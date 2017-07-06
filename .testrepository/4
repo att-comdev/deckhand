@@ -1,0 +1,14 @@
+time: 2017-07-06 19:36:24.960081Z
+tags: worker-1
+test: deckhand.tests.unit.control.test_base.TestBaseResource.test_on_options
+time: 2017-07-06 19:36:24.960534Z
+successful: deckhand.tests.unit.control.test_base.TestBaseResource.test_on_options [ multipart
+]
+tags: -worker-1
+time: 2017-07-06 19:36:24.962039Z
+tags: worker-0
+test: deckhand.tests.unit.control.test_api.TestApi.test_start_api
+time: 2017-07-06 19:36:25.006902Z
+successful: deckhand.tests.unit.control.test_api.TestApi.test_start_api [ multipart
+]
+tags: -worker-0
