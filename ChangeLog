@@ -1,6 +1,7 @@
 CHANGES
 =======
 
+* Add support for unit tests
 * Implement core Deckhand API framework
 * Oslo config integration (#1)
 * Add ChangeLog
