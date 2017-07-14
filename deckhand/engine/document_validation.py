@@ -45,7 +45,9 @@ class DocumentValidation(object):
             {'version': 'v1', 'kind': doc_kinds.DOCUMENT,
              'schema': v1_0.document_schema},
             {'version': 'v1', 'kind': doc_kinds.LAYERING,
-             'schema': v1_0.layering_schema}]
+             'schema': v1_0.layering_schema},
+            {'version': 'v1', 'kind': doc_kinds.VALIDATION,
+             'schema': v1_0.validation_schema}]
 
         def __init__(self, schema_version, kind):
             self.schema_version = schema_version

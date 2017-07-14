@@ -14,8 +14,6 @@
 
 import mock
 
-import testtools
-
 from deckhand.control import base as api_base
 from deckhand.tests.unit import base as test_base
 

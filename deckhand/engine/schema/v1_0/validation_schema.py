@@ -35,13 +35,16 @@ schema = {
         'data': {
             'type': 'object',
             'properties': {
-                'layerOrder': {
+            'requiredChecks': {
                     'type': 'array',
-                    'items': {'type': 'string'}
+                    'items': {
+                        'type': 'string',
+                        'pattern': '^.*-(validation|verification)$'
+                    }
                 }
             },
             'additionalProperties': True,
-            'required': ['layerOrder']
+            'required': ['requiredChecks']
         }
     },
     'additionalProperties': False,

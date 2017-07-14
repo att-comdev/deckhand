@@ -14,5 +14,6 @@
 
 from deckhand.engine.schema.v1_0 import document_schema
 from deckhand.engine.schema.v1_0 import layering_schema
+from deckhand.engine.schema.v1_0 import validation_schema
 
-__all__ = [document_schema, layering_schema]
+__all__ = ['document_schema', 'layering_schema', 'validation_schema']

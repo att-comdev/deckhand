@@ -14,3 +14,4 @@
 
 DOCUMENT = 'Document'
 LAYERING = 'LayeringPolicy'
+VALIDATION = 'ValidationPolicy'
