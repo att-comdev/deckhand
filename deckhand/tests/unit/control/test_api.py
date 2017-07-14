@@ -14,13 +14,12 @@
 
 import mock
 
-import testtools
-
 from deckhand.control import api
 from deckhand.control import base as api_base
+from deckhand.tests.unit import base as test_base
 
 
-class TestApi(testtools.TestCase):
+class TestApi(test_base.DeckhandTestCase):
 
 
     @mock.patch.object(api, 'db_api', autospec=True)

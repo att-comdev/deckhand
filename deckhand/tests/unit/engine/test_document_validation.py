@@ -25,11 +25,10 @@ from deckhand import errors
 
 class TestDocumentValidation(testtools.TestCase):
 
-    def setUp(self):
-        super(TestDocumentValidation, self).setUp()
+    def _read_data(self, file_name):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         test_yaml_path = os.path.abspath(os.path.join(
-            dir_path, os.pardir, 'resources', 'sample.yaml'))
+            dir_path, os.pardir, 'resources', file_name + '.yaml'))
 
         with open(test_yaml_path, 'r') as yaml_file:
             yaml_data = yaml_file.read()
@@ -69,15 +68,17 @@ class TestDocumentValidation(testtools.TestCase):
 
         return corrupted_data
 
-    def test_initialization(self):
+    def test_init_document_validation(self):
+        self._read_data('sample_document')
         doc_validation = document_validation.DocumentValidation(
             self.data)
         self.assertIsInstance(doc_validation,
                               document_validation.DocumentValidation)
 
-    def test_initialization_missing_sections(self):
-        expected_err = ("The provided YAML file is invalid. Exception: '%s' "
-                        "is a required property.")
+    def test_init_document_schema_missing_sections(self):
+        self._read_data('sample_document')
+        expected_err = ("The provided Document YAML file is invalid. "
+                        "Exception: '%s' is a required property.")
         invalid_data = [
             (self._corrupt_data('data'), 'data'),
             (self._corrupt_data('metadata'), 'metadata'),
@@ -87,6 +88,24 @@ class TestDocumentValidation(testtools.TestCase):
             (self._corrupt_data('metadata.substitutions'), 'substitutions'),
             (self._corrupt_data('metadata.substitutions.0.dest'), 'dest'),
             (self._corrupt_data('metadata.substitutions.0.src'), 'src')
+        ]
+
+        for invalid_entry, missing_key in invalid_data:
+            with six.assertRaisesRegex(self, errors.InvalidFormat,
+                                       expected_err % missing_key):
+                document_validation.DocumentValidation(invalid_entry)
+
+    def test_init_layering_schema_missing_sections(self):
+        self._read_data('sample_layering')
+        expected_err = ("The provided LayeringPolicy YAML file is invalid. "
+                        "Exception: '%s' is a required property.")
+        invalid_data = [
+            (self._corrupt_data('data'), 'data'),
+            (self._corrupt_data('data.layerOrder'), 'layerOrder'),
+            (self._corrupt_data('metadata'), 'metadata'),
+            (self._corrupt_data('metadata.metadataVersion'),
+                                'metadataVersion'),
+            (self._corrupt_data('metadata.name'), 'name')
         ]
 
         for invalid_entry, missing_key in invalid_data:

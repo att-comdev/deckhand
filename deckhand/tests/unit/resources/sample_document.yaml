@@ -1,7 +1,7 @@
 # Sample YAML file for testing forward replacement.
 ---
 schemaVersion: promenade/v1
-kind: SomeConfigType
+kind: Document
 metadata:
   metadataVersion: deckhand/v1
   name: a-unique-config-name-12345

@@ -69,7 +69,9 @@ schema = {
                 'layerDefinition': {
                     'type': 'object',
                     'properties': {
-                        'layer': {'enum': ['global', 'region', 'site']},
+                        'layer': {'enum': ['global', 'global-network',
+                                           'global-storage', 'region',
+                                           'site']},
                         'abstract': {'type': 'boolean'},
                         'childSelector': {
                             'type': 'object',

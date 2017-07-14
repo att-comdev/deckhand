@@ -12,7 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from deckhand.engine.schema.v1_0 import document_schema
-from deckhand.engine.schema.v1_0 import layering_schema
-
-__all__ = [document_schema, layering_schema]
+DOCUMENT = 'Document'
+LAYERING = 'LayeringPolicy'

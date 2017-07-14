@@ -14,7 +14,8 @@
 
 import jsonschema
 
-from deckhand.engine.schema.v1_0 import default_schema
+from deckhand.engine import kinds as doc_kinds
+from deckhand.engine.schema import v1_0
 from deckhand import errors
 
 
@@ -40,9 +41,11 @@ class DocumentValidation(object):
         YAML data.
         """
 
-        # TODO: Update kind according to requirements.
-        schema_versions_info = [{'version': 'v1', 'kind': 'default',
-                                 'schema': default_schema}]
+        schema_versions_info = [
+            {'version': 'v1', 'kind': doc_kinds.DOCUMENT,
+             'schema': v1_0.document_schema},
+            {'version': 'v1', 'kind': doc_kinds.LAYERING,
+             'schema': v1_0.layering_schema}]
 
         def __init__(self, schema_version, kind):
             self.schema_version = schema_version
@@ -50,9 +53,11 @@ class DocumentValidation(object):
 
         @property
         def schema(self):
+            print self.schema_versions_info
             # TODO: return schema based on version and kind.
             return [v['schema'] for v in self.schema_versions_info
-                    if v['version'] == self.schema_version][0].schema
+                    if v['version'] == self.schema_version and
+                       v['kind'] == self.kind][0].schema
 
     def pre_validate_data(self):
         """Pre-validate that the YAML file is correctly formatted."""
@@ -79,8 +84,9 @@ class DocumentValidation(object):
         try:
             jsonschema.validate(self.data, doc_schema_version.schema)
         except jsonschema.exceptions.ValidationError as e:
-            raise errors.InvalidFormat('The provided YAML file is invalid. '
-                                       'Exception: %s.' % e.message)
+            raise errors.InvalidFormat(
+                'The provided %s YAML file is invalid. Exception: %s. '
+                'Schema: %s.' % (doc_schema_version.kind, e.message, e.schema))
 
     def _multi_getattr(self, multi_key, substitutable_data):
         """Iteratively check for nested attributes in the YAML data.
