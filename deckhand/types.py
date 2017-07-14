@@ -12,14 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from deckhand.engine.schema.v1_0 import certificate_key_schema
-from deckhand.engine.schema.v1_0 import certificate_schema
-from deckhand.engine.schema.v1_0 import data_schema
-from deckhand.engine.schema.v1_0 import document_schema
-from deckhand.engine.schema.v1_0 import layering_schema
-from deckhand.engine.schema.v1_0 import passphrase_schema
-from deckhand.engine.schema.v1_0 import validation_schema
+DOCUMENT_SCHEMA_TYPES = (
+	LAYERING_POLICY_SCHEMA,
+	VALIDATION_POLICY_SCHEMA,
+) = (
+	'deckhand/LayeringPolicy/v1',
+	'deckhand/ValidationPolicy/v1',
+)
 
-__all__ = ['certificate_key_schema', 'certificate_schema', 'data_schema',
-		   'document_schema', 'layering_schema', 'passphrase_schema',
-		   'validation_schema']
+DECKHAND_VALIDATION_TYPES = (
+	DECKHAND_SCHEMA_VALIDATION,
+) = (
+	'deckhand-schema-validation',
+)
