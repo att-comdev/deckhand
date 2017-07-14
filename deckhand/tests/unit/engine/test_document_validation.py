@@ -21,9 +21,10 @@ import six
 
 from deckhand.engine import document_validation
 from deckhand import errors
+from deckhand.tests.unit import base as test_base
 
 
-class TestDocumentValidation(testtools.TestCase):
+class TestDocumentValidation(test_base.DeckhandTestCase):
 
     def _read_data(self, file_name):
         dir_path = os.path.dirname(os.path.realpath(__file__))

@@ -17,9 +17,10 @@ import mock
 import testtools
 
 from deckhand.control import base as api_base
+from deckhand.tests.unit import base as test_base
 
 
-class TestBaseResource(testtools.TestCase):
+class TestBaseResource(test_base.DeckhandTestCase):
 
     def setUp(self):
         super(TestBaseResource, self).setUp()

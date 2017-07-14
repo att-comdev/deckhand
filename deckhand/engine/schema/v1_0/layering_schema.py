@@ -37,10 +37,7 @@ schema = {
         	'properties': {
         		'layerOrder': {
 	        		'type': 'array',
-	        		'items': {
-	        			'enum': ['global', 'global-network', 'global-storage',
-	        					 'region', 'site']
-	        		}
+	        		'items': {'type': 'string'}
 	        	}
         	},
         	'additionalProperties': True,

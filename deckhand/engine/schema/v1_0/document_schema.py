@@ -47,7 +47,6 @@ schema = {
             'type': 'string',
             'pattern': '^([A-Za-z]+\/v[0-9]{1})$'
         },
-        # TODO: The kind should be an enum.
         'kind': {'type': 'string'},
         'metadata': {
             'type': 'object',
@@ -69,9 +68,7 @@ schema = {
                 'layerDefinition': {
                     'type': 'object',
                     'properties': {
-                        'layer': {'enum': ['global', 'global-network',
-                                           'global-storage', 'region',
-                                           'site']},
+                        'layer': {'type': 'string'},
                         'abstract': {'type': 'boolean'},
                         'childSelector': {
                             'type': 'object',
