@@ -53,7 +53,6 @@ class DocumentValidation(object):
 
         @property
         def schema(self):
-            print self.schema_versions_info
             # TODO: return schema based on version and kind.
             return [v['schema'] for v in self.schema_versions_info
                     if v['version'] == self.schema_version and
