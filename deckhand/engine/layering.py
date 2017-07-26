@@ -14,8 +14,7 @@
 
 import copy
 
-import six
-
+from deckhand.engine import document
 from deckhand import errors
 
 
@@ -43,7 +42,7 @@ class DocumentLayering(object):
 
         :param documents: List of YAML documents represented as dictionaries.
         """
-        self.documents = documents
+        self.documents = [document.Document(d) for d in documents]
         self.layering_policy = self._find_layering_policy()
         self.layered_docs = self._calc_document_parents()
 
@@ -51,14 +50,14 @@ class DocumentLayering(object):
         rendered_data = None
 
         for doc in self.layered_docs:
-            if "parent_idx" in doc:
+            if "parent_idx" in doc.data:
                 parent = self.layered_docs[doc["parent_idx"]]
                 if not rendered_data:
-                    rendered_data = copy.deepcopy(parent)
-                actions = self._get_doc_actions(doc)
+                    rendered_data = copy.deepcopy(parent.data)
+                actions = doc.get_actions()
 
                 for action in actions:
-                    self._apply_action(action, doc, rendered_data)
+                    self._apply_action(action, doc.data, rendered_data)
 
         return rendered_data['data']
 
@@ -92,28 +91,27 @@ class DocumentLayering(object):
         path.insert(0, 'data')
         last_key = 'data' if not path[-1] else path[-1]
 
-        src_ref = src_data.copy()
-
         for attr in path:
             if attr == path[-1]:
                 break
             dest_data = dest_data.get(attr)
-            src_ref = src_ref.get(attr)
+            src_data = src_data.get(attr)
 
         if method == 'delete':
             del dest_data[last_key]
+            # If the data key was removed, re-recreate it as an empty dict.
             if 'data' not in dest_data:
                 dest_data.setdefault('data', {})
         elif method == 'merge':
-            dest_data[last_key].update(src_ref[last_key])
+            dest_data[last_key].update(src_data[last_key])
         elif method == 'replace':
-            dest_data[last_key] = src_ref[last_key]
+            dest_data[last_key] = src_data[last_key]
 
     def _find_layering_policy(self):
         # FIXME(fmontei): There should be a DB call here to fetch the layering
         # policy from the DB.
         for doc in self.documents:
-            if doc['schema'] == self.LAYERING_POLICY_SCHEMA:
+            if doc.data['schema'] == self.LAYERING_POLICY_SCHEMA:
                 return doc
         raise errors.LayeringPolicyNotFound(schema=self.LAYERING_POLICY_SCHEMA)
 
@@ -162,7 +160,7 @@ class DocumentLayering(object):
         def _get_parents(doc):
             parents = []
 
-            doc_layer = self._get_doc_layer(doc)
+            doc_layer = doc.get_layer()
             try:
                 next_layer_idx = layer_order.index(doc_layer) + 1
                 parent_doc_layer = layer_order[next_layer_idx]
@@ -171,14 +169,14 @@ class DocumentLayering(object):
                 return parents
 
             for other_doc in layered_docs:
-                other_doc_layer = self._get_doc_layer(other_doc)
+                other_doc_layer = other_doc.get_layer()
                 if other_doc_layer == parent_doc_layer:
                     # A document can have many labels but should only have one
                     # explicit label for the parentSelector.
-                    parent_sel = self._get_doc_parent_selector(doc)
+                    parent_sel = doc.get_parent_selector()
                     parent_sel_key = list(parent_sel.keys())[0]
                     parent_sel_val = list(parent_sel.values())[0]
-                    other_doc_labels = self._get_doc_labels(other_doc)
+                    other_doc_labels = other_doc.get_labels()
 
                     if (parent_sel_key in other_doc_labels and
                         parent_sel_val == other_doc_labels[parent_sel_key]):
@@ -187,7 +185,7 @@ class DocumentLayering(object):
 
         for layer in layer_order:
             docs_by_layer = list(filter(
-                (lambda x: self._get_doc_layer(x) == layer), layered_docs))
+                (lambda x: x.get_layer() == layer), layered_docs))
 
             for doc in docs_by_layer:
                 parents = _get_parents(doc)
@@ -197,46 +195,14 @@ class DocumentLayering(object):
                     if not len(parents) == 1:
                         raise errors.IndeterminateDocumentParent(
                             document=doc, parents=parents)
-                    doc.setdefault(
+                    doc.data.setdefault(
                         'parent_idx', layered_docs.index(parents[0]))
                 # Unless the document is the topmost document in the
                 # `layerOrder` of the LayeringPolicy, a parent document should
                 # exist. Otherwise raise an exception.
                 else:
-                    if self._get_doc_layer(doc) != layer_order[-1]:
+                    if doc.get_layer() != layer_order[-1]:
                         raise errors.MissingDocumentParent(document=doc)
 
         return list(reversed(sorted(layered_docs,
-                    key=lambda x: layer_order.index(self._get_doc_layer(x)))))
-
-    def _is_abstract(self, doc):
-        try:
-            abstract = doc['metadata']['layeringDefinition']['abstract']
-            return six.text_type(abstract) == True
-        except KeyError:
-            return False
-
-    def _get_doc_layer(self, doc):
-        return doc['metadata']['layeringDefinition']['layer'].lower()
-
-    def _get_doc_parent_selector(self, doc):
-        """Return the `parentSelector` for the document.
-
-        The topmost document defined by the `layerOrder` in the LayeringPolicy
-        does not have a `parentSelector` as it has no parent.
-
-        :returns: `parentSelcetor` for the document if present, else None.
-        """
-        try:
-            return doc['metadata']['layeringDefinition']['parentSelector']
-        except KeyError:
-            return None
-
-    def _get_doc_labels(self, doc):
-        return doc['metadata']['labels']
-
-    def _get_doc_actions(self, doc):
-        try:
-            return doc['metadata']['layeringDefinition']['actions']
-        except KeyError:
-            return []
+                    key=lambda x: layer_order.index(x.get_layer()))))
