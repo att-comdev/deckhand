@@ -99,6 +99,11 @@ class DocumentLayering(object):
 
         # Remove empty string paths and ensure that "data" is always present.
         method = action['method']
+
+        if method not in self.SUPPORTED_ACTIONS:
+            raise errors.UnsupportedActionMethod(
+                action=action, document=src_data)
+
         path = action['path'].split('.')
         path = [p for p in path if p != '']
         path.insert(0, 'data')
@@ -112,7 +117,7 @@ class DocumentLayering(object):
 
         if method == 'delete':
             del dest_data[last_key]
-            # If the data key was removed, re-recreate it as an empty dict.
+            # If the data key was removed, re-create it as an empty dict.
             if 'data' not in dest_data:
                 dest_data.setdefault('data', {})
         elif method == 'merge':

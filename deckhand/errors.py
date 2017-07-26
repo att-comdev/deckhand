@@ -111,3 +111,8 @@ class IndeterminateDocumentParent(DeckhandException):
 class MissingDocumentParent(DeckhandException):
     msg_fmt = ("Missing parent document for document %(document)s.")
     code = 400
+
+
+class UnsupportedActionMethod(DeckhandException):
+    msg_fmt = ("Method in %(actions)s is invalid for document %(document)s.")
+    code = 400
