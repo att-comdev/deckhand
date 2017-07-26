@@ -149,9 +149,7 @@ class DocumentLayering(object):
         """Determine each document's parent.
 
         For each document, attempts to find the document's parent. Adds a new
-        key called "parent_idx" to the document's dictionary. This key points
-        to the location of the parent document in the list of documents given
-        by ``documents``.
+        key called "parent" to the document's dictionary.
 
         .. note::
 
@@ -161,7 +159,7 @@ class DocumentLayering(object):
             the topmost layer defined by the `layerOrder`.
 
         :returns: Ordered list of documents that need to be layered. Each
-            document contains a "parent_idx" in addition to original data. The
+            document contains a "parent" in addition to original data. The
             order highest to lowest layer in `layerOrder`.
         :raises LayeringPolicyMalformed: If the `layerOrder` could not be
             found in the LayeringPolicy or if it is not a list.

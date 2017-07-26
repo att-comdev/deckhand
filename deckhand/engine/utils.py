@@ -32,6 +32,6 @@ def deep_merge(dct, merge_dct):
                 and isinstance(merge_dct[k], collections.Mapping)):
             deep_merge(dct[k], merge_dct[k])
         else:
-        	# Prioritize the current values over the values in ``merge_dct``.
-        	if not (k in dct and k in merge_dct):
-        		dct[k] = merge_dct[k]
+            # Prioritize the current values over the values in ``merge_dct``.
+            if not (k in dct and k in merge_dct):
+                dct[k] = merge_dct[k]
