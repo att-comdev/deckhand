@@ -167,15 +167,19 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
                 method='merge', path=path))
             self._test_layering(expected[idx], documents)
 
-    # def test_layering_method_replace(self):
-    #     expected = [
-    #         {'a': {'x': 7, 'z': 3}, 'b': 4}
-    #     ]
+    def test_layering_method_replace(self):
+        expected = [
+            {'a': {'y': 2, 'x': 1}, 'c': 9},
+            {'a': {'y': 2, 'x': 1}, 'b': 4},
+            # '.b' doesn't exist in parent so do nothing.
+            {'a': {'z': 3, 'x': 7}, 'b': 4},
+            {'a': {'z': 3, 'x': 7}, 'b': 4, 'c': 9},
+        ]
 
-    #     for idx, path in enumerate(['.']):
-    #         documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
-    #             method='replace', path=path))
-    #         self._test_layering(expected[idx], documents)
+        for idx, path in enumerate(['.', '.a', '.b', '.c']):
+            documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
+                method='replace', path=path))
+            self._test_layering(expected[idx], documents)
 
 
 class TestDocumentLayering3Layers(TestDocumentLayering):
