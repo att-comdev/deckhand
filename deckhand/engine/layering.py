@@ -15,6 +15,7 @@
 import copy
 
 from deckhand.engine import document
+from deckhand.engine import utils
 from deckhand import errors
 
 
@@ -23,8 +24,8 @@ class DocumentLayering(object):
 
     Layering is controlled in two places:
 
-    1. The `LayeringPolicy` control document (described below), which defines
-       the valid layers and their order of precedence.
+    1. The `LayeringPolicy` control document, which defines the valid layers
+       and their order of precedence.
     2. In the `metadata.layeringDefinition` section of normal
        (`metadata.schema=metadata/Document/v1`) documents.
 
@@ -34,7 +35,7 @@ class DocumentLayering(object):
         together into a fully rendered document.
     """
 
-    SUPPORTED_ACTIONS = ('merge', 'replace', 'delete')
+    SUPPORTED_METHODS = ('merge', 'replace', 'delete')
     LAYERING_POLICY_SCHEMA = 'deckhand/LayeringPolicy/v1'
 
     def __init__(self, documents):
@@ -54,27 +55,27 @@ class DocumentLayering(object):
 
         :returns: the list of rendered data for each document.
         """
-        temp_data = None
+        rendered_data = None
 
         for doc in self.layered_docs:
-            if "parent_idx" in doc.data:
-                parent = self.layered_docs[doc["parent_idx"]]
+            if "parent" in doc.data:
+                parent = doc["parent"]
 
-                if not temp_data:
-                    temp_data = copy.deepcopy(parent.data)
+                if not rendered_data:
+                    rendered_data = copy.deepcopy(doc.data)
 
                 actions = doc.get_actions()
                 for action in actions:
-                    self._apply_action(action, doc.data, temp_data)
+                    self._apply_action(action, parent.data, rendered_data)
 
                 # Update the document's data if it is concrete.
                 if not doc.is_abstract():
-                    doc.set_data(temp_data, key='data')
+                    doc.set_data(rendered_data, key='data')
 
         # TODO: return rendered data for all concrete documents.
-        return temp_data['data']
+        return rendered_data['data']
 
-    def _apply_action(self, action, src_data, dest_data):
+    def _apply_action(self, action, parent_data, overall_data):
         """Apply actions to each layer that is rendered.
 
         Supported actions are:
@@ -87,23 +88,22 @@ class DocumentLayering(object):
 
         Requirements:
 
-            * The path must be present in both ``src_data`` and ``dest_data`` (
-              in both the parent and child documents).
+            * The path must be present in both ``parent_data`` and
+              ``overall_data`` (in both the parent and child documents).
         """
         # NOTE: In order to use references to update nested entries inside the
-        # ``dest_data`` dict, mutable data must be manipulated. That is,
+        # ``overall_data`` dict, mutable data must be manipulated. That is,
         # only references to dictionaries and lists and other mutable data
         # types are allowed. In the event that the path is ".", the entire
         # document is passed so that doc["data"] can be manipulated via
         # references.
 
-        # Remove empty string paths and ensure that "data" is always present.
         method = action['method']
-
-        if method not in self.SUPPORTED_ACTIONS:
+        if method not in self.SUPPORTED_METHODS:
             raise errors.UnsupportedActionMethod(
-                action=action, document=src_data)
+                action=action, document=parent_data)
 
+        # Remove empty string paths and ensure that "data" is always present.
         path = action['path'].split('.')
         path = [p for p in path if p != '']
         path.insert(0, 'data')
@@ -112,18 +112,30 @@ class DocumentLayering(object):
         for attr in path:
             if attr == path[-1]:
                 break
-            dest_data = dest_data.get(attr)
-            src_data = src_data.get(attr)
+            overall_data = overall_data.get(attr)
+            parent_data = parent_data.get(attr)
 
         if method == 'delete':
-            del dest_data[last_key]
-            # If the data key was removed, re-create it as an empty dict.
-            if 'data' not in dest_data:
-                dest_data.setdefault('data', {})
+            # If the entire document is passed (i.e. the dict including
+            # metadata, data, schema, etc.) then reset data to an empty dict.
+            if last_key == 'data':
+                overall_data['data'] = {}
+            else:
+                del overall_data[last_key]
         elif method == 'merge':
-            dest_data[last_key].update(src_data[last_key])
+            if last_key in overall_data and last_key in parent_data:
+                utils.deep_merge(overall_data[last_key], parent_data[last_key])
+            # If the data does not exist in the source document, copy from
+            # parent document.
+            elif last_key in parent_data:
+                overall_data.setdefault(last_key, parent_data[last_key])
         elif method == 'replace':
-            dest_data[last_key] = src_data[last_key]
+            if last_key in overall_data and last_key in parent_data:
+                overall_data[last_key] = parent_data[last_key]
+            # If the data does not exist in the source document, copy from
+            # parent document.
+            elif last_key in parent_data:
+                overall_data.setdefault(last_key, parent_data[last_key])
 
     def _find_layering_policy(self):
         # FIXME(fmontei): There should be a DB call here to fetch the layering
@@ -213,8 +225,7 @@ class DocumentLayering(object):
                     if not len(parents) == 1:
                         raise errors.IndeterminateDocumentParent(
                             document=doc, parents=parents)
-                    doc.data.setdefault(
-                        'parent_idx', layered_docs.index(parents[0]))
+                    doc.data.setdefault('parent', parents[0])
                 # Unless the document is the topmost document in the
                 # `layerOrder` of the LayeringPolicy, a parent document should
                 # exist. Otherwise raise an exception.
@@ -222,5 +233,5 @@ class DocumentLayering(object):
                     if doc.get_layer() != layer_order[-1]:
                         raise errors.MissingDocumentParent(document=doc)
 
-        return list(reversed(sorted(layered_docs,
-                    key=lambda x: layer_order.index(x.get_layer()))))
+        return list(sorted(layered_docs,
+                    key=lambda x: layer_order.index(x.get_layer())))
