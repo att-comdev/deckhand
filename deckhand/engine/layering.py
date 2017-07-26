@@ -54,20 +54,25 @@ class DocumentLayering(object):
 
         :returns: the list of rendered data for each document.
         """
-        rendered_data = None
+        temp_data = None
 
-        # FIXME(fm577c): Each concrete document should be updated.
         for doc in self.layered_docs:
             if "parent_idx" in doc.data:
                 parent = self.layered_docs[doc["parent_idx"]]
-                if not rendered_data:
-                    rendered_data = copy.deepcopy(parent.data)
+
+                if not temp_data:
+                    temp_data = copy.deepcopy(parent.data)
+
                 actions = doc.get_actions()
-
                 for action in actions:
-                    self._apply_action(action, doc.data, rendered_data)
+                    self._apply_action(action, doc.data, temp_data)
 
-        return rendered_data['data']
+                # Update the document's data if it is concrete.
+                if not doc.is_abstract():
+                    doc.set_data(temp_data, key='data')
+
+        # TODO: return rendered data for all concrete documents.
+        return temp_data['data']
 
     def _apply_action(self, action, src_data, dest_data):
         """Apply actions to each layer that is rendered.

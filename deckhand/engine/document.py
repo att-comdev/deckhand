@@ -25,10 +25,16 @@ class Document(object):
         """
         self.data = data
 
+    def set_data(self, data, key=None):
+        if not key:
+            self.data = data
+        else:
+            self.data[key] = data[key]
+
     def is_abstract(self):
         try:
             abstract = self.data['metadata']['layeringDefinition']['abstract']
-            return six.text_type(abstract) == True
+            return six.text_type(abstract) == 'True'
         except KeyError:
             return False
 
@@ -60,3 +66,6 @@ class Document(object):
 
     def __getitem__(self, k):
         return self.data[k]
+
+    def __repr__(self):
+        return repr(self.data)
