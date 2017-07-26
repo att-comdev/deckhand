@@ -47,8 +47,16 @@ class DocumentLayering(object):
         self.layered_docs = self._calc_document_parents()
 
     def render(self):
+        """Perform layering on the set of `documents`.
+
+        Each concrete document will undergo layering according to the actions
+        defined by its `layeringDefinition`.
+
+        :returns: the list of rendered data for each document.
+        """
         rendered_data = None
 
+        # FIXME(fm577c): Each concrete document should be updated.
         for doc in self.layered_docs:
             if "parent_idx" in doc.data:
                 parent = self.layered_docs[doc["parent_idx"]]
