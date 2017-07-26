@@ -56,4 +56,27 @@ class InvalidFormat(ApiError):
 class DocumentExists(DeckhandException):
     msg_fmt = ("Document with kind %(kind)s and schemaVersion "
                "%(schema_version)s already exists.")
+    code = 409
 
+
+class LayeringPolicyNotFound(DeckhandException):
+    msg_fmt = ("LayeringPolicy with schema %(schema)s not found in the "
+               "system.")
+    code = 400
+
+
+class LayeringPolicyMalformed(DeckhandException):
+    msg_fmt = ("LayeringPolicy with schema %(schema)s is improperly formatted:"
+               " %(document)s.")
+    code = 400
+
+
+class IndeterminateDocumentParent(DeckhandException):
+    msg_fmt = ("Too many parent documents found for document %(document)s."
+               "Possible parents: %(parent)s.")
+    code = 400
+
+
+class MissingDocumentParent(DeckhandException):
+    msg_fmt = ("Missing parent document for document %(document)s.")
+    code = 400

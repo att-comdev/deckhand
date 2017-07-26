@@ -25,4 +25,3 @@ Document creation can be tested locally using (from root deckhand directory):
     curl -i -X POST localhost:9000/api/v1.0/documents \
         -H "Content-Type: application/x-yaml" \
         --data-binary "@deckhand/tests/unit/resources/sample.yaml"
-
