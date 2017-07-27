@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
+import json
 import os
 import yaml
 
@@ -57,72 +59,65 @@ metadata:
     layer: site
     parentSelector:
       key1: value1
-    actions:
-      - method: {method}
-        path: {path}
+    {actions}
 data:
   a:
     x: 7
     z: 3
   b: 4"""
 
-    FAKE_YAML_DATA_3_LAYERS = """
----
-schema: deckhand/LayeringPolicy/v1
-metadata:
-  schema: metadata/Control/v1
-  name: layering-policy
-data:
-  layerOrder:
-    - global
-    - region
-    - site
----
-schema: example/Kind/v1
-metadata:
-  schema: metadata/Document/v1
-  name: global-1234
-  labels:
-    key1: value1
-  layeringDefinition:
-    abstract: true
-    layer: global
-data:
-  a:
-    x: 1
-    y: 2
----
-schema: example/Kind/v1
-metadata:
-  schema: metadata/Document/v1
-  name: region-1234
-  labels:
-    key1: value1
-  layeringDefinition:
-    abstract: true
-    layer: region
-    parentSelector:
-      key1: value1
-    actions:
-      - method: replace
-        path: .a
-data:
-  a:
-    z: 3
----
-schema: example/Kind/v1
-metadata:
-  schema: metadata/Document/v1
-  name: site-1234
-  layeringDefinition:
-    layer: site
-    parentSelector:
-      key1: value1
-    actions:
-      - method: merge
-        path: .
-data:
-  b: 4"""
+    FAKE_YAML_DATA_3_LAYERS = """[
+        {
+            "data": {
+                "layerOrder": ["global", "region", "site"]
+            },
+            "metadata": {
+                "name": "layering-policy",
+                "schema": "metadata/Control/v1"
+            },
+            "schema": "deckhand/LayeringPolicy/v1"
+        },
+        {
+            %(_GLOBAL_DATA_)s,
+            "metadata": {
+                "labels": {"key1": "value1"},
+                "layeringDefinition": {"abstract": true, "layer": "global"},
+                "name": "global-1234",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        },
+        {
+            %(_REGION_DATA_)s,
+            "metadata": {
+                "labels": {"key1": "value1"},
+                "layeringDefinition": {
+                    "abstract": true,
+                    %(_REGION_ACTIONS_)s,
+                    "layer": "region",
+                    "parentSelector": {"key1": "value1"}
+                },
+                "name": "region-1234",
+                "path": ".a",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        },
+        {
+            %(_SITE_DATA_)s,
+            "metadata": {
+                "layeringDefinition": {
+                    %(_SITE_ACTIONS_)s,
+                    "layer": "site",
+                    "parentSelector": {"key1": "value1"}
+                },
+                "name": "site-1234",
+                "path": ".a",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        }
+    ]"""
 
     def _read_data(self, filename):
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -141,6 +136,35 @@ data:
         rendered_data = document_layering.render()
         self.assertEqual(expected, rendered_data)
 
+    def _format_actions(self, count, *args):
+        actions = """
+    actions:
+"""
+        action_list = ""
+        for _ in range(count):
+            action = """
+      - method: %s
+        path: %s
+"""
+            action_list = action_list + action
+
+        actions = actions + action_list
+        return actions % args
+
+    def _format_data(self, base_data, new_dict=None, **kwargs):
+        if not new_dict:
+            new_dict = {}
+
+        for key, val in new_dict.items():
+            new_val = json.dumps(val)[1:-1]
+            new_dict[key] = new_val
+
+        updated_data = copy.deepcopy(base_data)
+        updated_data = updated_data % new_dict
+        updated_data = json.loads(updated_data)
+
+        return updated_data
+
 
 class TestDocumentLayering2Layers(TestDocumentLayering):
 
@@ -148,8 +172,9 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         expected = [{}, {'b': 4}]
 
         for idx, path in enumerate(['.', '.a']):
+            actions = self._format_actions(1, 'delete', path)
             documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
-                method='delete', path=path))
+                actions=actions))
             self._test_layering(expected[idx], documents)
 
     def test_layering_method_merge(self):
@@ -163,8 +188,9 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         ]
 
         for idx, path in enumerate(['.', '.a', '.b', '.c']):
+            actions = self._format_actions(1, 'merge', path)
             documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
-                method='merge', path=path))
+                actions=actions))
             self._test_layering(expected[idx], documents)
 
     def test_layering_method_replace(self):
@@ -177,84 +203,104 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         ]
 
         for idx, path in enumerate(['.', '.a', '.b', '.c']):
+            actions = self._format_actions(1, 'replace', path)
             documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
-                method='replace', path=path))
+                actions=actions))
             self._test_layering(expected[idx], documents)
 
 
 class TestDocumentLayering3Layers(TestDocumentLayering):
 
     def test_layering_default_scenario(self):
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{"method": "replace", "path": ".a"}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'a': {'x': 1, 'y': 2}, 'b': 4}
         self._test_layering(expected, documents)
 
     def test_layering_delete_everything(self):
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_REGION_DATA_": {
+                "data": {"a": {"x": 1, "y": 2}, "b": {"v": 3, "w": 4}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{"path": ".", "method": "delete"}]},
+            "_SITE_ACTIONS_": {"actions": [{"method": "merge", "path": "."}]}
         }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.', 'method': 'delete'}
-        ]
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {}
         self._test_layering(expected, documents)
 
     def test_layering_delete_path_a(self):
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.a', 'method': 'delete'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.a', 'method': 'delete'}
-        ]
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'b': 4}
         self._test_layering(expected, documents)
 
     def test_layering_merge_and_replace(self):
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
-        }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.', 'method': 'replace'}
-        ]
-        documents[2]['data'] = {
-            'a': {'z': 5}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}}},
+            "_SITE_DATA_": {"data": {'a': {'z': 5}}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.', 'method': 'replace'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'a': {'y': 2, 'x': 1}, 'b': {'w': 4, 'v': 3}}
         self._test_layering(expected, documents)
 
     def test_layering_double_merge(self):
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[2]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
-        }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.', 'method': 'merge'}
-        ]
-        documents[1]['data'] = {
-            'c': {'e': 55}
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"c": {"e": 55}}},
+            "_REGION_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_SITE_DATA_": {"data": {"a": {"z": 5}}},
+            "_REGION_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_ACTIONS_": {"actions": [{"method": "merge", "path": "."}]}
         }
 
-        expected = {'a': {'x': 1, 'y': 2}, 'b': 4, 'c': {'e': 55}}
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
+        expected = {'a': {'x': 1, 'y': 2, 'z': 5},
+                    'b': {'v': 3, 'w': 4}, 'c': {'e': 55}}
         self._test_layering(expected, documents)
 
     def test_layering_double_merge_2(self):
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
-        }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.a', 'method': 'merge'}
-        ]
-        documents[2]['data'] = {
-            'a': {'e': 55}
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_REGION_DATA_": {"data": {'a': {'e': 55}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.a', 'method': 'merge'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'a': {'x': 1, 'y': 2, 'e': 55}, 'b': 4}
         self._test_layering(expected, documents)
 
@@ -262,15 +308,19 @@ class TestDocumentLayering3Layers(TestDocumentLayering):
 class TestDocumentLayering3LayersScenario(TestDocumentLayering):
 
     def test_layering_multiple_delete(self):
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.', 'method': 'delete'},
+                            {'path': '.', 'method': 'delete'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.', 'method': 'delete'},
-            {'path': '.', 'method': 'delete'}
-        ]
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {}
         self._test_layering(expected, documents)
 
@@ -282,18 +332,19 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
         Replace:  {'a': {'x': 1, 'y': 2}, 'b': 4}
         Replace: {'a': {'x': 1, 'y': 2}, 'b': 4}
         """
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
-        }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.a', 'method': 'replace'},
-            {'path': '.a', 'method': 'replace'},
-        ]
-        documents[2]['data'] = {
-            'a': {'z': 5}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_REGION_DATA_": {"data": {'a': {'z': 5}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.a', 'method': 'replace'},
+                            {'path': '.a', 'method': 'replace'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'a': {'x': 1, 'y': 2}, 'b': 4}
         self._test_layering(expected, documents)
 
@@ -305,18 +356,19 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
         Replace:  {'a': {'x': 1, 'y': 2}, 'b': 4}
         Replace: {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}
         """
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
-        }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.a', 'method': 'replace'},
-            {'path': '.b', 'method': 'replace'},
-        ]
-        documents[2]['data'] = {
-            'a': {'z': 5}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_REGION_DATA_": {"data": {'a': {'z': 5}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.a', 'method': 'replace'},
+                            {'path': '.b', 'method': 'replace'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}
         self._test_layering(expected, documents)
 
@@ -328,18 +380,20 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
         Replace:  {'a': {'x': 1, 'y': 2}, 'b': 4}
         Replace: {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}
         """
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}, 'c': [123]
-        }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.a', 'method': 'replace'},
-            {'path': '.b', 'method': 'replace'},
-        ]
-        documents[2]['data'] = {
-            'a': {'z': 5}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4},
+                         'c': [123]}},
+            "_REGION_DATA_": {"data": {'a': {'z': 5}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.a', 'method': 'replace'},
+                            {'path': '.b', 'method': 'replace'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}
         self._test_layering(expected, documents)
 
@@ -351,19 +405,21 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
         Replace:  {'a': {'x': 1, 'y': 2}, 'b': 4}
         Replace: {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}, 'c': [123]}
         """
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}, 'c': [123]
-        }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.a', 'method': 'replace'},
-            {'path': '.b', 'method': 'replace'},
-            {'path': '.c', 'method': 'replace'}
-        ]
-        documents[2]['data'] = {
-            'a': {'z': 5}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4},
+                         'c': [123]}},
+            "_REGION_DATA_": {"data": {'a': {'z': 5}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.a', 'method': 'replace'},
+                            {'path': '.b', 'method': 'replace'},
+                            {'path': '.c', 'method': 'replace'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}, 'c': [123]}
         self._test_layering(expected, documents)
 
@@ -377,16 +433,20 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
         Delete (.a): {}
         Replace (.b): {'b': {'v': 3, 'w': 4}}
         """
-        documents = self._parse_data(self.FAKE_YAML_DATA_3_LAYERS)
-        documents[1]['data'] = {
-            'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}
+        kwargs = {
+            "_GLOBAL_DATA_": {
+                "data": {'a': {'x': 1, 'y': 2}, 'b': {'v': 3, 'w': 4}}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{'path': '.', 'method': 'delete'},
+                            {'path': '.a', 'method': 'replace'},
+                            {'path': '.a', 'method': 'delete'},
+                            {'path': '.b', 'method': 'replace'}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
         }
-        documents[2]['metadata']['layeringDefinition']['actions'] = [
-            {'path': '.', 'method': 'delete'},
-            {'path': '.a', 'method': 'replace'},
-            {'path': '.a', 'method': 'delete'},
-            {'path': '.b', 'method': 'replace'}
-        ]
 
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         expected = {'b': {'v': 3, 'w': 4}}
         self._test_layering(expected, documents)
