@@ -20,51 +20,51 @@ import yaml
 import testtools
 
 from deckhand.engine import layering
-from deckhand import errors
 
 
 class TestDocumentLayering(testtools.TestCase):
 
-    FAKE_YAML_DATA_2_LAYERS = """
----
-schema: deckhand/LayeringPolicy/v1
-metadata:
-  schema: metadata/Control/v1
-  name: layering-policy
-data:
-  layerOrder:
-    - global
-    - site
----
-schema: example/Kind/v1
-metadata:
-  schema: metadata/Document/v1
-  name: global-1234
-  labels:
-    key1: value1
-  layeringDefinition:
-    abstract: true
-    layer: global
-data:
-  a:
-    x: 1
-    y: 2
-  c: 9
----
-schema: example/Kind/v1
-metadata:
-  schema: metadata/Document/v1
-  name: site-1234
-  layeringDefinition:
-    layer: site
-    parentSelector:
-      key1: value1
-    {actions}
-data:
-  a:
-    x: 7
-    z: 3
-  b: 4"""
+    # These templates are used across the tests below. To use, they must be
+    # first passed to ``_format_data`` below with the correct mapping (for
+    # string substitution). This allows for code reusability but also a degree
+    # of control over dynamic data generation.
+    FAKE_YAML_DATA_2_LAYERS = """[
+        {
+            "data": {
+                "layerOrder": ["global", "site"]
+            },
+            "metadata": {
+                "name": "layering-policy",
+                "schema": "metadata/Control/v1"
+            },
+            "schema": "deckhand/LayeringPolicy/v1"
+        },
+        {
+            %(_GLOBAL_DATA_)s,
+            "metadata": {
+                "labels": {"key1": "value1"},
+                   "layeringDefinition": {
+                        "abstract": true,
+                        "layer": "global"
+                    },
+                    "name": "global-1234",
+                    "schema": "metadata/Document/v1"
+                },
+            "schema": "example/Kind/v1"
+        },
+        {
+            %(_SITE_DATA_)s,
+            "metadata": {
+                "layeringDefinition": {
+                    %(_SITE_ACTIONS_)s,
+                    "layer": "site",
+                    "parentSelector": {"key1": "value1"}
+            },
+            "name": "site-1234",
+            "schema": "metadata/Document/v1"
+        },
+        "schema": "example/Kind/v1"}
+    ]"""
 
     FAKE_YAML_DATA_3_LAYERS = """[
         {
@@ -126,9 +126,6 @@ data:
 
         with open(test_yaml_path, 'r') as yaml_file:
             yaml_data = yaml_file.read()
-        return self._parse_data(yaml_data)
-
-    def _parse_data(self, yaml_data):
         return [d for d in yaml.safe_load_all(yaml_data)]
 
     def _test_layering(self, expected, documents):
@@ -136,31 +133,22 @@ data:
         rendered_data = document_layering.render()
         self.assertEqual(expected, rendered_data)
 
-    def _format_actions(self, count, *args):
-        actions = """
-    actions:
-"""
-        action_list = ""
-        for _ in range(count):
-            action = """
-      - method: %s
-        path: %s
-"""
-            action_list = action_list + action
+    def _format_data(self, dict_as_string, mapping=None):
+        """Format ``dict_as_string`` by mapping dummy keys using ``mapping``.
 
-        actions = actions + action_list
-        return actions % args
+        :param dict_as_string: JSON-serialized dictionary.
+        :param mapping: Mapping used to substitute dummy variables with proper
+            data.
+        """
+        if not mapping:
+            mapping = {}
 
-    def _format_data(self, base_data, new_dict=None, **kwargs):
-        if not new_dict:
-            new_dict = {}
-
-        for key, val in new_dict.items():
+        for key, val in mapping.items():
             new_val = json.dumps(val)[1:-1]
-            new_dict[key] = new_val
+            mapping[key] = new_val
 
-        updated_data = copy.deepcopy(base_data)
-        updated_data = updated_data % new_dict
+        updated_data = copy.deepcopy(dict_as_string)
+        updated_data = updated_data % mapping
         updated_data = json.loads(updated_data)
 
         return updated_data
@@ -172,9 +160,13 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         expected = [{}, {'b': 4}]
 
         for idx, path in enumerate(['.', '.a']):
-            actions = self._format_actions(1, 'delete', path)
-            documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
-                actions=actions))
+            kwargs = {
+                "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+                "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+                "_SITE_ACTIONS_": {
+                    "actions": [{"method": "delete", "path": path}]}
+            }
+            documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
             self._test_layering(expected[idx], documents)
 
     def test_layering_method_merge(self):
@@ -188,9 +180,13 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         ]
 
         for idx, path in enumerate(['.', '.a', '.b', '.c']):
-            actions = self._format_actions(1, 'merge', path)
-            documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
-                actions=actions))
+            kwargs = {
+                "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+                "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+                "_SITE_ACTIONS_": {
+                    "actions": [{"method": "merge", "path": path}]}
+            }
+            documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
             self._test_layering(expected[idx], documents)
 
     def test_layering_method_replace(self):
@@ -203,9 +199,13 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         ]
 
         for idx, path in enumerate(['.', '.a', '.b', '.c']):
-            actions = self._format_actions(1, 'replace', path)
-            documents = self._parse_data(self.FAKE_YAML_DATA_2_LAYERS.format(
-                actions=actions))
+            kwargs = {
+                "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+                "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+                "_SITE_ACTIONS_": {
+                    "actions": [{"method": "replace", "path": path}]}
+            }
+            documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
             self._test_layering(expected[idx], documents)
 
 
