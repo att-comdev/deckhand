@@ -65,7 +65,7 @@ class Document(object):
             return []
 
     def __getitem__(self, k):
-        return self.data[k]
+        return self.data.get(k, None)
 
     def __repr__(self):
         return repr(self.data)

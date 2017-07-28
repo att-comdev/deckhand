@@ -55,24 +55,42 @@ class DocumentLayering(object):
 
         :returns: the list of rendered data for each document.
         """
-        rendered_data = None
-
+        from pprint import pprint
         for doc in self.layered_docs:
-            if "parent" in doc.data:
-                parent = doc["parent"]
 
-                if not rendered_data:
-                    rendered_data = copy.deepcopy(doc.data)
+            rendered_data = copy.deepcopy(doc.data)
 
-                actions = doc.get_actions()
+            curr_data = copy.deepcopy(doc)
+            while curr_data.get_parent_selector():
+                # print ('inner', curr_data['metadata']['layeringDefinition']['layer'],
+                #     curr_data['metadata']['layeringDefinition']['actions'])
+
+                parent = curr_data['parent']
+                if parent is None:
+                    break
+                # else:
+                #     print(parent['data'], parent.get_layer(), parent.get_actions())
+                
+
+                #print(rendered_data['data'])
+                #import pdb; pdb.set_trace()
+
+                actions = curr_data.get_actions()
                 for action in actions:
                     self._apply_action(action, parent.data, rendered_data)
 
+                curr_data = parent
+
                 # Update the document's data if it is concrete.
-                if not doc.is_abstract():
-                    doc.set_data(rendered_data, key='data')
+                #import pdb; pdb.set_trace()
+            print("DONE", rendered_data['data'])
+            if not doc.is_abstract():
+                doc.set_data(rendered_data, key='data')
+
+            print 'outer'
 
         # TODO: return rendered data for all concrete documents.
+        print self.layered_docs
         return rendered_data['data']
 
     def _apply_action(self, action, parent_data, overall_data):

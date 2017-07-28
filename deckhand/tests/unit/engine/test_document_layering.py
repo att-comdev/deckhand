@@ -44,7 +44,7 @@ class TestDocumentLayering(testtools.TestCase):
             "metadata": {
                 "labels": {"key1": "value1"},
                    "layeringDefinition": {
-                        "abstract": true,
+                        "abstract": %(_ABSTRACT_)s,
                         "layer": "global"
                     },
                     "name": "global-1234",
@@ -81,7 +81,10 @@ class TestDocumentLayering(testtools.TestCase):
             %(_GLOBAL_DATA_)s,
             "metadata": {
                 "labels": {"key1": "value1"},
-                "layeringDefinition": {"abstract": true, "layer": "global"},
+                "layeringDefinition": {
+                    "abstract": true,
+                    "layer": "global"
+                },
                 "name": "global-1234",
                 "schema": "metadata/Document/v1"
             },
@@ -92,7 +95,7 @@ class TestDocumentLayering(testtools.TestCase):
             "metadata": {
                 "labels": {"key1": "value1"},
                 "layeringDefinition": {
-                    "abstract": true,
+                    "abstract": %(_ABSTRACT_)s,
                     %(_REGION_ACTIONS_)s,
                     "layer": "region",
                     "parentSelector": {"key1": "value1"}
@@ -133,7 +136,8 @@ class TestDocumentLayering(testtools.TestCase):
         rendered_data = document_layering.render()
         self.assertEqual(expected, rendered_data)
 
-    def _format_data(self, dict_as_string, mapping=None):
+    def _format_data(self, dict_as_string, mapping=None,
+                     one_layer_abstract=True):
         """Format ``dict_as_string`` by mapping dummy keys using ``mapping``.
 
         :param dict_as_string: JSON-serialized dictionary.
@@ -142,6 +146,8 @@ class TestDocumentLayering(testtools.TestCase):
         """
         if not mapping:
             mapping = {}
+
+        mapping['_ABSTRACT_'] = str(one_layer_abstract).lower()
 
         for key, val in mapping.items():
             new_val = json.dumps(val)[1:-1]
@@ -207,6 +213,26 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
             }
             documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
             self._test_layering(expected[idx], documents)
+
+
+class TestDocumentLayering3LayersAbstractConcrete(TestDocumentLayering):
+
+    def test_layering_concrete_default_scenario(self):
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}, "b": 5}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{"method": "replace", "path": ".a"}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs,
+                                      one_layer_abstract=False)
+        site_expected = {'a': {'x': 1, 'y': 2}, 'b': 4}
+        region_expected = {'a': {'x': 1, 'y': 2}}
+        self._test_layering(site_expected, documents)
 
 
 class TestDocumentLayering3Layers(TestDocumentLayering):
