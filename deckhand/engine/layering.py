@@ -54,15 +54,6 @@ class DocumentLayering(object):
         :returns: the list of rendered documents (does not include layering
             policy document).
         """
-        # NOTE: In case performance becomes an issue, it is probably possible
-        # to increase the performance of the layering process by changing
-        # the logic below to do a top-bottom approach versus a bottom-up
-        # approach. The bottom-up approach is slower because "intermediate"
-        # layers need to be visited multiple times because lower layers depend
-        # on higher layers, so higher layers can only be updated after lower
-        # layers. The top-bottom approach should be faster because dependency
-        # concerns won't come into play. The upper and lower layers can be
-        # updated immediately, such that each document is visited only once.
         for doc in self.layered_docs:
             # ``rendered_data`` agglomerates the set of changes across all
             # actions across all layers for a specific document.
