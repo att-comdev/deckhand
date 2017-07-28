@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import copy
-
 from deckhand.engine import document
 from deckhand.engine import utils
 from deckhand import errors
@@ -53,45 +51,51 @@ class DocumentLayering(object):
         Each concrete document will undergo layering according to the actions
         defined by its `layeringDefinition`.
 
-        :returns: the list of rendered data for each document.
+        :returns: the list of rendered documents (does not include layering
+            policy document).
         """
-        from pprint import pprint
+        # NOTE: In case performance becomes an issue, it is probably possible
+        # to increase the performance of the layering process by changing
+        # the logic below to do a top-bottom approach versus a bottom-up
+        # approach. The bottom-up approach is slower because "intermediate"
+        # layers need to be visited multiple times because lower layers depend
+        # on higher layers, so higher layers can only be updated after lower
+        # layers. The top-bottom approach should be faster because dependency
+        # concerns won't come into play. The upper and lower layers can be
+        # updated immediately, such that each document is visited only once.
         for doc in self.layered_docs:
+            # ``rendered_data`` agglomerates the set of changes across all
+            # actions across all layers for a specific document.
+            rendered_data = doc.data
 
-            rendered_data = copy.deepcopy(doc.data)
-
-            curr_data = copy.deepcopy(doc)
+            # ``curr_data`` is a pointer to the current document that iterates
+            # up the layers by following each document's parent until the
+            # uppermost document layer-wise is reached.
+            curr_data = doc
+            # Keep iterating as long as a parent exists.
             while curr_data.get_parent_selector():
-                # print ('inner', curr_data['metadata']['layeringDefinition']['layer'],
-                #     curr_data['metadata']['layeringDefinition']['actions'])
-
+                # Perform all initializations with ``curr_data`` here so
+                # if we continue below everything is ready for the next
+                # iteration.
+                actions = curr_data.get_actions()
                 parent = curr_data['parent']
                 if parent is None:
                     break
-                # else:
-                #     print(parent['data'], parent.get_layer(), parent.get_actions())
-                
+                curr_data = parent
 
-                #print(rendered_data['data'])
-                #import pdb; pdb.set_trace()
+                # Do not bother performing any actions if the document is
+                # abstract since that is a waste of time.
+                if doc.is_abstract():
+                    continue
 
-                actions = curr_data.get_actions()
+                # Apply each action to the current document.
                 for action in actions:
                     self._apply_action(action, parent.data, rendered_data)
 
-                curr_data = parent
-
-                # Update the document's data if it is concrete.
-                #import pdb; pdb.set_trace()
-            print("DONE", rendered_data['data'])
-            if not doc.is_abstract():
+                # Update the actual document data in the outer for loop.
                 doc.set_data(rendered_data, key='data')
-
-            print 'outer'
-
-        # TODO: return rendered data for all concrete documents.
-        print self.layered_docs
-        return rendered_data['data']
+                
+        return [d.data for d in self.layered_docs]
 
     def _apply_action(self, action, parent_data, overall_data):
         """Apply actions to each layer that is rendered.
