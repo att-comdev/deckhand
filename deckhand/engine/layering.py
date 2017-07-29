@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import collections
+import copy
+
 from deckhand.engine import document
 from deckhand.engine import utils
 from deckhand import errors
@@ -43,7 +46,7 @@ class DocumentLayering(object):
         """
         self.documents = [document.Document(d) for d in documents]
         self.layering_policy = self._find_layering_policy()
-        self.layered_docs = self._calc_document_parents()
+        self.layered_docs = self._calc_document_children()
 
     def render(self):
         """Perform layering on the set of `documents`.
@@ -54,41 +57,54 @@ class DocumentLayering(object):
         :returns: the list of rendered documents (does not include layering
             policy document).
         """
+        rendered_data = None
         for doc in self.layered_docs:
             # ``rendered_data`` agglomerates the set of changes across all
-            # actions across all layers for a specific document.
-            rendered_data = doc.data
+            # actions across all layers for a specific document. Use copy
+            # to prevent global data from being updated referentially.
+            if rendered_data is None:
+                rendered_data = copy.deepcopy(doc.data)
 
             # ``curr_data`` is a pointer to the current document that iterates
             # up the layers by following each document's parent until the
             # uppermost document layer-wise is reached.
             curr_data = doc
-            # Keep iterating as long as a parent exists.
-            while curr_data.get_parent_selector():
+
+            children_iterator = []
+            has_children = 'children' in curr_data.data
+            if has_children:
+                children_iterator = iter(curr_data.data['children'])
+
+            # Keep iterating as long as a child exists.
+            while children_iterator:
                 # Perform all initializations with ``curr_data`` here so
                 # if we continue below everything is ready for the next
                 # iteration.
-                actions = curr_data.get_actions()
-                parent = curr_data['parent']
-                if parent is None:
+                try:
+                    child = next(children_iterator)
+                except StopIteration:
                     break
-                curr_data = parent
 
                 # Do not bother performing any actions if the document is
                 # abstract since that is a waste of time.
-                if doc.is_abstract():
-                    continue
+                # if child.is_abstract():
+                #     continue
 
                 # Apply each action to the current document.
+                actions = child.get_actions()
                 for action in actions:
-                    self._apply_action(action, parent.data, rendered_data)
+                    self._apply_action(action, child.data, rendered_data)
 
                 # Update the actual document data in the outer for loop.
-                doc.set_data(rendered_data, key='data')
+                if not child.is_abstract():
+                    child.set_data(copy.deepcopy(rendered_data), key='data')
                 
+            if has_children:
+                del curr_data.data['children']
+
         return [d.data for d in self.layered_docs]
 
-    def _apply_action(self, action, parent_data, overall_data):
+    def _apply_action(self, action, child_data, overall_data):
         """Apply actions to each layer that is rendered.
 
         Supported actions are:
@@ -101,7 +117,7 @@ class DocumentLayering(object):
 
         Requirements:
 
-            * The path must be present in both ``parent_data`` and
+            * The path must be present in both ``child_data`` and
               ``overall_data`` (in both the parent and child documents).
         """
         # NOTE: In order to use references to update nested entries inside the
@@ -114,7 +130,7 @@ class DocumentLayering(object):
         method = action['method']
         if method not in self.SUPPORTED_METHODS:
             raise errors.UnsupportedActionMethod(
-                action=action, document=parent_data)
+                action=action, document=child_data)
 
         # Remove empty string paths and ensure that "data" is always present.
         path = action['path'].split('.')
@@ -126,29 +142,40 @@ class DocumentLayering(object):
             if attr == path[-1]:
                 break
             overall_data = overall_data.get(attr)
-            parent_data = parent_data.get(attr)
+            child_data = child_data.get(attr)
 
         if method == 'delete':
             # If the entire document is passed (i.e. the dict including
             # metadata, data, schema, etc.) then reset data to an empty dict.
             if last_key == 'data':
                 overall_data['data'] = {}
-            else:
+            elif last_key in overall_data:
                 del overall_data[last_key]
+            else:
+                # If the key does not exist in `overall_data`, this is a
+                # validation error.
+                raise errors.MissingDocumentKey(
+                    child=child_data, parent=overall_data, key=last_key)
         elif method == 'merge':
-            if last_key in overall_data and last_key in parent_data:
-                utils.deep_merge(overall_data[last_key], parent_data[last_key])
-            # If the data does not exist in the source document, copy from
-            # parent document.
-            elif last_key in parent_data:
-                overall_data.setdefault(last_key, parent_data[last_key])
+            if last_key in overall_data and last_key in child_data:
+                utils.deep_merge(overall_data[last_key], child_data[last_key])
+            elif last_key in child_data:
+                overall_data.setdefault(last_key, child_data[last_key])
+            else:
+                # If the key does not exist in the child document, this is a
+                # validation error.
+                raise errors.MissingDocumentKey(
+                    child=child_data, parent=overall_data, key=last_key)
         elif method == 'replace':
-            if last_key in overall_data and last_key in parent_data:
-                overall_data[last_key] = parent_data[last_key]
-            # If the data does not exist in the source document, copy from
-            # parent document.
-            elif last_key in parent_data:
-                overall_data.setdefault(last_key, parent_data[last_key])
+            if last_key in overall_data and last_key in child_data:
+                overall_data[last_key] = child_data[last_key]
+            elif last_key in child_data:
+                overall_data.setdefault(last_key, child_data[last_key])
+            else:
+                # If the key does not exist in the child document, this is a
+                # validation error.
+                raise errors.MissingDocumentKey(
+                    child=child_data, parent=overall_data, key=last_key)
 
     def _find_layering_policy(self):
         # FIXME(fmontei): There should be a DB call here to fetch the layering
@@ -158,11 +185,11 @@ class DocumentLayering(object):
                 return doc
         raise errors.LayeringPolicyNotFound(schema=self.LAYERING_POLICY_SCHEMA)
 
-    def _calc_document_parents(self):
-        """Determine each document's parent.
+    def _calc_document_children(self):
+        """Determine each document's children.
 
-        For each document, attempts to find the document's parent. Adds a new
-        key called "parent" to the document's dictionary.
+        For each document, attempts to find the document's children. Adds a new
+        key called "children" to the document's dictionary.
 
         .. note::
 
@@ -182,8 +209,7 @@ class DocumentLayering(object):
             found. Only applies documents with `layeringDefinition` property.
         """
         try:
-            layer_order = list(
-                reversed(self.layering_policy['data']['layerOrder']))
+            layer_order = list(self.layering_policy['data']['layerOrder'])
         except KeyError:
             raise errors.LayeringPolicyMalformed(
                 schema=self.LAYERING_POLICY_SCHEMA,
@@ -198,51 +224,56 @@ class DocumentLayering(object):
             filter(lambda x: 'layeringDefinition' in x['metadata'],
                 self.documents))
 
-        def _get_parents(doc):
-            parents = []
-
+        all_children = collections.Counter()
+        def _get_children(doc):
+            children = []
             doc_layer = doc.get_layer()
             try:
                 next_layer_idx = layer_order.index(doc_layer) + 1
-                parent_doc_layer = layer_order[next_layer_idx]
+                children_doc_layer = layer_order[next_layer_idx]
             except IndexError:
-                # The highest layer does not have a parent. Return empty list.
-                return parents
+                # The lowest layer has been reached, so no children. Return
+                # empty list.
+                return children
 
             for other_doc in layered_docs:
                 other_doc_layer = other_doc.get_layer()
-                if other_doc_layer == parent_doc_layer:
+                if other_doc_layer == children_doc_layer:
                     # A document can have many labels but should only have one
                     # explicit label for the parentSelector.
-                    parent_sel = doc.get_parent_selector()
+                    parent_sel = other_doc.get_parent_selector()
                     parent_sel_key = list(parent_sel.keys())[0]
                     parent_sel_val = list(parent_sel.values())[0]
-                    other_doc_labels = other_doc.get_labels()
+                    doc_labels = doc.get_labels()
 
-                    if (parent_sel_key in other_doc_labels and
-                        parent_sel_val == other_doc_labels[parent_sel_key]):
-                        parents.append(other_doc)
-            return parents
+                    if (parent_sel_key in doc_labels and
+                        parent_sel_val == doc_labels[parent_sel_key]):
+                        children.append(other_doc)
+
+            return children
 
         for layer in layer_order:
             docs_by_layer = list(filter(
                 (lambda x: x.get_layer() == layer), layered_docs))
 
             for doc in docs_by_layer:
-                parents = _get_parents(doc)
+                children = _get_children(doc)
 
-                # Each document should have exactly one parent.
-                if parents:
-                    if not len(parents) == 1:
-                        raise errors.IndeterminateDocumentParent(
-                            document=doc, parents=parents)
-                    doc.data.setdefault('parent', parents[0])
-                # Unless the document is the topmost document in the
-                # `layerOrder` of the LayeringPolicy, a parent document should
-                # exist. Otherwise raise an exception.
-                else:
-                    if doc.get_layer() != layer_order[-1]:
-                        raise errors.MissingDocumentParent(document=doc)
+                if children:
+                    all_children.update(children)
+                    doc.data.setdefault('children', children)
 
-        return list(sorted(layered_docs,
-                    key=lambda x: layer_order.index(x.get_layer())))
+        secondary_docs = list(
+            filter(lambda d: d.get_layer() != layer_order[0], layered_docs))
+        for doc in secondary_docs:
+            # Unless the document is the topmost document in the
+            # `layerOrder` of the LayeringPolicy, it should be a child document
+            # of another document.
+            if doc not in list(all_children.elements()):
+                raise errors.MissingDocumentParent(document=doc)
+            # If the document is a child document of more than 1 parent, then
+            # the document has too many parents, which is a validation error.
+            elif all_children[doc] != 1:
+                raise errors.IndeterminateDocumentParent(document=doc)
+
+        return layered_docs

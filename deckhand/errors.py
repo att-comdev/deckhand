@@ -103,14 +103,18 @@ class LayeringPolicyMalformed(DeckhandException):
 
 
 class IndeterminateDocumentParent(DeckhandException):
-    msg_fmt = ("Too many parent documents found for document %(document)s."
-               "Possible parents: %(parent)s.")
+    msg_fmt = ("Too many parent documents found for document %(document)s.")
     code = 400
 
 
 class MissingDocumentParent(DeckhandException):
     msg_fmt = ("Missing parent document for document %(document)s.")
     code = 400
+
+
+class MissingDocumentKey(DeckhandException):
+    msg_fmt = ("Missing document key %(key)s from either parent or child. "
+               "Parent: %(parent)s. Child: %(child)s.")
 
 
 class UnsupportedActionMethod(DeckhandException):
