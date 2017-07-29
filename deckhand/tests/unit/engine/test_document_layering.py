@@ -102,7 +102,6 @@ class TestDocumentLayering(testtools.TestCase):
                     "parentSelector": {"key1": "value1"}
                 },
                 "name": "region-1234",
-                "path": ".a",
                 "schema": "metadata/Document/v1"
             },
             "schema": "example/Kind/v1"
@@ -116,17 +115,16 @@ class TestDocumentLayering(testtools.TestCase):
                     "parentSelector": {"key1": "value1"}
                 },
                 "name": "site-1234",
-                "path": ".a",
                 "schema": "metadata/Document/v1"
             },
             "schema": "example/Kind/v1"
         }
     ]"""
 
-    FAKE_YAML_DATA_3_LAYERS_2_SITES = """[
+    FAKE_YAML_DATA_2_LAYERS_2_SITES = """[
         {
             "data": {
-                "layerOrder": ["global", "region", "site"]
+                "layerOrder": ["global", "site"]
             },
             "metadata": {
                 "name": "layering-policy",
@@ -148,45 +146,27 @@ class TestDocumentLayering(testtools.TestCase):
             "schema": "example/Kind/v1"
         },
         {
-            %(_REGION_DATA_)s,
+            %(_SITE_DATA_ONE_)s,
             "metadata": {
-                "labels": {"key1": "value1"},
                 "layeringDefinition": {
-                    "abstract": %(_REGION_ABSTRACT_)s,
-                    %(_REGION_ACTIONS_)s,
-                    "layer": "region",
+                    %(_SITE_ACTIONS_ONE_)s,
+                    "layer": "site",
                     "parentSelector": {"key1": "value1"}
                 },
-                "name": "region-1234",
-                "path": ".a",
+                "name": "site-1234",
                 "schema": "metadata/Document/v1"
             },
             "schema": "example/Kind/v1"
         },
         {
-            %(_SITE_DATA_)s,
+            %(_SITE_DATA_TWO_)s,
             "metadata": {
                 "layeringDefinition": {
-                    %(_SITE_ACTIONS_)s,
+                    %(_SITE_ACTIONS_TWO_)s,
                     "layer": "site",
                     "parentSelector": {"key1": "value1"}
                 },
-                "name": "site-1234",
-                "path": ".a",
-                "schema": "metadata/Document/v1"
-            },
-            "schema": "example/Kind/v1"
-        },
-        {
-            %(_SITE_DATA_)s,
-            "metadata": {
-                "layeringDefinition": {
-                    %(_SITE_ACTIONS_)s,
-                    "layer": "site",
-                    "parentSelector": {"key1": "value1"}
-                },
-                "name": "site-1234",
-                "path": ".a",
+                "name": "site-1235",
                 "schema": "metadata/Document/v1"
             },
             "schema": "example/Kind/v1"
@@ -217,9 +197,9 @@ class TestDocumentLayering(testtools.TestCase):
             self.assertRaises(exception_expected, document_layering.render)
             return
 
-        site_doc = {}
-        region_doc = {}
-        global_doc = {}
+        site_docs = []
+        region_docs = []
+        global_docs = []
 
         # The layering policy is not returned as it is immutable. So all docs
         # should have a metadata.layeringDefinitionn.layer section.
@@ -227,18 +207,30 @@ class TestDocumentLayering(testtools.TestCase):
         for doc in rendered_documents:
             layer = doc['metadata']['layeringDefinition']['layer']
             if layer == 'site':
-                site_doc = doc
+                site_docs.append(doc)
             if layer == 'region':
-                region_doc = doc
+                region_docs.append(doc)
             if layer == 'global':
-                global_doc = doc
+                global_docs.append(doc)
 
         if site_expected:
-            self.assertEqual(site_expected, site_doc.get('data'))
+            if not isinstance(site_expected, list):
+                site_expected = [site_expected]
+
+            for idx, expected in enumerate(site_expected):
+                self.assertEqual(expected, site_docs[idx].get('data'))
         if region_expected:
-            self.assertEqual(region_expected, region_doc.get('data'))
+            if not isinstance(region_expected, list):
+                region_expected = [region_expected]
+
+            for idx, expected in enumerate(region_expected):
+                self.assertEqual(expected, region_docs[idx].get('data'))
         if global_expected:
-            self.assertEqual(global_expected, global_doc.get('data'))
+            if not isinstance(global_expected, list):
+                global_expected = [global_expected]
+
+            for idx, expected in enumerate(global_expected):
+                self.assertEqual(expected, global_docs[idx].get('data'))
 
     def _format_data(self, dict_as_string, mapping=None,
                      region_abstract=True, global_abstract=True):
@@ -383,6 +375,26 @@ class TestDocumentLayering2LayersAbstractConcrete(TestDocumentLayering):
         global_expected = {'a': {'x': 1, 'y': 2}, 'c': 9}
         self._test_layering(documents, site_expected,
                             global_expected=global_expected)
+
+
+class TestDocumentLayering2Layers2Sites(TestDocumentLayering):
+
+    def test_layering_default_scenario(self):
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_DATA_ONE_": {"data": {"b": 4}},
+            "_SITE_ACTIONS_ONE_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_DATA_TWO_": {"data": {"b": 3}},
+            "_SITE_ACTIONS_TWO_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+        documents = self._format_data(
+            self.FAKE_YAML_DATA_2_LAYERS_2_SITES, kwargs)
+        site_expected = [{'a': {'x': 1, 'y': 2}, 'b': 4},
+                         {'a': {'x': 1, 'y': 2}, 'b': 3}]
+        self._test_layering(documents, site_expected)
 
 
 class TestDocumentLayering3Layers(TestDocumentLayering):

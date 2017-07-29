@@ -22,13 +22,28 @@ class TestDocumentLayeringNegative(
 
     def test_layering_without_layering_policy(self):
         kwargs = {
-            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
-            "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
-            "_SITE_ACTIONS_": {
-                "actions": [{"method": "delete", "path": "."}]}
+            "_GLOBAL_DATA_": {'data': {}}, "_SITE_DATA_": {'data': {}},
+            "_SITE_ACTIONS_": {'actions': {}}
         }
         documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
         documents.pop(0)  # First doc is layering policy.
 
         self.assertRaises(errors.LayeringPolicyNotFound,
                           layering.DocumentLayering, documents)
+
+    def test_layering_with_completely_missing_layer(self):
+        kwargs = {
+            "_GLOBAL_DATA_": {'data': {}}, "_SITE_DATA_": {'data': {}},
+            "_SITE_ACTIONS_": {'actions': {}}
+        }
+
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        broken_layer_orders = [
+            ['site', 'region', 'global'], ['broken', 'global'], ['broken'],
+            ['site', 'broken']]
+
+        for broken_layer_order in broken_layer_orders:
+            documents[0]['data']['layerOrder'] = broken_layer_order
+            # The site will not be able to find a correct parent.
+            self.assertRaises(errors.MissingDocumentParent,
+                              layering.DocumentLayering, documents)

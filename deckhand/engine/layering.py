@@ -263,13 +263,14 @@ class DocumentLayering(object):
                     all_children.update(children)
                     doc.data.setdefault('children', children)
 
+        all_children_elements = list(all_children.elements())
         secondary_docs = list(
             filter(lambda d: d.get_layer() != layer_order[0], layered_docs))
         for doc in secondary_docs:
             # Unless the document is the topmost document in the
             # `layerOrder` of the LayeringPolicy, it should be a child document
             # of another document.
-            if doc not in list(all_children.elements()):
+            if doc not in all_children_elements:
                 raise errors.MissingDocumentParent(document=doc)
             # If the document is a child document of more than 1 parent, then
             # the document has too many parents, which is a validation error.
