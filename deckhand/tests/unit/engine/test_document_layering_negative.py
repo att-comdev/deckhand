@@ -31,7 +31,7 @@ class TestDocumentLayeringNegative(
         self.assertRaises(errors.LayeringPolicyNotFound,
                           layering.DocumentLayering, documents)
 
-    def test_layering_with_completely_missing_layer(self):
+    def test_layering_with_broken_layer_order(self):
         kwargs = {
             "_GLOBAL_DATA_": {'data': {}}, "_SITE_DATA_": {'data': {}},
             "_SITE_ACTIONS_": {'actions': {}}

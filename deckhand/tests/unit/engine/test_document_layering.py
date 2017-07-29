@@ -357,11 +357,13 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
 
 
 class TestDocumentLayering2LayersAbstractConcrete(TestDocumentLayering):
-    """The the 2-layer payload setting multiple layers to concrete."""
+    """The the 2-layer payload with site/global layers concrete.
+
+    Both the site and global data should be updated as they're both
+    concrete docs. (2-layer has no region layer.)
+    """
 
     def test_layering_site_and_global_concrete(self):
-        # Both the site and global data should be updated as they're both
-        # concrete docs. (2-layer has no region layer.)
         kwargs = {
             "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
             "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
@@ -515,7 +517,7 @@ class TestDocumentLayering3Layers(TestDocumentLayering):
 
 
 class TestDocumentLayering3LayersAbstractConcrete(TestDocumentLayering):
-    """The the 3-layer payload setting multiple layers to concrete.
+    """The the 3-layer payload with site/region layers concrete.
 
     Both the site and region data should be updated as they're both concrete
     docs.
