@@ -21,23 +21,14 @@ class TestDocumentLayeringNegative(
         test_document_layering.TestDocumentLayering):
 
     def test_layering_without_layering_policy(self):
-        kwargs = {
-            "_GLOBAL_DATA_": {'data': {}}, "_SITE_DATA_": {'data': {}},
-            "_SITE_ACTIONS_": {'actions': {}}
-        }
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
         documents.pop(0)  # First doc is layering policy.
 
         self.assertRaises(errors.LayeringPolicyNotFound,
                           layering.DocumentLayering, documents)
 
     def test_layering_with_broken_layer_order(self):
-        kwargs = {
-            "_GLOBAL_DATA_": {'data': {}}, "_SITE_DATA_": {'data': {}},
-            "_SITE_ACTIONS_": {'actions': {}}
-        }
-
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
         broken_layer_orders = [
             ['site', 'region', 'global'], ['broken', 'global'], ['broken'],
             ['site', 'broken']]
@@ -47,3 +38,44 @@ class TestDocumentLayeringNegative(
             # The site will not be able to find a correct parent.
             self.assertRaises(errors.MissingDocumentParent,
                               layering.DocumentLayering, documents)
+
+    def test_layering_child_invalid_parent_selector(self):
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+
+        for parent_selector in ({'key2': 'value2'}, {'key1': 'value2'}):
+            documents[-1]['metadata']['layeringDefinition'][
+                'parentSelector'] = parent_selector
+
+            self.assertRaises(errors.MissingDocumentParent,
+                              layering.DocumentLayering, documents)
+
+    def test_layering_child_unreferenced_parent_label(self):
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+
+        for parent_label in ({'key2': 'value2'}, {'key1': 'value2'}):
+            # Second doc is the global doc, or parent.
+            documents[1]['metadata']['labels'] = [parent_label]
+
+            self.assertRaises(errors.MissingDocumentParent,
+                              layering.DocumentLayering, documents)
+
+    def test_layering_parent_duplicate_parent_selector_2_layer(self):
+        # Validate that documents belonging to the same layer cannot have the
+        # same unique parent identifier referenced by `parentSelector`.
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+        documents.append(documents[1])  # Copy global layer.
+
+        self.assertRaises(errors.IndeterminateDocumentParent,
+                          layering.DocumentLayering, documents)
+
+    def test_layering_parent_duplicate_parent_selector_3_layer(self):
+        # Validate that documents belonging to the same layer cannot have the
+        # same unique parent identifier referenced by `parentSelector`.
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, {})
+
+        # 1 is global layer, 2 is region layer.
+        for idx in (1, 2):
+            documents.append(documents[idx])
+            self.assertRaises(errors.IndeterminateDocumentParent,
+                              layering.DocumentLayering, documents)
+            documents.pop(-1)  # Remove the just-appended duplicate.

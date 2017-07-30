@@ -251,7 +251,20 @@ class TestDocumentLayering(testtools.TestCase):
             mapping[key] = new_val
 
         updated_data = copy.deepcopy(dict_as_string)
-        updated_data = updated_data % mapping
+
+        # NOTE: Auto-populate the missing keys if they aren't provided with
+        # '"actions": {}' or '"data": {}' depending on whether the missing key
+        # contains ACTIONS or DATA in it, respectively. Used for negative
+        # testing.
+        while True:
+            try:
+                updated_data = updated_data % mapping
+                break
+            except KeyError as e:
+                missing_key = e.args[0]
+                key_type = missing_key.split('_')[-2].lower()
+                mapping[missing_key] = '"%s": %s' % (key_type, {})
+
         updated_data = json.loads(updated_data)
 
         return updated_data
@@ -394,6 +407,56 @@ class TestDocumentLayering2Layers2Sites(TestDocumentLayering):
 
         documents = self._format_data(
             self.FAKE_YAML_DATA_2_LAYERS_2_SITES, kwargs)
+        site_expected = [{'a': {'x': 1, 'y': 2}, 'b': 4},
+                         {'a': {'x': 1, 'y': 2}, 'b': 3}]
+        self._test_layering(documents, site_expected)
+
+
+class TestDocumentLayering2Layers2Sites2Globals(TestDocumentLayering):
+
+    def test_layering_two_parents_only_one_with_child(self):
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_DATA_ONE_": {"data": {"b": 4}},
+            "_SITE_ACTIONS_ONE_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_DATA_TWO_": {"data": {"b": 3}},
+            "_SITE_ACTIONS_TWO_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+        documents = self._format_data(
+            self.FAKE_YAML_DATA_2_LAYERS_2_SITES, kwargs)
+
+        other_parent = copy.deepcopy(documents[1])
+        other_parent['metadata']['labels'] = {'key2': 'value2'}
+        documents.append(other_parent)
+
+        site_expected = [{'a': {'x': 1, 'y': 2}, 'b': 4},
+                         {'a': {'x': 1, 'y': 2}, 'b': 3}]
+        self._test_layering(documents, site_expected)
+
+    def test_layering_two_parents_one_child_each(self):
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_DATA_ONE_": {"data": {"b": 4}},
+            "_SITE_ACTIONS_ONE_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_DATA_TWO_": {"data": {"b": 3}},
+            "_SITE_ACTIONS_TWO_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+        documents = self._format_data(
+            self.FAKE_YAML_DATA_2_LAYERS_2_SITES, kwargs)
+
+        documents[-1]['metadata']['layeringDefinition']['parentSelector'] = {
+            'key2': 'value2'
+        }
+        other_parent = copy.deepcopy(documents[1])
+        other_parent['metadata']['labels'] = {'key2': 'value2'}
+        documents.append(other_parent)
+
         site_expected = [{'a': {'x': 1, 'y': 2}, 'b': 4},
                          {'a': {'x': 1, 'y': 2}, 'b': 3}]
         self._test_layering(documents, site_expected)
