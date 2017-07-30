@@ -65,30 +65,17 @@ class DocumentLayering(object):
             if rendered_data is None:
                 rendered_data = copy.deepcopy(doc.data)
 
-            # ``curr_data`` is a pointer to the current document that iterates
-            # up the layers by following each document's parent until the
-            # uppermost document layer-wise is reached.
-            curr_data = doc
-
             children_iterator = []
-            has_children = 'children' in curr_data.data
+            has_children = 'children' in doc.data
             if has_children:
-                children_iterator = iter(curr_data.data['children'])
+                children_iterator = iter(doc.data['children'])
 
             # Keep iterating as long as a child exists.
             while children_iterator:
-                # Perform all initializations with ``curr_data`` here so
-                # if we continue below everything is ready for the next
-                # iteration.
                 try:
                     child = next(children_iterator)
                 except StopIteration:
                     break
-
-                # Do not bother performing any actions if the document is
-                # abstract since that is a waste of time.
-                # if child.is_abstract():
-                #     continue
 
                 # Apply each action to the current document.
                 actions = child.get_actions()
@@ -100,7 +87,7 @@ class DocumentLayering(object):
                     child.set_data(copy.deepcopy(rendered_data), key='data')
                 
             if has_children:
-                del curr_data.data['children']
+                del doc.data['children']
 
         return [d.data for d in self.layered_docs]
 
