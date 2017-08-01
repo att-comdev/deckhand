@@ -96,28 +96,3 @@ class TestDocumentValidation(testtools.TestCase):
             with six.assertRaisesRegex(self, errors.InvalidFormat,
                                        expected_err % missing_key):
                 document_validation.DocumentValidation(invalid_entry)
-
-    def test_initialization_bad_substitutions(self):
-        expected_err = ('The attribute "%s" included in the "dest" field "%s" '
-                        'is missing from the YAML data')
-        invalid_data = []
-
-        data = copy.deepcopy(self.data)
-        data['metadata']['substitutions'][0]['dest'] = {'path': 'foo'}
-        invalid_data.append(self._format_data(data))
-
-        data = copy.deepcopy(self.data)
-        data['metadata']['substitutions'][0]['dest'] = {
-            'path': 'tls_endpoint.bar'}
-        invalid_data.append(self._format_data(data))
-
-        def _test(invalid_entry, field, dest):
-            _expected_err = expected_err % (field, dest)
-            with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       _expected_err):
-                document_validation.DocumentValidation(invalid_entry)
-
-        # Verify that invalid body dest reference is invalid.
-        _test(invalid_data[0], "foo", {'path': 'foo'})
-        # Verify that nested invalid body dest reference is invalid.
-        _test(invalid_data[1], "bar", {'path': 'tls_endpoint.bar'})
