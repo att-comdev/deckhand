@@ -30,12 +30,6 @@ class Document(object):
     def all_data(self):
         return self._inner
 
-    def set_data(self, value, key=None):
-        if not key:
-            self._inner = value
-        else:
-            self._inner[key] = value[key]
-
     def is_abstract(self):
         try:
             abstract = self._inner['metadata']['layeringDefinition']['abstract']
@@ -90,6 +84,9 @@ class Document(object):
 
     def __getitem__(self, k, default=None):
         return self._inner.get(k, default)
+
+    def __setitem__(self, k, val):
+        self._inner[k] = val
 
     def __delitem__(self, k):
         if self.__contains__(k):

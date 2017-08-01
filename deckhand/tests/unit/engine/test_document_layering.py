@@ -579,7 +579,8 @@ class TestDocumentLayering3Layers(TestDocumentLayering):
 
         documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         site_expected = {'a': {'z': 3}, 'b': 4}
-        self._test_layering(documents, site_expected)
+        region_expected = {"a": {"z": 3}}  # Region is abstract.
+        self._test_layering(documents, site_expected, region_expected)
 
     def test_layering_delete_everything(self):
         kwargs = {
@@ -691,23 +692,51 @@ class TestDocumentLayering3LayersAbstractConcrete(TestDocumentLayering):
         """Scenario:
         
         Initially: {"a": {"x": 1, "y": 2}}
-        Replace ".a": {"a": {"z": 3}} (Region is updated.)
-        Merge ".": {"a": {"z": 3}, "b": 4} (Site is updated.)
+        Merge ".": {"a": {"x": 1, "y": 2, "z": 3}, "b": 5, "c": 11}
+            (Region updated.)
+        Delete ".c": {"a": {"x": 1, "y": 2, "z": 3}, "b": 5} (Region updated.)
+        Replace ".b": {"a": {"x": 1, "y": 2, "z": 3}, "b": 4} (Site updated.)
         """
         kwargs = {
             "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
-            "_REGION_DATA_": {"data": {"a": {"z": 3}, "b": 5}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}, "b": 5, "c": 11}},
             "_SITE_DATA_": {"data": {"b": 4}},
             "_REGION_ACTIONS_": {
-                "actions": [{"method": "replace", "path": ".a"}]},
+                "actions": [{"method": "merge", "path": "."},
+                            {"method": "delete", "path": ".c"}]},
             "_SITE_ACTIONS_": {
-                "actions": [{"method": "merge", "path": "."}]}
+                "actions": [{"method": "replace", "path": ".b"}]}
         }
 
         documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs,
                                       region_abstract=False)
-        site_expected = {'a': {'z': 3}, 'b': 4}
-        region_expected = {'a': {'z': 3}}
+        site_expected = {"a": {"x": 1, "y": 2, "z": 3}, "b": 4}
+        region_expected = {"a": {"x": 1, "y": 2, "z": 3}, "b": 5}
+        self._test_layering(documents, site_expected, region_expected)
+
+    def test_layering_site_concrete_and_region_abstract(self):
+        """Scenario:
+
+        Initially: {"a": {"x": 1, "y": 2}}
+        Merge ".": {"a": {"x": 1, "y": 2, "z": 3}, "b": 5, "c": 11}
+        Delete ".c": {"a": {"x": 1, "y": 2, "z": 3}, "b": 5}
+        Replace ".b": {"a": {"x": 1, "y": 2, "z": 3}, "b": 4} (Site updated.)
+        """
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_REGION_DATA_": {"data": {"a": {"z": 3}, "b": 5, "c": 11}},
+            "_SITE_DATA_": {"data": {"b": 4}},
+            "_REGION_ACTIONS_": {
+                "actions": [{"method": "merge", "path": "."},
+                            {"method": "delete", "path": ".c"}]},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "replace", "path": ".b"}]}
+        }
+
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs,
+                                      region_abstract=True)
+        site_expected = {"a": {"x": 1, "y": 2, "z": 3}, "b": 4}
+        region_expected = {"a": {"z": 3}, "b": 5, "c": 11}
         self._test_layering(documents, site_expected, region_expected)
 
     def test_layering_site_region_and_global_concrete(self):
@@ -889,7 +918,7 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
 
 class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
 
-    def test_layering_two_parents_only_one_with_child(self):
+    def test_layering_two_abstract_regions_one_child_each(self):
         """Scenario:
 
         Initially: r1: {"c": 3, "d": 4}, r2: {"e": 5, "f": 6}
@@ -915,7 +944,43 @@ class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
         }
 
         documents = self._format_data(
-            self.FAKE_YAML_DATA_3_LAYERS_2_REGIONS_2_SITES, kwargs)
+            self.FAKE_YAML_DATA_3_LAYERS_2_REGIONS_2_SITES, kwargs,
+            region_abstract=True)
+        site_expected = [{"a": 1, "b": 2, "c": 3, "d": 4, "g": 7, "h": 8},
+                         {"a": 1, "b": 2, "e": 5, "f": 6, "i": 9, "j": 10}]
+        region_expected = [{"c": 3, "d": 4}, {"e": 5, "f": 6}]
+        global_expected = {"a": 1, "b": 2}
+        self._test_layering(documents, site_expected, region_expected,
+                            global_expected)
+
+    def test_layering_two_concrete_regions_one_child_each(self):
+        """Scenario:
+
+        Initially: r1: {"c": 3, "d": 4}, r2: {"e": 5, "f": 6}
+        Merge "." (g -> r1): {"a": 1, "b": 2, "c": 3, "d": 4}
+        Merge "." (r1 -> s1): {"a": 1, "b": 2, "c": 3, "d": 4, "g": 7, "h": 8}
+        Merge "." (g -> r2): {"a": 1, "b": 2, "e": 5, "f": 6}
+        Merge "." (r2 -> s2): {"a": 1, "b": 2, "e": 5, "f": 6, "i": 9, "j": 10}
+        """
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": 1, "b": 2}},
+            "_REGION_DATA_ONE_": {"data": {"c": 3, "d": 4}},
+            "_REGION_ACTIONS_ONE_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_REGION_DATA_TWO_": {"data": {"e": 5, "f": 6}},
+            "_REGION_ACTIONS_TWO_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_DATA_ONE_": {"data": {"g": 7, "h": 8}},
+            "_SITE_ACTIONS_ONE_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_DATA_TWO_": {"data": {"i": 9, "j": 10}},
+            "_SITE_ACTIONS_TWO_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+        documents = self._format_data(
+            self.FAKE_YAML_DATA_3_LAYERS_2_REGIONS_2_SITES, kwargs,
+            region_abstract=False)
         site_expected = [{"a": 1, "b": 2, "c": 3, "d": 4, "g": 7, "h": 8},
                          {"a": 1, "b": 2, "e": 5, "f": 6, "i": 9, "j": 10}]
         region_expected = [{"a": 1, "b": 2, "c": 3, "d": 4},

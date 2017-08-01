@@ -70,7 +70,7 @@ class DocumentLayering(object):
 
         for doc in global_docs:
             layer_idx = self.layer_order.index(doc.get_layer())
-            rendered_data_by_layer[layer_idx] = copy.deepcopy(doc.all_data)
+            rendered_data_by_layer[layer_idx] = doc.all_data
 
             # Keep iterating as long as a child exists.
             for child in doc.get_children(nested=True):
@@ -78,29 +78,28 @@ class DocumentLayering(object):
                 # Retrieve the most up-to-date rendered_data (by
                 # referencing the child's parent's data).
                 child_layer_idx = self.layer_order.index(child.get_layer())
-                rendered_data = copy.deepcopy(
-                    rendered_data_by_layer[child_layer_idx - 1])
+                rendered_data = rendered_data_by_layer[child_layer_idx - 1]
 
                 # Apply each action to the current document.
                 actions = child.get_actions()
                 for action in actions:
-                    self._apply_action(action, child.all_data, rendered_data)
+                    rendered_data = self._apply_action(
+                        action, child.all_data, rendered_data)
 
-                # Update the actual document data in the outer for loop.
+                # Update the actual document data if concrete.
                 if not child.is_abstract():
-                    child.set_data(copy.deepcopy(rendered_data), key='data')
+                    self.layered_docs[self.layered_docs.index(child)][
+                        'data'] = rendered_data['data']
 
                 # Update ``rendered_data_by_layer`` for this layer so that
                 # children in deeper layers can reference the most up-to-date
                 # changes.
-                rendered_data_by_layer[child_layer_idx] = copy.deepcopy(
-                    rendered_data)
-                result.append(rendered_data['data'])
+                rendered_data_by_layer[child_layer_idx] = rendered_data
 
             if 'children' in doc:
                 del doc['children']
 
-        return self.layered_docs
+        return [d.all_data for d in self.layered_docs]
 
     def _apply_action(self, action, child_data, overall_data):
         """Apply actions to each layer that is rendered.
@@ -118,17 +117,14 @@ class DocumentLayering(object):
             * The path must be present in both ``child_data`` and
               ``overall_data`` (in both the parent and child documents).
         """
-        # NOTE: In order to use references to update nested entries inside the
-        # ``overall_data`` dict, mutable data must be manipulated. That is,
-        # only references to dictionaries and lists and other mutable data
-        # types are allowed. In the event that the path is ".", the entire
-        # document is passed so that doc["data"] can be manipulated via
-        # references.
-
         method = action['method']
         if method not in self.SUPPORTED_METHODS:
             raise errors.UnsupportedActionMethod(
                 action=action, document=child_data)
+
+        overall_data = copy.deepcopy(overall_data)
+        child_data = copy.deepcopy(child_data)
+        rendered_data = overall_data
 
         # Remove empty string paths and ensure that "data" is always present.
         path = action['path'].split('.')
@@ -139,48 +135,50 @@ class DocumentLayering(object):
         for attr in path:
             if attr == path[-1]:
                 break
-            overall_data = overall_data.get(attr)
+            rendered_data = rendered_data.get(attr)
             child_data = child_data.get(attr)
 
         if method == 'delete':
             # If the entire document is passed (i.e. the dict including
             # metadata, data, schema, etc.) then reset data to an empty dict.
             if last_key == 'data':
-                overall_data['data'] = {}
-            elif last_key in overall_data:
-                del overall_data[last_key]
+                rendered_data['data'] = {}
+            elif last_key in rendered_data:
+                del rendered_data[last_key]
             else:
-                # If the key does not exist in `overall_data`, this is a
+                # If the key does not exist in `rendered_data`, this is a
                 # validation error.
                 raise errors.MissingDocumentKey(
-                    child=child_data, parent=overall_data, key=last_key)
+                    child=child_data, parent=rendered_data, key=last_key)
         elif method == 'merge':
-            if last_key in overall_data and last_key in child_data:
+            if last_key in rendered_data and last_key in child_data:
                 # If both entries are dictionaries, do a deep merge. Otherwise
                 # do a simple merge.
-                if (isinstance(overall_data[last_key], dict)
+                if (isinstance(rendered_data[last_key], dict)
                     and isinstance(child_data[last_key], dict)):
                     utils.deep_merge(
-                        overall_data[last_key], child_data[last_key])
+                        rendered_data[last_key], child_data[last_key])
                 else:
-                    overall_data.setdefault(last_key, child_data[last_key])
+                    rendered_data.setdefault(last_key, child_data[last_key])
             elif last_key in child_data:
-                overall_data.setdefault(last_key, child_data[last_key])
+                rendered_data.setdefault(last_key, child_data[last_key])
             else:
                 # If the key does not exist in the child document, this is a
                 # validation error.
                 raise errors.MissingDocumentKey(
-                    child=child_data, parent=overall_data, key=last_key)
+                    child=child_data, parent=rendered_data, key=last_key)
         elif method == 'replace':
-            if last_key in overall_data and last_key in child_data:
-                overall_data[last_key] = child_data[last_key]
+            if last_key in rendered_data and last_key in child_data:
+                rendered_data[last_key] = child_data[last_key]
             elif last_key in child_data:
-                overall_data.setdefault(last_key, child_data[last_key])
+                rendered_data.setdefault(last_key, child_data[last_key])
             else:
                 # If the key does not exist in the child document, this is a
                 # validation error.
                 raise errors.MissingDocumentKey(
-                    child=child_data, parent=overall_data, key=last_key)
+                    child=child_data, parent=rendered_data, key=last_key)
+
+        return overall_data
 
     def _find_layering_policy(self):
         """Retrieve the current layering policy.
