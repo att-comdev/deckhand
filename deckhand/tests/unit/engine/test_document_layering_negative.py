@@ -114,3 +114,16 @@ class TestDocumentLayeringNegative(
             self.assertRaises(errors.IndeterminateDocumentParent,
                               layering.DocumentLayering, documents)
             documents.pop(-1)  # Remove the just-appended duplicate.
+
+    def test_layering_document_references_itself(self):
+        # Test that a parentSelector cannot reference the document itself
+        # without an error being raised.
+        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, {})
+        self_ref = {"self": "self"}
+        documents[2]['metadata']['labels'] = self_ref
+        documents[2]['metadata']['layeringDefinition'][
+            'parentSelector'] = self_ref
+
+        expected_err = "'name': u'region-1234'"  # Should be the region.
+        self.assertRaisesRegex(errors.MissingDocumentParent, expected_err,
+                               layering.DocumentLayering, documents)
