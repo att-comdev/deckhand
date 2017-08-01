@@ -81,7 +81,7 @@ class TestDocumentLayering(testtools.TestCase):
         {
             %(_GLOBAL_DATA_)s,
             "metadata": {
-                "labels": {"key1": "value1"},
+                "labels": {"global": "global1"},
                 "layeringDefinition": {
                     "abstract": %(_GLOBAL_ABSTRACT_)s,
                     "layer": "global"
@@ -94,12 +94,12 @@ class TestDocumentLayering(testtools.TestCase):
         {
             %(_REGION_DATA_)s,
             "metadata": {
-                "labels": {"key1": "value1"},
+                "labels": {"region": "region1"},
                 "layeringDefinition": {
                     "abstract": %(_REGION_ABSTRACT_)s,
                     %(_REGION_ACTIONS_)s,
                     "layer": "region",
-                    "parentSelector": {"key1": "value1"}
+                    "parentSelector": {"global": "global1"}
                 },
                 "name": "region-1234",
                 "schema": "metadata/Document/v1"
@@ -112,7 +112,7 @@ class TestDocumentLayering(testtools.TestCase):
                 "layeringDefinition": {
                     %(_SITE_ACTIONS_)s,
                     "layer": "site",
-                    "parentSelector": {"key1": "value1"}
+                    "parentSelector": {"region": "region1"}
                 },
                 "name": "site-1234",
                 "schema": "metadata/Document/v1"
@@ -167,6 +167,88 @@ class TestDocumentLayering(testtools.TestCase):
                     "parentSelector": {"key1": "value1"}
                 },
                 "name": "site-1235",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        }
+    ]"""
+
+    FAKE_YAML_DATA_3_LAYERS_2_REGIONS_2_SITES = """[
+        {
+            "data": {
+                "layerOrder": ["global", "region", "site"]
+            },
+            "metadata": {
+                "name": "layering-policy",
+                "schema": "metadata/Control/v1"
+            },
+            "schema": "deckhand/LayeringPolicy/v1"
+        },
+        {
+            %(_GLOBAL_DATA_)s,
+            "metadata": {
+                "labels": {"global": "global1"},
+                "layeringDefinition": {
+                    "abstract": %(_GLOBAL_ABSTRACT_)s,
+                    "layer": "global"
+                },
+                "name": "global-1",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        },
+        {
+            %(_REGION_DATA_ONE_)s,
+            "metadata": {
+                "labels": {"region": "region1"},
+                "layeringDefinition": {
+                    "abstract": %(_REGION_ABSTRACT_)s,
+                    %(_REGION_ACTIONS_ONE_)s,
+                    "layer": "region",
+                    "parentSelector": {"global": "global1"}
+                },
+                "name": "region-1",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        },
+        {
+            %(_REGION_DATA_TWO_)s,
+            "metadata": {
+                "labels": {"region": "region2"},
+                "layeringDefinition": {
+                    "abstract": %(_REGION_ABSTRACT_)s,
+                    %(_REGION_ACTIONS_TWO_)s,
+                    "layer": "region",
+                    "parentSelector": {"global": "global1"}
+                },
+                "name": "region-2",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        },
+        {
+            %(_SITE_DATA_ONE_)s,
+            "metadata": {
+                "layeringDefinition": {
+                    %(_SITE_ACTIONS_ONE_)s,
+                    "layer": "site",
+                    "parentSelector": {"region": "region1"}
+                },
+                "name": "site-1",
+                "schema": "metadata/Document/v1"
+            },
+            "schema": "example/Kind/v1"
+        },
+        {
+            %(_SITE_DATA_TWO_)s,
+            "metadata": {
+                "layeringDefinition": {
+                    %(_SITE_ACTIONS_TWO_)s,
+                    "layer": "site",
+                    "parentSelector": {"region": "region2"}
+                },
+                "name": "site-2",
                 "schema": "metadata/Document/v1"
             },
             "schema": "example/Kind/v1"
@@ -803,3 +885,41 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
         documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, kwargs)
         site_expected = {'b': 4}
         self._test_layering(documents, site_expected)
+
+
+class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
+
+    def test_layering_two_parents_only_one_with_child(self):
+        """Scenario:
+
+        Initially: r1: {"c": 3, "d": 4}, r2: {"e": 5, "f": 6}
+        Merge "." (g -> r1): {"a": 1, "b": 2, "c": 3, "d": 4}
+        Merge "." (r1 -> s1): {"a": 1, "b": 2, "c": 3, "d": 4, "g": 7, "h": 8}
+        Merge "." (g -> r2): {"a": 1, "b": 2, "e": 5, "f": 6}
+        Merge "." (r2 -> s2): {"a": 1, "b": 2, "e": 5, "f": 6, "i": 9, "j": 10}
+        """
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": 1, "b": 2}},
+            "_REGION_DATA_ONE_": {"data": {"c": 3, "d": 4}},
+            "_REGION_ACTIONS_ONE_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_REGION_DATA_TWO_": {"data": {"e": 5, "f": 6}},
+            "_REGION_ACTIONS_TWO_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_DATA_ONE_": {"data": {"g": 7, "h": 8}},
+            "_SITE_ACTIONS_ONE_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_DATA_TWO_": {"data": {"i": 9, "j": 10}},
+            "_SITE_ACTIONS_TWO_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+        documents = self._format_data(
+            self.FAKE_YAML_DATA_3_LAYERS_2_REGIONS_2_SITES, kwargs)
+        site_expected = [{"a": 1, "b": 2, "c": 3, "d": 4, "g": 7, "h": 8},
+                         {"a": 1, "b": 2, "e": 5, "f": 6, "i": 9, "j": 10}]
+        region_expected = [{"a": 1, "b": 2, "c": 3, "d": 4},
+                           {"a": 1, "b": 2, "e": 5, "f": 6}]
+        global_expected = {"a": 1, "b": 2}
+        self._test_layering(documents, site_expected, region_expected,
+                            global_expected)

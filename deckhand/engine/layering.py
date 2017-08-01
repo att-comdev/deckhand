@@ -74,10 +74,12 @@ class DocumentLayering(object):
 
             # Keep iterating as long as a child exists.
             for child in doc.get_children(nested=True):
+
                 # Retrieve the most up-to-date rendered_data (by
                 # referencing the child's parent's data).
                 child_layer_idx = self.layer_order.index(child.get_layer())
-                rendered_data = rendered_data_by_layer[child_layer_idx - 1]
+                rendered_data = copy.deepcopy(
+                    rendered_data_by_layer[child_layer_idx - 1])
 
                 # Apply each action to the current document.
                 actions = child.get_actions()
@@ -93,11 +95,12 @@ class DocumentLayering(object):
                 # changes.
                 rendered_data_by_layer[child_layer_idx] = copy.deepcopy(
                     rendered_data)
-                
+                result.append(rendered_data['data'])
+
             if 'children' in doc:
                 del doc['children']
 
-        return [d.all_data for d in self.layered_docs]
+        return self.layered_docs
 
     def _apply_action(self, action, child_data, overall_data):
         """Apply actions to each layer that is rendered.

@@ -85,7 +85,7 @@ class Document(object):
                 self._get_nested_children(child, nested_children)
         return nested_children
 
-    def get(self, k, default):
+    def get(self, k, default=None):
         return self.__getitem__(k, default=default)
 
     def __getitem__(self, k, default=None):
