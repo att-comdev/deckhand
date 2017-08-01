@@ -57,13 +57,16 @@ class DocumentLayering(object):
         :returns: the list of rendered documents (does not include layering
             policy document).
         """
-        rendered_data = None
-        for doc in self.layered_docs:
-            # ``rendered_data`` agglomerates the set of changes across all
-            # actions across all layers for a specific document. Use copy
-            # to prevent global data from being updated referentially.
-            if rendered_data is None:
-                rendered_data = copy.deepcopy(doc.data)
+        # ``rendered_data_by_layer`` agglomerates the set of changes across all
+        # actions across each layer for a specific document. Use copy
+        # to prevent global data from being updated referentially.
+        rendered_data_by_layer = {}
+
+        thing = [doc for doc in self.layered_docs if doc.get_layer() == 'global']
+        for doc in thing:
+            layer_idx = self.layer_order.index(doc.get_layer())
+            rendered_data_by_layer[layer_idx] = copy.deepcopy(doc.data)
+            import pdb; pdb.set_trace()
 
             children_iterator = []
             has_children = 'children' in doc.data
@@ -74,6 +77,12 @@ class DocumentLayering(object):
             while children_iterator:
                 try:
                     child = next(children_iterator)
+                    print child.get_layer(), 'child'
+
+                    # Retrieve the most up-to-date rendered_data (by
+                    # referencing the child's parent's data).
+                    child_layer_idx = self.layer_order.index(child.get_layer())
+                    rendered_data = rendered_data_by_layer[child_layer_idx - 1]
                 except StopIteration:
                     break
 
@@ -85,6 +94,12 @@ class DocumentLayering(object):
                 # Update the actual document data in the outer for loop.
                 if not child.is_abstract():
                     child.set_data(copy.deepcopy(rendered_data), key='data')
+
+                # Update ``rendered_data_by_layer`` for this layer so that
+                # children in deeper layers can reference the most up-to-date
+                # changes.
+                rendered_data_by_layer[child_layer_idx] = copy.deepcopy(
+                    rendered_data)
                 
             if has_children:
                 del doc.data['children']
@@ -145,7 +160,14 @@ class DocumentLayering(object):
                     child=child_data, parent=overall_data, key=last_key)
         elif method == 'merge':
             if last_key in overall_data and last_key in child_data:
-                utils.deep_merge(overall_data[last_key], child_data[last_key])
+                # If both entries are dictionaries, do a deep merge. Otherwise
+                # do a simple merge.
+                if (isinstance(overall_data[last_key], dict)
+                    and isinstance(child_data[last_key], dict)):
+                    utils.deep_merge(
+                        overall_data[last_key], child_data[last_key])
+                else:
+                    overall_data.setdefault(last_key, child_data[last_key])
             elif last_key in child_data:
                 overall_data.setdefault(last_key, child_data[last_key])
             else:
@@ -196,13 +218,13 @@ class DocumentLayering(object):
             found. Only applies documents with `layeringDefinition` property.
         """
         try:
-            layer_order = list(self.layering_policy['data']['layerOrder'])
+            self.layer_order = list(self.layering_policy['data']['layerOrder'])
         except KeyError:
             raise errors.LayeringPolicyMalformed(
                 schema=self.LAYERING_POLICY_SCHEMA,
                 document=self.layering_policy)
 
-        if not isinstance(layer_order, list):
+        if not isinstance(self.layer_order, list):
             raise errors.LayeringPolicyMalformed(
                 schema=self.LAYERING_POLICY_SCHEMA,
                 document=self.layering_policy)
@@ -216,8 +238,8 @@ class DocumentLayering(object):
             children = []
             doc_layer = doc.get_layer()
             try:
-                next_layer_idx = layer_order.index(doc_layer) + 1
-                children_doc_layer = layer_order[next_layer_idx]
+                next_layer_idx = self.layer_order.index(doc_layer) + 1
+                children_doc_layer = self.layer_order[next_layer_idx]
             except IndexError:
                 # The lowest layer has been reached, so no children. Return
                 # empty list.
@@ -239,7 +261,7 @@ class DocumentLayering(object):
 
             return children
 
-        for layer in layer_order:
+        for layer in self.layer_order:
             docs_by_layer = list(filter(
                 (lambda x: x.get_layer() == layer), layered_docs))
 
@@ -252,7 +274,7 @@ class DocumentLayering(object):
 
         all_children_elements = list(all_children.elements())
         secondary_docs = list(
-            filter(lambda d: d.get_layer() != layer_order[0], layered_docs))
+            filter(lambda d: d.get_layer() != self.layer_order[0], layered_docs))
         for doc in secondary_docs:
             # Unless the document is the topmost document in the
             # `layerOrder` of the LayeringPolicy, it should be a child document

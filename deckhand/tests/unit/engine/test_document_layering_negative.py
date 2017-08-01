@@ -20,6 +20,41 @@ from deckhand.tests.unit.engine import test_document_layering
 class TestDocumentLayeringNegative(
         test_document_layering.TestDocumentLayering):
 
+    def test_layering_method_merge_key_not_in_child(self):
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "merge", "path": ".c"}]}
+        }
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        self._test_layering(
+            documents, exception_expected=errors.MissingDocumentKey)
+
+    def test_layering_method_delete_key_not_in_child(self):
+        # The key will not be in the site after the global data is copied into
+        # the site data implicitly.
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "delete", "path": ".b"}]}
+        }
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        self._test_layering(
+            documents, exception_expected=errors.MissingDocumentKey)
+
+    def test_layering_method_replace_key_not_in_child(self):
+        kwargs = {
+            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_": {
+                "actions": [{"method": "replace", "path": ".c"}]}
+        }
+        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        self._test_layering(
+            documents, exception_expected=errors.MissingDocumentKey)
+
     def test_layering_without_layering_policy(self):
         documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
         documents.pop(0)  # First doc is layering policy.
@@ -39,7 +74,7 @@ class TestDocumentLayeringNegative(
             self.assertRaises(errors.MissingDocumentParent,
                               layering.DocumentLayering, documents)
 
-    def test_layering_child_invalid_parent_selector(self):
+    def test_layering_child_with_invalid_parent_selector(self):
         documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
 
         for parent_selector in ({'key2': 'value2'}, {'key1': 'value2'}):
@@ -49,7 +84,7 @@ class TestDocumentLayeringNegative(
             self.assertRaises(errors.MissingDocumentParent,
                               layering.DocumentLayering, documents)
 
-    def test_layering_child_unreferenced_parent_label(self):
+    def test_layering_unreferenced_parent_label(self):
         documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
 
         for parent_label in ({'key2': 'value2'}, {'key1': 'value2'}):
@@ -59,7 +94,7 @@ class TestDocumentLayeringNegative(
             self.assertRaises(errors.MissingDocumentParent,
                               layering.DocumentLayering, documents)
 
-    def test_layering_parent_duplicate_parent_selector_2_layer(self):
+    def test_layering_duplicate_parent_selector_2_layer(self):
         # Validate that documents belonging to the same layer cannot have the
         # same unique parent identifier referenced by `parentSelector`.
         documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
@@ -68,7 +103,7 @@ class TestDocumentLayeringNegative(
         self.assertRaises(errors.IndeterminateDocumentParent,
                           layering.DocumentLayering, documents)
 
-    def test_layering_parent_duplicate_parent_selector_3_layer(self):
+    def test_layering_duplicate_parent_selector_3_layer(self):
         # Validate that documents belonging to the same layer cannot have the
         # same unique parent identifier referenced by `parentSelector`.
         documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, {})
