@@ -32,7 +32,8 @@ class Document(object):
 
     def is_abstract(self):
         try:
-            abstract = self._inner['metadata']['layeringDefinition']['abstract']
+            abstract = self._inner['metadata']['layeringDefinition'][
+                'abstract']
             return six.text_type(abstract) == 'True'
         except KeyError:
             return False
