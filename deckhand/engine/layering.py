@@ -45,7 +45,7 @@ class DocumentLayering(object):
         :param documents: List of YAML documents represented as dictionaries.
         """
         self.documents = [document.Document(d) for d in documents]
-        self.layering_policy = self._find_layering_policy()
+        self._find_layering_policy()
         self.layered_docs = self._calc_document_children()
 
     def render(self):
@@ -62,34 +62,27 @@ class DocumentLayering(object):
         # to prevent global data from being updated referentially.
         rendered_data_by_layer = {}
 
-        thing = [doc for doc in self.layered_docs if doc.get_layer() == 'global']
-        for doc in thing:
-            layer_idx = self.layer_order.index(doc.get_layer())
-            rendered_data_by_layer[layer_idx] = copy.deepcopy(doc.data)
-            import pdb; pdb.set_trace()
+        # NOTE(fmontei): ``global_docs`` represents the topmost documents in
+        # the system. It should probably be impossible for more than 1
+        # top-level doc to exist, but handle multiple for now.
+        global_docs = [doc for doc in self.layered_docs
+                       if doc.get_layer() == self.layer_order[0]]
 
-            children_iterator = []
-            has_children = 'children' in doc.data
-            if has_children:
-                children_iterator = iter(doc.data['children'])
+        for doc in global_docs:
+            layer_idx = self.layer_order.index(doc.get_layer())
+            rendered_data_by_layer[layer_idx] = copy.deepcopy(doc.all_data)
 
             # Keep iterating as long as a child exists.
-            while children_iterator:
-                try:
-                    child = next(children_iterator)
-                    print child.get_layer(), 'child'
-
-                    # Retrieve the most up-to-date rendered_data (by
-                    # referencing the child's parent's data).
-                    child_layer_idx = self.layer_order.index(child.get_layer())
-                    rendered_data = rendered_data_by_layer[child_layer_idx - 1]
-                except StopIteration:
-                    break
+            for child in doc.get_children(nested=True):
+                # Retrieve the most up-to-date rendered_data (by
+                # referencing the child's parent's data).
+                child_layer_idx = self.layer_order.index(child.get_layer())
+                rendered_data = rendered_data_by_layer[child_layer_idx - 1]
 
                 # Apply each action to the current document.
                 actions = child.get_actions()
                 for action in actions:
-                    self._apply_action(action, child.data, rendered_data)
+                    self._apply_action(action, child.all_data, rendered_data)
 
                 # Update the actual document data in the outer for loop.
                 if not child.is_abstract():
@@ -101,10 +94,10 @@ class DocumentLayering(object):
                 rendered_data_by_layer[child_layer_idx] = copy.deepcopy(
                     rendered_data)
                 
-            if has_children:
-                del doc.data['children']
+            if 'children' in doc:
+                del doc['children']
 
-        return [d.data for d in self.layered_docs]
+        return [d.all_data for d in self.layered_docs]
 
     def _apply_action(self, action, child_data, overall_data):
         """Apply actions to each layer that is rendered.
@@ -187,12 +180,35 @@ class DocumentLayering(object):
                     child=child_data, parent=overall_data, key=last_key)
 
     def _find_layering_policy(self):
-        # FIXME(fmontei): There should be a DB call here to fetch the layering
+        """Retrieve the current layering policy.
+
+        :raises LayeringPolicyMalformed: If the `layerOrder` could not be
+            found in the LayeringPolicy or if it is not a list.
+        :raises LayeringPolicyNotFound: If system has no layering policy.
+        """
+        # TODO(fmontei): There should be a DB call here to fetch the layering
         # policy from the DB.
         for doc in self.documents:
-            if doc.data['schema'] == self.LAYERING_POLICY_SCHEMA:
-                return doc
-        raise errors.LayeringPolicyNotFound(schema=self.LAYERING_POLICY_SCHEMA)
+            if doc.all_data['schema'] == self.LAYERING_POLICY_SCHEMA:
+                self.layering_policy = doc
+                break
+
+        if not hasattr(self, 'layering_policy'):
+            raise errors.LayeringPolicyNotFound(
+                schema=self.LAYERING_POLICY_SCHEMA)
+
+        # TODO(fmontei): Rely on schema validation or some such for this.
+        try:
+            self.layer_order = list(self.layering_policy['data']['layerOrder'])
+        except KeyError:
+            raise errors.LayeringPolicyMalformed(
+                schema=self.LAYERING_POLICY_SCHEMA,
+                document=self.layering_policy)
+
+        if not isinstance(self.layer_order, list):
+            raise errors.LayeringPolicyMalformed(
+                schema=self.LAYERING_POLICY_SCHEMA,
+                document=self.layering_policy)
 
     def _calc_document_children(self):
         """Determine each document's children.
@@ -210,25 +226,11 @@ class DocumentLayering(object):
         :returns: Ordered list of documents that need to be layered. Each
             document contains a "parent" in addition to original data. The
             order highest to lowest layer in `layerOrder`.
-        :raises LayeringPolicyMalformed: If the `layerOrder` could not be
-            found in the LayeringPolicy or if it is not a list.
         :raises IndeterminateDocumentParent: If more than one parent document
             was found for a document.
         :raises MissingDocumentParent: If the parent document could not be
             found. Only applies documents with `layeringDefinition` property.
         """
-        try:
-            self.layer_order = list(self.layering_policy['data']['layerOrder'])
-        except KeyError:
-            raise errors.LayeringPolicyMalformed(
-                schema=self.LAYERING_POLICY_SCHEMA,
-                document=self.layering_policy)
-
-        if not isinstance(self.layer_order, list):
-            raise errors.LayeringPolicyMalformed(
-                schema=self.LAYERING_POLICY_SCHEMA,
-                document=self.layering_policy)
-
         layered_docs = list(
             filter(lambda x: 'layeringDefinition' in x['metadata'],
                 self.documents))
@@ -270,7 +272,7 @@ class DocumentLayering(object):
 
                 if children:
                     all_children.update(children)
-                    doc.data.setdefault('children', children)
+                    doc.all_data.setdefault('children', children)
 
         all_children_elements = list(all_children.elements())
         secondary_docs = list(

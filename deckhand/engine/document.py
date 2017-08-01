@@ -21,25 +21,33 @@ class Document(object):
     def __init__(self, data):
         """Constructor for ``Document``.
 
-        :param data: Dictionary of all document data.
+        :param data: Dictionary of all document data (includes metadata, data,
+            schema, etc.).
         """
-        self.data = data
+        self._inner = data
 
-    def set_data(self, data, key=None):
+    @property
+    def all_data(self):
+        return self._inner
+
+    def set_data(self, value, key=None):
         if not key:
-            self.data = data
+            self._inner = value
         else:
-            self.data[key] = data[key]
+            self._inner[key] = value[key]
 
     def is_abstract(self):
         try:
-            abstract = self.data['metadata']['layeringDefinition']['abstract']
+            abstract = self._inner['metadata']['layeringDefinition']['abstract']
             return six.text_type(abstract) == 'True'
         except KeyError:
             return False
 
+    def get_name(self):
+        return self._inner['metadata']['name']
+
     def get_layer(self):
-        return self.data['metadata']['layeringDefinition']['layer'].lower()
+        return self._inner['metadata']['layeringDefinition']['layer'].lower()
 
     def get_parent_selector(self):
         """Return the `parentSelector` for the document.
@@ -50,22 +58,48 @@ class Document(object):
         :returns: `parentSelcetor` for the document if present, else None.
         """
         try:
-            return self.data['metadata']['layeringDefinition'][
+            return self._inner['metadata']['layeringDefinition'][
                 'parentSelector']
         except KeyError:
             return None
 
     def get_labels(self):
-        return self.data['metadata']['labels']
+        return self._inner['metadata']['labels']
 
     def get_actions(self):
         try:
-            return self.data['metadata']['layeringDefinition']['actions']
+            return self._inner['metadata']['layeringDefinition']['actions']
         except KeyError:
             return []
 
-    def __getitem__(self, k):
-        return self.data.get(k, None)
+    def get_children(self, nested=False):
+        if not nested:
+            return self._inner.get('children', [])
+        else:
+            return self._get_nested_children(self, [])
+
+    def _get_nested_children(self, doc, nested_children):
+        for child in doc.get('children', []):
+            nested_children.append(child)
+            if 'children' in child._inner:
+                self._get_nested_children(child, nested_children)
+        return nested_children
+
+    def get(self, k, default):
+        return self.__getitem__(k, default=default)
+
+    def __getitem__(self, k, default=None):
+        return self._inner.get(k, default)
+
+    def __delitem__(self, k):
+        if self.__contains__(k):
+            del self._inner[k]
+
+    def __contains__(self, k):
+        return self.get(k, default=None) is not None
+
+    def __missing__(self, k):
+        return not self.__contains__(k)
 
     def __repr__(self):
-        return repr(self.data)
+        return repr(self._inner)

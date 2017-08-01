@@ -446,6 +446,14 @@ class TestDocumentLayering2Layers2Sites2Globals(TestDocumentLayering):
         self._test_layering(documents, site_expected)
 
     def test_layering_two_parents_one_child_each_2(self):
+        """Scenario:
+
+        Initially: p1: {"a": {"x": 1, "y": 2}}, p2: {"b": {"f": -9, "g": 71}}
+        Where: c1 references p1 and c2 references p2
+        Merge "." (p1 -> c1): {"a": {"x": 1, "y": 2, "b": 4}}
+        Merge "." (p2 -> c2): {"b": {"f": -9, "g": 71}, "c": 3}
+        Delete ".c" (p2 -> c2): {"b": {"f": -9, "g": 71}}
+        """
         kwargs = {
             "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}}},
             "_SITE_DATA_ONE_": {"data": {"b": 4}},
@@ -453,7 +461,8 @@ class TestDocumentLayering2Layers2Sites2Globals(TestDocumentLayering):
                 "actions": [{"method": "merge", "path": "."}]},
             "_SITE_DATA_TWO_": {"data": {"c": 3}},
             "_SITE_ACTIONS_TWO_": {
-                "actions": [{"method": "merge", "path": "."}]}
+                "actions": [{"method": "merge", "path": "."},
+                            {"method": "delete", "path": ".c"}]}
         }
 
         documents = self._format_data(
@@ -468,7 +477,7 @@ class TestDocumentLayering2Layers2Sites2Globals(TestDocumentLayering):
         documents.append(other_parent)
 
         site_expected = [{'a': {'x': 1, 'y': 2}, 'b': 4},
-                         {"b": {"f": -9, "g": 71}, "c": 3}]
+                         {"b": {"f": -9, "g": 71}}]
         self._test_layering(documents, site_expected)
 
 
