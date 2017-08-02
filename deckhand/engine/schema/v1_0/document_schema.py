@@ -43,17 +43,16 @@ substitution_schema = {
 schema = {
     'type': 'object',
     'properties': {
-        'schemaVersion': {
+        'schema': {
             'type': 'string',
-            'pattern': '^([A-Za-z]+\/v[0-9]{1})$'
+            'pattern': '^([A-Za-z]+\/[A-Za-z]+\/v[1]{1})$'
         },
-        'kind': {'type': 'string'},
         'metadata': {
             'type': 'object',
             'properties': {
-                'metadataVersion': {
+                'schema': {
                     'type': 'string',
-                    'pattern': '^([A-Za-z]+\/v[0-9]{1})$'
+                    'pattern': '^(metadata\/Document\/v[1]{1})$'
                 },
                 'name': {'type': 'string'},
                 'labels': {
@@ -88,7 +87,7 @@ schema = {
                 }
             },
             'additionalProperties': False,
-            'required': ['metadataVersion', 'name', 'labels',
+            'required': ['schema', 'name', 'labels',
                          'layerDefinition', 'substitutions']
         },
         'data': {
@@ -96,5 +95,5 @@ schema = {
         }
     },
     'additionalProperties': False,
-    'required': ['schemaVersion', 'kind', 'metadata', 'data']
+    'required': ['schema', 'metadata', 'data']
 }

@@ -14,7 +14,7 @@
 
 import jsonschema
 
-from deckhand.engine import kinds as doc_kinds
+from deckhand.engine.schema import base_schema
 from deckhand.engine.schema import v1_0
 from deckhand import errors
 
@@ -30,7 +30,7 @@ class DocumentValidation(object):
     """
 
     def __init__(self, data):
-        self.data = data
+        self._inner = data
         self.pre_validate_data()
 
     class SchemaVersion(object):
@@ -42,44 +42,75 @@ class DocumentValidation(object):
         """
 
         schema_versions_info = [
-            {'version': 'v1', 'kind': doc_kinds.DOCUMENT,
+            {'id': 'deckhand/CertficiateKey',
+             'schema': v1_0.certificate_key_schema},
+            {'id': 'deckhand/Certficiate',
+             'schema': v1_0.certificate_schema},
+            {'id': 'deckhand/DataSchema',
+             'schema': v1_0.data_schema},
+            {'id': 'metadata/Document',
              'schema': v1_0.document_schema},
-            {'version': 'v1', 'kind': doc_kinds.LAYERING,
+            {'id': 'deckhand/LayeringPolicy',
              'schema': v1_0.layering_schema},
-            {'version': 'v1', 'kind': doc_kinds.VALIDATION,
+            {'id': 'deckhand/Passphrase',
+             'schema': v1_0.passphrase_schema},
+            {'id': 'deckhand/ValidationPolicy',
              'schema': v1_0.validation_schema}]
 
-        def __init__(self, schema_version, kind):
-            self.schema_version = schema_version
-            self.kind = kind
+        def __init__(self, data):
+            """Constructor for ``SchemaVersion``.
 
-        @property
-        def schema(self):
-            # TODO: return schema based on version and kind.
-            return [v['schema'] for v in self.schema_versions_info
-                    if v['version'] == self.schema_version and
-                       v['kind'] == self.kind][0].schema
+            Retrieve the relevant schema based on the API version and schema
+            name contained in `document.schema` where `document` constitutes a
+            single document in a YAML payload.
+
+            :param api_version: The API version used for schema validation.
+            :param schema: The schema property in `document.schema`.
+            """
+            self.schema = self.get_schema(data)
+
+        def get_schema(self, data):
+            # Fallback to `document.metadata.schema`.
+            for doc_property in [data['schema'], data['metadata']['schema']]:
+                schema = self._get_schema_by_property(doc_property)
+                if schema:
+                    return schema
+            return None
+
+        def _get_schema_by_property(self, doc_property):
+            schema_parts = doc_property.split('/')
+            doc_schema_identifier = '/'.join(schema_parts[:-1])
+
+            for schema in self.schema_versions_info:
+                if doc_schema_identifier.startswith(schema['id']):
+                    return schema['schema'].schema
+            return None
 
     def pre_validate_data(self):
         """Pre-validate that the YAML file is correctly formatted."""
         self._validate_with_schema()
 
-        # TODO(fm577c): Query Deckhand API to validate "src" values.
-
     def _validate_with_schema(self):
-        # Validate the document using the schema defined by the document's
-        # `schemaVersion` and `kind`.
+        # Subject each document to basic validation to verify that each
+        # major property is present (schema, metadata, data).
         try:
-            schema_version = self.data['schemaVersion'].split('/')[-1]
-            doc_kind = self.data['kind']
-            doc_schema_version = self.SchemaVersion(schema_version, doc_kind)
-        except (AttributeError, IndexError, KeyError) as e:
-            raise errors.InvalidFormat(
-                'The provided schemaVersion is invalid or missing. Exception: '
-                '%s.' % e)
-        try:
-            jsonschema.validate(self.data, doc_schema_version.schema)
+            jsonschema.validate(self._inner, base_schema.schema)
         except jsonschema.exceptions.ValidationError as e:
             raise errors.InvalidFormat(
-                'The provided %s YAML file is invalid. Exception: %s. '
-                'Schema: %s.' % (doc_schema_version.kind, e.message, e.schema))
+                'The provided YAML file is invalid. Exception: %s. '
+                'Schema: %s.' % (e.message, e.schema))
+
+        doc_schema_version = self.SchemaVersion(self._inner)
+        if doc_schema_version.schema is None:
+            # TODO(fmontei): Raise a custom exception type once other PRs are
+            # merged. 
+            raise ValueError(
+                "Could not determine the validation schema to validate the "
+                "schema: %s." % self._inner['schema'])
+
+        try:
+            jsonschema.validate(self._inner, doc_schema_version.schema)
+        except jsonschema.exceptions.ValidationError as e:
+            raise errors.InvalidFormat(
+                'The provided YAML file is invalid. Exception: %s. '
+                'Schema: %s.' % (e.message, e.schema))

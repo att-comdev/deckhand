@@ -1,9 +1,8 @@
 # Sample YAML file for testing forward replacement.
 ---
-schemaVersion: promenade/v1
-kind: Document
+schema: promenade/ResourceType/v1
 metadata:
-  metadataVersion: deckhand/v1
+  schema: metadata/Document/v1
   name: a-unique-config-name-12345
   labels:
     component: apiserver

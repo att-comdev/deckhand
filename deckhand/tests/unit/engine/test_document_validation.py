@@ -78,17 +78,17 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
 
     def test_init_document_schema_missing_sections(self):
         self._read_data('sample_document')
-        expected_err = ("The provided Document YAML file is invalid. "
-                        "Exception: '%s' is a required property.")
+        expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
+                        " a required property.")
         invalid_data = [
             (self._corrupt_data('data'), 'data'),
             (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.metadataVersion'),
-                                'metadataVersion'),
+            (self._corrupt_data('metadata.schema'), 'schema'),
             (self._corrupt_data('metadata.name'), 'name'),
             (self._corrupt_data('metadata.substitutions'), 'substitutions'),
             (self._corrupt_data('metadata.substitutions.0.dest'), 'dest'),
-            (self._corrupt_data('metadata.substitutions.0.src'), 'src')
+            (self._corrupt_data('metadata.substitutions.0.src'), 'src'),
+            (self._corrupt_data('schema'), 'schema')
         ]
 
         for invalid_entry, missing_key in invalid_data:
@@ -98,15 +98,14 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
 
     def test_init_layering_schema_missing_sections(self):
         self._read_data('sample_layering')
-        expected_err = ("The provided LayeringPolicy YAML file is invalid. "
-                        "Exception: '%s' is a required property.")
+        expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
+                        " a required property.")
         invalid_data = [
-            (self._corrupt_data('data'), 'data'),
             (self._corrupt_data('data.layerOrder'), 'layerOrder'),
             (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.metadataVersion'),
-                                'metadataVersion'),
-            (self._corrupt_data('metadata.name'), 'name')
+            (self._corrupt_data('metadata.schema'), 'schema'),
+            (self._corrupt_data('metadata.name'), 'name'),
+            (self._corrupt_data('schema'), 'schema')
         ]
 
         for invalid_entry, missing_key in invalid_data:

@@ -17,7 +17,8 @@ schema = {
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^(deckhand\/[A-Za-z]+\/v[1]{1})$'
+            # Currently supported versions include v1 only.
+            'pattern': '^([A-Za-z]+\/[A-Za-z]+\/v[1]{1})$'
         },
         'metadata': {
             'type': 'object',
