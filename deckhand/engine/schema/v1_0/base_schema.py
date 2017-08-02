@@ -17,31 +17,18 @@ schema = {
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^(deckhand\/LayeringPolicy\/v[1]{1})$'
+            'pattern': '^(deckhand\/[A-Za-z]+\/v[1]{1})$'
         },
         'metadata': {
             'type': 'object',
             'properties': {
-                'schema': {
-                    'type': 'string',
-                    'pattern': '^(metadata\/Control\/v[1]{1})$'
-                },
+                'schema': {'type': 'string'},
                 'name': {'type': 'string'}
             },
-            'additionalProperties': False,
+            'additionalProperties': True,
             'required': ['schema', 'name']
         },
-        'data': {
-            'type': 'object',
-            'properties': {
-                'layerOrder': {
-                    'type': 'array',
-                    'items': {'type': 'string'}
-                }
-            },
-            'additionalProperties': True,
-            'required': ['layerOrder']
-        }
+        'data': {'type': ['string', 'object']}
     },
     'additionalProperties': False,
     'required': ['schema', 'metadata', 'data']

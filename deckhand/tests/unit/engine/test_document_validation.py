@@ -113,21 +113,3 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
             with six.assertRaisesRegex(self, errors.InvalidFormat,
                                        expected_err % missing_key):
                 document_validation.DocumentValidation(invalid_entry)
-
-    def test_init_validation_schema_missing_sections(self):
-        self._read_data('sample_validation')
-        expected_err = ("The provided ValidationPolicy YAML file is invalid. "
-                        "Exception: '%s' is a required property.")
-        invalid_data = [
-            (self._corrupt_data('data'), 'data'),
-            (self._corrupt_data('data.requiredChecks'), 'requiredChecks'),
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.metadataVersion'),
-                                'metadataVersion'),
-            (self._corrupt_data('metadata.name'), 'name')
-        ]
-
-        for invalid_entry, missing_key in invalid_data:
-            with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       expected_err % missing_key):
-                document_validation.DocumentValidation(invalid_entry)

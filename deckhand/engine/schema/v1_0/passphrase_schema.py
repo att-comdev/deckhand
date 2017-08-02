@@ -17,31 +17,25 @@ schema = {
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^(deckhand\/LayeringPolicy\/v[1]{1})$'
+            'pattern': '^(deckhand\/Passphrase\/v1)$'
         },
         'metadata': {
             'type': 'object',
             'properties': {
                 'schema': {
                     'type': 'string',
-                    'pattern': '^(metadata\/Control\/v[1]{1})$'
+                    'pattern': '^(metadata\/Document\/v1)$',
                 },
-                'name': {'type': 'string'}
-            },
-            'additionalProperties': False,
-            'required': ['schema', 'name']
-        },
-        'data': {
-            'type': 'object',
-            'properties': {
-                'layerOrder': {
-                    'type': 'array',
-                    'items': {'type': 'string'}
+                'name': {'type': 'string'},
+                'storagePolicy': {
+                    'type': 'string',
+                    'pattern': '^(encrypted)$'
                 }
             },
-            'additionalProperties': True,
-            'required': ['layerOrder']
-        }
+            'additionalProperties': False,
+            'required': ['schema', 'name', 'encrypted']
+        },
+        'data': {'type': 'string'}
     },
     'additionalProperties': False,
     'required': ['schema', 'metadata', 'data']

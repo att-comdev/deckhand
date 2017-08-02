@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This specifies the official JSON schema meta-schema. DataSchema documents
+# are used by various services to register new schemas that Deckhand can use
+# for validation.
 schema = {
     'type': 'object',
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^(deckhand\/ValidationPolicy\/v[1]{1})$'
+            'pattern': '^(deckhand\/DataSchema\/v[1]{1})$'
         },
         'metadata': {
             'type': 'object',
@@ -26,7 +29,12 @@ schema = {
                     'type': 'string',
                     'pattern': '^(metadata\/Control\/v[1]{1})$'
                 },
-                'name': {'type': 'string'}
+                'name': {'type': 'string'},
+                # Labels are optional.
+                'labels': {
+                    'type': 'array',
+                    'items': {'type': 'string'}
+                }
             },
             'additionalProperties': False,
             'required': ['schema', 'name']
@@ -34,27 +42,12 @@ schema = {
         'data': {
             'type': 'object',
             'properties': {
-            'validations': {
-                    'type': 'array',
-                    'items': {
-                        'type': 'object',
-                        'properties': {
-                            'name': {
-                                'type': 'string',
-                                'pattern': '^.*-(validation|verification)$'
-                            },
-                            # 'expiresAfter' is optional.
-                            'expiresAfter': {
-                                'type': ['string', None]
-                            }
-                        },
-                        'additionalProperties': False,
-                        'required': ['name']
-                    }
+                '$schema': {
+                    'type': 'string'
                 }
             },
-            'additionalProperties': True,
-            'required': ['validations']
+            'additionalProperties': False,
+            'required': ['$schema']
         }
     },
     'additionalProperties': False,
