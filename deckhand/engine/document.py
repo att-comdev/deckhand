@@ -26,8 +26,7 @@ class Document(object):
         """
         self._inner = data
 
-    @property
-    def all_data(self):
+    def to_dict(self):
         return self._inner
 
     def is_abstract(self):

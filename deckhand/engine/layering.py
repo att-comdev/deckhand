@@ -58,8 +58,7 @@ class DocumentLayering(object):
             policy document).
         """
         # ``rendered_data_by_layer`` agglomerates the set of changes across all
-        # actions across each layer for a specific document. Use copy
-        # to prevent global data from being updated referentially.
+        # actions across each layer for a specific document.
         rendered_data_by_layer = {}
 
         # NOTE(fmontei): ``global_docs`` represents the topmost documents in
@@ -70,7 +69,7 @@ class DocumentLayering(object):
 
         for doc in global_docs:
             layer_idx = self.layer_order.index(doc.get_layer())
-            rendered_data_by_layer[layer_idx] = doc.all_data
+            rendered_data_by_layer[layer_idx] = doc.to_dict()
 
             # Keep iterating as long as a child exists.
             for child in doc.get_children(nested=True):
@@ -84,7 +83,7 @@ class DocumentLayering(object):
                 actions = child.get_actions()
                 for action in actions:
                     rendered_data = self._apply_action(
-                        action, child.all_data, rendered_data)
+                        action, child.to_dict(), rendered_data)
 
                 # Update the actual document data if concrete.
                 if not child.is_abstract():
@@ -99,7 +98,7 @@ class DocumentLayering(object):
             if 'children' in doc:
                 del doc['children']
 
-        return [d.all_data for d in self.layered_docs]
+        return [d.to_dict() for d in self.layered_docs]
 
     def _apply_action(self, action, child_data, overall_data):
         """Apply actions to each layer that is rendered.
@@ -117,11 +116,13 @@ class DocumentLayering(object):
             * The path must be present in both ``child_data`` and
               ``overall_data`` (in both the parent and child documents).
         """
+        # TODO(fmontei): Rely on schema validation for this.
         method = action['method']
         if method not in self.SUPPORTED_METHODS:
             raise errors.UnsupportedActionMethod(
                 action=action, document=child_data)
 
+        # Use copy prevent these data from being updated referentially.
         overall_data = copy.deepcopy(overall_data)
         child_data = copy.deepcopy(child_data)
         rendered_data = overall_data
@@ -190,7 +191,7 @@ class DocumentLayering(object):
         # TODO(fmontei): There should be a DB call here to fetch the layering
         # policy from the DB.
         for doc in self.documents:
-            if doc.all_data['schema'] == self.LAYERING_POLICY_SCHEMA:
+            if doc.to_dict()['schema'] == self.LAYERING_POLICY_SCHEMA:
                 self.layering_policy = doc
                 break
 
@@ -225,8 +226,10 @@ class DocumentLayering(object):
             the topmost layer defined by the `layerOrder`.
 
         :returns: Ordered list of documents that need to be layered. Each
-            document contains a "parent" in addition to original data. The
-            order highest to lowest layer in `layerOrder`.
+            document contains a "children" property in addition to original
+            data. List of documents returned is ordered from highest to lowest
+            layer.
+        :rtype: list of deckhand.engine.document.Document objects.
         :raises IndeterminateDocumentParent: If more than one parent document
             was found for a document.
         :raises MissingDocumentParent: If the parent document could not be
@@ -236,6 +239,8 @@ class DocumentLayering(object):
             filter(lambda x: 'layeringDefinition' in x['metadata'],
                 self.documents))
 
+        # ``all_children`` is a counter utility for verifying that each
+        # document has exactly one parent.
         all_children = collections.Counter()
         def _get_children(doc):
             children = []
@@ -273,7 +278,7 @@ class DocumentLayering(object):
 
                 if children:
                     all_children.update(children)
-                    doc.all_data.setdefault('children', children)
+                    doc.to_dict().setdefault('children', children)
 
         all_children_elements = list(all_children.elements())
         secondary_docs = list(
