@@ -34,7 +34,7 @@ schema = {
         'data': {
             'type': 'object',
             'properties': {
-            'validations': {
+                'validations': {
                     'type': 'array',
                     'items': {
                         'type': 'object',
@@ -44,9 +44,7 @@ schema = {
                                 'pattern': '^.*-(validation|verification)$'
                             },
                             # 'expiresAfter' is optional.
-                            'expiresAfter': {
-                                'type': ['string', None]
-                            }
+                            'expiresAfter': {'type': 'string'}
                         },
                         'additionalProperties': False,
                         'required': ['name']

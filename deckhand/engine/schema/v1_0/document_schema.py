@@ -19,21 +19,20 @@ substitution_schema = {
             'type': 'object',
             'properties': {
                 'path': {'type': 'string'},
-                'replacePattern': {'type': 'string'}
+                'pattern': {'type': 'string'}
             },
             'additionalProperties': False,
-            # 'replacePattern' is not required.
             'required': ['path']
         },
         'src': {
             'type': 'object',
             'properties': {
-                'kind': {'type': 'string'},
+                'schema': {'type': 'string'},
                 'name': {'type': 'string'},
                 'path': {'type': 'string'}
             },
             'additionalProperties': False,
-            'required': ['kind', 'name', 'path']
+            'required': ['schema', 'name', 'path']
         }
     },
     'additionalProperties': False,

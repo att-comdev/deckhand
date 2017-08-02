@@ -14,19 +14,27 @@ metadata:
         label: value
   substitutions:
     - dest:
-        path: .tls_endpoint.certificate
-        replacePattern: 'test.pattern'
+        path: .chart.values.tls.certificate
       src:
-        kind: Certificate
-        name: some-certificate-asdf-1234
-        path: .cert
+        schema: deckhand/Certificate/v1
+        name: example-cert
+        path: .
     - dest:
-        path: .tls_endpoint.key
+        path: .chart.values.tls.key
       src:
-        kind: CertificateKey
-        name: some-certificate-asdf-1234
-        path: .key
+        schema: deckhand/CertificateKey/v1
+        name: example-key
+        path: .
+    - dest:
+        path: .chart.values.some_url
+        pattern: INSERT_[A-Z]+_HERE
+      src:
+        schema: deckhand/Passphrase/v1
+        name: example-password
+        path: .
 data:
-  tls_endpoint:
-    certificate: '.cert'
-    key: deckhand/v1:some-certificate-asdf-1234
+  chart:
+    details:
+      data: here
+    values:
+      some_url: http://admin:INSERT_PASSWORD_HERE@service-name:8080/v1

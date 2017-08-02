@@ -32,8 +32,7 @@ schema = {
                 'name': {'type': 'string'},
                 # Labels are optional.
                 'labels': {
-                    'type': 'array',
-                    'items': {'type': 'string'}
+                    'type': 'object'
                 }
             },
             'additionalProperties': False,

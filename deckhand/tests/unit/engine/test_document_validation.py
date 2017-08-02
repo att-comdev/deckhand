@@ -76,19 +76,72 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
         self.assertIsInstance(doc_validation,
                               document_validation.DocumentValidation)
 
-    def test_init_document_schema_missing_sections(self):
+    def test_certificate_key_schema_missing_required_sections(self):
+        self._read_data('sample_certificate_key')
+        expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
+                        " a required property.")
+        invalid_data = [
+            (self._corrupt_data('schema'), 'schema'),
+            (self._corrupt_data('metadata'), 'metadata'),
+            (self._corrupt_data('metadata.schema'), 'schema'),
+            (self._corrupt_data('metadata.name'), 'name'),
+            (self._corrupt_data('metadata.storagePolicy'), 'storagePolicy'),
+            (self._corrupt_data('data'), 'data')
+        ]
+
+        for invalid_entry, missing_key in invalid_data:
+            print invalid_entry
+            print "KEY", missing_key, "\n"
+            with six.assertRaisesRegex(self, errors.InvalidFormat,
+                                       expected_err % missing_key):
+                document_validation.DocumentValidation(invalid_entry)
+
+    def test_data_schema_missing_required_sections(self):
+        self._read_data('sample_data_schema')
+        expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
+                        " a required property.")
+        invalid_data = [
+            (self._corrupt_data('schema'), 'schema'),
+            (self._corrupt_data('metadata'), 'metadata'),
+            (self._corrupt_data('metadata.schema'), 'schema'),
+            (self._corrupt_data('metadata.name'), 'name'),
+            (self._corrupt_data('data'), 'data'),
+            (self._corrupt_data('data.$schema'), '$schema')
+        ]
+
+        for invalid_entry, missing_key in invalid_data:
+            e = self.assertRaises(
+                errors.InvalidFormat,  document_validation.DocumentValidation,
+                invalid_entry)
+            self.assertIn(expected_err % missing_key, str(e))
+
+    def test_data_schema_missing_optional_sections(self):
+        self._read_data('sample_data_schema')
+        optional_missing_data = [
+            self._corrupt_data('metadata.labels'),
+        ]
+
+        for missing_data in optional_missing_data:
+            document_validation.DocumentValidation(missing_data)
+
+    def test_document_schema_missing_required_sections(self):
         self._read_data('sample_document')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
         invalid_data = [
-            (self._corrupt_data('data'), 'data'),
+            (self._corrupt_data('schema'), 'schema'),
             (self._corrupt_data('metadata'), 'metadata'),
             (self._corrupt_data('metadata.schema'), 'schema'),
             (self._corrupt_data('metadata.name'), 'name'),
             (self._corrupt_data('metadata.substitutions'), 'substitutions'),
             (self._corrupt_data('metadata.substitutions.0.dest'), 'dest'),
+            (self._corrupt_data('metadata.substitutions.0.dest.path'), 'path'),
             (self._corrupt_data('metadata.substitutions.0.src'), 'src'),
-            (self._corrupt_data('schema'), 'schema')
+            (self._corrupt_data('metadata.substitutions.0.src.schema'),
+             'schema'),
+            (self._corrupt_data('metadata.substitutions.0.src.name'), 'name'),
+            (self._corrupt_data('metadata.substitutions.0.src.path'), 'path'),
+            (self._corrupt_data('data'), 'data'),
         ]
 
         for invalid_entry, missing_key in invalid_data:
@@ -96,16 +149,45 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
                                        expected_err % missing_key):
                 document_validation.DocumentValidation(invalid_entry)
 
-    def test_init_layering_schema_missing_sections(self):
-        self._read_data('sample_layering')
+    def test_document_schema_missing_optional_sections(self):
+        self._read_data('sample_document')
+        optional_missing_data = [
+            self._corrupt_data('metadata.substitutions.2.dest.pattern')
+        ]
+
+        for missing_data in optional_missing_data:
+            document_validation.DocumentValidation(missing_data)
+
+    def test_layering_policy_schema_missing_required_sections(self):
+        self._read_data('sample_layering_policy')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
         invalid_data = [
-            (self._corrupt_data('data.layerOrder'), 'layerOrder'),
+            (self._corrupt_data('schema'), 'schema'),
             (self._corrupt_data('metadata'), 'metadata'),
             (self._corrupt_data('metadata.schema'), 'schema'),
             (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('schema'), 'schema')
+            (self._corrupt_data('data'), 'data'),
+            (self._corrupt_data('data.layerOrder'), 'layerOrder'),
+        ]
+
+        for invalid_entry, missing_key in invalid_data:
+            with six.assertRaisesRegex(self, errors.InvalidFormat,
+                                       expected_err % missing_key):
+                document_validation.DocumentValidation(invalid_entry)
+
+    def test_validation_policy_schema_missing_required_sections(self):
+        self._read_data('sample_validation_policy')
+        expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
+                        " a required property.")
+        invalid_data = [
+            (self._corrupt_data('schema'), 'schema'),
+            (self._corrupt_data('metadata'), 'metadata'),
+            (self._corrupt_data('metadata.schema'), 'schema'),
+            (self._corrupt_data('metadata.name'), 'name'),
+            (self._corrupt_data('data'), 'data'),
+            (self._corrupt_data('data.validations'), 'validations'),
+            (self._corrupt_data('data.validations.0.name'), 'name'),
         ]
 
         for invalid_entry, missing_key in invalid_data:
