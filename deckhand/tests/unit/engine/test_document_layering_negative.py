@@ -15,55 +15,64 @@
 from deckhand.engine import layering
 from deckhand import errors
 from deckhand.tests.unit.engine import test_document_layering
+from deckhand.tests.unit import factories
 
 
 class TestDocumentLayeringNegative(
         test_document_layering.TestDocumentLayering):
 
     def test_layering_method_merge_key_not_in_child(self):
-        kwargs = {
-            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
-            "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
-            "_SITE_ACTIONS_": {
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_SITE_DATA_1_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_1_": {
                 "actions": [{"method": "merge", "path": ".c"}]}
         }
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen(mapping, site_abstract=False)
+
         self._test_layering(
             documents, exception_expected=errors.MissingDocumentKey)
 
     def test_layering_method_delete_key_not_in_child(self):
         # The key will not be in the site after the global data is copied into
         # the site data implicitly.
-        kwargs = {
-            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
-            "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
-            "_SITE_ACTIONS_": {
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_SITE_DATA_1_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_1_": {
                 "actions": [{"method": "delete", "path": ".b"}]}
         }
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen(mapping, site_abstract=False)
+
         self._test_layering(
             documents, exception_expected=errors.MissingDocumentKey)
 
     def test_layering_method_replace_key_not_in_child(self):
-        kwargs = {
-            "_GLOBAL_DATA_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
-            "_SITE_DATA_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
-            "_SITE_ACTIONS_": {
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_SITE_DATA_1_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_1_": {
                 "actions": [{"method": "replace", "path": ".c"}]}
         }
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, kwargs)
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen(mapping, site_abstract=False)
+
         self._test_layering(
             documents, exception_expected=errors.MissingDocumentKey)
 
     def test_layering_without_layering_policy(self):
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen({}, site_abstract=False)
         documents.pop(0)  # First doc is layering policy.
 
         self.assertRaises(errors.LayeringPolicyNotFound,
                           layering.DocumentLayering, documents)
 
     def test_layering_with_broken_layer_order(self):
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen({}, site_abstract=False)
         broken_layer_orders = [
             ['site', 'region', 'global'], ['broken', 'global'], ['broken'],
             ['site', 'broken']]
@@ -75,7 +84,8 @@ class TestDocumentLayeringNegative(
                               layering.DocumentLayering, documents)
 
     def test_layering_child_with_invalid_parent_selector(self):
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen({}, site_abstract=False)
 
         for parent_selector in ({'key2': 'value2'}, {'key1': 'value2'}):
             documents[-1]['metadata']['layeringDefinition'][
@@ -85,7 +95,8 @@ class TestDocumentLayeringNegative(
                               layering.DocumentLayering, documents)
 
     def test_layering_unreferenced_parent_label(self):
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen({}, site_abstract=False)
 
         for parent_label in ({'key2': 'value2'}, {'key1': 'value2'}):
             # Second doc is the global doc, or parent.
@@ -97,7 +108,8 @@ class TestDocumentLayeringNegative(
     def test_layering_duplicate_parent_selector_2_layer(self):
         # Validate that documents belonging to the same layer cannot have the
         # same unique parent identifier referenced by `parentSelector`.
-        documents = self._format_data(self.FAKE_YAML_DATA_2_LAYERS, {})
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen({}, site_abstract=False)
         documents.append(documents[1])  # Copy global layer.
 
         self.assertRaises(errors.IndeterminateDocumentParent,
@@ -106,7 +118,8 @@ class TestDocumentLayeringNegative(
     def test_layering_duplicate_parent_selector_3_layer(self):
         # Validate that documents belonging to the same layer cannot have the
         # same unique parent identifier referenced by `parentSelector`.
-        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, {})
+        doc_factory = factories.DocumentFactory(3, [1, 1, 1])
+        documents = doc_factory.gen({}, site_abstract=False)
 
         # 1 is global layer, 2 is region layer.
         for idx in (1, 2):
@@ -118,12 +131,13 @@ class TestDocumentLayeringNegative(
     def test_layering_document_references_itself(self):
         # Test that a parentSelector cannot reference the document itself
         # without an error being raised.
-        documents = self._format_data(self.FAKE_YAML_DATA_3_LAYERS, {})
+        doc_factory = factories.DocumentFactory(3, [1, 1, 1])
+        documents = doc_factory.gen({}, site_abstract=False)
         self_ref = {"self": "self"}
         documents[2]['metadata']['labels'] = self_ref
         documents[2]['metadata']['layeringDefinition'][
             'parentSelector'] = self_ref
 
-        expected_err = "'name': u'region-1234'"  # Should be the region.
+        expected_err = "'name': 'region1'"  # Should be the region name.
         self.assertRaisesRegex(errors.MissingDocumentParent, expected_err,
                                layering.DocumentLayering, documents)
