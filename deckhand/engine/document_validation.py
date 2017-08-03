@@ -104,9 +104,8 @@ class DocumentValidation(object):
         try:
             jsonschema.validate(self._inner, base_schema.schema)
         except jsonschema.exceptions.ValidationError as e:
-            raise errors.InvalidFormat(
-                'The provided YAML file failed basic validation. '
-                'Exception: %s. Schema: %s.' % (e.message, e.schema))
+            raise errors.InvalidDocumentFormat(
+                detail=e.message, schema=e.schema)
 
         doc_schema_version = self.SchemaVersion(self._inner)
         if doc_schema_version.schema is None:
@@ -119,6 +118,6 @@ class DocumentValidation(object):
         try:
             jsonschema.validate(self._inner, doc_schema_version.schema)
         except jsonschema.exceptions.ValidationError as e:
-            raise errors.InvalidFormat(
-                'The provided YAML file is invalid. Exception: %s. '
-                'Schema: %s.' % (e.message, e.schema))
+            raise errors.InvalidDocumentFormat(
+                detail=e.message, schema=e.schema,
+                document_type=self._inner['schema'])
