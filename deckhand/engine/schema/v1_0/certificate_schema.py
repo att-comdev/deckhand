@@ -17,14 +17,14 @@ schema = {
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^(deckhand\/Certificate\/v1)$'
+            'pattern': '^(deckhand/Certificate/v1)$'
         },
         'metadata': {
             'type': 'object',
             'properties': {
                 'schema': {
                     'type': 'string',
-                    'pattern': '^(metadata\/Document\/v1)$',
+                    'pattern': '^(metadata/Document/v1)$',
                 },
                 'name': {'type': 'string'},
                 'storagePolicy': {

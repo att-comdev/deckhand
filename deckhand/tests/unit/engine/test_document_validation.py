@@ -35,7 +35,7 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
             yaml_data = yaml_file.read()
         self.data = yaml.safe_load(yaml_data)
 
-    def _corrupt_data(self, key, data=None):
+    def _corrupt_data(self, key, value=None, data=None, op='delete'):
         """Corrupt test data to check that pre-validation works.
 
         Corrupt data by removing a key from the document. Each key must
@@ -63,9 +63,15 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
                     _corrupted_data = _corrupted_data[int(nested_key)]
                 else:
                     _corrupted_data = _corrupted_data[nested_key]
-            _corrupted_data.pop(nested_keys[-1])
+            if op == 'delete':
+                _corrupted_data.pop(nested_keys[-1])
+            elif op == 'replace':
+                _corrupted_data[nested_keys[-1]] = value
         else:
-            corrupted_data.pop(key)
+            if op == 'delete':
+                corrupted_data.pop(key)
+            elif op == 'replace':
+                corrupted_data[key] = value
 
         return corrupted_data
 
@@ -80,53 +86,47 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
         self._read_data('sample_certificate_key')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
-        invalid_data = [
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.schema'), 'schema'),
-            (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('metadata.storagePolicy'), 'storagePolicy'),
-            (self._corrupt_data('data'), 'data')
-        ]
+        properties_to_remove = ['metadata', 'metadata.schema', 'metadata.name',
+                                'metadata.storagePolicy', 'data']
 
-        for invalid_entry, missing_key in invalid_data:
+        for property_to_remove in properties_to_remove:
+            missing_prop = property_to_remove.split('.')[-1]
+            invalid_data = self._corrupt_data(property_to_remove)
+
             with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       expected_err % missing_key):
-                document_validation.DocumentValidation(invalid_entry)
+                                       expected_err % missing_prop):
+                document_validation.DocumentValidation(invalid_data)
 
     def test_certificate_schema_missing_required_sections(self):
         self._read_data('sample_certificate')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
-        invalid_data = [
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.schema'), 'schema'),
-            (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('metadata.storagePolicy'), 'storagePolicy'),
-            (self._corrupt_data('data'), 'data')
-        ]
+        properties_to_remove = ['metadata', 'metadata.schema', 'metadata.name',
+                                'metadata.storagePolicy', 'data']
 
-        for invalid_entry, missing_key in invalid_data:
+        for property_to_remove in properties_to_remove:
+            missing_prop = property_to_remove.split('.')[-1]
+            invalid_data = self._corrupt_data(property_to_remove)
+
             with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       expected_err % missing_key):
-                document_validation.DocumentValidation(invalid_entry)
+                                       expected_err % missing_prop):
+                document_validation.DocumentValidation(invalid_data)
 
     def test_data_schema_missing_required_sections(self):
         self._read_data('sample_data_schema')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
-        invalid_data = [
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.schema'), 'schema'),
-            (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('data'), 'data'),
-            (self._corrupt_data('data.$schema'), '$schema')
-        ]
+        properties_to_remove = ['metadata', 'metadata.schema', 'metadata.name',
+                                'data', 'data.$schema']
 
-        for invalid_entry, missing_key in invalid_data:
+        for property_to_remove in properties_to_remove:
+            missing_prop = property_to_remove.split('.')[-1]
+            invalid_data = self._corrupt_data(property_to_remove)
+
             e = self.assertRaises(
-                errors.InvalidFormat,  document_validation.DocumentValidation,
-                invalid_entry)
-            self.assertIn(expected_err % missing_key, str(e))
+                errors.InvalidFormat, document_validation.DocumentValidation,
+                invalid_data)
+            self.assertIn(expected_err % missing_prop, str(e))
 
     def test_data_schema_missing_optional_sections(self):
         self._read_data('sample_data_schema')
@@ -141,95 +141,87 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
         self._read_data('sample_document')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
-        invalid_data = [
-            (self._corrupt_data('schema'), 'schema'),
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.schema'), 'schema'),
-            (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('metadata.substitutions'), 'substitutions'),
-            (self._corrupt_data('metadata.substitutions.0.dest'), 'dest'),
-            (self._corrupt_data('metadata.substitutions.0.dest.path'), 'path'),
-            (self._corrupt_data('metadata.substitutions.0.src'), 'src'),
-            (self._corrupt_data('metadata.substitutions.0.src.schema'),
-             'schema'),
-            (self._corrupt_data('metadata.substitutions.0.src.name'), 'name'),
-            (self._corrupt_data('metadata.substitutions.0.src.path'), 'path'),
-            (self._corrupt_data('data'), 'data'),
-        ]
+        properties_to_remove = ['schema', 'metadata', 'metadata.schema',
+                                'metadata.name', 'metadata.substitutions',
+                                'metadata.substitutions.0.dest',
+                                'metadata.substitutions.0.dest.path',
+                                'metadata.substitutions.0.src',
+                                'metadata.substitutions.0.src.schema',
+                                'metadata.substitutions.0.src.name',
+                                'metadata.substitutions.0.src.path', 'data']
 
-        for invalid_entry, missing_key in invalid_data:
-            with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       expected_err % missing_key):
-                document_validation.DocumentValidation(invalid_entry)
+        for property_to_remove in properties_to_remove:
+            missing_prop = property_to_remove.split('.')[-1]
+            invalid_data = self._corrupt_data(property_to_remove)
+
+            e = self.assertRaises(
+                errors.InvalidFormat, document_validation.DocumentValidation,
+                invalid_data)
+            self.assertIn(expected_err % missing_prop, str(e))
+
 
     def test_document_schema_missing_optional_sections(self):
         self._read_data('sample_document')
-        optional_missing_data = [
-            self._corrupt_data('metadata.substitutions.2.dest.pattern')
-        ]
+        properties_to_remove = ['metadata.substitutions.2.dest.pattern']
 
-        for missing_data in optional_missing_data:
-            document_validation.DocumentValidation(missing_data)
+        for property_to_remove in properties_to_remove:
+            optional_data_removed = self._corrupt_data(property_to_remove)
+            document_validation.DocumentValidation(optional_data_removed)
 
     def test_layering_policy_schema_missing_required_sections(self):
         self._read_data('sample_layering_policy')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
-        invalid_data = [
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.schema'), 'schema'),
-            (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('data'), 'data'),
-            (self._corrupt_data('data.layerOrder'), 'layerOrder'),
-        ]
+        properties_to_remove = ['metadata', 'metadata.schema', 'metadata.name',
+                                'data', 'data.layerOrder']
 
-        for invalid_entry, missing_key in invalid_data:
+        for property_to_remove in properties_to_remove:
+            missing_prop = property_to_remove.split('.')[-1]
+            invalid_data = self._corrupt_data(property_to_remove)
+
             with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       expected_err % missing_key):
-                document_validation.DocumentValidation(invalid_entry)
+                                       expected_err % missing_prop):
+                document_validation.DocumentValidation(invalid_data)
 
     def test_passphrase_missing_required_sections(self):
         self._read_data('sample_passphrase')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
-        invalid_data = [
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.schema'), 'schema'),
-            (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('metadata.storagePolicy'), 'storagePolicy'),
-            (self._corrupt_data('data'), 'data')
-        ]
+        properties_to_remove = ['metadata', 'metadata.schema', 'metadata.name',
+                                'metadata.storagePolicy', 'data']
 
-        for invalid_entry, missing_key in invalid_data:
+        for property_to_remove in properties_to_remove:
+            missing_prop = property_to_remove.split('.')[-1]
+            invalid_data = self._corrupt_data(property_to_remove)
+
             with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       expected_err % missing_key):
-                document_validation.DocumentValidation(invalid_entry)
+                                       expected_err % missing_prop):
+                document_validation.DocumentValidation(invalid_data)
 
     def test_passphrase_with_incorrect_storage_policy(self):
         self._read_data('sample_passphrase')
         expected_err = ("The provided YAML file is invalid. Exception: "
                         "'cleartext' does not match '^(encrypted)$'.")
-        self.data['metadata']['storagePolicy'] = 'cleartext'
+        wrong_data = self._corrupt_data('metadata.storagePolicy', 'cleartext',
+                                        op='replace')
 
         e = self.assertRaises(
             errors.InvalidFormat, document_validation.DocumentValidation,
-            self.data)
+            wrong_data)
         self.assertIn(expected_err, str(e))
 
     def test_validation_policy_schema_missing_required_sections(self):
         self._read_data('sample_validation_policy')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
-        invalid_data = [
-            (self._corrupt_data('metadata'), 'metadata'),
-            (self._corrupt_data('metadata.schema'), 'schema'),
-            (self._corrupt_data('metadata.name'), 'name'),
-            (self._corrupt_data('data'), 'data'),
-            (self._corrupt_data('data.validations'), 'validations'),
-            (self._corrupt_data('data.validations.0.name'), 'name'),
-        ]
+        properties_to_remove = ['metadata', 'metadata.schema', 'metadata.name',
+                                'data', 'data.validations',
+                                'data.validations.0.name']
 
-        for invalid_entry, missing_key in invalid_data:
+        for property_to_remove in properties_to_remove:
+            missing_prop = property_to_remove.split('.')[-1]
+            invalid_data = self._corrupt_data(property_to_remove)
+
             with six.assertRaisesRegex(self, errors.InvalidFormat,
-                                       expected_err % missing_key):
-                document_validation.DocumentValidation(invalid_entry)
+                                       expected_err % missing_prop):
+                document_validation.DocumentValidation(invalid_data)

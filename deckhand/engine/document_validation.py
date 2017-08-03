@@ -42,7 +42,7 @@ class DocumentValidation(object):
         """
 
         schema_versions_info = [
-            {'id': 'deckhand/CertficiateKey',
+            {'id': 'deckhand/CertificateKey',
              'schema': v1_0.certificate_key_schema},
             {'id': 'deckhand/Certificate',
              'schema': v1_0.certificate_schema},
@@ -82,7 +82,7 @@ class DocumentValidation(object):
             doc_schema_identifier = '/'.join(schema_parts[:-1])
 
             for schema in self.schema_versions_info:
-                if doc_schema_identifier.startswith(schema['id']):
+                if doc_schema_identifier == schema['id']:
                     return schema['schema'].schema
             return None
 
