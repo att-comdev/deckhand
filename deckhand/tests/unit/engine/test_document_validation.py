@@ -16,6 +16,7 @@ import copy
 import os
 import yaml
 
+import mock
 import six
 
 from deckhand.engine import document_validation
@@ -106,10 +107,29 @@ class TestDocumentValidation(TestDocumentValidationBase):
         for missing_data in optional_missing_data:
             document_validation.DocumentValidation(missing_data)
 
-    def test_document_schema_missing_optional_sections(self):
+    def test_document_missing_optional_sections(self):
         self._read_data('sample_document')
-        properties_to_remove = ['metadata.substitutions.2.dest.pattern']
+        properties_to_remove = (
+            'metadata.layeringDefinition.actions',
+            'metadata.layeringDefinition.parentSelector',
+            'metadata.substitutions',
+            'metadata.substitutions.2.dest.pattern')
 
         for property_to_remove in properties_to_remove:
             optional_data_removed = self._corrupt_data(property_to_remove)
             document_validation.DocumentValidation(optional_data_removed)
+
+    @mock.patch.object(document_validation, 'LOG', autospec=True)
+    def test_abstract_document_not_validated(self, mock_log):
+        self._read_data('sample_document')
+        # Set the document to abstract.
+        updated_data = self._corrupt_data(
+            'metadata.layeringDefinition.abstract', True, op='replace')
+        # Guarantee that a validation error is thrown by removing a required
+        # property.
+        del updated_data['metadata']['layeringDefinition']['layer']
+
+        document_validation.DocumentValidation(updated_data)
+        self.assertTrue(mock_log.info.called)
+        self.assertIn("Skipping schema validation for abstract document",
+                      mock_log.info.mock_calls[0][1][0])

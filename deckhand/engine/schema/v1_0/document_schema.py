@@ -54,40 +54,40 @@ schema = {
                     'pattern': '^(metadata/Document/v[1]{1})$'
                 },
                 'name': {'type': 'string'},
-                'labels': {
-                    'type': 'object',
-                    'properties': {
-                        'component': {'type': 'string'},
-                        'hostname': {'type': 'string'}
-                    },
-                    'additionalProperties': False,
-                    'required': ['component', 'hostname']
-                },
-                'layerDefinition': {
+                'labels': {'type': 'object'},
+                'layeringDefinition': {
                     'type': 'object',
                     'properties': {
                         'layer': {'type': 'string'},
                         'abstract': {'type': 'boolean'},
-                        'childSelector': {
-                            'type': 'object',
-                            'properties': {
-                                'label': {'type': 'string'}
-                            },
-                            'additionalProperties': False,
-                            'required': ['label']
+                        # "parentSelector" is optional.
+                        'parentSelector': {'type': 'object'},
+                        # "actions" is optional.
+                        'actions': {
+                            'type': 'array',
+                            'items': {
+                                'type': 'object',
+                                'properties': {
+                                    'method': {'enum': ['replace', 'delete',
+                                                        'merge']},
+                                    'path': {'type': 'string'}
+                                },
+                                'additionalProperties': False,
+                                'required': ['method', 'path']
+                            }
                         }
                     },
                     'additionalProperties': False,
-                    'required': ['layer', 'abstract', 'childSelector']
+                    'required': ['layer', 'abstract']
                 },
+                # "substitutions" is optional.
                 'substitutions': {
                     'type': 'array',
                     'items': substitution_schema
                 }
             },
             'additionalProperties': False,
-            'required': ['schema', 'name', 'labels',
-                         'layerDefinition', 'substitutions']
+            'required': ['schema', 'name', 'layeringDefinition']
         },
         'data': {
             'type': 'object'

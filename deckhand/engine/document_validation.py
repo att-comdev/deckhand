@@ -13,27 +13,33 @@
 # limitations under the License.
 
 import jsonschema
+from oslo_log import log as logging
 
 from deckhand.engine.schema import base_schema
 from deckhand.engine.schema import v1_0
 from deckhand import errors
 
+LOG = logging.getLogger(__name__)
+
 
 class DocumentValidation(object):
     """Class for document validation logic for YAML files.
 
-    This class is responsible for parsing, validating and retrieving secret
-    values for values stored in the YAML file.
+    This class is responsible for validating YAML files according to their
+    schema.
 
-    :param data: YAML data that requires secrets to be validated, merged and
-        consolidated.
+    :param documents: Documents to be validated.
+    :type documents: List of dictionaries or dictionary.
     """
 
-    def __init__(self, data):
-        self._inner = data
+    def __init__(self, documents):
+        if not isinstance(documents, (list, tuple)):
+            documents = [documents]
+
+        self.documents = documents
         self.pre_validate_data()
 
-    class SchemaVersion(object):
+    class SchemaType(object):
         """Class for retrieving correct schema for pre-validation on YAML.
 
         Retrieves the schema that corresponds to "apiVersion" in the YAML
@@ -60,7 +66,7 @@ class DocumentValidation(object):
              'schema': v1_0.validation_schema}]
 
         def __init__(self, data):
-            """Constructor for ``SchemaVersion``.
+            """Constructor for ``SchemaType``.
 
             Retrieve the relevant schema based on the API version and schema
             name contained in `document.schema` where `document` constitutes a
@@ -92,6 +98,11 @@ class DocumentValidation(object):
     def pre_validate_data(self):
         """Pre-validate that the YAML file is correctly formatted.
 
+        All concrete documents in the revision successfully pass their JSON
+        schema validations. The result of the validation is stored under
+        the "deckhand-document-schema-validation" validation namespace for
+        a document revision.
+
         Validation is broken up into 2 stages:
 
             1) Validate that each document contains the basic bulding blocks
@@ -99,25 +110,44 @@ class DocumentValidation(object):
             2) Validate each specific document type (e.g. validation policy)
                using a more detailed schema.  
         """
-        # Subject each document to basic validation to verify that each
-        # major property is present (schema, metadata, data).
-        try:
-            jsonschema.validate(self._inner, base_schema.schema)
-        except jsonschema.exceptions.ValidationError as e:
-            raise errors.InvalidDocumentFormat(
-                detail=e.message, schema=e.schema)
+        for document in self.documents:
+            # Subject every document to basic validation to verify that each
+            # main section is present (schema, metadata, data).
+            try:
+                jsonschema.validate(document, base_schema.schema)
+            except jsonschema.exceptions.ValidationError as e:
+                raise errors.InvalidDocumentFormat(
+                    detail=e.message, schema=e.schema)
 
-        doc_schema_version = self.SchemaVersion(self._inner)
-        if doc_schema_version.schema is None:
-            # TODO(fmontei): Raise a custom exception type once other PRs are
-            # merged. 
-            raise ValueError(
-                "Could not determine the validation schema to validate the "
-                "schema: %s." % self._inner['schema'])
+            doc_schema_type = self.SchemaType(document)
+            if doc_schema_type.schema is None:
+                raise errors.UknownDocumentFormat(
+                    document_type=document['schema'])
 
+            # Perform more detailed validation on each document depending on
+            # its schema. If the document is abstract, validation errors are
+            # ignored.
+            try:
+                jsonschema.validate(document, doc_schema_type.schema)
+            except jsonschema.exceptions.ValidationError as e:
+                # TODO(fmontei): Use the `Document` object wrapper instead
+                # once other PR is merged.
+                if not self._is_abstract(document):
+                    raise errors.InvalidDocumentFormat(
+                        detail=e.message, schema=e.schema,
+                        document_type=document['schema'])
+                else:
+                    LOG.info('Skipping schema validation for abstract '
+                             'document: %s.' % document)
+
+    def _is_abstract(self, document):
         try:
-            jsonschema.validate(self._inner, doc_schema_version.schema)
-        except jsonschema.exceptions.ValidationError as e:
-            raise errors.InvalidDocumentFormat(
-                detail=e.message, schema=e.schema,
-                document_type=self._inner['schema'])
+            is_abstract = document['metadata']['layeringDefinition'][
+                'abstract'] == True
+            return is_abstract
+        except KeyError:
+            # NOTE(fmontei): If the document is not a layering policy or the
+            # "abstract" property is not present in the layering policy, then
+            # assume the document is concrete.
+            pass
+        return False

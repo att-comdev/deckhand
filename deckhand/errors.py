@@ -48,14 +48,20 @@ class DeckhandException(Exception):
 class InvalidDocumentFormat(DeckhandException):
     msg_fmt = ("The provided YAML failed schema validation. Details: "
                "%(detail)s. Schema: %(schema)s.")
-    alt_msg_fmt = ("The provided %(doc_type)s YAML failed schema "
+    alt_msg_fmt = ("The provided %(document_type)s YAML failed schema "
                    "validation. Details: %(detail)s. Schema: %(schema)s.")
 
     def __init__(self, document_type=None, **kwargs):
         if document_type:
             self.msg_fmt = self.alt_msg_fmt
-            kwargs.update({'doc_type': document_type})
+            kwargs.update({'document_type': document_type})
         super(InvalidDocumentFormat, self).__init__(**kwargs)
+
+
+class UnknownDocumentFormat(DeckhandException):
+    msg_fmt = ("Could not determine the validation schema to validate the "
+                "document type: %(document_type)s.")
+    code = 500
 
 
 class RevisionNotFound(DeckhandException):

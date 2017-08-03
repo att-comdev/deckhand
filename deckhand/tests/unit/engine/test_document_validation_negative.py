@@ -64,7 +64,11 @@ class TestDocumentValidationNegative(
     def test_document_missing_required_sections(self):
         self._read_data('sample_document')
         properties_to_remove = self.BASIC_ATTRS + (
-            'metadata.substitutions',
+            'metadata.layeringDefinition',
+            'metadata.layeringDefinition.abstract',
+            'metadata.layeringDefinition.layer',
+            'metadata.layeringDefinition.actions.0.method',
+            'metadata.layeringDefinition.actions.0.path',
             'metadata.substitutions.0.dest',
             'metadata.substitutions.0.dest.path',
             'metadata.substitutions.0.src',
@@ -72,6 +76,13 @@ class TestDocumentValidationNegative(
             'metadata.substitutions.0.src.name',
             'metadata.substitutions.0.src.path')
         self._test_missing_required_sections(properties_to_remove)
+
+    def test_document_invalid_layering_definition_action(self):
+        self._read_data('sample_document')
+        updated_data = self._corrupt_data(
+            'metadata.layeringDefinition.actions.0.action', 'invalid',
+            op='replace')
+        self._test_missing_required_sections(updated_data)
 
     def test_layering_policy_missing_required_sections(self):
         self._read_data('sample_layering_policy')

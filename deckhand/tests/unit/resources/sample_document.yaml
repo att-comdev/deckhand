@@ -7,11 +7,17 @@ metadata:
   labels:
     component: apiserver
     hostname: server0
-  layerDefinition:
+  layeringDefinition:
       layer: global
-      abstract: True
-      childSelector:
-        label: value
+      abstract: False
+      parentSelector:
+        required_key_a: required_label_a
+        required_key_b: required_label_b
+      actions:
+        - method: merge
+          path: .path.to.merge.into.parent
+        - method: delete
+          path: .path.to.delete
   substitutions:
     - dest:
         path: .chart.values.tls.certificate
