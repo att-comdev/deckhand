@@ -48,6 +48,8 @@ class DocumentValidation(object):
              'schema': v1_0.certificate_schema},
             {'id': 'deckhand/DataSchema',
              'schema': v1_0.data_schema},
+            # NOTE(fmontei): Fall back to the metadata's schema for validating
+            # generic documents.
             {'id': 'metadata/Document',
              'schema': v1_0.document_schema},
             {'id': 'deckhand/LayeringPolicy',
@@ -70,7 +72,8 @@ class DocumentValidation(object):
             self.schema = self.get_schema(data)
 
         def get_schema(self, data):
-            # Fallback to `document.metadata.schema`.
+            # Fall back to `document.metadata.schema` if the schema cannot be
+            # determined from `data.schema`.
             for doc_property in [data['schema'], data['metadata']['schema']]:
                 schema = self._get_schema_by_property(doc_property)
                 if schema:
@@ -87,18 +90,23 @@ class DocumentValidation(object):
             return None
 
     def pre_validate_data(self):
-        """Pre-validate that the YAML file is correctly formatted."""
-        self._validate_with_schema()
+        """Pre-validate that the YAML file is correctly formatted.
 
-    def _validate_with_schema(self):
+        Validation is broken up into 2 stages:
+
+            1) Validate that each document contains the basic bulding blocks
+               needed: "schema", "metadata" and "data" using a "base" schema.
+            2) Validate each specific document type (e.g. validation policy)
+               using a more detailed schema.  
+        """
         # Subject each document to basic validation to verify that each
         # major property is present (schema, metadata, data).
         try:
             jsonschema.validate(self._inner, base_schema.schema)
         except jsonschema.exceptions.ValidationError as e:
             raise errors.InvalidFormat(
-                'The provided YAML file is invalid. Exception: %s. '
-                'Schema: %s.' % (e.message, e.schema))
+                'The provided YAML file failed basic validation. '
+                'Exception: %s. Schema: %s.' % (e.message, e.schema))
 
         doc_schema_version = self.SchemaVersion(self._inner)
         if doc_schema_version.schema is None:
