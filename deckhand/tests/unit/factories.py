@@ -74,14 +74,14 @@ class DocumentFactory(object):
             include 2 or 3.
         :type num_layers: integer
         :param docs_per_layer: The number of documents to be included per
-            layer. For example, if num_layers is 3, then docs_per_layer can
-            be (1, 1, 1) for 1 document for each layer or (1, 2, 3) for 1 doc
-            for the 1st layer, 2 docs for the 2nd layer, and 3 docs for the 3rd
-            layer.
+            layer. For example, if ``num_layers`` is 3, then ``docs_per_layer``
+            can be (1, 1, 1) for 1 document for each layer or (1, 2, 3) for 1
+            doc for the 1st layer, 2 docs for the 2nd layer, and 3 docs for the
+            3rd layer.
         :type docs_per_layer: tuple, list
-        :raises TypeError: If `docs_per_layer` is not the right type.
-        :raises ValueError: If `num_layers` is not the right value or isn't
-            compatible with `docs_per_layer`.
+        :raises TypeError: If ``docs_per_layer`` is not the right type.
+        :raises ValueError: If ``num_layers`` is not the right value or isn't
+            compatible with ``docs_per_layer``.
         """
         # Set up the layering definition's layerOrder.
         if num_layers == 2:
@@ -207,7 +207,7 @@ class DocumentFactory(object):
                         'actions'] = mapping[actions_key]['actions']
                 except KeyError as e:
                     LOG.warning('Could not map %s because it was not found in '
-                                'the `mapping` list.' % e.args[0])
+                                'the `mapping` dict.' % e.args[0])
                     pass
 
                 rendered_template.append(layer_template)

@@ -168,6 +168,22 @@ class TestDocumentLayering2LayersAbstractConcrete(TestDocumentLayering):
         self._test_layering(documents, site_expected,
                             global_expected=global_expected)
 
+    def test_layering_site_and_global_abstract(self):
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_SITE_DATA_1_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "delete", "path": '.a'}]}
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen(mapping, site_abstract=True,
+                                    global_abstract=True)
+
+        site_expected = {"a": {"x": 7, "z": 3}, "b": 4}
+        global_expected = {'a': {'x': 1, 'y': 2}, 'c': 9}
+        self._test_layering(documents, site_expected,
+                            global_expected=global_expected)
+
 
 class TestDocumentLayering2Layers2Sites(TestDocumentLayering):
 
@@ -307,7 +323,8 @@ class TestDocumentLayering3Layers(TestDocumentLayering):
             "_SITE_DATA_1_": {"data": {"b": 4}},
             "_REGION_ACTIONS_1_": {
                 "actions": [{"path": ".a", "method": "delete"}]},
-            "_SITE_ACTIONS_1_": {"actions": [{"method": "delete", "path": ".b"}]}
+            "_SITE_ACTIONS_1_": {"actions": [
+                {"method": "delete", "path": ".b"}]}
         }
         doc_factory = factories.DocumentFactory(3, [1, 1, 1])
         documents = doc_factory.gen(mapping, site_abstract=False)
@@ -328,7 +345,8 @@ class TestDocumentLayering3Layers(TestDocumentLayering):
             "_SITE_DATA_1_": {"data": {"b": 4}},
             "_REGION_ACTIONS_1_": {
                 "actions": [{"path": ".", "method": "delete"}]},
-            "_SITE_ACTIONS_1_": {"actions": [{"method": "delete", "path": ".b"}]}
+            "_SITE_ACTIONS_1_": {"actions": [
+                {"method": "delete", "path": ".b"}]}
         }
         doc_factory = factories.DocumentFactory(3, [1, 1, 1])
         documents = doc_factory.gen(mapping, site_abstract=False)
