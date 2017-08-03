@@ -145,9 +145,10 @@ class DocumentValidation(object):
             is_abstract = document['metadata']['layeringDefinition'][
                 'abstract'] == True
             return is_abstract
+        # NOTE(fmontei): If the document is of ``document_schema`` type and
+        # no "layeringDefinition" or "abstract" property is found, then treat
+        # this as a validation error.
         except KeyError:
-            # NOTE(fmontei): If the document is not a layering policy or the
-            # "abstract" property is not present in the layering policy, then
-            # assume the document is concrete.
-            pass
+            doc_schema_type = self.SchemaType(document)
+            return doc_schema_type is v1_0.document_schema
         return False
