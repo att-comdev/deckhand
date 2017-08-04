@@ -33,7 +33,7 @@ schema = {
                 }
             },
             'additionalProperties': False,
-            'required': ['schema', 'name', 'encrypted']
+            'required': ['schema', 'name', 'storagePolicy']
         },
         'data': {'type': 'string'}
     },

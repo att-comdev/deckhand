@@ -81,7 +81,6 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
         invalid_data = [
-            (self._corrupt_data('schema'), 'schema'),
             (self._corrupt_data('metadata'), 'metadata'),
             (self._corrupt_data('metadata.schema'), 'schema'),
             (self._corrupt_data('metadata.name'), 'name'),
@@ -90,8 +89,23 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
         ]
 
         for invalid_entry, missing_key in invalid_data:
-            print invalid_entry
-            print "KEY", missing_key, "\n"
+            with six.assertRaisesRegex(self, errors.InvalidFormat,
+                                       expected_err % missing_key):
+                document_validation.DocumentValidation(invalid_entry)
+
+    def test_certificate_schema_missing_required_sections(self):
+        self._read_data('sample_certificate')
+        expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
+                        " a required property.")
+        invalid_data = [
+            (self._corrupt_data('metadata'), 'metadata'),
+            (self._corrupt_data('metadata.schema'), 'schema'),
+            (self._corrupt_data('metadata.name'), 'name'),
+            (self._corrupt_data('metadata.storagePolicy'), 'storagePolicy'),
+            (self._corrupt_data('data'), 'data')
+        ]
+
+        for invalid_entry, missing_key in invalid_data:
             with six.assertRaisesRegex(self, errors.InvalidFormat,
                                        expected_err % missing_key):
                 document_validation.DocumentValidation(invalid_entry)
@@ -101,7 +115,6 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
         invalid_data = [
-            (self._corrupt_data('schema'), 'schema'),
             (self._corrupt_data('metadata'), 'metadata'),
             (self._corrupt_data('metadata.schema'), 'schema'),
             (self._corrupt_data('metadata.name'), 'name'),
@@ -163,7 +176,6 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
         invalid_data = [
-            (self._corrupt_data('schema'), 'schema'),
             (self._corrupt_data('metadata'), 'metadata'),
             (self._corrupt_data('metadata.schema'), 'schema'),
             (self._corrupt_data('metadata.name'), 'name'),
@@ -176,12 +188,39 @@ class TestDocumentValidation(test_base.DeckhandTestCase):
                                        expected_err % missing_key):
                 document_validation.DocumentValidation(invalid_entry)
 
+    def test_passphrase_missing_required_sections(self):
+        self._read_data('sample_passphrase')
+        expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
+                        " a required property.")
+        invalid_data = [
+            (self._corrupt_data('metadata'), 'metadata'),
+            (self._corrupt_data('metadata.schema'), 'schema'),
+            (self._corrupt_data('metadata.name'), 'name'),
+            (self._corrupt_data('metadata.storagePolicy'), 'storagePolicy'),
+            (self._corrupt_data('data'), 'data')
+        ]
+
+        for invalid_entry, missing_key in invalid_data:
+            with six.assertRaisesRegex(self, errors.InvalidFormat,
+                                       expected_err % missing_key):
+                document_validation.DocumentValidation(invalid_entry)
+
+    def test_passphrase_with_incorrect_storage_policy(self):
+        self._read_data('sample_passphrase')
+        expected_err = ("The provided YAML file is invalid. Exception: "
+                        "'cleartext' does not match '^(encrypted)$'.")
+        self.data['metadata']['storagePolicy'] = 'cleartext'
+
+        e = self.assertRaises(
+            errors.InvalidFormat, document_validation.DocumentValidation,
+            self.data)
+        self.assertIn(expected_err, str(e))
+
     def test_validation_policy_schema_missing_required_sections(self):
         self._read_data('sample_validation_policy')
         expected_err = ("The provided YAML file is invalid. Exception: '%s' is"
                         " a required property.")
         invalid_data = [
-            (self._corrupt_data('schema'), 'schema'),
             (self._corrupt_data('metadata'), 'metadata'),
             (self._corrupt_data('metadata.schema'), 'schema'),
             (self._corrupt_data('metadata.name'), 'name'),

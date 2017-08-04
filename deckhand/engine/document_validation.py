@@ -44,7 +44,7 @@ class DocumentValidation(object):
         schema_versions_info = [
             {'id': 'deckhand/CertficiateKey',
              'schema': v1_0.certificate_key_schema},
-            {'id': 'deckhand/Certficiate',
+            {'id': 'deckhand/Certificate',
              'schema': v1_0.certificate_schema},
             {'id': 'deckhand/DataSchema',
              'schema': v1_0.data_schema},
