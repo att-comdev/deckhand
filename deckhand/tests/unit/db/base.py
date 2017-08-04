@@ -25,6 +25,8 @@ DOCUMENT_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
 REVISION_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
     "id", "documents")
 
+DOCUMENT_EXPECTED_VALIDATIONS = ['deckhand-document-schema-validation']
+
 
 class DocumentFixture(object):
 
@@ -58,7 +60,11 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         if not isinstance(payload, list):
             payload = [payload]
 
-        docs = db_api.documents_create(payload)
+        validations = {
+            x['metadata']['name']: DOCUMENT_EXPECTED_VALIDATIONS
+            for x in payload
+        }
+        docs = db_api.documents_create(payload, validations)
         for idx, doc in enumerate(docs):
             self._validate_document(expected=payload[idx], actual=doc)
         return docs
@@ -98,13 +104,11 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         if not is_deleted:
             expected_fields.remove('deleted_at')
 
-        expected_validations = ['deckhand-document-schema-validation']
-
         self.assertIsInstance(actual, dict)
         for field in expected_fields:
             self.assertIn(field, actual)
 
-        for validation in expected_validations:
+        for validation in DOCUMENT_EXPECTED_VALIDATIONS:
             self.assertIn(validation, actual['validations'])
 
         if expected:

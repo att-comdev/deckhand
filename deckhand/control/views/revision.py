@@ -23,8 +23,6 @@ class ViewBuilder(common.ViewBuilder):
 	def list(self, revisions):
 	    resp_body = {
 	        'count': len(revisions),
-	        'next': None,
-	        'prev': None,
 	        'results': []
 	    }
 

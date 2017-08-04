@@ -107,12 +107,26 @@ class DocumentValidation(object):
             1) Validate that each document contains the basic bulding blocks
                needed: "schema", "metadata" and "data" using a "base" schema.
             2) Validate each specific document type (e.g. validation policy)
-               using a more detailed schema.  
+               using a more detailed schema.
+
+        :returns: Dictionary mapping with keys being the unique name for each
+            document and values being the validations executed for that
+            document, including failed and succeeded validations.
         """
+        validations = {}
+
         for document in self.documents:
-            self._validate_one(document)
+            document_validations = self._validate_one(document)
+            validations.setdefault(
+                document['metadata']['name'], document_validations)
+
+        return validations
 
     def _validate_one(self, document):
+        # TODO: Build this from validating the document against internal
+        # validations and validation policies.
+        validations = ['deckhand-document-schema-validation']
+
         # Subject every document to basic validation to verify that each
         # main section is present (schema, metadata, data).
         try:
@@ -141,6 +155,8 @@ class DocumentValidation(object):
             else:
                 LOG.info('Skipping schema validation for abstract '
                          'document: %s.' % document)
+
+        return validations
 
     def _is_abstract(self, document):
         try:

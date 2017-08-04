@@ -30,7 +30,7 @@ class TestRevisionViews(base.TestDbBase):
         revisions = self._list_revisions()
         revisions_view = self.view_builder.list(revisions)
 
-        expected_attrs = ('next', 'prev', 'results', 'count')
+        expected_attrs = ('results', 'count')
         for attr in expected_attrs:
             self.assertIn(attr, revisions_view)
         # Validate that only 1 revision was returned.
@@ -52,7 +52,7 @@ class TestRevisionViews(base.TestDbBase):
             revisions = self._list_revisions()
         revisions_view = self.view_builder.list(revisions)
 
-        expected_attrs = ('next', 'prev', 'results', 'count')
+        expected_attrs = ('results', 'count')
         for attr in expected_attrs:
             self.assertIn(attr, revisions_view)
         # Validate that only 1 revision was returned.
