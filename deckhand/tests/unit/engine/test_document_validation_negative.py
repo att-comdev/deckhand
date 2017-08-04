@@ -44,7 +44,8 @@ class TestDocumentValidationNegative(
 
             with self.assertRaisesRegex(errors.InvalidDocumentFormat,
                                         expected_err):
-                document_validation.DocumentValidation(invalid_data)
+                document_validation.DocumentValidation(
+                    invalid_data).validate_all()
 
     def test_certificate_key_missing_required_sections(self):
         self._read_data('sample_certificate_key')
@@ -102,9 +103,9 @@ class TestDocumentValidationNegative(
         wrong_data = self._corrupt_data('metadata.storagePolicy', 'cleartext',
                                         op='replace')
 
+        doc_validation = document_validation.DocumentValidation(wrong_data)
         e = self.assertRaises(errors.InvalidDocumentFormat,
-                              document_validation.DocumentValidation,
-                              wrong_data)
+                              doc_validation.validate_all)
         self.assertIn(expected_err, str(e))
 
     def test_validation_policy_missing_required_sections(self):

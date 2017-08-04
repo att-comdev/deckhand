@@ -98,10 +98,6 @@ class Revision(BASE, DeckhandBase):
 
     id = Column(String(36), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
-    parent_id = Column(Integer, ForeignKey('revisions.id'), nullable=True)
-    child_id = Column(Integer, ForeignKey('revisions.id'), nullable=True)
-    results = Column(oslo_types.JsonEncodedList(), nullable=True)
-
     documents = relationship("Document")
 
     def to_dict(self):
@@ -124,6 +120,7 @@ class Document(BASE, DeckhandBase):
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
     data = Column(oslo_types.JsonEncodedDict(), nullable=False)
+    validations = Column(oslo_types.JsonEncodedList(), nullable=False)
     revision_id = Column(Integer, ForeignKey('revisions.id'), nullable=False)
 
     def to_dict(self, raw_dict=False):

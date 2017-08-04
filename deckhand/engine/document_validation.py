@@ -37,7 +37,6 @@ class DocumentValidation(object):
             documents = [documents]
 
         self.documents = documents
-        self.pre_validate_data()
 
     class SchemaType(object):
         """Class for retrieving correct schema for pre-validation on YAML.
@@ -95,7 +94,7 @@ class DocumentValidation(object):
                     return schema['schema'].schema
             return None
 
-    def pre_validate_data(self):
+    def validate_all(self):
         """Pre-validate that the YAML file is correctly formatted.
 
         All concrete documents in the revision successfully pass their JSON
@@ -111,34 +110,37 @@ class DocumentValidation(object):
                using a more detailed schema.  
         """
         for document in self.documents:
-            # Subject every document to basic validation to verify that each
-            # main section is present (schema, metadata, data).
-            try:
-                jsonschema.validate(document, base_schema.schema)
-            except jsonschema.exceptions.ValidationError as e:
+            self._validate_one(document)
+
+    def _validate_one(self, document):
+        # Subject every document to basic validation to verify that each
+        # main section is present (schema, metadata, data).
+        try:
+            jsonschema.validate(document, base_schema.schema)
+        except jsonschema.exceptions.ValidationError as e:
+            raise errors.InvalidDocumentFormat(
+                detail=e.message, schema=e.schema)
+
+        doc_schema_type = self.SchemaType(document)
+        if doc_schema_type.schema is None:
+            raise errors.UknownDocumentFormat(
+                document_type=document['schema'])
+
+        # Perform more detailed validation on each document depending on
+        # its schema. If the document is abstract, validation errors are
+        # ignored.
+        try:
+            jsonschema.validate(document, doc_schema_type.schema)
+        except jsonschema.exceptions.ValidationError as e:
+            # TODO(fmontei): Use the `Document` object wrapper instead
+            # once other PR is merged.
+            if not self._is_abstract(document):
                 raise errors.InvalidDocumentFormat(
-                    detail=e.message, schema=e.schema)
-
-            doc_schema_type = self.SchemaType(document)
-            if doc_schema_type.schema is None:
-                raise errors.UknownDocumentFormat(
+                    detail=e.message, schema=e.schema,
                     document_type=document['schema'])
-
-            # Perform more detailed validation on each document depending on
-            # its schema. If the document is abstract, validation errors are
-            # ignored.
-            try:
-                jsonschema.validate(document, doc_schema_type.schema)
-            except jsonschema.exceptions.ValidationError as e:
-                # TODO(fmontei): Use the `Document` object wrapper instead
-                # once other PR is merged.
-                if not self._is_abstract(document):
-                    raise errors.InvalidDocumentFormat(
-                        detail=e.message, schema=e.schema,
-                        document_type=document['schema'])
-                else:
-                    LOG.info('Skipping schema validation for abstract '
-                             'document: %s.' % document)
+            else:
+                LOG.info('Skipping schema validation for abstract '
+                         'document: %s.' % document)
 
     def _is_abstract(self, document):
         try:

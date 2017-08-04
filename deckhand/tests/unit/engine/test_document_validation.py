@@ -105,7 +105,7 @@ class TestDocumentValidation(TestDocumentValidationBase):
         ]
 
         for missing_data in optional_missing_data:
-            document_validation.DocumentValidation(missing_data)
+            document_validation.DocumentValidation(missing_data).validate_all()
 
     def test_document_missing_optional_sections(self):
         self._read_data('sample_document')
@@ -117,7 +117,8 @@ class TestDocumentValidation(TestDocumentValidationBase):
 
         for property_to_remove in properties_to_remove:
             optional_data_removed = self._corrupt_data(property_to_remove)
-            document_validation.DocumentValidation(optional_data_removed)
+            document_validation.DocumentValidation(
+                optional_data_removed).validate_all()
 
     @mock.patch.object(document_validation, 'LOG', autospec=True)
     def test_abstract_document_not_validated(self, mock_log):
@@ -129,7 +130,7 @@ class TestDocumentValidation(TestDocumentValidationBase):
         # property.
         del updated_data['metadata']['layeringDefinition']['layer']
 
-        document_validation.DocumentValidation(updated_data)
+        document_validation.DocumentValidation(updated_data).validate_all()
         self.assertTrue(mock_log.info.called)
         self.assertIn("Skipping schema validation for abstract document",
                       mock_log.info.mock_calls[0][1][0])

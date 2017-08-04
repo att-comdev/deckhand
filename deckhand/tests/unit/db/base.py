@@ -21,9 +21,9 @@ from deckhand.tests.unit import base
 
 BASE_EXPECTED_FIELDS = ("created_at", "updated_at", "deleted_at", "deleted")
 DOCUMENT_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
-    "id", "schema", "name", "metadata", "data", "revision_id")
+    "id", "schema", "name", "metadata", "data", "validations", "revision_id")
 REVISION_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
-    "id", "child_id", "parent_id", "documents")
+    "id", "documents")
 
 
 class DocumentFixture(object):
@@ -98,9 +98,14 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         if not is_deleted:
             expected_fields.remove('deleted_at')
 
+        expected_validations = ['deckhand-document-schema-validation']
+
         self.assertIsInstance(actual, dict)
         for field in expected_fields:
             self.assertIn(field, actual)
+
+        for validation in expected_validations:
+            self.assertIn(validation, actual['validations'])
 
         if expected:
             # Validate that the expected values are equivalent to actual
