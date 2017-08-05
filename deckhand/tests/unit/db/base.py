@@ -21,11 +21,9 @@ from deckhand.tests.unit import base
 
 BASE_EXPECTED_FIELDS = ("created_at", "updated_at", "deleted_at", "deleted")
 DOCUMENT_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
-    "id", "schema", "name", "metadata", "data", "validations", "revision_id")
+    "id", "schema", "name", "metadata", "data", "revision_id")
 REVISION_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
     "id", "documents")
-
-DOCUMENT_EXPECTED_VALIDATIONS = ['deckhand-document-schema-validation']
 
 
 class DocumentFixture(object):
@@ -60,11 +58,7 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         if not isinstance(payload, list):
             payload = [payload]
 
-        validations = {
-            x['metadata']['name']: DOCUMENT_EXPECTED_VALIDATIONS
-            for x in payload
-        }
-        docs = db_api.documents_create(payload, validations)
+        docs = db_api.documents_create(payload)
         for idx, doc in enumerate(docs):
             self._validate_document(expected=payload[idx], actual=doc)
         return docs
@@ -107,9 +101,6 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         self.assertIsInstance(actual, dict)
         for field in expected_fields:
             self.assertIn(field, actual)
-
-        for validation in DOCUMENT_EXPECTED_VALIDATIONS:
-            self.assertIn(validation, actual['validations'])
 
         if expected:
             # Validate that the expected values are equivalent to actual

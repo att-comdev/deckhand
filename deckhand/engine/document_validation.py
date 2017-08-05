@@ -17,7 +17,9 @@ from oslo_log import log as logging
 
 from deckhand.engine.schema import base_schema
 from deckhand.engine.schema import v1_0
+from deckhand.engine import types
 from deckhand import errors
+from deckhand import factories
 
 LOG = logging.getLogger(__name__)
 
@@ -113,20 +115,19 @@ class DocumentValidation(object):
             document and values being the validations executed for that
             document, including failed and succeeded validations.
         """
-        validations = {}
+        internal_validation_docs = []
+        validation_policy_factory = factories.ValidationPolicyFactory()
 
         for document in self.documents:
             document_validations = self._validate_one(document)
-            validations.setdefault(
-                document['metadata']['name'], document_validations)
 
-        return validations
+        deckhand_schema_validation = validation_policy_factory.gen(
+            types.DECKHAND_SCHEMA_VALIDATION, status='success')
+        internal_validation_docs.append(deckhand_schema_validation)
+
+        return internal_validation_docs
 
     def _validate_one(self, document):
-        # TODO: Build this from validating the document against internal
-        # validations and validation policies.
-        validations = ['deckhand-document-schema-validation']
-
         # Subject every document to basic validation to verify that each
         # main section is present (schema, metadata, data).
         try:
@@ -155,8 +156,6 @@ class DocumentValidation(object):
             else:
                 LOG.info('Skipping schema validation for abstract '
                          'document: %s.' % document)
-
-        return validations
 
     def _is_abstract(self, document):
         try:

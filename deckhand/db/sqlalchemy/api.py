@@ -111,13 +111,7 @@ def drop_db():
     models.unregister_models(get_engine())
 
 
-def documents_create(documents, session=None):
-    """Create a set of documents."""
-    created_docs = [document_create(doc, session) for doc in documents]
-    return created_docs
-
-
-def documents_create(values_list, validations, session=None):
+def documents_create(values_list, session=None):
     """Create a set of documents and associated schema.
 
     If no changes are detected, a new revision will not be created. This
@@ -125,9 +119,6 @@ def documents_create(values_list, validations, session=None):
     creating unnecessary revisions.
 
     :param values_list: List of documents to be saved.
-    :param validations: Dictionary mapping with keys being the unique name for
-        each document and values being the validations executed for that
-        document, including failed and succeeded validations.
     """
     values_list = copy.deepcopy(values_list)
     session = session or get_session()
@@ -153,7 +144,6 @@ def documents_create(values_list, validations, session=None):
     for values in values_list:
         values['_metadata'] = values.pop('metadata')
         values['name'] = values['_metadata']['name']
-        values['validations'] = validations.get(values['name'], [])
     
         try:
             existing_document = document_get(

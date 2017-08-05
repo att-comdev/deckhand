@@ -120,7 +120,6 @@ class Document(BASE, DeckhandBase):
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
     data = Column(oslo_types.JsonEncodedDict(), nullable=False)
-    validations = Column(oslo_types.JsonEncodedList(), nullable=False)
     revision_id = Column(Integer, ForeignKey('revisions.id'), nullable=False)
 
     def to_dict(self, raw_dict=False):

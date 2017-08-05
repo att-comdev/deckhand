@@ -14,11 +14,11 @@
 
 from deckhand.engine import document_validation
 from deckhand import errors
-from deckhand.tests.unit.engine import test_document_validation
+from deckhand.tests.unit.engine import base as engine_test_base
 
 
 class TestDocumentValidationNegative(
-        test_document_validation.TestDocumentValidationBase):
+        engine_test_base.TestDocumentValidationBase):
     """Negative testing suite for document validation."""
 
     BASIC_ATTRS = (
