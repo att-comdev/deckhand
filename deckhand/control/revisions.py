@@ -18,7 +18,6 @@ from deckhand.control import base as api_base
 from deckhand.control.views import revision as revision_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
-from deckhand import types
 
 
 class RevisionsResource(api_base.BaseResource):
@@ -43,9 +42,7 @@ class RevisionsResource(api_base.BaseResource):
         included.
         """
         try:
-            revision = db_api.revision_get(
-                revision_id,
-                filter_documents_by_schema=types.VALIDATION_POLICY_SCHEMA)
+            revision = db_api.revision_get(revision_id)
         except errors.RevisionNotFound as e:
             return self.return_error(resp, falcon.HTTP_404, message=e)
 

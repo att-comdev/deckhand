@@ -43,19 +43,16 @@ class ViewBuilder(common.ViewBuilder):
         validation_policies = []
         success_status = 'success'
 
-        for doc in revision['documents']:
-            try:
-                validation_policy = {}
-                validation_policy['name'] = doc.get('name')
-                validation_policy['url'] = self._gen_url(doc)
-                validation_policy['status'] = doc['data']['validations'][0][
-                    'status']
-                validation_policies.append(validation_policy)
+        for vp in revision['validation_policies']:
+            validation_policy = {}
+            validation_policy['name'] = vp.get('name')
+            validation_policy['url'] = self._gen_url(vp)
+            validation_policy['status'] = vp['data']['validations'][0][
+                'status']
+            validation_policies.append(validation_policy)
 
-                if validation_policy['status'] != 'success':
-                    success_status = 'failed'
-            except (KeyError, IndexError):
-                pass
+            if validation_policy['status'] != 'success':
+                success_status = 'failed'
 
         return {
             'id': revision.get('id'),

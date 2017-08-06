@@ -23,7 +23,7 @@ BASE_EXPECTED_FIELDS = ("created_at", "updated_at", "deleted_at", "deleted")
 DOCUMENT_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
     "id", "schema", "name", "metadata", "data", "revision_id")
 REVISION_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
-    "id", "documents")
+    "id", "documents", "validation_policies")
 
 
 class DocumentFixture(object):
@@ -54,13 +54,18 @@ class DocumentFixture(object):
 
 class TestDbBase(base.DeckhandWithDBTestCase):
 
-    def _create_documents(self, payload):
-        if not isinstance(payload, list):
-            payload = [payload]
+    def _create_documents(self, documents, validation_policies=None):
+        if not validation_policies:
+            validation_policies = []
 
-        docs = db_api.documents_create(payload)
+        if not isinstance(documents, list):
+            documents = [documents]
+        if not isinstance(validation_policies, list):
+            validation_policies = [validation_policies]
+
+        docs = db_api.documents_create(documents, validation_policies)
         for idx, doc in enumerate(docs):
-            self._validate_document(expected=payload[idx], actual=doc)
+            self._validate_document(expected=documents[idx], actual=doc)
         return docs
 
     def _get_document(self, **fields):
@@ -68,8 +73,8 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         self._validate_document(actual=doc)
         return doc
 
-    def _get_revision(self, revision_id, **kwargs):
-        revision = db_api.revision_get(revision_id, **kwargs)
+    def _get_revision(self, revision_id):
+        revision = db_api.revision_get(revision_id)
         self._validate_revision(revision)
         return revision
 

@@ -18,7 +18,6 @@ import yaml
 import falcon
 
 from deckhand.control import api
-from deckhand.db.sqlalchemy import api as db_api
 from deckhand.tests.functional import base as test_base
 from deckhand import types
 
@@ -43,19 +42,9 @@ class TestDocumentsApi(test_base.TestFunctionalBase):
         expected_validation_policy = self.validation_policy_factory.gen(
             types.DECKHAND_SCHEMA_VALIDATION, status='success')
 
+        # Validate that the correct number of documents were created: one
+        # document corresponding to ``yaml_data``.
         resp_documents = [d for d in yaml.safe_load_all(result.text)]
         self.assertIsInstance(resp_documents, list)
-        self.assertEqual(2, len(resp_documents))
-
-        # Validate that the created validation policy is correctly formatted.
-        resp_validation_policy = list(filter(
-            lambda d: d['schema'] == types.VALIDATION_POLICY_SCHEMA,
-            resp_documents))[0]
-
-        for key, val in expected_validation_policy.items():
-            self.assertIn(key, resp_validation_policy)
-
-        # Validate that the validation policy is stored in the DB.
-        retrieved_validation_policy = db_api.document_get(
-            id=resp_validation_policy['id'])
-        self.assertIsInstance(retrieved_validation_policy, dict)
+        self.assertEqual(1, len(resp_documents))
+        self.assertIn('revision_id', resp_documents[0])

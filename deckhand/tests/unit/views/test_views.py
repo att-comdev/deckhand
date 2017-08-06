@@ -98,9 +98,7 @@ class TestRevisionViews(base.TestDbBase):
         payload.append(validation_policy)
         documents = self._create_documents(payload)
 
-        revision = self._get_revision(
-            documents[0]['revision_id'],
-            filter_documents_by_schema=types.VALIDATION_POLICY_SCHEMA)
+        revision = self._get_revision(documents[0]['revision_id'])
         revision_view = self.view_builder.show(revision)
 
         expected_attrs = ('id', 'url', 'createdAt', 'validationPolicies',
@@ -131,9 +129,7 @@ class TestRevisionViews(base.TestDbBase):
         payload.append(validation_policy)
         documents = self._create_documents(payload)
 
-        revision = self._get_revision(
-            documents[0]['revision_id'],
-            filter_documents_by_schema=types.VALIDATION_POLICY_SCHEMA)
+        revision = self._get_revision(documents[0]['revision_id'])
         revision_view = self.view_builder.show(revision)
 
         expected_attrs = ('id', 'url', 'createdAt', 'validationPolicies',

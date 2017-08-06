@@ -38,6 +38,7 @@ import sqlalchemy.sql as sa_sql
 
 from deckhand.db.sqlalchemy import models
 from deckhand import errors
+from deckhand import types
 from deckhand import utils
 
 sa_logger = None
@@ -111,7 +112,24 @@ def drop_db():
     models.unregister_models(get_engine())
 
 
-def documents_create(values_list, session=None):
+def documents_create(documents, validation_policies, session=None):
+    session = session or get_session()
+
+    documents_created = _documents_create(documents, session)
+    val_policies_created = _documents_create(validation_policies, session)
+    all_docs_created = documents_created + val_policies_created
+
+    if all_docs_created:
+        revision = revision_create()
+        for doc in all_docs_created:
+            with session.begin():
+                doc['revision_id'] = revision['id']
+                doc.save(session=session)
+
+    return [d.to_dict() for d in documents_created]
+
+
+def _documents_create(values_list, session=None):
     """Create a set of documents and associated schema.
 
     If no changes are detected, a new revision will not be created. This
@@ -134,12 +152,19 @@ def documents_create(values_list, session=None):
                 return True
         return False
 
+    def _get_model(schema):
+        if schema == types.LAYERING_POLICY_SCHEMA:
+            return models.LayeringPolicy()
+        elif schema == types.VALIDATION_POLICY_SCHEMA:
+            return models.ValidationPolicy()
+        else:
+            return models.Document()
+
     def _document_create(values):
-        document = models.Document()
+        document = _get_model(values['schema'])
         with session.begin():
             document.update(values)
-            document.save(session=session)
-        return document.to_dict()
+        return document
 
     for values in values_list:
         values['_metadata'] = values.pop('metadata')
@@ -160,10 +185,7 @@ def documents_create(values_list, session=None):
             do_create = True
 
     if do_create:
-        revision = revision_create()
-
         for values in values_list:
-            values['revision_id'] = revision['id']
             doc = _document_create(values)
             documents_created.append(doc)
 
@@ -188,7 +210,7 @@ def revision_create(session=None):
     return revision.to_dict()
 
 
-def revision_get(revision_id, filter_documents_by_schema=None, session=None):
+def revision_get(revision_id, session=None):
     """Return the specified `revision_id`.
 
     :raises: RevisionNotFound if the revision was not found.
@@ -200,11 +222,6 @@ def revision_get(revision_id, filter_documents_by_schema=None, session=None):
             id=revision_id).one().to_dict()
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
-
-    if filter_documents_by_schema:
-        revision['documents'] = list(filter(
-            lambda d: d['schema'] == filter_documents_by_schema,
-            revision['documents']))
 
     return revision
 
