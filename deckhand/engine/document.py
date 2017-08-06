@@ -37,6 +37,9 @@ class Document(object):
         except KeyError:
             return False
 
+    def get_schema(self):
+        return self._inner['schema']
+
     def get_name(self):
         return self._inner['metadata']['name']
 

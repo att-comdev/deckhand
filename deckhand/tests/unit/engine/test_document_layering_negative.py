@@ -16,6 +16,7 @@ from deckhand.engine import layering
 from deckhand import errors
 from deckhand.tests.unit.engine import test_document_layering
 from deckhand.tests.unit import factories
+from deckhand.tests import test_utils
 
 
 class TestDocumentLayeringNegative(
@@ -138,6 +139,27 @@ class TestDocumentLayeringNegative(
         documents[2]['metadata']['layeringDefinition'][
             'parentSelector'] = self_ref
 
-        expected_err = "'name': 'region1'"  # Should be the region name.
+        # Escape '[' and ']' for regex to work.
+        expected_err = ("Missing parent document for document %s."
+                        % documents[2]).replace('[', '\[').replace(']', '\]')
         self.assertRaisesRegex(errors.MissingDocumentParent, expected_err,
                                layering.DocumentLayering, documents)
+
+    def test_layering_documents_with_different_schemas(self):
+        """Validate that attempting to layer documents with different schemas
+        results in errors."""
+        doc_factory = factories.DocumentFactory(3, [1, 1, 1])
+        documents = doc_factory.gen({})
+
+        # Region and site documents should result in no parent being found
+        # since their schemas will not match that of their parent's.
+        for idx in range(2, 3):  # Only region/site have parent.
+            documents[idx]['schema'] = test_utils.rand_name('schema')
+
+            # Escape '[' and ']' for regex to work.
+            expected_err = (
+                "Missing parent document for document %s."
+                % documents[idx]).replace('[', '\[').replace(']', '\]')
+            expected_err = expected_err
+            self.assertRaisesRegex(errors.MissingDocumentParent, expected_err,
+                                   layering.DocumentLayering, documents)

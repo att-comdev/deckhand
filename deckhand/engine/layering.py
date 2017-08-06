@@ -254,8 +254,10 @@ class DocumentLayering(object):
                 return children
 
             for other_doc in layered_docs:
-                other_doc_layer = other_doc.get_layer()
-                if other_doc_layer == children_doc_layer:
+                # Documents with different schemas are never layered together,
+                # so consider only documents with same schema as candidates.
+                if (other_doc.get_layer() == children_doc_layer
+                    and other_doc.get_schema() == doc.get_schema()):
                     # A document can have many labels but should only have one
                     # explicit label for the parentSelector.
                     parent_sel = other_doc.get_parent_selector()
