@@ -62,6 +62,10 @@ class DocumentsResource(api_base.BaseResource):
         except Exception as e:
             return self.return_error(resp, falcon.HTTP_500, message=e)
 
-        resp.status = falcon.HTTP_201
+        if not created_documents:
+            resp.status = falcon.HTTP_201
+        else:
+            resp.status = falcon.HTTP_204
+
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = self.to_yaml_body(created_documents)
