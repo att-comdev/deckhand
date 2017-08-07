@@ -17,9 +17,9 @@ from oslo_log import log as logging
 
 from deckhand.engine.schema import base_schema
 from deckhand.engine.schema import v1_0
-from deckhand.engine import types
 from deckhand import errors
 from deckhand import factories
+from deckhand import types
 
 LOG = logging.getLogger(__name__)
 

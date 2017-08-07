@@ -16,30 +16,52 @@ from deckhand.control import common
 
 
 class ViewBuilder(common.ViewBuilder):
-	"""Model revision API responses as a python dictionary."""
+    """Model revision API responses as a python dictionary."""
 
-	_collection_name = 'revisions'
+    _collection_name = 'revisions'
 
-	def list(self, revisions):
-	    resp_body = {
-	        'count': len(revisions),
-	        'results': []
-	    }
+    def list(self, revisions):
+        resp_body = {
+            'count': len(revisions),
+            'results': []
+        }
 
-	    for revision in revisions:
-	        result = {}
-	        for attr in ('id', 'created_at'):
-	            result[common.to_camel_case(attr)] = revision[attr]
-	        result['count'] = len(revision.pop('documents'))
-	        resp_body['results'].append(result)
+        for revision in revisions:
+            result = {}
+            for attr in ('id', 'created_at'):
+                result[common.to_camel_case(attr)] = revision[attr]
+            result['count'] = len(revision.pop('documents'))
+            resp_body['results'].append(result)
 
-	    return resp_body
+        return resp_body
 
-	def show(self, revision):
-		return {
-			'id': revision.get('id'),
-			'createdAt': revision.get('created_at'),
-			'url': self._gen_url(revision),
-			# TODO: Not yet implemented.
-			'validationPolicies': [],
-		}
+    def show(self, revision):
+        """Generate view for showing revision details.
+
+        Each revision's documents should only be validation policies.
+        """
+        validation_policies = []
+        success_status = 'success'
+
+        for doc in revision['documents']:
+            try:
+                validation_policy = {}
+                validation_policy['name'] = doc.get('name')
+                validation_policy['url'] = self._gen_url(doc)
+                validation_policy['status'] = doc['data']['validations'][0][
+                    'status']
+                validation_policies.append(validation_policy)
+
+                if validation_policy['status'] != 'success':
+                    success_status = 'failed'
+            except (KeyError, IndexError):
+                pass
+
+        return {
+            'id': revision.get('id'),
+            'createdAt': revision.get('created_at'),
+            'url': self._gen_url(revision),
+            # TODO: Not yet implemented.
+            'validationPolicies': validation_policies,
+            'status': success_status
+        }

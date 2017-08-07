@@ -13,33 +13,19 @@
 # limitations under the License.
 
 import os
-import mock
 import yaml
 
 import falcon
-from falcon import testing as falcon_testing
 
 from deckhand.control import api
 from deckhand.db.sqlalchemy import api as db_api
-from deckhand.engine import types
-from deckhand import factories
-from deckhand.tests.unit import base as test_base
+from deckhand.tests.functional import base as test_base
+from deckhand import types
 
 
-class TestDocumentsApi(test_base.DeckhandWithDBTestCase,
-                       falcon_testing.TestCase):
+class TestDocumentsApi(test_base.TestFunctionalBase):
 
-    def setUp(self):
-        super(TestDocumentsApi, self).setUp()
-        self.app = falcon_testing.TestClient(api.start_api())
-        self.validation_policy_factory = factories.ValidationPolicyFactory()
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestDocumentsApi, cls).setUpClass()
-        mock.patch.object(api, '__setup_logging').start()
-
-    def _read_data(self, file_name):
+    def _read_test_resource(self, file_name):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         test_yaml_path = os.path.abspath(os.path.join(
             dir_path, os.pardir, 'unit', 'resources', file_name + '.yaml'))
@@ -49,7 +35,7 @@ class TestDocumentsApi(test_base.DeckhandWithDBTestCase,
         return yaml_data
 
     def test_create_document(self):
-        yaml_data = self._read_data('sample_document')
+        yaml_data = self._read_test_resource('sample_document')
         result = self.app.simulate_post('/api/v1.0/documents', body=yaml_data)
         self.assertEqual(falcon.HTTP_201, result.status)
 

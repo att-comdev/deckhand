@@ -188,17 +188,24 @@ def revision_create(session=None):
     return revision.to_dict()
 
 
-def revision_get(revision_id, session=None):
+def revision_get(revision_id, filter_documents_by_schema=None, session=None):
     """Return the specified `revision_id`.
 
     :raises: RevisionNotFound if the revision was not found.
     """
     session = session or get_session()
+
     try:
         revision = session.query(models.Revision).filter_by(
             id=revision_id).one().to_dict()
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
+
+    if filter_documents_by_schema:
+        revision['documents'] = list(filter(
+            lambda d: d['schema'] == filter_documents_by_schema,
+            revision['documents']))
+
     return revision
 
 

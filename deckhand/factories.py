@@ -17,8 +17,8 @@ import copy
 
 from oslo_log import log as logging
 
-from deckhand.engine import types
 from deckhand.tests import test_utils
+from deckhand import types
 
 LOG = logging.getLogger(__name__)
 
@@ -80,10 +80,9 @@ class ValidationPolicyFactory(DeckhandFactory):
             self.VALIDATION_POLICY_TEMPLATE)
 
         validation_policy_template['metadata'][
-            'name'] = types.DECKHAND_SCHEMA_VALIDATION
+            'name'] = validation_type
         validation_policy_template['data']['validations'] = [
-            {'name': types.DECKHAND_SCHEMA_VALIDATION,
-             'success': status}
+            {'name': validation_type, 'status': status}
         ]
 
         return validation_policy_template

@@ -68,8 +68,8 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         self._validate_document(actual=doc)
         return doc
 
-    def _get_revision(self, revision_id):
-        revision = db_api.revision_get(revision_id)
+    def _get_revision(self, revision_id, **kwargs):
+        revision = db_api.revision_get(revision_id, **kwargs)
         self._validate_revision(revision)
         return revision
 
