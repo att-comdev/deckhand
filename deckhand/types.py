@@ -11,3 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+DOCUMENT_SCHEMA_TYPES = (
+	LAYERING_POLICY_SCHEMA,
+	VALIDATION_POLICY_SCHEMA,
+) = (
+	'deckhand/LayeringPolicy/v1',
+	'deckhand/ValidationPolicy/v1',
+)
+
+DECKHAND_VALIDATION_TYPES = (
+	DECKHAND_SCHEMA_VALIDATION,
+) = (
+	'deckhand-schema-validation',
+)
