@@ -23,7 +23,7 @@ BASE_EXPECTED_FIELDS = ("created_at", "updated_at", "deleted_at", "deleted")
 DOCUMENT_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
     "id", "schema", "name", "metadata", "data", "revision_id")
 REVISION_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
-    "id", "child_id", "parent_id", "documents")
+    "id", "child_id", "parent_id", "documents", "tags")
 
 
 class DocumentFixture(object):

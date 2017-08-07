@@ -18,6 +18,7 @@
 import ast
 import copy
 import datetime
+import functools
 import threading
 
 from oslo_config import cfg
@@ -182,7 +183,6 @@ def document_get(session=None, raw_dict=False, **filters):
 
 ####################
 
-
 def revision_create(session=None):
     session = session or get_session()
     revision = models.Revision()
@@ -204,6 +204,18 @@ def revision_get(revision_id, session=None):
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
     return revision
+
+
+def require_revision_exists(f):
+    """Decorator to require the specified revision to exist.
+    Requires the wrapped function to use revision_id as the first argument.
+    """
+
+    @functools.wraps(f)
+    def wrapper(revision_id, *args, **kwargs):
+        revision_get(revision_id)
+        return f(revision_id, *args, **kwargs)
+    return wrapper
 
 
 def revision_get_all(session=None):
@@ -260,3 +272,89 @@ def _filter_revision_documents(documents, **filters):
             filtered_documents.append(document)
 
     return filtered_documents
+
+
+####################
+
+@require_revision_exists
+def revision_tag_create(revision_id, tag, session=None):
+    """Create a revision tag."""
+    session = session or get_session()
+    tag_model = models.RevisionTag()
+
+    with session.begin():
+        tag_model.update({'tag': tag, 'revision_id': revision_id})
+        tag_model.save(session=session)
+
+    return tag_model.to_dict()
+
+
+@require_revision_exists
+def revision_tag_check(revision_id, tag, session=None):
+    """Return tag details.
+
+    :returns: None
+    :raises RevisionTagNotFound: If `tag` for `revision_id` was not found.
+    """
+    session = session or get_session()
+
+    try:
+        tag = session.query(models.RevisionTag)\
+            .filter_by(tag=tag, revision_id=revision_id)\
+            .one()
+    except sa_orm.exc.NoResultFound:
+        raise errors.RevisionTagNotFound(tag=tag, revision_id=revision_id)
+
+
+@require_revision_exists
+def revision_tag_get_all(revision_id, session=None):
+    """Return list of tags for a revision."""
+    session = session or get_session()
+    tags = session.query(models.RevisionTag)\
+        .filter_by(revision_id=revision_id)\
+        .all()
+    return [t.to_dict() for t in tags]
+
+
+@require_revision_exists
+def revision_tag_delete(revision_id, tag, session=None):
+    """Delete a specific tag for a revision.
+
+    :returns: None
+    """
+    session = session or get_session()
+    result = session.query(models.RevisionTag)\
+                .filter_by(tag=tag, revision_id=revision_id)\
+                .delete(synchronize_session=False)
+    if result == 0:
+        raise errors.RevisionTagNotFound(tag=tag, revision_id=revision_id)
+
+
+@require_revision_exists
+def revision_tag_delete_all(revision_id, session=None):
+    """Delete all tags for a revision.
+
+    :returns: None
+    """
+    session = session or get_session()
+    query = session.query(models.RevisionTag)\
+                .filter_by(revision_id=revision_id)\
+                .delete(synchronize_session=False)
+
+
+@require_revision_exists
+def revision_tag_replace_all(revision_id, tags, session=None):
+    """Delete all tags for a revision.
+
+    :returns: None
+    """
+    revision_tag_delete_all(revision_id, session)
+
+    created_tags = []
+    session = session or get_session()
+
+    for tag in tags:
+        created_tag = revision_tag_create(revision_id, tag, session)
+        created_tags.append(tag)
+
+    return created_tags
