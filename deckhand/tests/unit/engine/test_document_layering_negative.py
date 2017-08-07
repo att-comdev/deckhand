@@ -153,13 +153,16 @@ class TestDocumentLayeringNegative(
 
         # Region and site documents should result in no parent being found
         # since their schemas will not match that of their parent's.
-        for idx in range(2, 3):  # Only region/site have parent.
+        for idx in range(2, 4):  # Only region/site have parent.
+            prev_schema = documents[idx]['schema']
             documents[idx]['schema'] = test_utils.rand_name('schema')
 
             # Escape '[' and ']' for regex to work.
             expected_err = (
                 "Missing parent document for document %s."
                 % documents[idx]).replace('[', '\[').replace(']', '\]')
-            expected_err = expected_err
             self.assertRaisesRegex(errors.MissingDocumentParent, expected_err,
                                    layering.DocumentLayering, documents)
+
+            # Restore schema for next test run.
+            documents[idx]['schema'] = prev_schema
