@@ -28,6 +28,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy import schema
 from sqlalchemy import String
 from sqlalchemy import Text
+from sqlalchemy import Unicode
 from sqlalchemy.types import TypeDecorator
 
 
@@ -37,28 +38,17 @@ BASE = declarative.declarative_base()
 
 
 class DeckhandBase(models.ModelBase, models.TimestampMixin):
-    """Base class for Deckhand Models."""
+    """Base class for Deckhand models."""
 
     __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8'}
     __table_initialized__ = False
-    __protected_attributes__ = set([
-        "created_at", "updated_at", "deleted_at", "deleted"])
 
     def save(self, session=None):
         from deckhand.db.sqlalchemy import api as db_api
         super(DeckhandBase, self).save(session or db_api.get_session())
 
-    created_at = Column(DateTime, default=lambda: timeutils.utcnow(),
-                        nullable=False)
-    updated_at = Column(DateTime, default=lambda: timeutils.utcnow(),
-                        nullable=True, onupdate=lambda: timeutils.utcnow())
-    deleted_at = Column(DateTime, nullable=True)
-    deleted = Column(Boolean, nullable=False, default=False)
-
     def delete(self, session=None):
         """Delete this object."""
-        self.deleted = True
-        self.deleted_at = timeutils.utcnow()
         self.save(session=session)
 
     def keys(self):
@@ -75,6 +65,37 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
         # Remove private state instance, as it is not serializable and causes
         # CircularReference.
         d.pop("_sa_instance_state")
+        return d
+
+    @staticmethod
+    def gen_unqiue_contraint(*fields):
+        constraint_name = 'ix_' + DeckhandBase.__name__.lower() + '_'
+        for field in fields:
+            constraint_name = constraint_name + '_%s' % field
+        return schema.UniqueConstraint(*fields, name=constraint_name)
+
+
+class DeckhandTimestampBase(DeckhandBase, models.TimestampMixin):
+    """Base Deckhand DB model that adds additional timestamp columns (
+    ``deleted`` and ``deleted_at`) to the model."""
+
+    __protected_attributes__ = set([
+        "created_at", "updated_at", "deleted_at", "deleted"])
+
+    created_at = Column(DateTime, default=lambda: timeutils.utcnow(),
+                        nullable=False)
+    updated_at = Column(DateTime, default=lambda: timeutils.utcnow(),
+                        nullable=True, onupdate=lambda: timeutils.utcnow())
+    deleted_at = Column(DateTime, nullable=True)
+    deleted = Column(Boolean, nullable=False, default=False)
+
+    def delete(self, session=None):
+        self.deleted = True
+        self.deleted_at = timeutils.utcnow()
+        super(DeckhandTimestampBase, self).delete(session=session)
+
+    def to_dict(self):
+        d = super(DeckhandTimestampBase, self).to_dict()
 
         if 'deleted_at' not in d:
             d.setdefault('deleted_at', None)
@@ -85,15 +106,8 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
 
         return d
 
-    @staticmethod
-    def gen_unqiue_contraint(self, *fields):
-        constraint_name = 'ix_' + self.__class__.__name__.lower() + '_'
-        for field in fields:
-            constraint_name = constraint_name + '_%s' % field
-        return schema.UniqueConstraint(*fields, name=constraint_name)
 
-
-class Revision(BASE, DeckhandBase):
+class Revision(BASE, DeckhandTimestampBase):
     __tablename__ = 'revisions'
 
     id = Column(String(36), primary_key=True,
@@ -103,14 +117,26 @@ class Revision(BASE, DeckhandBase):
     results = Column(oslo_types.JsonEncodedList(), nullable=True)
 
     documents = relationship("Document")
+    tags = relationship("RevisionTag")
 
     def to_dict(self):
         d = super(Revision, self).to_dict()
         d['documents'] = [doc.to_dict() for doc in self.documents]
+        d['tags'] = [tag.to_dict() for tag in self.tags]
         return d
 
 
-class Document(BASE, DeckhandBase):
+class RevisionTag(BASE, DeckhandBase):
+    UNIQUE_CONSTRAINTS = ('tag', 'revision_id')
+    __tablename__ = 'revision_tags'
+    __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
+
+    tag = Column(Unicode(80), primary_key=True, nullable=False)
+    data = Column(oslo_types.JsonEncodedDict(), nullable=True)
+    revision_id = Column(Integer, ForeignKey('revisions.id'), nullable=False)
+
+
+class Document(BASE, DeckhandTimestampBase):
     UNIQUE_CONSTRAINTS = ('schema', 'name', 'revision_id')
     __tablename__ = 'documents'
     __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
