@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import yaml
 
 import falcon
@@ -21,15 +20,6 @@ from deckhand.tests.functional import base as test_base
 
 
 class TestDocumentsApi(test_base.TestFunctionalBase):
-
-    def _read_test_resource(self, file_name):
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        test_yaml_path = os.path.abspath(os.path.join(
-            dir_path, os.pardir, 'unit', 'resources', file_name + '.yaml'))
-
-        with open(test_yaml_path, 'r') as yaml_file:
-            yaml_data = yaml_file.read()
-        return yaml_data
 
     def test_create_document(self):
         yaml_data = self._read_test_resource('sample_document')
