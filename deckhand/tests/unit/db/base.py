@@ -23,7 +23,7 @@ BASE_EXPECTED_FIELDS = ("created_at", "updated_at", "deleted_at", "deleted")
 DOCUMENT_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
     "id", "schema", "name", "metadata", "data", "revision_id")
 REVISION_EXPECTED_FIELDS = BASE_EXPECTED_FIELDS + (
-    "id", "documents", "validation_policies")
+    "id", "documents", "validation_policies", "tags")
 
 
 class DocumentFixture(object):
@@ -72,6 +72,12 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         doc = db_api.document_get(**fields)
         self._validate_document(actual=doc)
         return doc
+
+    def _create_revision(self):
+        # Automatically creates a revision.
+        documents = [DocumentFixture.get_minimal_fixture()]
+        revision_id = self._create_documents(documents)[0]['revision_id']
+        return revision_id
 
     def _get_revision(self, revision_id):
         revision = db_api.revision_get(revision_id)
