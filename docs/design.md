@@ -719,7 +719,7 @@ Get a detailed description of a particular revision. The status of each
 `ValidationPolicy` belonging to the revision is also included. Valid values
 for the status of each validation policy are:
 
-* `succeded` - All validations associated with the policy are `succeeded`.
+* `succeded` - All validations associated with the policy are `success`.
 * `failed` - Any validation associated with the policy has status `failed`,
   `expired` or `missing`.
 
@@ -796,7 +796,7 @@ This endpoint uses the `write_validation` action.
 
 ### GET `/revisions/{{revision_id}}/validations`
 
-Gets the list of validations which have reported for this revision.
+Gets the list of validations which have been reported for this revision.
 
 Sample response:
 
@@ -864,7 +864,7 @@ errors:
 
 This endpoint uses the `read_validation` action.
 
-### DELETE `/docuemnts/{{schema}}/{{name}}`
+### DELETE `/documents/{{schema}}/{{name}}`
 
 Delete the specified document.  This is equivalent to posting a tombstone for
 the document.
