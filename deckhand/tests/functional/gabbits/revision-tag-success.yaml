@@ -1,0 +1,37 @@
+# Tests the following:
+#
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+  response_headers:
+      content-type: application/x-yaml
+
+tests:
+  - name: purge
+    desc: Begin testing from known state.
+    DELETE: /api/v1.0/revisions
+    status: 204
+
+    # Create a revision implicitly by creating a document.
+  - name: initialize
+    desc: Create initial documents
+    PUT: /api/v1.0/bucket/mop/documents
+    status: 200
+    data: <@resources/design-doc-layering-sample.yaml
+
+  - name: create_tag
+    desc: Create a tag for the revision
+    POST: /api/v1.0/revision/$RESPONSE['$.[0].status.revision']/tags/foo
+    status: 201
+    data: <@resources/design-doc-layering-sample.yaml
+
+  - name: list_tags
+    desc: Verify listing tags includes created tag
+    GET: /api/v1.0/revision/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']/tags
+    status: 200
+
+  - name: show_tag
+    desc: Verify showing created tag works
+    GET: /api/v1.0/revision/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']/tags/foo
+    status: 200

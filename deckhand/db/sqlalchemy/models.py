@@ -26,6 +26,7 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy import schema
 from sqlalchemy import String
+from sqlalchemy import Unicode
 
 
 # Declarative base class which maintains a catalog of classes and tables
@@ -34,28 +35,17 @@ BASE = declarative.declarative_base()
 
 
 class DeckhandBase(models.ModelBase, models.TimestampMixin):
-    """Base class for Deckhand Models."""
+    """Base class for Deckhand models."""
 
     __table_args__ = {'mysql_engine': 'Postgre', 'mysql_charset': 'utf8'}
     __table_initialized__ = False
-    __protected_attributes__ = set([
-        "created_at", "updated_at", "deleted_at", "deleted"])
 
     def save(self, session=None):
         from deckhand.db.sqlalchemy import api as db_api
         super(DeckhandBase, self).save(session or db_api.get_session())
 
-    created_at = Column(DateTime, default=lambda: timeutils.utcnow(),
-                        nullable=False)
-    updated_at = Column(DateTime, default=lambda: timeutils.utcnow(),
-                        nullable=True, onupdate=lambda: timeutils.utcnow())
-    deleted_at = Column(DateTime, nullable=True)
-    deleted = Column(Boolean, nullable=False, default=False)
-
     def delete(self, session=None):
         """Delete this object."""
-        self.deleted = True
-        self.deleted_at = timeutils.utcnow()
         self.save(session=session)
 
     def keys(self):
@@ -68,28 +58,11 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
         return self.__dict__.items()
 
     def to_dict(self, raw_dict=False):
-        """Conver the object into dictionary format.
-
-        :param raw_dict: if True, returns unmodified data; else returns data
-            expected by users.
-        """
+        """Convert the object into dictionary format."""
         d = self.__dict__.copy()
         # Remove private state instance, as it is not serializable and causes
         # CircularReference.
         d.pop("_sa_instance_state")
-
-        if 'deleted_at' not in d:
-            d.setdefault('deleted_at', None)
-
-        for k in ["created_at", "updated_at", "deleted_at", "deleted"]:
-            if k in d and d[k]:
-                d[k] = d[k].isoformat()
-
-        # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
-        # must be used to store document metadata information in the DB.
-        if not raw_dict and '_metadata' in self.keys():
-            d['metadata'] = d['_metadata']
-
         return d
 
     @staticmethod
@@ -100,20 +73,73 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
         return schema.UniqueConstraint(*fields, name=constraint_name)
 
 
-class Revision(BASE, DeckhandBase):
+class DeckhandTimestampBase(DeckhandBase, models.TimestampMixin):
+    """Base Deckhand DB model that adds additional timestamp columns (
+    ``deleted`` and ``deleted_at`) to the model.
+    """
+
+    __protected_attributes__ = set([
+        "created_at", "updated_at", "deleted_at", "deleted"])
+
+    created_at = Column(DateTime, default=lambda: timeutils.utcnow(),
+                        nullable=False)
+    updated_at = Column(DateTime, default=lambda: timeutils.utcnow(),
+                        nullable=True, onupdate=lambda: timeutils.utcnow())
+    deleted_at = Column(DateTime, nullable=True)
+    deleted = Column(Boolean, nullable=False, default=False)
+
+    def delete(self, session=None):
+        self.deleted = True
+        self.deleted_at = timeutils.utcnow()
+        super(DeckhandTimestampBase, self).delete(session=session)
+
+    def to_dict(self, raw_dict=False):
+        """Convert the object into dictionary format.
+
+        :param raw_dict: Renames the key "_metadata" to "metadata".
+        """
+        d = super(DeckhandTimestampBase, self).to_dict()
+
+        for k in ["created_at", "updated_at", "deleted_at", "deleted"]:
+            if k in d and d[k]:
+                d[k] = d[k].isoformat()
+            else:
+                d.setdefault(k, None)
+
+        # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
+        # must be used to store document metadata information in the DB.
+        if not raw_dict and '_metadata' in self.keys():
+            d['metadata'] = d['_metadata']
+
+        return d
+
+
+class Revision(BASE, DeckhandTimestampBase):
     __tablename__ = 'revisions'
 
     id = Column(String(36), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
     documents = relationship("Document")
     validation_policies = relationship("ValidationPolicy")
+    tags = relationship("RevisionTag")
 
     def to_dict(self):
         d = super(Revision, self).to_dict()
         d['documents'] = [doc.to_dict() for doc in self.documents]
         d['validation_policies'] = [
             vp.to_dict() for vp in self.validation_policies]
+        d['tags'] = [tag.to_dict() for tag in self.tags]
         return d
+
+
+class RevisionTag(BASE, DeckhandBase):
+    UNIQUE_CONSTRAINTS = ('tag', 'revision_id')
+    __tablename__ = 'revision_tags'
+    __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
+
+    tag = Column(Unicode(80), primary_key=True, nullable=False)
+    data = Column(oslo_types.JsonEncodedDict(), nullable=True)
+    revision_id = Column(Integer, ForeignKey('revisions.id'), nullable=False)
 
 
 class DocumentMixin(object):
@@ -134,7 +160,7 @@ class DocumentMixin(object):
         return Column(Integer, ForeignKey('revisions.id'), nullable=False)
 
 
-class Document(BASE, DeckhandBase, DocumentMixin):
+class Document(BASE, DeckhandTimestampBase, DocumentMixin):
     UNIQUE_CONSTRAINTS = ('schema', 'name', 'revision_id')
     __tablename__ = 'documents'
     __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
@@ -143,7 +169,7 @@ class Document(BASE, DeckhandBase, DocumentMixin):
                 default=lambda: str(uuid.uuid4()))
 
 
-class LayeringPolicy(BASE, DeckhandBase, DocumentMixin):
+class LayeringPolicy(BASE, DeckhandTimestampBase, DocumentMixin):
 
     # NOTE(fmontei): Only one layering policy can exist per revision, so
     # enforce this constraint at the DB level.
@@ -155,7 +181,7 @@ class LayeringPolicy(BASE, DeckhandBase, DocumentMixin):
                 default=lambda: str(uuid.uuid4()))
 
 
-class ValidationPolicy(BASE, DeckhandBase, DocumentMixin):
+class ValidationPolicy(BASE, DeckhandTimestampBase, DocumentMixin):
 
     UNIQUE_CONSTRAINTS = ('schema', 'name', 'revision_id')
     __tablename__ = 'validation_policies'

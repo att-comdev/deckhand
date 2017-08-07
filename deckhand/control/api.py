@@ -22,6 +22,7 @@ from deckhand.conf import config
 from deckhand.control import base as api_base
 from deckhand.control import documents
 from deckhand.control import revision_documents
+from deckhand.control import revision_tags
 from deckhand.control import revisions
 from deckhand.control import secrets
 from deckhand.db.sqlalchemy import api as db_api
@@ -72,7 +73,10 @@ def start_api(state_manager=None):
         ('revisions', revisions.RevisionsResource()),
         ('revisions/{revision_id}', revisions.RevisionsResource()),
         ('revisions/{revision_id}/documents',
-         revision_documents.RevisionDocumentsResource()),
+            revision_documents.RevisionDocumentsResource()),
+        ('revisions/{revision_id}/tags', revision_tags.RevisionTagsResource()),
+        ('revisions/{revision_id}/tags/{tag}',
+            revision_tags.RevisionTagsResource()),
         ('secrets', secrets.SecretsResource())
     ]
 
