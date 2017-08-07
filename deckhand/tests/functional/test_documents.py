@@ -24,15 +24,6 @@ from deckhand import types
 
 class TestDocumentsApi(test_base.TestFunctionalBase):
 
-    def _read_test_resource(self, file_name):
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        test_yaml_path = os.path.abspath(os.path.join(
-            dir_path, os.pardir, 'unit', 'resources', file_name + '.yaml'))
-
-        with open(test_yaml_path, 'r') as yaml_file:
-            yaml_data = yaml_file.read()
-        return yaml_data
-
     def test_create_document(self):
         yaml_data = self._read_test_resource('sample_document')
         result = self.app.simulate_post('/api/v1.0/documents', body=yaml_data)

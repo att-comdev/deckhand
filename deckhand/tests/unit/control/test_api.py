@@ -18,6 +18,7 @@ from deckhand.control import api
 from deckhand.control import base as api_base
 from deckhand.control import documents
 from deckhand.control import revision_documents
+from deckhand.control import revision_tags
 from deckhand.control import revisions
 from deckhand.control import secrets
 from deckhand.tests.unit import base as test_base
@@ -27,7 +28,8 @@ class TestApi(test_base.DeckhandTestCase):
 
     def setUp(self):
         super(TestApi, self).setUp()
-        for resource in (documents, revision_documents, revisions, secrets):
+        for resource in (documents, revisions, revision_documents,
+                         revision_tags, secrets):
             resource_name = resource.__name__.split('.')[-1]
             resource_obj = mock.patch.object(
                 resource, '%sResource' % resource_name.title().replace(
@@ -53,6 +55,10 @@ class TestApi(test_base.DeckhandTestCase):
                       self.revisions_resource()),
             mock.call('/api/v1.0/revisions/{revision_id}/documents',
                       self.revision_documents_resource()),
+            mock.call('/api/v1.0/revisions/{revision_id}/tags',
+                      self.revision_tags_resource()),
+            mock.call('/api/v1.0/revisions/{revision_id}/tags/{tag}',
+                      self.revision_tags_resource()),
             mock.call('/api/v1.0/secrets', self.secrets_resource())
         ])
         mock_config.parse_args.assert_called_once_with()
