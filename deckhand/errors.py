@@ -61,3 +61,8 @@ class DocumentExists(DeckhandException):
 class RevisionNotFound(DeckhandException):
     msg_fmt = ("The requested revision %(revision)s was not found.")
     code = 403
+
+
+class RevisionTagNotFound(DeckhandException):
+    msg_fmt = ("The requested revision %(revision)s was not found.")
+    code = 403

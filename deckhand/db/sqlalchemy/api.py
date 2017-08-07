@@ -260,3 +260,65 @@ def _filter_revision_documents(documents, **filters):
             filtered_documents.append(document)
 
     return filtered_documents
+
+
+####################
+
+
+def revision_tag_create(tag, revision_id, session=None):
+    """Create a revision tag."""
+    session = session or get_session()
+    tag = models.RevisionTag()
+
+    with session.begin():
+        tag.update({'tag': tag, 'revision_id': revision_id})
+        tag.save(session=session)
+
+    return tag.to_dict()
+
+
+def revision_tag_get(tag, revision_id, session=None):
+    """Return tag details."""
+    session = session or get_session()
+
+    try:
+        tag = session.query(models.Revision)\
+            .filter_by(tag=tag, revision_id=revision_id)\
+            .one()
+    except sa_orm.exc.NoResultFound:
+        raise errors.RevisionTagNotFound(tag=tag)
+
+    return tag.to_dict()
+
+
+def revision_tag_get_all(revision_id, session=None):
+    """Return list of tags for a revision."""
+    session = session or get_session()
+    tags = session.query(models.RevisionTag).all()
+    return [t.to_dict() for t in tags]
+
+
+def revision_tag_delete(tag, revision_id, session=None):
+    """Delete a specific tag for a revision.
+
+    :returns: None
+    """
+    session = session or get_session()
+    result = session.query(models.RevisionTag)\
+                .filter_by(tag=tag, revision_id=revision_id)\
+                .soft_delete(synchronize_session=False)
+    if result == 0:
+        raise errors.RevisionTagNotFound(revision_id=revision_id)
+
+
+def revision_tag_delete_all(revision_id, session=None):
+    """Delete all tags for a revision.
+
+    :returns: None
+    """
+    session = session or get_session()
+    result = session.query(models.RevisionTag)\
+                .filter_by(revision_id=revision_id)\
+                .soft_delete(synchronize_session=False)
+    if result == 0:
+        raise errors.RevisionTagNotFound(revision_id=revision_id)

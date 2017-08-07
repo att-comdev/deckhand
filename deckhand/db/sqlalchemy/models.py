@@ -28,6 +28,7 @@ from sqlalchemy.orm import backref, relationship
 from sqlalchemy import schema
 from sqlalchemy import String
 from sqlalchemy import Text
+from sqlalchemy import Unicode
 from sqlalchemy.types import TypeDecorator
 
 
@@ -86,8 +87,8 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
         return d
 
     @staticmethod
-    def gen_unqiue_contraint(self, *fields):
-        constraint_name = 'ix_' + self.__class__.__name__.lower() + '_'
+    def gen_unqiue_contraint(*fields):
+        constraint_name = 'ix_' + DeckhandBase.__name__.lower() + '_'
         for field in fields:
             constraint_name = constraint_name + '_%s' % field
         return schema.UniqueConstraint(*fields, name=constraint_name)
@@ -103,11 +104,24 @@ class Revision(BASE, DeckhandBase):
     results = Column(oslo_types.JsonEncodedList(), nullable=True)
 
     documents = relationship("Document")
+    tags = relationship("RevisionTag")
 
     def to_dict(self):
         d = super(Revision, self).to_dict()
         d['documents'] = [doc.to_dict() for doc in self.documents]
+        d['tags'] = [tag.to_dict() for tag in self.tags]
         return d
+
+
+class RevisionTag(BASE, DeckhandBase):
+    UNIQUE_CONSTRAINTS = ('tag', 'revision_id')
+    __tablename__ = 'revision_tags'
+    __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
+
+    id = Column(String(36), primary_key=True,
+                default=lambda: str(uuid.uuid4()))
+    tag = Column(Unicode(80), primary_key=True, nullable=False)
+    revision_id = Column(Integer, ForeignKey('revisions.id'), nullable=False)
 
 
 class Document(BASE, DeckhandBase):
