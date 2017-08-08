@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bf230ad_aeed4dd0",
+        "filename": "deckhand/engine/document.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T15:30:55Z",
+      "side": 1,
+      "message": "Is this a validated document or all documents? I see a few pieces below that assume certain things are in place.",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6618342a_7ce6aeaa",
+        "filename": "deckhand/engine/document.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T15:30:55Z",
+      "side": 1,
+      "message": "Do we want the layer names to be case-insensitive? I\u0027m indifferent, but I think it needs to be explicit in the design reference.",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "98a26478_6baebb64",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T15:30:55Z",
+      "side": 1,
+      "message": "If this is not explicit in the design, then I don\u0027t think there is an implicit requirement for this. It should be possible to insert a branch in the tree with the source data even if that branch does not exist in the child document.",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d02447e1_c98fa6bd",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T15:30:55Z",
+      "side": 1,
+      "message": "Again, not sure this is true unless explicitly designed in",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6844a7a_eef4afde",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T15:30:55Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
