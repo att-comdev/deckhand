@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ffecdfda_ed180a5a",
+        "filename": "deckhand/control/views/revision.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "I\u0027ll have to add a TODO for that with a key whose value is null for now. Patch is too big as is.",
+      "parentUuid": "736d6ffd_19efd738",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be1305a3_2fafd4d0",
         "filename": "deckhand/control/views/revision.py",
         "patchSetId": 1
@@ -30,6 +48,47 @@
       "writtenOn": "2017-08-08T16:14:48Z",
       "side": 1,
       "message": "Is there danger to assuming this deep tree structure without checking or handling a keyerror?",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e8c83c8_4ff87adb",
+        "filename": "deckhand/control/views/revision.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "This is how it\u0027s stored in the DB. If the data in there has been corrupted/buggy, I guess I can change this to \"unknown\" or something.",
+      "parentUuid": "be1305a3_2fafd4d0",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d934270e_d8697a4a",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "Spaces.",
+      "range": {
+        "startLine": 172,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 4
+      },
       "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -53,6 +112,47 @@
     },
     {
       "key": {
+        "uuid": "103a86ef_09d0e609",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "That\u0027s a TODO.",
+      "parentUuid": "d876a0de_d4d09531",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b739c96e_eaba35b4",
+        "filename": "deckhand/engine/schema/v1_0/__init__.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "Spaces.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 36
+      },
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc00f1b4_1fd8bd79",
         "filename": "deckhand/engine/schema/v1_0/certificate_key_schema.py",
         "patchSetId": 1
@@ -64,6 +164,24 @@
       "writtenOn": "2017-08-08T16:14:48Z",
       "side": 1,
       "message": "Should these by in python files versus JSON data files?",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "daaaa1d8_aff5b680",
+        "filename": "deckhand/engine/schema/v1_0/certificate_key_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "I prefer Python to allow it to be easily imported. Otherwise I have to dynamically import JSON files and then JSON.load() them which adds overhead.",
+      "parentUuid": "bc00f1b4_1fd8bd79",
       "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -115,6 +233,24 @@
       "writtenOn": "2017-08-08T16:14:48Z",
       "side": 1,
       "message": "The \u0027vx.y\u0027 portion should probably follow Semantic Versioning, but I\u0027m not sure.",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c290723_3116df41",
+        "filename": "deckhand/engine/schema/v1_0/document_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "Fixed in next patch.",
+      "parentUuid": "abb858d6_457b342a",
       "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -189,6 +325,70 @@
     },
     {
       "key": {
+        "uuid": "86f0886f_f0dfe203",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "Yeah, maybe a 400 Bad Request. I\u0027ll fix this in next patch.",
+      "parentUuid": "5a48f5b2_829aacc8",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0286f72f_15e2bf6e",
+        "filename": "deckhand/tests/unit/db/base.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "Spaces.",
+      "range": {
+        "startLine": 51,
+        "startChar": 61,
+        "endLine": 51,
+        "endChar": 62
+      },
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d67acf4f_6e4b74d3",
+        "filename": "deckhand/tests/unit/resources/sample_layering_policy.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "Spaces.",
+      "range": {
+        "startLine": 8,
+        "startChar": 13,
+        "endLine": 8,
+        "endChar": 14
+      },
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "00d834c1_eab104ae",
         "filename": "deckhand/types.py",
         "patchSetId": 1
@@ -200,6 +400,24 @@
       "writtenOn": "2017-08-08T16:14:48Z",
       "side": 1,
       "message": "I think you have tabs here.",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5dff0050_d96eb1b3",
+        "filename": "deckhand/types.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:30:30Z",
+      "side": 1,
+      "message": "Yeah, fixed in next patch.",
+      "parentUuid": "00d834c1_eab104ae",
       "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
