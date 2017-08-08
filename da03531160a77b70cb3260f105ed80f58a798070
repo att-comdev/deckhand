@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "4e0eedbc_322d435d",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T18:13:47Z",
+      "side": 1,
+      "message": "Removing this comment in next patch. As you can see on L147/L164, I do a check to see if the path is just in the child_data; if it is, then I use that and disregard whether the path is in the parent or not. So this comment is not even true in the code.",
+      "parentUuid": "ef3eef44_875b3e85",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d02447e1_c98fa6bd",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 2
@@ -142,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "39b70ff9_8ea7f98b",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T18:13:47Z",
+      "side": 1,
+      "message": "Well, I see this in the design document (under [0]):\n\nmerge - \"deep\" merge child data at the specified path into the existing data\nreplace - overwrite existing data with child data at the specified path\n\nThis implies that the child data is the _source_. If the _source_ data is missing, then that, to me, appears to be a validation error. Otherwise, how do we proceed? Do nothing, i.e. don\u0027t add the key at all, or set the key\u0027s value to null or empty string?\n\nThis argument applies to both \"merge\" and \"replace\" operations because both use the child data as the source.\n\nThat being said, I could change the condition to \"elif last_key not in child_data\" to make this even more explicit in the code.\n\n[0] https://github.com/att-comdev/deckhand/blob/master/docs/design.md#layering",
+      "parentUuid": "6cdb08c0_dc80bba4",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6844a7a_eef4afde",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 2
@@ -153,6 +189,24 @@
       "writtenOn": "2017-08-08T15:30:55Z",
       "side": 1,
       "message": "Same",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5dbee97_48695c7b",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T18:13:47Z",
+      "side": 1,
+      "message": "See above.",
+      "parentUuid": "f6844a7a_eef4afde",
       "revId": "da03531160a77b70cb3260f105ed80f58a798070",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
