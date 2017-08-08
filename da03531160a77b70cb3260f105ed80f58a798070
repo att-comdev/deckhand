@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c0edb2db_f6517203",
+        "filename": "deckhand/engine/document.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "The intention right now is to use this for layering purposes, which will be done after initial schema validation. I will clarify in the docstring. Eventually, however, I want to use this object wrapper as much as possible throughout the engine module to avoid having to constantly do these long chains of indexing into nested dicts.",
+      "parentUuid": "8bf230ad_aeed4dd0",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6618342a_7ce6aeaa",
         "filename": "deckhand/engine/document.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-08T15:30:55Z",
       "side": 1,
       "message": "Do we want the layer names to be case-insensitive? I\u0027m indifferent, but I think it needs to be explicit in the design reference.",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7710d22e_9deab8cc",
+        "filename": "deckhand/engine/document.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "The layers are arbitrarily named, so I\u0027ll remove .lower() in next patch.",
+      "parentUuid": "6618342a_7ce6aeaa",
       "revId": "da03531160a77b70cb3260f105ed80f58a798070",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ef3eef44_875b3e85",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "I\u0027ll re-read the relevant section in the design document and revisit this if need be. Some of these docstrings might just be a little out of date though after so many changes.",
+      "parentUuid": "98a26478_6baebb64",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d02447e1_c98fa6bd",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 2
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "6cdb08c0_dc80bba4",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Again, I\u0027ll check design doc. Thought this was mentioned in there or Mark told me this at some point.",
+      "parentUuid": "d02447e1_c98fa6bd",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6844a7a_eef4afde",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 2
@@ -81,6 +153,259 @@
       "writtenOn": "2017-08-08T15:30:55Z",
       "side": 1,
       "message": "Same",
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a892ab0f_31572aef",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Idea is to pass these codes to ``self.return_error`` in a future patch (which will then convert it to the right falcon error).",
+      "range": {
+        "startLine": 71,
+        "startChar": 4,
+        "endLine": 71,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec8136ea_09258256",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 337,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a40344e_ec44a6e2",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 435,
+        "startChar": 0,
+        "endLine": 435,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4011d97_59eeaeb2",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 515,
+        "startChar": 0,
+        "endLine": 515,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "097462b7_84d4f900",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 520,
+        "startChar": 11,
+        "endLine": 520,
+        "endChar": 19
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "699f0e25_1e22e1cc",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 540,
+        "startChar": 0,
+        "endLine": 540,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2616369a_d53c10a5",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 565,
+        "startChar": 0,
+        "endLine": 565,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1db96d15_570e0c39",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 590,
+        "startChar": 0,
+        "endLine": 590,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e542262e_e0fa3a95",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 616,
+        "startChar": 0,
+        "endLine": 616,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9c2dc35_c947adb9",
+        "filename": "deckhand/tests/unit/engine/test_document_layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 644,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 644,
+        "startChar": 0,
+        "endLine": 644,
+        "endChar": 8
+      },
+      "revId": "da03531160a77b70cb3260f105ed80f58a798070",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58d209ad_9a4ec741",
+        "filename": "deckhand/tests/unit/factories.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-08T16:17:26Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 151,
+        "endChar": 12
+      },
       "revId": "da03531160a77b70cb3260f105ed80f58a798070",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
