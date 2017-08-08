@@ -17,6 +17,7 @@ import yaml
 
 import falcon
 from falcon import request
+from oslo_context import context
 from oslo_log import log as logging
 from oslo_serialization import jsonutils as json
 import six
@@ -29,9 +30,6 @@ LOG = logging.getLogger(__name__)
 class BaseResource(object):
     """Base resource class for implementing API resources."""
 
-    def __init__(self):
-        self.authorized_roles = []
-
     def on_options(self, req, resp):
         self_attrs = dir(self)
         methods = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'PATCH']
@@ -43,37 +41,6 @@ class BaseResource(object):
 
         resp.headers['Allow'] = ','.join(allowed_methods)
         resp.status = falcon.HTTP_200
-
-    # For authorizing access at the Resource level. A Resource requiring
-    # finer-grained authorization at the method or instance level must
-    # implement that in the request handlers
-    def authorize_roles(self, role_list):
-        authorized = set(self.authorized_roles)
-        applied = set(role_list)
-
-        if authorized.isdisjoint(applied):
-            return False
-        else:
-            return True
-
-    def req_json(self, req):
-        if req.content_length is None or req.content_length == 0:
-            return None
-
-        if req.content_type is not None and req.content_type.lower() \
-            == 'application/json':
-            raw_body = req.stream.read(req.content_length or 0)
-
-            if raw_body is None:
-                return None
-
-            try:
-                return json.loads(raw_body.decode('utf-8'))
-            except json.JSONDecodeError as jex:
-                raise errors.InvalidFormat("%s: Invalid JSON in body: %s" % (
-                    req.path, jex))
-        else:
-            raise errors.InvalidFormat("Requires application/json payload.")
 
     def return_error(self, resp, status_code, message="", retry=False):
         resp.body = json.dumps(
@@ -95,26 +62,44 @@ class BaseResource(object):
                         'body to YAML format.')
 
 
-class DeckhandRequestContext(object):
+class DeckhandRequestContext(context.RequestContext):
+    """Stores information about the security context.
 
-    def __init__(self):
-        self.user = None
-        self.roles = []
-        self.request_id = str(uuid.uuid4())
+    Stores how the user accesses the system, as well as additional request
+    information.
+    """
 
-    def set_user(self, user):
-        self.user = user
+    def __init__(self, service_catalog=None, **kwargs):
+        super(RequestContext, self).__init__(**kwargs)
+        self.service_catalog = service_catalog
 
-    def add_role(self, role):
-        self.roles.append(role)
+    def to_dict(self):
+        d = super(RequestContext, self).to_dict()
+        d.update({
+            'roles': self.roles,
+            'service_catalog': self.service_catalog,
+        })
+        return d
 
-    def add_roles(self, roles):
-        self.roles.extend(roles)
+    def to_policy_values(self):
+        pdict = super(RequestContext, self).to_policy_values()
+        pdict['user'] = self.user
+        pdict['tenant'] = self.tenant
+        return pdict
 
-    def remove_role(self, role):
-        if role in self.roles:
-            self.roles.remove(role)
+    @classmethod
+    def from_dict(cls, values):
+        return cls(**values)
 
 
-class DeckhandRequest(request.Request):
+def get_admin_context(show_deleted=False):
+    """Create an administrator context."""
+    return RequestContext(auth_token=None,
+                          tenant=None,
+                          is_admin=True,
+                          show_deleted=show_deleted,
+                          overwrite=False)
+
+
+class DeckhandRequest(falcon.request.Request):
     context_type = DeckhandRequestContext

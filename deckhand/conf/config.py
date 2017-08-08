@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from keystoneauth1 import loading as ka_loading
 from oslo_config import cfg
 
 CONF = cfg.CONF
@@ -61,8 +62,12 @@ def register_opts(conf):
 
 
 def list_opts():
-    return {barbican_group: barbican_opts,
-            keystone_auth_group: keystone_auth_opts}
+    opts = {barbican_group: barbican_opts}
+    # Assume we'll use the password plugin, so include those options in the
+    # configuration template.
+    opts['keystone_authtoken_password'] = ka_loading.get_auth_plugin_conf_options(
+        'password')
+    return opts
 
 
 def parse_args(args=None, usage=None, default_config_files=None):
