@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "736d6ffd_19efd738",
+        "filename": "deckhand/control/views/revision.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "I think we also want to timestamp the validation to allow for expiration.",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be1305a3_2fafd4d0",
+        "filename": "deckhand/control/views/revision.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "Is there danger to assuming this deep tree structure without checking or handling a keyerror?",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d876a0de_d4d09531",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "It\u0027s not clear to me if this supports dynamically registered schemas to extend this list.",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc00f1b4_1fd8bd79",
+        "filename": "deckhand/engine/schema/v1_0/certificate_key_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "Should these by in python files versus JSON data files?",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af9ed9af_fbe6fe3e",
+        "filename": "deckhand/engine/schema/v1_0/certificate_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "Same - JSON vs .py",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f3c48be_b16a3633",
+        "filename": "deckhand/engine/schema/v1_0/data_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "Same - JSON vs .py",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "abb858d6_457b342a",
+        "filename": "deckhand/engine/schema/v1_0/document_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "The \u0027vx.y\u0027 portion should probably follow Semantic Versioning, but I\u0027m not sure.",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47ecbbd3_f51701cd",
+        "filename": "deckhand/engine/schema/v1_0/layering_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "Same - JSON vs .py",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f081cad9_04bb03d0",
+        "filename": "deckhand/engine/schema/v1_0/passphrase_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "Same - JSON vs .py",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5e3681d_b77da7cc",
+        "filename": "deckhand/engine/schema/v1_0/validation_schema.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "Same - JSON vs .py",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a48f5b2_829aacc8",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "I\u0027d like to see this as a 4XX error, maybe 409 Conflict? I\u0027m not sure, but a 500 seems off.",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00d834c1_eab104ae",
+        "filename": "deckhand/types.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-08T16:14:48Z",
+      "side": 1,
+      "message": "I think you have tabs here.",
+      "revId": "746a786d773db7c7375dda9c5363bab7cdec8f4a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
