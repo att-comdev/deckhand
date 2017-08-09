@@ -70,6 +70,7 @@ def start_api(state_manager=None):
 
     v1_0_routes = [
         ('documents', documents.DocumentsResource()),
+        ('documents/{document_id}', documents.DocumentsResource()),
         ('revisions', revisions.RevisionsResource()),
         ('revisions/{revision_id}', revisions.RevisionsResource()),
         ('revisions/{revision_id}/documents',
