@@ -502,7 +502,15 @@ data:
 ### Provided Utility Document Kinds
 
 These are documents that use the `Document` metadata schema, but live in the
-`deckhand` namespace.
+`deckhand` namespace. The `data` section for each document is stored in
+Barbican. Supported `schema` values and their mappings in Barbican are:
+
+* `deckhand/Certificate/v1`: `certificate` - "Used for storing cryptographic
+certificates such as X.509 certificates."
+* `deckhand/CertificateKey/v1`: `private` - "Used for storing the private key
+of an asymmetric keypair."
+* `deckhand/Passphrase/v1`: `passphrase` - "Used for storing plain text
+passphrases."
 
 #### Certificate
 
@@ -871,3 +879,128 @@ the document.
 
 This endpoint uses the `write_cleartext_document` and
 `write_encrypted_document` actions.
+
+### POST `/secrets`
+
+Create a secret ([certificate](#certificate), [certificate key](#certificatekey),
+or [passphrase](#passphrase)). Each payload should adhere to the formats
+outlined [here](#provided-utility-document-kinds).
+
+Sample request with body:
+
+```http
+POST `/secrets`
+Content-Type: application/x-yaml
+
+---
+schema: deckhand/Certificate/v1
+metadata:
+  schema: metadata/Document/v1
+  name: application-api
+  storagePolicy: cleartext
+data: |-
+  -----BEGIN CERTIFICATE-----
+  MIIDYDCCAkigAwIBAgIUKG41PW4VtiphzASAMY4/3hL8OtAwDQYJKoZIhvcNAQEL
+  ...snip...
+  P3WT9CfFARnsw2nKjnglQcwKkKLYip0WY2wh3FE7nrQZP6xKNaSRlh6p2pCGwwwH
+  HkvVwA==
+  -----END CERTIFICATE-----
+...
+```
+
+Sample response:
+
+```http
+Content-Type: application/x-yaml
+HTTP/1.1 201 Created
+Location: https://deckhand/api/v1.0/secrets/0615b731-7f3e-478d-8ba8-a223eab4757e
+```
+
+This endpoint uses the `secrets:post` Barbican action.
+
+### GET `/secrets`
+
+List secrets created by the user.
+
+Sample request with body:
+
+```http
+GET `/secrets`
+```
+
+Sample response:
+
+```http
+Content-Type: application/x-yaml
+HTTP/1.1 200 OK
+
+---
+- schema: deckhand/Certificate/v1
+  metadata:
+    schema: metadata/Document/v1
+    name: application-api
+    storagePolicy: cleartext
+  data: |-
+    -----BEGIN CERTIFICATE-----
+    MIIDYDCCAkigAwIBAgIUKG41PW4VtiphzASAMY4/3hL8OtAwDQYJKoZIhvcNAQEL
+    ...snip...
+    P3WT9CfFARnsw2nKjnglQcwKkKLYip0WY2wh3FE7nrQZP6xKNaSRlh6p2pCGwwwH
+    HkvVwA==
+    -----END CERTIFICATE-----
+- schema: deckhand/CertificateKey/v1
+...
+```
+
+This endpoint uses the `secrets:get` Barbican action.
+
+### GET `/secrets/{{secret_d}}`
+
+Retrieve details for a secret.
+
+Sample request with body:
+
+```http
+GET `/secrets/0615b731-7f3e-478d-8ba8-a223eab4757e`
+```
+
+Sample response:
+
+```http
+Content-Type: application/x-yaml
+HTTP/1.1 200 OK
+
+---
+schema: deckhand/Certificate/v1
+metadata:
+  schema: metadata/Document/v1
+  name: application-api
+  storagePolicy: cleartext
+data: |-
+  -----BEGIN CERTIFICATE-----
+  MIIDYDCCAkigAwIBAgIUKG41PW4VtiphzASAMY4/3hL8OtAwDQYJKoZIhvcNAQEL
+  ...snip...
+  P3WT9CfFARnsw2nKjnglQcwKkKLYip0WY2wh3FE7nrQZP6xKNaSRlh6p2pCGwwwH
+  HkvVwA==
+  -----END CERTIFICATE-----
+```
+
+This endpoint uses the `secret:get` Barbican action.
+
+### DELETE `/secrets/{{secret_d}}`
+
+Deletes the specified secret.
+
+Sample request with body:
+
+```http
+DELETE `/secrets/0615b731-7f3e-478d-8ba8-a223eab4757e`
+```
+
+Sample response:
+
+```http
+Content-Type: application/x-yaml
+HTTP/1.1 204 No Content
+```
+
+This endpoint uses the `secret:delete` Barbican action.
