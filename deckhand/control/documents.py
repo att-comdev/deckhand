@@ -65,3 +65,11 @@ class DocumentsResource(api_base.BaseResource):
         resp.status = falcon.HTTP_201
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = self.to_yaml_body(created_documents)
+
+    def on_delete(self, req, resp, document_id):
+        try:
+            db_api.document_delete(document_id)
+        except deckhand_errors.DocumentNotFound as e:
+            return self.return_error(resp, falcon.HTTP_404, message=e)
+
+        resp.status = falcon.HTTP_204

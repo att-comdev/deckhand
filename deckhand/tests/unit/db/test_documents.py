@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from deckhand.tests.unit.db import base
+from deckhand import errors
 
 
 class TestDocuments(base.TestDbBase):
@@ -85,3 +86,15 @@ class TestDocuments(base.TestDbBase):
             document['revision_id'], **filters)
         self.assertEqual(1, len(documents))
         self.assertEqual(document, documents[0])
+
+    def test_delete_document(self):
+        payload = base.DocumentFixture.get_minimal_fixture()
+        documents = self._create_documents(payload)
+
+        # Validate that document deletion works.
+        result = self._delete_document(document_id=documents[0]['id'])
+        self.assertIsNone(result)
+
+        # Valdate that the document no longer exists.
+        self.assertRaises(errors.DocumentNotFound, self._get_document,
+                          do_validation=False, document_id=documents[0]['id'])

@@ -153,7 +153,7 @@ def documents_create(values_list, session=None):
             existing_document = document_get(
                 raw_dict=True,
                 **{c: values[c] for c in filters if c != 'revision_id'})
-        except db_exception.DBError:
+        except errors.DocumentNotFound:
             # Ignore bad data at this point. Allow creation to bubble up the
             # error related to bad data.
             existing_document = None
@@ -176,8 +176,26 @@ def documents_create(values_list, session=None):
 
 def document_get(session=None, raw_dict=False, **filters):
     session = session or get_session()
-    document = session.query(models.Document).filter_by(**filters).first()
-    return document.to_dict(raw_dict=raw_dict) if document else {}
+    if 'document_id' in filters:
+        filters['id'] = filters.pop('document_id')
+
+    try:
+        document = session.query(models.Document)\
+            .filter_by(**filters)\
+            .one()
+    except sa_orm.exc.NoResultFound:
+        raise errors.DocumentNotFound(document=filters)
+
+    return document.to_dict(raw_dict=raw_dict)
+
+
+def document_delete(document_id, session=None):
+    session = session or get_session()
+    result = session.query(models.Document)\
+                .filter_by(id=document_id)\
+                .delete(synchronize_session=False)
+    if result == 0:
+        raise errors.DocumentNotFound(document=document_id)
 
 
 ####################
@@ -199,11 +217,13 @@ def revision_get(revision_id, session=None):
     """
     session = session or get_session()
     try:
-        revision = session.query(models.Revision).filter_by(
-            id=revision_id).one().to_dict()
+        revision = session.query(models.Revision)\
+            .filter_by(id=revision_id)\
+            .one()
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
-    return revision
+
+    return revision.to_dict()
 
 
 def revision_get_all(session=None):
