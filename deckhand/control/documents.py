@@ -20,7 +20,6 @@ from oslo_db import exception as db_exc
 from oslo_log import log as logging
 
 from deckhand.control import base as api_base
-from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import document_validation
 from deckhand import errors as deckhand_errors
@@ -65,5 +64,12 @@ class DocumentsResource(api_base.BaseResource):
 
         resp.status = falcon.HTTP_201
         resp.append_header('Content-Type', 'application/x-yaml')
-        resp_body = document_view.ViewBuilder().list(created_documents)
-        resp.body = self.to_yaml_body(resp_body)
+        resp.body = self.to_yaml_body(created_documents)
+
+    def on_delete(self, req, resp, document_id):
+        try:
+            db_api.document_delete(document_id)
+        except deckhand_errors.DocumentNotFound as e:
+            return self.return_error(resp, falcon.HTTP_404, message=e)
+
+        resp.status = falcon.HTTP_204
