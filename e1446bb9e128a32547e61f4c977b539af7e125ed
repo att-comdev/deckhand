@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1eaa210d_21307e5b",
+        "filename": "deckhand/control/views/revision.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-08-09T15:11:49Z",
+      "side": 1,
+      "message": "I don\u0027t understand this comment. I think there\u0027s context because of the folder this is in that maybe I\u0027m missing?  Is this ViewBuilder only for validation policies? Why wouldn\u0027t the class be named something to that effect, or the package be named accordingly?",
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8973dab_e3cb8932",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-08-09T15:11:49Z",
+      "side": 1,
+      "message": "Do you have a plan for getting more logging done in these methods? I don\u0027t see much in the way of debug logging that would give me a clue as to what happened.  I\u0027ll not repeat this comment in other places, but it does apply elsewhere.",
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
