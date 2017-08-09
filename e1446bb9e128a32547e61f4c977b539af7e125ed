@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a604ce96_6918db60",
+        "filename": "deckhand/control/views/revision.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-09T15:19:35Z",
+      "side": 1,
+      "message": "Corresponds to this: https://github.com/att-comdev/deckhand/blob/master/docs/design.md#get-revisionsrevision_id\n\n\"The status of each ValidationPolicy belonging to the revision is also included.\"\n\nThe design document says nothing about other types of documents being returned.\n\nBesides that, I stopped adding view logic for every endpoint because this patch is already too big. There are multiple things I need to follow up with like a /DELETE endpoint for documents, views for documents, more functional tests, more unit tests, and it just goes on.",
+      "parentUuid": "1eaa210d_21307e5b",
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f8973dab_e3cb8932",
         "filename": "deckhand/db/sqlalchemy/api.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-09T15:11:49Z",
       "side": 1,
       "message": "Do you have a plan for getting more logging done in these methods? I don\u0027t see much in the way of debug logging that would give me a clue as to what happened.  I\u0027ll not repeat this comment in other places, but it does apply elsewhere.",
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9cdd592_9921f4d1",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-09T15:19:35Z",
+      "side": 1,
+      "message": "It\u0027d have to be done in a follow up patch. Actually, right now all the oslo_db junk is getting logged to the database and I\u0027ve been trying to figure out how to turn all of it off because it\u0027s a distraction.\n\nI do agree though that adding LOG statements with nice messages is nice to have.",
+      "parentUuid": "f8973dab_e3cb8932",
       "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
