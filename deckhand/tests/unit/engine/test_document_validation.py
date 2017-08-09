@@ -14,7 +14,6 @@
 
 import copy
 import os
-import testtools
 import yaml
 
 import mock
@@ -22,9 +21,10 @@ import six
 
 from deckhand.engine import document_validation
 from deckhand import errors
+from deckhand.tests.unit import base
 
 
-class TestDocumentValidation(testtools.TestCase):
+class TestDocumentValidation(base.DeckhandTestCase):
 
     def setUp(self):
         super(TestDocumentValidation, self).setUp()
