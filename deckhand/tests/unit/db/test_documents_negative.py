@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from deckhand import errors
 from deckhand.tests.unit.db import base
+from deckhand.tests import test_utils
 
 
 class TestDocumentsNegative(base.TestDbBase):
@@ -37,3 +39,9 @@ class TestDocumentsNegative(base.TestDbBase):
             documents = self._get_revision_documents(
                 document['revision_id'], filter_key=filter_val)
             self.assertEmpty(documents)
+
+    def test_delete_document_invalid_id(self):
+        self.assertRaises(errors.DocumentNotFound,
+                          self._get_document,
+                          do_validation=False,
+                          document_id=test_utils.rand_uuid_hex())
