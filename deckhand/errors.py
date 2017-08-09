@@ -64,6 +64,11 @@ class UnknownDocumentFormat(DeckhandException):
     code = 400
 
 
+class DocumentNotFound(DeckhandException):
+    msg_fmt = ("The requested document %(document)s was not found.")
+    code = 403
+
+
 class RevisionNotFound(DeckhandException):
     msg_fmt = ("The requested revision %(revision)s was not found.")
     code = 403
