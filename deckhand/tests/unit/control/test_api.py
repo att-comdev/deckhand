@@ -48,6 +48,8 @@ class TestApi(test_base.DeckhandTestCase):
             request_type=api_base.DeckhandRequest)
         mock_falcon_api.add_route.assert_has_calls([
             mock.call('/api/v1.0/documents', self.documents_resource()),
+            mock.call('/api/v1.0/documents/{document_id}',
+                      self.documents_resource()),
             mock.call('/api/v1.0/revisions', self.revisions_resource()),
             mock.call('/api/v1.0/revisions/{revision_id}',
                       self.revisions_resource()),
