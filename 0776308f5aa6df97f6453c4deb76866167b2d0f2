@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a161e5bc_0d78f379",
+        "filename": "docs/design.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 919,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-08-09T13:40:35Z",
+      "side": 1,
+      "message": "When a new resource is created, while not strictly necessary in this design (the user provides the URL/ID), it\u0027s common to include a location header that contains the URL of the created resource.",
+      "revId": "0776308f5aa6df97f6453c4deb76866167b2d0f2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
