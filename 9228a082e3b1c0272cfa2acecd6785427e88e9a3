@@ -1,0 +1,228 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee2165b0_8db4af48",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "Securely store secrets for ``secret_doc``.",
+      "range": {
+        "startLine": 31,
+        "startChar": 11,
+        "endLine": 31,
+        "endChar": 45
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed745309_3a7c1943",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "documents",
+      "range": {
+        "startLine": 33,
+        "startChar": 29,
+        "endLine": 33,
+        "endChar": 40
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8029f2a2_24a75b42",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "of the documents with the schemas enumerated below",
+      "range": {
+        "startLine": 34,
+        "startChar": 70,
+        "endLine": 35,
+        "endChar": 42
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaa9cbb2_eda4746b",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "Documents",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 19
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "378c8857_7e6a10d6",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": ".",
+      "range": {
+        "startLine": 39,
+        "startChar": 35,
+        "endLine": 39,
+        "endChar": 36
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76b38b1f_e9f0a5cf",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "Documents",
+      "range": {
+        "startLine": 41,
+        "startChar": 8,
+        "endLine": 41,
+        "endChar": 19
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "66ba3f3c_9a937419",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "the",
+      "range": {
+        "startLine": 43,
+        "startChar": 64,
+        "endLine": 43,
+        "endChar": 68
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b69ae97_73e0eaeb",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "document",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 18
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "451a95c3_409d809d",
+        "filename": "deckhand/engine/secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "document",
+      "range": {
+        "startLine": 46,
+        "startChar": 38,
+        "endLine": 46,
+        "endChar": 48
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1077150_2ca429d1",
+        "filename": "deckhand/tests/test_utils.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-10T14:45:11Z",
+      "side": 1,
+      "message": "Add note at the top indicating that this was taken from Tempest, and include the Apache license.",
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
