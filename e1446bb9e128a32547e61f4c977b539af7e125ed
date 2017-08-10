@@ -69,6 +69,92 @@
       "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b4589cf_6e612f56",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-10T19:56:47Z",
+      "side": 1,
+      "message": "This table arg surprises me.  I thought the only valid kinds of \"mysql_engine\" values were store engine options for mysql\u0027s create table: https://dev.mysql.com/doc/refman/5.7/en/storage-engines.html  (+ innodb).\n\nIs this doing something different because of oslo.db?",
+      "range": {
+        "startLine": 42,
+        "startChar": 22,
+        "endLine": 42,
+        "endChar": 47
+      },
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "338be237_52ac8de8",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-10T19:56:47Z",
+      "side": 1,
+      "message": "I was imagining we would take advantage of Postgres\u0027s native jsonb type for storing these.\n\nThat will let us build indexes directly into the metadata.  It\u0027s of course not required, but it\u0027s available to us.",
+      "range": {
+        "startLine": 131,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 63
+      },
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a058ecd_b648471e",
+        "filename": "deckhand/engine/schema/base_schema.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-10T19:56:47Z",
+      "side": 1,
+      "message": "It might be the case that we don\u0027t care what\u0027s here (so long as it\u0027s valid json).",
+      "range": {
+        "startLine": 32,
+        "startChar": 25,
+        "endLine": 32,
+        "endChar": 45
+      },
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0768544_7a28d12d",
+        "filename": "deckhand/engine/schema/v1_0/certificate_key_schema.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-10T19:56:47Z",
+      "side": 1,
+      "message": "Not sure if you\u0027re already planning this, but I would consider a single schema for metadata.schema \u003d metadata/Document/v1 (and of course for m/Control/v1).\n\nThen you can apply that schema to just the data under the metadata key and reuse it for all documents with that metadata schema.\n\nLikewise with other document types, you could just apply them to everything under the data key.",
+      "revId": "e1446bb9e128a32547e61f4c977b539af7e125ed",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
