@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57604ca6_88f4c0a8",
+        "filename": "deckhand/tests/functional/test_revision_tags_negative.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-11T02:48:25Z",
+      "side": 1,
+      "message": "TODO: All such method will be moved to a client in a separate file for common consumption.",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "aa955d52bb307dc3c6902bb423f3bea3d2581be1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e04548d2_0aa375a2",
+        "filename": "deckhand/tests/functional/test_revision_tags_negative.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-11T02:48:25Z",
+      "side": 1,
+      "message": "resp_dict is probably better name for this",
+      "range": {
+        "startLine": 35,
+        "startChar": 8,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "aa955d52bb307dc3c6902bb423f3bea3d2581be1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
