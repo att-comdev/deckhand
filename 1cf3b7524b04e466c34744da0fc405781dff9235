@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d17db2e_e5012da5",
+        "filename": "deckhand/control/documents.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-11T03:32:19Z",
+      "side": 1,
+      "message": "Change to \"to_python_object\" or something instead.",
+      "range": {
+        "startLine": 37,
+        "startChar": 25,
+        "endLine": 37,
+        "endChar": 36
+      },
+      "revId": "1cf3b7524b04e466c34744da0fc405781dff9235",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82741fca_3bb7eecd",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-11T03:32:19Z",
+      "side": 1,
+      "message": "Spaces...",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 8
+      },
+      "revId": "1cf3b7524b04e466c34744da0fc405781dff9235",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
