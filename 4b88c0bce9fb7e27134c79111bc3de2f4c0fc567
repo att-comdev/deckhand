@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28032a71_568175d1",
+        "filename": "deckhand/control/documents.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-11T16:22:14Z",
+      "side": 1,
+      "message": "It might be more appropriate to raise an error like 409 Conflict with an appropriate error message.",
+      "range": {
+        "startLine": 71,
+        "startChar": 33,
+        "endLine": 71,
+        "endChar": 41
+      },
+      "revId": "4b88c0bce9fb7e27134c79111bc3de2f4c0fc567",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
