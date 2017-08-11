@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1af89a44_df62314a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-11T16:58:10Z",
+      "side": 1,
+      "message": "38: Secrets DB table and internal secrets endpoints",
+      "range": {
+        "startLine": 7,
+        "startChar": 22,
+        "endLine": 7,
+        "endChar": 58
+      },
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee2165b0_8db4af48",
         "filename": "deckhand/engine/secrets.py",
         "patchSetId": 5
