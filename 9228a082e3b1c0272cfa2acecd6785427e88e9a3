@@ -223,6 +223,23 @@
       "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec973610_a2a42984",
+        "filename": "deckhand/tests/unit/engine/test_secrets.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-11T16:54:04Z",
+      "side": 1,
+      "message": "Extra newline.",
+      "revId": "9228a082e3b1c0272cfa2acecd6785427e88e9a3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
