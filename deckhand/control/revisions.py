@@ -44,7 +44,7 @@ class RevisionsResource(api_base.BaseResource):
         try:
             revision = db_api.revision_get(revision_id)
         except errors.RevisionNotFound as e:
-            return self.return_error(resp, falcon.HTTP_404, message=e)
+            return self.format_error(resp, e)
 
         revision_resp = revision_view.ViewBuilder().show(revision)
         resp.status = falcon.HTTP_200

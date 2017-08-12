@@ -45,6 +45,11 @@ class DeckhandException(Exception):
         return self.args[0]
 
 
+class InvalidRequestFormat(DeckhandException):
+    msg_fmt = ("Requires application/x-yaml payload.")
+    code = 400
+
+
 class InvalidDocumentFormat(DeckhandException):
     msg_fmt = ("The provided YAML failed schema validation. Details: "
                "%(detail)s. Schema: %(schema)s.")
