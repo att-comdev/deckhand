@@ -48,6 +48,7 @@ class BaseResource(object):
     # finer-grained authorization at the method or instance level must
     # implement that in the request handlers
     def authorize_roles(self, role_list):
+        # TODO(fmontei): Update this when oslo.policy integration added.
         authorized = set(self.authorized_roles)
         applied = set(role_list)
 
@@ -56,30 +57,48 @@ class BaseResource(object):
         else:
             return True
 
-    def req_json(self, req):
+    def req_to_yaml(self, req):
+        """Convert YAML payload into Python object.
+
+        :returns: None if the payload is empty, else the Python object version
+            of the YAML payload.
+        :raises: errors.InvalidRequestFormat if the request payload could not
+            be parsed into a Python object.
+        """
         if req.content_length is None or req.content_length == 0:
             return None
 
-        if req.content_type is not None and req.content_type.lower() \
-            == 'application/json':
-            raw_body = req.stream.read(req.content_length or 0)
+        if (not req.content_type
+            or req.content_type.lower() != 'application/x-yaml'):
+            LOG.warning('Requires application/yaml payload.')
 
-            if raw_body is None:
-                return None
+        raw_body = req.stream.read(req.content_length or 0)
 
-            try:
-                return json.loads(raw_body.decode('utf-8'))
-            except json.JSONDecodeError as jex:
-                raise errors.InvalidFormat("%s: Invalid JSON in body: %s" % (
-                    req.path, jex))
-        else:
-            raise errors.InvalidFormat("Requires application/json payload.")
+        if not raw_body:
+            return None
 
-    def return_error(self, resp, status_code, message="", retry=False):
-        resp.body = json.dumps(
-            {'type': 'error', 'message': six.text_type(message),
-             'retry': retry})
-        resp.status = status_code
+        try:
+            yaml_body = [
+                x for x in yaml.safe_load_all(raw_body.decode('utf-8'))]
+            return yaml_body
+        except yaml.YAMLError as e:
+            error_msg = ("Could not parse the request body into YAML data."
+                         " Details: %s." % e)
+            LOG.error(error_msg)
+            raise errors.InvalidRequestFormat()
+
+    def format_error(self, resp, exc):
+        """Format the Falcon `resp` object with appropriate error messages
+        given the error code (if present) and message contained in the `exc`
+        exception.
+
+        :param resp: Response object of type `falcon.Response`.
+        :param exc: An instance or subclass of `Exception` class.
+        """
+        resp.body = self.to_yaml_body(json.dumps(
+            {'type': 'error', 'message': six.text_type(exc)}))
+        error_code = exc.code if hasattr(exc, 'code') else 500
+        resp.status = self.to_falcon_error(error_code)
 
     def to_yaml_body(self, dict_body):
         """Converts JSON body into YAML response body.
@@ -94,8 +113,21 @@ class BaseResource(object):
         raise TypeError('Unrecognized dict_body type when converting response '
                         'body to YAML format.')
 
+    def to_falcon_error(self, error_code):
+        """Converts an integer representation into a Falcon HTTP error code.
+
+        :param error_code: Integer representation of an HTTP error code.
+        :returns: The Falcon HTTP error code attribute if it exists, else
+            raises a `ValueError`.
+        """
+        falcon_code = getattr(falcon, 'HTTP_%d' % error_code, None)
+        if falcon_code is None:
+            raise ValueError('%d is not a valid HTTP error code.' % error_code)
+        return falcon_code
+
 
 class DeckhandRequestContext(object):
+    # TODO(fmontei): Update this when oslo.policy integration added.
 
     def __init__(self):
         self.user = None
