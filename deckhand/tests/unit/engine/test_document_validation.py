@@ -15,29 +15,30 @@
 import mock
 
 from deckhand.engine import document_validation
+from deckhand.tests import test_utils
 from deckhand.tests.unit.engine import base as engine_test_base
 
 
 class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
 
-    def test_init_document_validation(self):
-        self._read_data('sample_document')
+    @test_utils.file_data('../resources/sample_document.yaml')
+    def test_init_document_validation(self, doc_data):
         doc_validation = document_validation.DocumentValidation(
-            self.data)
+            doc_data)
         self.assertIsInstance(doc_validation,
                               document_validation.DocumentValidation)
 
-    def test_data_schema_missing_optional_sections(self):
-        self._read_data('sample_data_schema')
+    @test_utils.file_data('../resources/sample_data_schema.yaml')
+    def test_data_schema_missing_optional_sections(self, doc_data):
         optional_missing_data = [
-            self._corrupt_data('metadata.labels'),
+            self._corrupt_data(doc_data, 'metadata.labels'),
         ]
 
         for missing_data in optional_missing_data:
             document_validation.DocumentValidation(missing_data).validate_all()
 
-    def test_document_missing_optional_sections(self):
-        self._read_data('sample_document')
+    @test_utils.file_data('../resources/sample_document.yaml')
+    def test_document_missing_optional_sections(self, doc_data):
         properties_to_remove = (
             'metadata.layeringDefinition.actions',
             'metadata.layeringDefinition.parentSelector',
@@ -45,16 +46,18 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
             'metadata.substitutions.2.dest.pattern')
 
         for property_to_remove in properties_to_remove:
-            optional_data_removed = self._corrupt_data(property_to_remove)
+            optional_data_removed = self._corrupt_data(
+                doc_data, property_to_remove)
             document_validation.DocumentValidation(
                 optional_data_removed).validate_all()
 
+    @test_utils.file_data('../resources/sample_document.yaml')
     @mock.patch.object(document_validation, 'LOG', autospec=True)
-    def test_abstract_document_not_validated(self, mock_log):
-        self._read_data('sample_document')
+    def test_abstract_document_not_validated(self, doc_data, mock_log):
         # Set the document to abstract.
         updated_data = self._corrupt_data(
-            'metadata.layeringDefinition.abstract', True, op='replace')
+            doc_data, 'metadata.layeringDefinition.abstract', True,
+            op='replace')
         # Guarantee that a validation error is thrown by removing a required
         # property.
         del updated_data['metadata']['layeringDefinition']['layer']

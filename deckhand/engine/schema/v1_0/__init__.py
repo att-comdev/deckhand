@@ -18,8 +18,9 @@ from deckhand.engine.schema.v1_0 import data_schema
 from deckhand.engine.schema.v1_0 import document_schema
 from deckhand.engine.schema.v1_0 import layering_schema
 from deckhand.engine.schema.v1_0 import passphrase_schema
+from deckhand.engine.schema.v1_0 import tombstone_schema
 from deckhand.engine.schema.v1_0 import validation_schema
 
 __all__ = ['certificate_key_schema', 'certificate_schema', 'data_schema',
            'document_schema', 'layering_schema', 'passphrase_schema',
-           'validation_schema']
+           'tombstone_schema', 'validation_schema']

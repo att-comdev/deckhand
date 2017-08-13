@@ -12,30 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Generic schema used to validate all documents.
+# Schema used for deleting pre-existing documents.
 schema = {
     'type': 'object',
     'properties': {
         'schema': {
             'type': 'string',
-            # Currently supported versions include v1 only.
-            'pattern': '^([A-Za-z\-\_]+\/[A-Za-z\-\_]+\/v[1]{1}\.[0]{1})$'
+            'pattern': '^([A-Za-z\-\_]+/[A-Za-z\-\_]+/v[1]{1}\.[0]{1})$'
         },
         'metadata': {
             'type': 'object',
             'properties': {
-                'schema': {'type': 'string'},
+                'schema': {
+                    'type': 'string',
+                    'pattern': '^(metadata/Tombstone/v[1]{1}\.[0]{1})$',
+                },
                 'name': {'type': 'string'}
             },
-            'additionalProperties': True,
+            'additionalProperties': False,
+            # The only valid key in a Tombstone metadata section is name.
             'required': ['schema', 'name']
         },
-        'data': {'type': ['string', 'object']}
+        'data': {'type': 'string'}
     },
     'additionalProperties': False,
-    # NOTE(fmontei): All schemas require the "data" section except for
-    # Tombstone documents. Since this is a generic schema for validating all
-    # documents, we omit "data" below as all documents are subject to more
-    # fine-grained schema validation anyway.
+    # The top-level data section should be omitted.
     'required': ['schema', 'metadata']
 }

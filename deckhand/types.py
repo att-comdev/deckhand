@@ -13,11 +13,27 @@
 # limitations under the License.
 
 DOCUMENT_SCHEMA_TYPES = (
+    CERTIFICATE_SCHEMA,
+    CERTIFICATE_KEY_SCHEMA,
     LAYERING_POLICY_SCHEMA,
+    PASSPHRASE_SCHEMA,
     VALIDATION_POLICY_SCHEMA,
 ) = (
+    'deckhand/Certificate/v1',
+    'deckhand/CertificateKey/v1',
     'deckhand/LayeringPolicy/v1',
+    'deckhand/Passphrase/v1',
     'deckhand/ValidationPolicy/v1',
+)
+
+DOCUMENT_METADATA_SCHEMA_TYPES = (
+    CONTROL_METADATA_SCHEMA,
+    DOCUMENT_METADATA_SCHEMA,
+    TOMBSTONE_METADATA_SCHEMA,
+) = (
+    'metadata/Control/v1',
+    'metadata/Document/v1',
+    'metadata/Tombstone/v1',
 )
 
 DECKHAND_VALIDATION_TYPES = (

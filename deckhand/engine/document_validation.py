@@ -56,16 +56,18 @@ class DocumentValidation(object):
              'schema': v1_0.certificate_schema},
             {'id': 'deckhand/DataSchema',
              'schema': v1_0.data_schema},
-            # NOTE(fmontei): Fall back to the metadata's schema for validating
-            # generic documents.
-            {'id': 'metadata/Document',
-             'schema': v1_0.document_schema},
             {'id': 'deckhand/LayeringPolicy',
              'schema': v1_0.layering_schema},
             {'id': 'deckhand/Passphrase',
              'schema': v1_0.passphrase_schema},
             {'id': 'deckhand/ValidationPolicy',
-             'schema': v1_0.validation_schema}]
+             'schema': v1_0.validation_schema},
+            # NOTE(fmontei): Fall back to the metadata's schema for validating
+            # generic documents.
+            {'id': 'metadata/Document',
+             'schema': v1_0.document_schema},
+            {'id': 'metadata/Tombstone',
+             'schema': v1_0.tombstone_schema},]
 
         def __init__(self, data):
             """Constructor for ``SchemaType``.

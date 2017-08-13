@@ -44,7 +44,7 @@ schema = {
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^([A-Za-z]+/[A-Za-z]+/v[1]{1}\.[0]{1})$'
+            'pattern': '^([A-Za-z\-\_]+/[A-Za-z\-\_]+/v[1]{1}\.[0]{1})$'
         },
         'metadata': {
             'type': 'object',

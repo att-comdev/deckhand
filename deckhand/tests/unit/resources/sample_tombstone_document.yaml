@@ -1,0 +1,5 @@
+---
+schema: any-namespace/AnyKind/v1.0
+metadata:
+  schema: metadata/Tombstone/v1.0
+  name: name-to-delete
