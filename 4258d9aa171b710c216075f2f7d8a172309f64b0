@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ecb1b1e8_e3d6885b",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-13T20:17:25Z",
+      "side": 1,
+      "message": "Yeah, fixed in next patch",
+      "parentUuid": "49773504_109e080e",
+      "range": {
+        "startLine": 80,
+        "startChar": 17,
+        "endLine": 80,
+        "endChar": 45
+      },
+      "revId": "4258d9aa171b710c216075f2f7d8a172309f64b0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7cdd06a_62edfc9f",
         "filename": "deckhand/errors.py",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-13T19:45:40Z",
       "side": 1,
       "message": "404",
+      "range": {
+        "startLine": 69,
+        "startChar": 11,
+        "endLine": 69,
+        "endChar": 14
+      },
+      "revId": "4258d9aa171b710c216075f2f7d8a172309f64b0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cbdb6ed_b7abbd96",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-13T20:17:25Z",
+      "side": 1,
+      "message": "Fixed in next patch",
+      "parentUuid": "c7cdd06a_62edfc9f",
       "range": {
         "startLine": 69,
         "startChar": 11,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "683f05d4_a900f623",
+        "filename": "deckhand/tests/test_utils.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-13T20:17:25Z",
+      "side": 1,
+      "message": "This is actually Tempest\u0027s implementation of rand_password I stole.",
+      "parentUuid": "5c18fb3f_bc60803d",
+      "range": {
+        "startLine": 16,
+        "startChar": 7,
+        "endLine": 16,
+        "endChar": 13
+      },
+      "revId": "4258d9aa171b710c216075f2f7d8a172309f64b0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "170ca8b2_03beab4d",
         "filename": "deckhand/tests/unit/resources/sample_layering_policy.yaml",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2017-08-13T19:45:40Z",
       "side": 1,
       "message": "do we want to put in a microversion for these things?  will there be a /v1.1 /v1.2 and how do you track them?",
+      "range": {
+        "startLine": 5,
+        "startChar": 29,
+        "endLine": 5,
+        "endChar": 31
+      },
+      "revId": "4258d9aa171b710c216075f2f7d8a172309f64b0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c0461d4_6ed1b44f",
+        "filename": "deckhand/tests/unit/resources/sample_layering_policy.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-13T20:17:25Z",
+      "side": 1,
+      "message": "Dunno about microversioning. Scott suggested perhaps. This is an open question that I don\u0027t have an answer to.",
+      "parentUuid": "170ca8b2_03beab4d",
       "range": {
         "startLine": 5,
         "startChar": 29,
