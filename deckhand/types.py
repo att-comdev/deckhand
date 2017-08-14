@@ -20,6 +20,18 @@ DOCUMENT_SCHEMA_TYPES = (
     'deckhand/ValidationPolicy/v1',
 )
 
+
+DOCUMENT_SECRET_TYPES = (
+    CERTIFICATE_KEY_SCHEMA,
+    CERTIFICATE_SCHEMA,
+    PASSPHRASE_SCHEMA
+) = (
+    'deckhand/Certificate/v1.0',
+    'deckhand/CertificateKey/v1.0',
+    'deckhand/Passphrase/v1.0'
+)
+
+
 DECKHAND_VALIDATION_TYPES = (
     DECKHAND_SCHEMA_VALIDATION,
 ) = (
