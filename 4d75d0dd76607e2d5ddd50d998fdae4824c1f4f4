@@ -22,6 +22,29 @@
       "revId": "4d75d0dd76607e2d5ddd50d998fdae4824c1f4f4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d8dc8e6_e9d5c498",
+        "filename": "tox.ini",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-08-14T19:21:18Z",
+      "side": 1,
+      "message": "Would added that this is not needed if you add that to the *requirements.txt",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 16
+      },
+      "revId": "4d75d0dd76607e2d5ddd50d998fdae4824c1f4f4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
