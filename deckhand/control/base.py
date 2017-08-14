@@ -18,10 +18,6 @@ import yaml
 import falcon
 from falcon import request
 from oslo_log import log as logging
-from oslo_serialization import jsonutils as json
-import six
-
-from deckhand import errors
 
 LOG = logging.getLogger(__name__)
 
@@ -48,6 +44,7 @@ class BaseResource(object):
     # finer-grained authorization at the method or instance level must
     # implement that in the request handlers
     def authorize_roles(self, role_list):
+        # TODO(fmontei): Update this when oslo.policy integration added.
         authorized = set(self.authorized_roles)
         applied = set(role_list)
 
@@ -56,30 +53,32 @@ class BaseResource(object):
         else:
             return True
 
-    def req_json(self, req):
+    def to_python_object(self, req):
+        """Convert YAML payload into Python object.
+
+        :returns: None if the payload is empty, else the Python object version
+            of the YAML payload.
+        :raises: falcon.HTTPBadRequest if the request payload could not be
+            parsed into a Python object.
+        """
         if req.content_length is None or req.content_length == 0:
             return None
 
-        if req.content_type is not None and req.content_type.lower() \
-            == 'application/json':
-            raw_body = req.stream.read(req.content_length or 0)
+        raw_body = req.stream.read(req.content_length or 0)
 
-            if raw_body is None:
-                return None
+        if not raw_body:
+            return None
 
-            try:
-                return json.loads(raw_body.decode('utf-8'))
-            except json.JSONDecodeError as jex:
-                raise errors.InvalidFormat("%s: Invalid JSON in body: %s" % (
-                    req.path, jex))
-        else:
-            raise errors.InvalidFormat("Requires application/json payload.")
-
-    def return_error(self, resp, status_code, message="", retry=False):
-        resp.body = json.dumps(
-            {'type': 'error', 'message': six.text_type(message),
-             'retry': retry})
-        resp.status = status_code
+        try:
+            yaml_body = [
+                x for x in yaml.safe_load_all(raw_body.decode('utf-8'))]
+            return yaml_body
+        except yaml.YAMLError as e:
+            error_msg = ("Could not parse the request body into YAML data."
+                         " Details: %s." % e)
+            LOG.error(error_msg)
+            raise falcon.HTTPBadRequest(title='Malformed document payload',
+                                        description='msg')
 
     def to_yaml_body(self, dict_body):
         """Converts JSON body into YAML response body.
@@ -96,6 +95,7 @@ class BaseResource(object):
 
 
 class DeckhandRequestContext(object):
+    # TODO(fmontei): Update this when oslo.policy integration added.
 
     def __init__(self):
         self.user = None
