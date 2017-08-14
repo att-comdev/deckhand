@@ -25,7 +25,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
 
     def on_get(self, req, resp, revision_id):
         """Returns all documents for a `revision_id`.
-        
+
         Returns a multi-document YAML response containing all the documents
         matching the filters specified via query string parameters. Returned
         documents will be as originally posted with no substitutions or
@@ -35,7 +35,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
         try:
             documents = db_api.revision_get_documents(revision_id, **params)
         except errors.RevisionNotFound as e:
-            return self.return_error(resp, falcon.HTTP_404, message=e)
+            raise falcon.HTTPNotFound()
 
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
