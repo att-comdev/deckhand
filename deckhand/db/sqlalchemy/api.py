@@ -79,12 +79,14 @@ def clear_db_env():
     _FACADE = None
 
 
-def setup_db():
-    models.register_models(get_engine())
-
-
 def drop_db():
     models.unregister_models(get_engine())
+
+
+def setup_db():
+    # Ensure the DB doesn't exist before creation.
+    drop_db()
+    models.register_models(get_engine())
 
 
 def documents_create(documents, validation_policies, session=None):
