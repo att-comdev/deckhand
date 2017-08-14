@@ -18,6 +18,7 @@ from oslo_db.sqlalchemy import models
 from oslo_db.sqlalchemy import types as oslo_types
 from oslo_utils import timeutils
 from sqlalchemy import Boolean
+from sqlalchemy import CheckConstraint
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy.ext import declarative
@@ -26,6 +27,7 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy import schema
 from sqlalchemy import String
+from sqlalchemy import Unicode
 
 
 # Declarative base class which maintains a catalog of classes and tables
@@ -163,6 +165,37 @@ class ValidationPolicy(BASE, DeckhandBase, DocumentMixin):
 
     id = Column(String(36), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
+
+
+class DocumentSecret(BASE, DeckhandBase):
+    """Model for storing secrets or secret references.
+
+    Two different methods for secret storage are used:
+
+    1. Directly stores secrets into Deckhand database if the specified
+    document's `storagePolicy` is "cleartext".
+
+    2. Indirectly stores secrets by way of the ``secret_ref`` if the specified
+    document's `storagePolicy` is "encrypted". The secret itself is stored in
+    Barbican, which returns an API reference to the secret, to be retrieved by
+    Deckhand when needed for secret substitution.
+    """
+
+    __tablename__ = 'secrets'
+
+    id = Column(String(36), primary_key=True,
+                default=lambda: str(uuid.uuid4()))
+    document_id = Column(Integer, ForeignKey('documents.id'), nullable=False)
+    secret_ref = Column(Unicode(80), nullable=True)
+    # NOTE(fmontei): Do not define a maximum length for ``secret_data``.
+    # However, this approach is not compatible with all database types.
+    secret_data = Column(Unicode(), nullable=True)
+
+    # NOTE(fmontei): Somme databases do not actively support check constraints
+    # such as MySQL.
+    # TODO(fmontei): Get this to work.
+    CheckConstraint('secret_ref != null and secret_data != null',
+                    name='secret_ref_or_secret_data_not_null')
 
 
 def register_models(engine):
