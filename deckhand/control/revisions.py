@@ -25,7 +25,7 @@ class RevisionsResource(api_base.BaseResource):
 
     def on_get(self, req, resp, revision_id=None):
         """Returns list of existing revisions.
-        
+
         Lists existing revisions and reports basic details including a summary
         of validation status for each `deckhand/ValidationPolicy` that is part
         of each revision.
@@ -44,7 +44,7 @@ class RevisionsResource(api_base.BaseResource):
         try:
             revision = db_api.revision_get(revision_id)
         except errors.RevisionNotFound as e:
-            return self.return_error(resp, falcon.HTTP_404, message=e)
+            raise falcon.HTTPNotFound()
 
         revision_resp = revision_view.ViewBuilder().show(revision)
         resp.status = falcon.HTTP_200
