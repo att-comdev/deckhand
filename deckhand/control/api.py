@@ -23,7 +23,6 @@ from deckhand.control import base as api_base
 from deckhand.control import documents
 from deckhand.control import revision_documents
 from deckhand.control import revisions
-from deckhand.control import secrets
 from deckhand.db.sqlalchemy import api as db_api
 
 CONF = cfg.CONF
@@ -73,8 +72,7 @@ def start_api(state_manager=None):
         ('revisions', revisions.RevisionsResource()),
         ('revisions/{revision_id}', revisions.RevisionsResource()),
         ('revisions/{revision_id}/documents',
-         revision_documents.RevisionDocumentsResource()),
-        ('secrets', secrets.SecretsResource())
+         revision_documents.RevisionDocumentsResource())
     ]
 
     for path, res in v1_0_routes:
