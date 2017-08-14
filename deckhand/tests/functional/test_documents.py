@@ -35,7 +35,9 @@ class TestDocumentsApi(test_base.TestFunctionalBase):
 
     def test_create_document(self):
         yaml_data = self._read_test_resource('sample_document')
-        result = self.app.simulate_post('/api/v1.0/documents', body=yaml_data)
+        result = self.app.simulate_post(
+            '/api/v1.0/documents', body=yaml_data,
+            headers={'Content-Type': 'application/x-yaml'})
         self.assertEqual(falcon.HTTP_201, result.status)
 
         expected_documents = [yaml.safe_load(yaml_data)]
