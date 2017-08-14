@@ -79,12 +79,14 @@ def clear_db_env():
     _FACADE = None
 
 
-def setup_db():
-    models.register_models(get_engine())
-
-
 def drop_db():
     models.unregister_models(get_engine())
+
+
+def setup_db():
+    # Ensure the DB doesn't exist before creation.
+    drop_db()
+    models.register_models(get_engine())
 
 
 def documents_create(documents, validation_policies, session=None):
@@ -144,6 +146,7 @@ def _documents_create(values_list, session=None):
     for values in values_list:
         values['_metadata'] = values.pop('metadata')
         values['name'] = values['_metadata']['name']
+        values['is_secret'] = 'secret' in values['data']
 
         try:
             existing_document = document_get(
