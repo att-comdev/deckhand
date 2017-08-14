@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "200aefea_ba795a13",
+        "filename": "tox.ini",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-08-14T19:18:23Z",
+      "side": 1,
+      "message": "I don\u0027t remember bandit needs to be white listed.  However, if it is needed, can we white list at [testenv:bandit] instead of the global [testenv].  I don\u0027t forsee other targets needing such white list if it is needed.",
+      "range": {
+        "startLine": 7,
+        "startChar": 22,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "4d75d0dd76607e2d5ddd50d998fdae4824c1f4f4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
