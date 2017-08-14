@@ -15,6 +15,7 @@
 import falcon
 
 from deckhand.control import base as api_base
+from deckhand.control import common
 from deckhand.control.views import revision as revision_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
@@ -23,19 +24,17 @@ from deckhand import errors
 class RevisionsResource(api_base.BaseResource):
     """API resource for realizing CRUD operations for revisions."""
 
-    def on_get(self, req, resp, revision_id=None):
+    @common.reroute(on='revision_id')
+    def on_get(self, req, resp, **kwargs):
         """Returns list of existing revisions.
-        
+
         Lists existing revisions and reports basic details including a summary
         of validation status for each `deckhand/ValidationPolicy` that is part
         of each revision.
         """
-        if revision_id:
-            self._show_revision(req, resp, revision_id=revision_id)
-        else:
-            self._list_revisions(req, resp)
+        raise falcon.HTTPMethodNotAllowed()
 
-    def _show_revision(self, req, resp, revision_id):
+    def on_show(self, req, resp, revision_id):
         """Returns detailed description of a particular revision.
 
         The status of each ValidationPolicy belonging to the revision is also
@@ -44,14 +43,14 @@ class RevisionsResource(api_base.BaseResource):
         try:
             revision = db_api.revision_get(revision_id)
         except errors.RevisionNotFound as e:
-            return self.return_error(resp, falcon.HTTP_404, message=e)
+            raise falcon.HTTPNotFound()
 
         revision_resp = revision_view.ViewBuilder().show(revision)
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = self.to_yaml_body(revision_resp)
 
-    def _list_revisions(self, req, resp):
+    def on_list(self, req, resp):
         revisions = db_api.revision_get_all()
         revisions_resp = revision_view.ViewBuilder().list(revisions)
 

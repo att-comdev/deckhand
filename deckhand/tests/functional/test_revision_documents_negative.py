@@ -12,18 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import falcon
+
 from deckhand.tests.functional import base as test_base
-from deckhand import types
 
 
-class TestDocumentsApi(test_base.TestFunctionalBase):
+class TestRevisionDocumentsApiNegative(test_base.TestFunctionalBase):
 
-    def test_create_document(self):
-        resp_documents = self.create_document('sample_document')
-        expected_validation_policy = self.validation_policy_factory.gen(
-            types.DECKHAND_SCHEMA_VALIDATION, status='success')
-
-        # Validate that the correct number of documents were created: one
-        # document corresponding to ``yaml_data``.
-        self.assertEqual(1, len(resp_documents))
-        self.assertIn('revision_id', resp_documents[0])
+    def test_show_revision_documents_with_invalid_revision_id(self):
+        resp = self.app.simulate_get(
+            '/api/v1.0/revisions/fake-revision-id/documents')
+        self.assertEqual(falcon.HTTP_404, resp.status)
