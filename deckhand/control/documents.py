@@ -23,7 +23,9 @@ from deckhand.control import base as api_base
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import document_validation
+from deckhand.engine import secrets_manager
 from deckhand import errors as deckhand_errors
+from deckhand import types
 
 LOG = logging.getLogger(__name__)
 
@@ -31,13 +33,14 @@ LOG = logging.getLogger(__name__)
 class DocumentsResource(api_base.BaseResource):
     """API resource for realizing CRUD endpoints for Documents."""
 
+    _secrets_manager = secrets_manager.SecretsManager()
+
     def on_post(self, req, resp):
         """Create a document. Accepts YAML data only."""
         if req.content_type != 'application/x-yaml':
             LOG.warning('Requires application/yaml payload.')
 
         document_data = req.stream.read(req.content_length or 0)
-
         try:
             documents = [d for d in yaml.safe_load_all(document_data)]
         except yaml.YAMLError as e:
@@ -54,6 +57,11 @@ class DocumentsResource(api_base.BaseResource):
         except (deckhand_errors.InvalidDocumentFormat,
                 deckhand_errors.UnknownDocumentFormat) as e:
             return self.return_error(resp, falcon.HTTP_400, message=e)
+
+        for document in documents:
+            if document['schema'] in types.DOCUMENT_SECRET_TYPES:
+                secret_data = self._secrets_manager.create(document)
+                document['data'] = secret_data
 
         try:
             created_documents = db_api.documents_create(

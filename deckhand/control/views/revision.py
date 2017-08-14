@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from deckhand.control import common
+from deckhand import utils
 
 
 class ViewBuilder(common.ViewBuilder):
@@ -29,7 +30,7 @@ class ViewBuilder(common.ViewBuilder):
         for revision in revisions:
             result = {}
             for attr in ('id', 'created_at'):
-                result[common.to_camel_case(attr)] = revision[attr]
+                result[utils.to_camel_case(attr)] = revision[attr]
             result['count'] = len(revision.pop('documents'))
             resp_body['results'].append(result)
 
