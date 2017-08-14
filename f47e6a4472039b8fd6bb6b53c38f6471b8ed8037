@@ -22,6 +22,30 @@
       "revId": "f47e6a4472039b8fd6bb6b53c38f6471b8ed8037",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad81495c_addcc5a3",
+        "filename": ".gitignore",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-14T20:20:56Z",
+      "side": 1,
+      "message": "True, I actually do so in another patch, I\u0027ll remove this, thanks.",
+      "parentUuid": "5ff966d8_3622bd5a",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 14
+      },
+      "revId": "f47e6a4472039b8fd6bb6b53c38f6471b8ed8037",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
