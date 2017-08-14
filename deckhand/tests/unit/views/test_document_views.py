@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from oslo_utils import uuidutils
-
 from deckhand.control.views import document
 from deckhand import factories
 from deckhand.tests.unit.db import base
@@ -38,10 +36,10 @@ class TestRevisionViews(base.TestDbBase):
         for attr in expected_attrs:
             self.assertIn(attr, document_view)
 
-        self.assertTrue(uuidutils.is_uuid_like(document_view['revision_id']))
+        self.assertEqual(1, document_view['revision_id'])
         self.assertEqual(count, len(document_view['documents']))
-        for doc_id in document_view['documents']:
-            self.assertTrue(uuidutils.is_uuid_like(doc_id))
+        for idx, doc_id in enumerate(document_view['documents']):
+            self.assertEqual(idx + 1, doc_id)
 
     def test_create_single_document(self):
         self._test_document_creation_view(1)

@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uuid
-
 from oslo_db.sqlalchemy import models
 from oslo_db.sqlalchemy import types as oslo_types
 from oslo_utils import timeutils
@@ -88,23 +86,22 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
         # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
         # must be used to store document metadata information in the DB.
         if not raw_dict and '_metadata' in self.keys():
-            d['metadata'] = d['_metadata']
+            d['metadata'] = d.pop('_metadata')
 
         return d
 
-    @staticmethod
-    def gen_unqiue_contraint(*fields):
-        constraint_name = 'ix_' + DeckhandBase.__name__.lower() + '_'
-        for field in fields:
-            constraint_name = constraint_name + '_%s' % field
-        return schema.UniqueConstraint(*fields, name=constraint_name)
+
+def gen_unqiue_contraint(table_name, *fields):
+    constraint_name = 'ix_' + table_name.lower()
+    for field in fields:
+        constraint_name = constraint_name + '_%s' % field
+    return schema.UniqueConstraint(*fields, name=constraint_name)
 
 
 class Revision(BASE, DeckhandBase):
     __tablename__ = 'revisions'
 
-    id = Column(String(36), primary_key=True,
-                default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True)
     documents = relationship("Document")
     validation_policies = relationship("ValidationPolicy")
 
@@ -127,7 +124,8 @@ class DocumentMixin(object):
     # this approach is not compatible with all database types.
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
-    data = Column(oslo_types.JsonEncodedDict(), nullable=False)
+    data = Column(oslo_types.JsonEncodedDict(), nullable=True)
+    is_secret = Column(Boolean, nullable=False, default=False)
 
     @declarative.declared_attr
     def revision_id(cls):
@@ -137,10 +135,10 @@ class DocumentMixin(object):
 class Document(BASE, DeckhandBase, DocumentMixin):
     UNIQUE_CONSTRAINTS = ('schema', 'name', 'revision_id')
     __tablename__ = 'documents'
-    __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
+    __table_args__ = (
+        gen_unqiue_contraint(__tablename__, *UNIQUE_CONSTRAINTS),)
 
-    id = Column(String(36), primary_key=True,
-                default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True)
 
 
 class LayeringPolicy(BASE, DeckhandBase, DocumentMixin):
@@ -149,23 +147,25 @@ class LayeringPolicy(BASE, DeckhandBase, DocumentMixin):
     # enforce this constraint at the DB level.
     UNIQUE_CONSTRAINTS = ('revision_id',)
     __tablename__ = 'layering_policies'
-    __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
+    __table_args__ = (
+        gen_unqiue_contraint(__tablename__, *UNIQUE_CONSTRAINTS),)
 
-    id = Column(String(36), primary_key=True,
-                default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True)
 
 
 class ValidationPolicy(BASE, DeckhandBase, DocumentMixin):
 
     UNIQUE_CONSTRAINTS = ('schema', 'name', 'revision_id')
     __tablename__ = 'validation_policies'
-    __table_args__ = (DeckhandBase.gen_unqiue_contraint(*UNIQUE_CONSTRAINTS),)
+    __table_args__ = (
+        gen_unqiue_contraint(__tablename__, *UNIQUE_CONSTRAINTS),)
 
-    id = Column(String(36), primary_key=True,
-                default=lambda: str(uuid.uuid4()))
+    id = Column(Integer, primary_key=True)
 
 
 def register_models(engine):
+    # TODO(fmontei): Remove this.
+    unregister_models(engine)
     """Create database tables for all models with the given engine."""
     models = [Document, Revision, LayeringPolicy, ValidationPolicy]
     for model in models:
