@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import yaml
-
 import falcon
 
 from oslo_db import exception as db_exc
 from oslo_log import log as logging
 
 from deckhand.control import base as api_base
+from deckhand.control import common
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import document_validation
@@ -31,20 +30,10 @@ LOG = logging.getLogger(__name__)
 class DocumentsResource(api_base.BaseResource):
     """API resource for realizing CRUD endpoints for Documents."""
 
+    @common.enforce_content_types(['application/yaml', 'application/x-yaml'])
     def on_post(self, req, resp):
         """Create a document. Accepts YAML data only."""
-        if req.content_type != 'application/x-yaml':
-            LOG.warning('Requires application/yaml payload.')
-
-        document_data = req.stream.read(req.content_length or 0)
-
-        try:
-            documents = [d for d in yaml.safe_load_all(document_data)]
-        except yaml.YAMLError as e:
-            error_msg = ("Could not parse the document into YAML data. "
-                         "Details: %s." % e)
-            LOG.error(error_msg)
-            return self.return_error(resp, falcon.HTTP_400, message=error_msg)
+        documents = self.to_python_object(req)
 
         # All concrete documents in the payload must successfully pass their
         # JSON schema validations. Otherwise raise an error.
@@ -53,15 +42,16 @@ class DocumentsResource(api_base.BaseResource):
                 documents).validate_all()
         except (deckhand_errors.InvalidDocumentFormat,
                 deckhand_errors.UnknownDocumentFormat) as e:
-            return self.return_error(resp, falcon.HTTP_400, message=e)
+            raise falcon.HTTPBadRequest(title='Malformed document payload',
+                                        description=repr(e))
 
         try:
             created_documents = db_api.documents_create(
                 documents, validation_policies)
         except db_exc.DBDuplicateEntry as e:
-            return self.return_error(resp, falcon.HTTP_409, message=e)
+            raise falcon.HTTPConflict(description=repr(e))
         except Exception as e:
-            return self.return_error(resp, falcon.HTTP_500, message=e)
+            raise falcon.HTTPInternalServerError(description=repr(e))
 
         if created_documents:
             resp.status = falcon.HTTP_201
