@@ -66,4 +66,10 @@ class UnknownDocumentFormat(DeckhandException):
 
 class RevisionNotFound(DeckhandException):
     msg_fmt = ("The requested revision %(revision)s was not found.")
-    code = 403
+    code = 404
+
+
+class BarbicanException(DeckhandException):
+
+    def __init__(self, message, code):
+        super(BarbicanException, self).__init__(message=message, code=code)

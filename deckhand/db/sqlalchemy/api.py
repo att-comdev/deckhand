@@ -280,3 +280,27 @@ def _filter_revision_documents(documents, **filters):
             filtered_documents.append(document)
 
     return filtered_documents
+
+
+####################
+
+
+def secret_create(document_id, secret_data=None, secret_ref=None,
+                  session=None):
+    if not any([secret_data, secret_ref]):
+        raise ValueError('Either secret_data or secret_ref must be provided.')
+    if all([secret_data, secret_ref]):
+        raise ValueError('secret_data and secret_ref are mutually exclusive.')
+
+    session = session or get_session()
+
+    secret = models.DocumentSecret()
+    with session.begin():
+        if secret_data:
+            secret.update({'secret_data': secret_data})
+        elif secret_ref:
+            secret.update({'secret_ref': secret_ref})
+        secret.update({'document_id': document_id})
+        secret.save(session=session)
+
+    return secret.to_dict()

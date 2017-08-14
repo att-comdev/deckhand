@@ -14,6 +14,7 @@
 
 from keystoneauth1.identity import v3
 from keystoneauth1 import session
+from oslo_log import log as logging
 
 from deckhand.conf import config
 from deckhand import errors
@@ -22,6 +23,7 @@ from barbicanclient import barbican
 from barbicanclient import exceptions as barbican_exc
 
 CONF = config.CONF
+LOG = logging.getLogger(__name__)
 
 
 class BarbicanClientWrapper(object):
@@ -44,16 +46,13 @@ class BarbicanClientWrapper(object):
         # TODO: Deckhand's configuration file needs to be populated with
         # correct Keysone authentication values as well as the Barbican
         # endpoint URL automatically.
-        barbican_url = (CONF.barbican.api_endpoint
-                        if CONF.barbican.api_endpoint
-                        else 'http://127.0.0.1:9311')
+        barbican_url = CONF.barbican.api_endpoint
 
         keystone_auth = dict(CONF.keystone_authtoken)
         auth = v3.Password(**keystone_auth)
         sess = session.Session(auth=auth)
 
         try:
-            # TODO: replace with ``barbican_url``.
             cli = barbican.client.Client(endpoint=barbican_url,
                                          session=sess)
             # Cache the client so we don't have to reconstruct and
@@ -61,10 +60,10 @@ class BarbicanClientWrapper(object):
             if retry_on_conflict:
                 self._cached_client = cli
 
-        except barbican_exc.HTTPAuthError:
-            msg = _("Unable to authenticate Barbican client.")
-            # TODO: Log the error.
-            raise errors.ApiError(msg)
+        except barbican_exc.HTTPAuthError as e:
+            LOG.exception(e.message)
+            raise errors.BarbicanException(message=e.message,
+                                           code=e.status_code)
 
         return cli
 
