@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ff966d8_3622bd5a",
+        "filename": ".gitignore",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-08-14T20:00:31Z",
+      "side": 1,
+      "message": "it might be okay to check in a conf .sample into the repo.  It may also be out of scope for this patch :D",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 14
+      },
+      "revId": "f47e6a4472039b8fd6bb6b53c38f6471b8ed8037",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
