@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f24caaa_969d9b2d",
+        "filename": "docs/design.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-16T13:31:44Z",
+      "side": 1,
+      "message": "I think we should avoid specifying the secret storage backend in the design document.  It should be irrelevant for users (not for operators of course).",
+      "revId": "a17c8474e7aa58ff2e6c214205d9f9902155f7c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ced798c2_b74e4f3a",
+        "filename": "docs/design.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-16T13:31:44Z",
+      "side": 1,
+      "message": "We should check with Alan and Rodolfo about whether we need separate endpoints here.  I thought the requirement was really just separate delivery of certificates from other kinds of documents, which we already support.",
+      "revId": "a17c8474e7aa58ff2e6c214205d9f9902155f7c3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
