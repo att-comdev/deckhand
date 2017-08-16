@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48745989_f4c7cd95",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-16T13:37:08Z",
+      "side": 1,
+      "message": "What I had in mind for the DELETE endpoint was to insert a tombstone document.  Maybe we can have a quick chat about the idea?",
+      "revId": "c9d6d111ec4cffa8b26cb8ebed16fb038a1eae8a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
