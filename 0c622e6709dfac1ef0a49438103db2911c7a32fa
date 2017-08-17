@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5aee544f_468cb603",
+        "filename": "deckhand/control/base.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-17T19:27:34Z",
+      "side": 1,
+      "message": "Do we want to make oslo_context a shared pattern across UCP?",
+      "revId": "0c622e6709dfac1ef0a49438103db2911c7a32fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
