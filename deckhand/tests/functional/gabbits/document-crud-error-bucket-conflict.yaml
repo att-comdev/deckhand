@@ -1,0 +1,25 @@
+# Tests error paths for document crud.
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+  response_headers:
+    content-type: application/x-yaml
+
+tests:
+  - name: purge
+    desc: Begin testing from known state.
+    DELETE: /revisions
+    status: 204
+
+  - name: create
+    desc: Create initial documents
+    POST: /bucket/a/documents
+    status: 201
+    data: <@resources/sample-document.yaml
+
+  - name: error
+    desc: Trigger error case
+    POST: /bucket/b/documents
+    status: 409
+    data: <@resources/sample-document.yaml
