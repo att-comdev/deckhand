@@ -1,0 +1,182 @@
+# Test success paths for document create, read, update and delete using a
+# single bucket.
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+  response_headers:
+    content-type: application/x-yaml
+
+tests:
+  - name: purge
+    desc: Begin testing from known state.
+    DELETE: /revisions
+    status: 204
+
+  - name: initialize
+    desc: Create initial documents
+    POST: /bucket/mop/documents
+    status: 201
+    data: <@resources/design-doc-layering-sample.yaml
+
+  - name: verify_initial
+    desc: Verify initial document count and revisions
+    GET: /revisions/$RESPONSE['$.documents[0].revision']/documents
+    status: 200
+    response_multidoc_jsonpaths:
+      $.documents[*].metadata.name:
+        - layering-policy
+        - global-1234
+        - region-1234
+        - site-1234
+      $.documents[*].status.revision:
+        - "$RESPONSE['$.documents[0].revision']"
+        - "$RESPONSE['$.documents[0].revision']"
+        - "$RESPONSE['$.documents[0].revision']"
+        - "$RESPONSE['$.documents[0].revision']"
+      $.documents[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
+
+  - name: ignore_duplicate
+    desc: Push a duplicate bucket of documents
+    POST: /bucket/mop/documents
+    status: 200
+    data: <@resources/design-doc-layering-sample.yaml
+
+  - name: verify_ignore
+    desc: Verify duplicate documents were ignored
+    GET: /revisions/$RESPONSE['$.documents[0].revision']/documents
+    status: 200
+    response_multidoc_jsonpaths:
+      $.documents[*].metadata.name:
+        - layering-policy
+        - global-1234
+        - region-1234
+        - site-1234
+      $.documents[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+      $.documents[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
+
+  - name: update_single_document
+    desc: Update a single document, ignore other documents in the bucket
+    POST: /bucket/mop/documents
+    status: 201
+    data: <@resources/design-doc-layering-sample-with-update.yaml
+
+  - name: verify_update
+    desc: Verify updated document count and revisions
+    GET: /revisions/$RESPONSE['$.documents[0].revision']/documents
+    status: 200
+    response_multidoc_jsonpaths:
+      $.documents[*].metadata.name:
+        - layering-policy
+        - global-1234
+        - region-1234
+        - site-1234
+      $.documents[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$RESPONSE['$.documents[0].revision']"
+      $.documents[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
+
+  - name: verify_initial_documents_preserved_after_update
+    desc: Verify initial documents count and revisions preserved after update
+    GET: /revisions/$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']/documents
+    status: 200
+    response_multidoc_jsonpaths:
+      $.documents[*].metadata.name:
+        - layering-policy
+        - global-1234
+        - region-1234
+        - site-1234
+      $.documents[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+      $.documents[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
+
+  - name: delete_document
+    desc: Delete a single document
+    POST: /bucket/mop/documents
+    status: 201
+    data: <@resources/design-doc-layering-sample-with-delete.yaml
+
+  - name: verify_delete
+    desc: Verify document deletion
+    GET: /revisions/$RESPONSE['$.documents[0].revision']/documents
+    status: 200
+    response_multidoc_jsonpaths:
+      $.documents[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['update_with_ignore'].$RESPONSE['$.documents[0].revision']"
+      $.documents[*].metadata.name:
+        - layering-policy
+        - global-1234
+        - site-1234
+      $.documents[*].status.bucket:
+        - mop
+        - mop
+        - mop
+
+  - name: verify_initial_documents_preserved_after_delete
+    desc: Verify initial documents count and revisions
+    GET: /revisions/$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']/documents
+    status: 200
+    response_multidoc_jsonpaths:
+      $.documents[*].metadata.name:
+        - layering-policy
+        - global-1234
+        - region-1234
+        - site-1234
+      $.documents[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+      $.documents[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
+
+  - name: verify_updated_documents_preserved_after_delete
+    desc: Verify updated documents count and revisions preserved after delete
+    GET: /revisions/$HISTORY['update_with_ignore'].$RESPONSE['$.documents[0].revision']/documents
+    status: 200
+    response_multidoc_jsonpaths:
+      $.documents[*].metadata.name:
+        - layering-policy
+        - global-1234
+        - region-1234
+        - site-1234
+      $.documents[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.documents[0].revision']"
+        - "$HISTORY['update_with_ignore'].$RESPONSE['$.documents[0].revision']"
+      $.documents[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
