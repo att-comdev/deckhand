@@ -1,0 +1,221 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db63c4c6_9ba001d5",
+        "filename": "deckhand/tests/functional/gabbits/document-crud.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "This looks great, I like how anyone can read this and understand what\u0027s going on. Perfect high-level requirements-driven approach to testing.",
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb3612d1_7dcef9f4",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "nit: May we separate these out into their own section above gabbi?",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 11
+      },
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cfb8c301_551a5e79",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "Should probably call this MultidocYamlpaths and update the name of the test_key_suffix below to be multidoc_yamlpaths.",
+      "range": {
+        "startLine": 27,
+        "startChar": 6,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d841338_44b83925",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "I had to prefix this with sudo to get it to not throw an unauthorized error.",
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c8838b7_663dbd76",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "deckhand",
+      "range": {
+        "startLine": 19,
+        "startChar": 23,
+        "endLine": 19,
+        "endChar": 32
+      },
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35eb3b52_843ef797",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 20,
+        "startChar": 25,
+        "endLine": 20,
+        "endChar": 34
+      },
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "46838324_ea975c97",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "I had to prefix this with sudo to get it to not throw an unauthorized error.",
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "901af1cf_37bb2616",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "I had to prefix this with sudo to get it to not throw an unauthorized error.",
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed2013a8_58ea9c2f",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "I had to prefix this with sudo to get it to not throw an unauthorized error.",
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94c39a1a_fcc16c18",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "Could also run tox -egenconfig to generate the config file then overwrite/include necessary sections.",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 6
+      },
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54d3cce9_b53349fd",
+        "filename": "tox.ini",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-18T14:58:43Z",
+      "side": 1,
+      "message": "I had to include \"psycopg2\" here as well. Though I think it\u0027d be better to move these additional requirements either into a new requirements file for functional testing or into test-requirements.txt.",
+      "revId": "19bfe0d56788ca9b36f0fb4763bfcb8c33c74ffd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
