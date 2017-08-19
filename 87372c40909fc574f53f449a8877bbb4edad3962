@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8997a1ca_b3f11455",
+        "filename": "docs/design.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-08-19T17:04:02Z",
+      "side": 1,
+      "message": "Does this become necessarily false as any collections committed make any prior documents from that same collection no-longer valid?",
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f839fa1_82ca5f21",
+        "filename": "docs/design.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-08-19T17:04:02Z",
+      "side": 1,
+      "message": "won\u0027t we want the bucket/collection name as a query param?",
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
