@@ -28,7 +28,8 @@ class ViewBuilder(common.ViewBuilder):
         # TODO(fmontei): Convert these IDs to URLs instead once URL conversion
         # is implemented.
         for document in documents:
-            resp_body.setdefault('revision_id', document['revision_id'])
-            resp_body['documents'].append(document['id'])
+            resp_body['documents'].append(
+                {x: document[x] for x in [
+                    'id', 'revision_id', 'metadata', 'data', 'schema']})
 
         return resp_body

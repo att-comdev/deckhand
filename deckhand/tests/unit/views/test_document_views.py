@@ -34,14 +34,17 @@ class TestRevisionViews(base.TestDbBase):
         created_documents = self._create_documents(payload)
         document_view = self.view_builder.list(created_documents)
 
-        expected_attrs = ('revision_id', 'documents')
-        for attr in expected_attrs:
-            self.assertIn(attr, document_view)
-
-        self.assertTrue(uuidutils.is_uuid_like(document_view['revision_id']))
+        self.assertIn('documents', document_view)
+        self.assertIsInstance(document_view['documents'], list)
         self.assertEqual(count, len(document_view['documents']))
-        for doc_id in document_view['documents']:
-            self.assertTrue(uuidutils.is_uuid_like(doc_id))
+
+        expected_attrs = ('id', 'revision_id', 'metadata', 'data', 'schema')
+        for idx in range(count):
+            for attr in expected_attrs:
+                self.assertIn(attr, document_view['documents'][idx])
+            for attr in ('id', 'revision_id'):
+                self.assertTrue(uuidutils.is_uuid_like(
+                    document_view['documents'][idx][attr]))
 
     def test_create_single_document(self):
         self._test_document_creation_view(1)

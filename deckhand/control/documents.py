@@ -31,6 +31,8 @@ LOG = logging.getLogger(__name__)
 class DocumentsResource(api_base.BaseResource):
     """API resource for realizing CRUD endpoints for Documents."""
 
+    view_builder = document_view.ViewBuilder()
+
     def on_post(self, req, resp):
         """Create a document. Accepts YAML data only."""
         if req.content_type != 'application/x-yaml':
@@ -66,7 +68,15 @@ class DocumentsResource(api_base.BaseResource):
         if created_documents:
             resp.status = falcon.HTTP_201
             resp.append_header('Content-Type', 'application/x-yaml')
-            resp_body = document_view.ViewBuilder().list(created_documents)
-            resp.body = self.to_yaml_body(resp_body)
+            resp.body = self.to_yaml_body(
+                self.view_builder.list(created_documents))
         else:
             resp.status = falcon.HTTP_204
+
+    def on_delete(self, req, resp, document_id):
+        try:
+            db_api.document_delete(document_id)
+        except deckhand_errors.DocumentNotFound as e:
+            return self.return_error(resp, falcon.HTTP_404, message=e)
+
+        resp.status = falcon.HTTP_204

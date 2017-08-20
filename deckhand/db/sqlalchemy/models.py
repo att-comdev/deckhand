@@ -88,7 +88,7 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
         # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
         # must be used to store document metadata information in the DB.
         if not raw_dict and '_metadata' in self.keys():
-            d['metadata'] = d['_metadata']
+            d['metadata'] = d.pop('_metadata')
 
         return d
 
@@ -131,7 +131,8 @@ class DocumentMixin(object):
 
     @declarative.declared_attr
     def revision_id(cls):
-        return Column(Integer, ForeignKey('revisions.id'), nullable=False)
+        return Column(Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
+                      nullable=False)
 
 
 class Document(BASE, DeckhandBase, DocumentMixin):
