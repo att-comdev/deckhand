@@ -1,0 +1,38 @@
+# Tests the following:
+#
+# 1) Creation of a single document
+# 2) Implicit creation of a revision
+# 3) Verify revision was created
+# 4) Delete the revision
+# 5) Verify the revision was deleted
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+
+tests:
+  - name: create_single_document
+    desc: Create a sample document
+    POST: /api/v1.0/documents
+    status: 201
+    data: <@resources/sample-doc.yaml
+    response_headers:
+      content-type: application/x-yaml
+
+  - name: verify_single_revision
+    desc: Verify that revision was created for document above
+    GET: /api/v1.0/revisions/$RESPONSE['$.documents[0].revision_id']
+    status: 200
+
+    response_headers:
+      content-type: application/x-yaml
+
+  - name: delete_single_revision
+    desc: Delete a revision
+    DELETE: /api/v1.0/revisions/$RESPONSE['$.id']
+    status: 204
+
+  - name: verify_revision_deleted
+    desc: Verify that the revision was deleted
+    GET: /api/v1.0/revisions/$HISTORY['verify_single_revision'].$RESPONSE['$.id']
+    status: 404
