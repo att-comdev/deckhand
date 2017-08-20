@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2a37540_87d69127",
+        "filename": "deckhand/tests/functional/gabbits/resources/sample-doc.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-20T22:45:32Z",
+      "side": 0,
+      "message": "Scott suggested this should look like semantic versioning. Are we just using macroversions, no microversions?",
+      "range": {
+        "startLine": 2,
+        "startChar": 31,
+        "endLine": 2,
+        "endChar": 35
+      },
+      "revId": "ee3a96d518f18452f5b514952400c81584a830d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
