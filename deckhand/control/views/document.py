@@ -25,10 +25,16 @@ class ViewBuilder(common.ViewBuilder):
             'documents': []
         }
 
-        # TODO(fmontei): Convert these IDs to URLs instead once URL conversion
-        # is implemented.
         for document in documents:
-            resp_body.setdefault('revision_id', document['revision_id'])
-            resp_body['documents'].append(document['id'])
+            attrs = ['id', 'metadata', 'data', 'schema']
+            if document['deleted']:
+                attrs.append('deleted')
+
+            resp_obj = {x: document[x] for x in attrs}
+            resp_obj.setdefault('status', {})
+            resp_obj['status']['bucket'] = document['bucket_id']
+            resp_obj['status']['revision'] = document['revision_id']
+
+            resp_body['documents'].append(resp_obj)
 
         return resp_body
