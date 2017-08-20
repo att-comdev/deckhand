@@ -43,7 +43,6 @@ tests:
     desc: Begin testing from known state.
     DELETE: /api/v1.0/revisions
     status: 204
-    skip: Not implemented.
 
   - name: initialize
     desc: Create initial documents
