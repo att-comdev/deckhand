@@ -15,12 +15,15 @@
 import falcon
 
 from deckhand.control import base as api_base
+from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
 
 
 class RevisionDocumentsResource(api_base.BaseResource):
-    """API resource for realizing CRUD endpoints for Document Revisions."""
+    """API resource for realizing CRUD endpoints for revision documents."""
+
+    view_builder = document_view.ViewBuilder()
 
     def on_get(self, req, resp, revision_id):
         """Returns all documents for a `revision_id`.
@@ -29,6 +32,9 @@ class RevisionDocumentsResource(api_base.BaseResource):
         matching the filters specified via query string parameters. Returned
         documents will be as originally posted with no substitutions or
         layering applied.
+
+        Providing ``deleted=true`` in the query string will return deleted
+        documents only.
         """
         params = req.params
         try:
@@ -38,4 +44,4 @@ class RevisionDocumentsResource(api_base.BaseResource):
 
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
-        resp.body = self.to_yaml_body(documents)
+        resp.body = self.to_yaml_body(self.view_builder.list(documents))
