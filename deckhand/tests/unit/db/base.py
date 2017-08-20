@@ -68,15 +68,24 @@ class TestDbBase(base.DeckhandWithDBTestCase):
             self._validate_document(expected=documents[idx], actual=doc)
         return docs
 
-    def _get_document(self, **fields):
+    def _get_document(self, do_validation=True, **fields):
         doc = db_api.document_get(**fields)
-        self._validate_document(actual=doc)
+
+        if do_validation:
+            self._validate_document(actual=doc)
+
         return doc
+
+    def _delete_document(self, document_id):
+        return db_api.document_delete(document_id)
 
     def _get_revision(self, revision_id):
         revision = db_api.revision_get(revision_id)
         self._validate_revision(revision)
         return revision
+
+    def _delete_revisions(self):
+        return db_api.revision_delete_all()
 
     def _get_revision_documents(self, revision_id, **filters):
         documents = db_api.revision_get_documents(revision_id, **filters)

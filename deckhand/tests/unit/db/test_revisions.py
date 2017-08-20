@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from deckhand import errors
 from deckhand import factories
 from deckhand.tests.unit.db import base
 from deckhand import types
@@ -42,3 +43,29 @@ class TestRevisions(base.TestDbBase):
         self.assertEqual(1, len(revisions))
         self.assertEqual(4, len(revisions[0]['documents']))
         self.assertEqual(1, len(revisions[0]['validation_policies']))
+
+    def test_delete_all(self):
+        all_created_documents = []
+        all_revision_ids = []
+        for _ in range(3):
+            document_payload = [base.DocumentFixture.get_minimal_fixture()
+                                for _ in range(3)]
+            created_documents = self._create_documents(document_payload)
+            all_created_documents.extend(created_documents)
+            revision_id = created_documents[0]['revision_id']
+            all_revision_ids.append(revision_id)
+
+        self._delete_revisions()
+
+        # Validate that all revisions were deleted.
+        for revision_id in all_revision_ids:
+            error_re = 'The requested revision %s was not found.' % revision_id
+            self.assertRaisesRegex(errors.RevisionNotFound, error_re,
+                                   self._get_revision, revision_id)
+
+        # Validate that the documents (children) were deleted.
+        for doc in created_documents:
+            filters = {'id': doc['id']}
+            error_re = 'The requested document %s was not found.' % filters
+            self.assertRaisesRegex(errors.DocumentNotFound, error_re,
+                                   self._get_document, **filters)
