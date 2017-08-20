@@ -1,0 +1,53 @@
+# Tests the following:
+#
+# 1) Creation of a single document
+# 2) Implicit creation of a revision
+# 3) Verify revision was created
+# 4) Delete the revision
+# 5) Verify the revision was deleted
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+
+tests:
+    # Validates whether creating a revision works.
+    # Required parameters:
+    # body: Any document payload.
+    # Asserts that status code and response headers are correct.
+  - name: create_single_document
+    desc: Create a sample document
+    POST: /api/v1.0/documents
+    status: 201
+    data: <@resources/sample-doc.yaml
+    response_headers:
+      content-type: application/x-yaml
+
+    # Validates whether revision was created.
+    # Required parameters:
+    # path: revision_id.
+    # Asserts that status code and response headers are correct.
+  - name: verify_single_revision
+    desc: Verify that revision was created for document above
+    GET: /api/v1.0/revisions/$RESPONSE['$.documents[0].revision_id']
+    status: 200
+
+    response_headers:
+      content-type: application/x-yaml
+
+    # Validates whether revision deletion works.
+    # Required parameters:
+    # path: revision_id.
+  - name: delete_single_revision
+    desc: Delete a revision
+    DELETE: /api/v1.0/revisions/$RESPONSE['$.id']
+    status: 204
+
+    # Validates whether revision was deleted.
+    # Required parameters:
+    # path: revision_id.
+    # Asserts that 404 is thrown when trying to retrieve deleted revision.
+  - name: verify_revision_deleted
+    desc: Verify that the revision was deleted
+    GET: /api/v1.0/revisions/$HISTORY['verify_single_revision'].$RESPONSE['$.id']
+    status: 404

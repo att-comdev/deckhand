@@ -15,7 +15,7 @@
 import mock
 
 from deckhand.control import api
-from deckhand.control import base as api_base
+from deckhand.control import base
 from deckhand.control import documents
 from deckhand.control import revision_documents
 from deckhand.control import revisions
@@ -45,9 +45,11 @@ class TestApi(test_base.DeckhandTestCase):
         self.assertEqual(mock_falcon_api, result)
 
         mock_falcon.API.assert_called_once_with(
-            request_type=api_base.DeckhandRequest)
+            request_type=base.DeckhandRequest, middleware=[mock.ANY])
         mock_falcon_api.add_route.assert_has_calls([
             mock.call('/api/v1.0/documents', self.documents_resource()),
+            mock.call('/api/v1.0/documents/{document_id}',
+                      self.documents_resource()),
             mock.call('/api/v1.0/revisions', self.revisions_resource()),
             mock.call('/api/v1.0/revisions/{revision_id}',
                       self.revisions_resource()),

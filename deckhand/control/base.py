@@ -94,6 +94,26 @@ class BaseResource(object):
         raise TypeError('Unrecognized dict_body type when converting response '
                         'body to YAML format.')
 
+    def sanitize_params(self, req_params):
+        """Sanitize query string parameters passed to an HTTP request.
+
+        Invalid parameters are ignored.
+
+        :param req_params: The request's query string parameters.
+        :returns: Dictionary of sanitize parameters.
+        """
+        allowed_keys = (
+            'schema', 'metadata.name', 'metadata.layeringDefinition.abstract',
+            'metadata.layeringDefinition.layer', 'metadata.label',
+            'deleted')
+        sanitized_params = {}
+
+        for key in req_params.keys():
+            if key in allowed_keys:
+                sanitized_params[key] = req_params[key]
+
+        return sanitized_params
+
 
 class DeckhandRequestContext(object):
 

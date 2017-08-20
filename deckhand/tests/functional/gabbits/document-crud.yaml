@@ -1,10 +1,21 @@
-# Test creation of a single document and verify duplciates will be ignored
+# Tests the following:
+#
+# 1) Creation of a single document
+# 2) Implicit creation of a revision
+# 3) Document for the revision exists
+# 4) Creating a duplicate document returns 204
+# 5) Deleting a single document returns 204
+# 6) Retrieving deleted document returns 404
 
 defaults:
   request_headers:
     content-type: application/x-yaml
 
 tests:
+    # Validates whether creating a single document works.
+    # Required parameters:
+    # body: Document payload.
+    # Asserts that status code and response headers are correct.
   - name: create_single_document
     desc: Create a sample document
     POST: /api/v1.0/documents
@@ -13,18 +24,79 @@ tests:
     response_headers:
       content-type: application/x-yaml
 
-  - name: verify_single_document
+    # Validates whether revision for set of documents was created.
+    # Required parameters:
+    # path: revision_id
+    # Asserts that status code and response headers are correct.
+  - name: verify_single_revision
+    desc: Verify that revision was created for document above
+    GET: /api/v1.0/revisions/$RESPONSE['$.documents[0].revision_id']
+    status: 200
+
+    response_headers:
+      content-type: application/x-yaml
+
+    # Validates whether created revision has required documents.
+    # Required parameters:
+    # path: revision_id
+    # Asserts that status code, response headers and document metadata/schema
+    # are correct.
+  - name: verify_single_revision_document
     desc: Check that a single document was created above
-    GET: /api/v1.0/revisions/$RESPONSE['$.documents[0].revision_id']/documents
+    GET: /api/v1.0/revisions/$HISTORY['create_single_document'].$RESPONSE['$.documents[0].revision_id']/documents
     status: 200
 
     response_headers:
       content-type: application/x-yaml
     response_multidoc_jsonpaths:
       $.documents[*].metadata.name: a-unique-config-name-12345
+      $.documents[*].schema: promenade/ResourceType/v1.0
 
+    # Validates creating duplicate document does nothing.
+    # Required parameters:
+    # body: Identical document payload.
   - name: create_duplicate_document
     desc: Attempt to duplicate sample document
     POST: /api/v1.0/documents
     status: 204
     data: <@resources/sample-doc.yaml
+
+    # Validates deleting document works.
+    # Required parameters:
+    # path: document_id
+  - name: delete_single_document
+    desc: Delete a document
+    DELETE: /api/v1.0/documents/$HISTORY['create_single_document'].$RESPONSE['$.documents[0].id']
+    status: 204
+
+    # Validates that the document was deleted by attempting to retrieve it.
+    # Required parameters:
+    # path: revision_id
+    # Asserts that response headers are correct and no documents returned.
+  - name: verify_document_deleted
+    desc: Check that the revision has no documents
+    GET: /api/v1.0/revisions/$HISTORY['create_single_document'].$RESPONSE['$.documents[0].revision_id']/documents
+    status: 200
+
+    response_headers:
+      content-type: application/x-yaml
+    response_multidoc_jsonpaths:
+      $.documents: []
+
+    # Validates that the deleted document is returned with ?deleted=true.
+    # Required parameters:
+    # path: revision_id
+    # query: deleted=true
+    # Asserts that status code, response headers, document metadata and schema
+    # and document deleted flag are correct.
+  - name: verify_deleted_document_returned_with_deleted_filter_true
+    desc: Check that the deleted document is returned with ?deleted=true param
+    GET: /api/v1.0/revisions/$HISTORY['create_single_document'].$RESPONSE['$.documents[0].revision_id']/documents?deleted=true
+    status: 200
+
+    response_headers:
+      content-type: application/x-yaml
+    response_multidoc_jsonpaths:
+      $.documents[*].metadata.name: a-unique-config-name-12345
+      $.documents[*].schema: promenade/ResourceType/v1.0
+      $.documents[*].deleted: true

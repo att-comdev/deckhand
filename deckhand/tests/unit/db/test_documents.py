@@ -84,3 +84,28 @@ class TestDocuments(base.TestDbBase):
             document['revision_id'], **filters)
         self.assertEqual(1, len(documents))
         self.assertEqual(document, documents[0])
+
+    def test_delete_document(self):
+        payload = base.DocumentFixture.get_minimal_fixture()
+        documents = self._create_documents(payload)
+
+        # Validate that document deletion works.
+        result = self._delete_document(document_id=documents[0]['id'])
+        self.assertTrue(result['deleted'])
+
+        # Valdate that the document no longer exists.
+        self.assertEmpty(
+            self._get_revision_documents(documents[0]['revision_id']))
+
+    def test_show_deleted_document(self):
+        payload = base.DocumentFixture.get_minimal_fixture()
+        documents = self._create_documents(payload)
+
+        # Validate that document deletion works.
+        result = self._delete_document(document_id=documents[0]['id'])
+        self.assertTrue(result['deleted'])
+
+        # Valdate that the deleted document is returned with ``deleted=True``.
+        deleted_documents = self._get_revision_documents(
+            documents[0]['revision_id'], deleted=True)
+        self.assertEqual(1, len(deleted_documents))

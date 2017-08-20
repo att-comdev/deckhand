@@ -149,7 +149,7 @@ def _documents_create(values_list, session=None):
             existing_document = document_get(
                 raw_dict=True,
                 **{c: values[c] for c in filters if c != 'revision_id'})
-        except db_exception.DBError:
+        except errors.DocumentNotFound:
             # Ignore bad data at this point. Allow creation to bubble up the
             # error related to bad data.
             existing_document = None
@@ -169,8 +169,31 @@ def _documents_create(values_list, session=None):
 
 def document_get(session=None, raw_dict=False, **filters):
     session = session or get_session()
-    document = session.query(models.Document).filter_by(**filters).first()
-    return document.to_dict(raw_dict=raw_dict) if document else {}
+    if 'document_id' in filters:
+        filters['id'] = filters.pop('document_id')
+
+    try:
+        document = session.query(models.Document)\
+            .filter_by(**filters)\
+            .one()
+    except sa_orm.exc.NoResultFound:
+        raise errors.DocumentNotFound(document=filters)
+
+    return document.to_dict(raw_dict=raw_dict)
+
+
+def document_delete(document_id, session=None):
+    session = session or get_session()
+
+    try:
+        result = session.query(models.Document)\
+                    .filter_by(id=document_id)\
+                    .one()
+    except sa_orm.exc.NoResultFound:
+        raise errors.DocumentNotFound(document=document_id)
+
+    result.safe_delete(session=session)
+    return result.to_dict()
 
 
 ####################
@@ -193,12 +216,13 @@ def revision_get(revision_id, session=None):
     session = session or get_session()
 
     try:
-        revision = session.query(models.Revision).filter_by(
-            id=revision_id).one().to_dict()
+        revision = session.query(models.Revision)\
+            .filter_by(id=revision_id)\
+            .one()
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
 
-    return revision
+    return revision.to_dict()
 
 
 def revision_get_all(session=None):
@@ -208,27 +232,53 @@ def revision_get_all(session=None):
     return [r.to_dict() for r in revisions]
 
 
+def revision_delete(revision_id, session=None):
+    """Delete a single revision."""
+    session = session or get_session()
+    result = session.query(models.Revision)\
+                .filter_by(id=revision_id)\
+                .delete(synchronize_session=False)
+    if result == 0:
+        raise errors.RevisionNotFound(revision=revision_id)
+
+
+def revision_delete_all(session=None):
+    """Delete all revisions."""
+    session = session or get_session()
+    session.query(models.Revision)\
+        .delete(synchronize_session=False)
+
+
 def revision_get_documents(revision_id, session=None, **filters):
     """Return the documents that match filters for the specified `revision_id`.
+
+    Deleted documents are not included unless deleted=True is provided in
+    ``filters``.
 
     :raises: RevisionNotFound if the revision was not found.
     """
     session = session or get_session()
     try:
-        revision = session.query(models.Revision).filter_by(
-            id=revision_id).one().to_dict()
+        revision = session.query(models.Revision)\
+            .filter_by(id=revision_id)\
+            .one()\
+            .to_dict()
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
 
+    if 'deleted' not in filters:
+        filters.update({'deleted': False})
+
     filtered_documents = _filter_revision_documents(
         revision['documents'], **filters)
+
     return filtered_documents
 
 
 def _filter_revision_documents(documents, **filters):
     """Return the list of documents that match filters.
 
-    :returns: list of documents that match specified filters.
+    :returns: List of documents that match specified filters.
     """
     # TODO(fmontei): Implement this as an sqlalchemy query.
     filtered_documents = []
@@ -240,7 +290,7 @@ def _filter_revision_documents(documents, **filters):
             actual_val = utils.multi_getattr(filter_key, document)
 
             if (isinstance(actual_val, bool)
-                and isinstance(filter_val, six.text_type)):
+                and isinstance(filter_val, six.string_types)):
                 try:
                     filter_val = ast.literal_eval(filter_val.title())
                 except ValueError:
