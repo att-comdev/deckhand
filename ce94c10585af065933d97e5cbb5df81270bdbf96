@@ -195,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "9a9e6bba_33bcfb5a",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T20:30:19Z",
+      "side": 1,
+      "message": "The response I would have expected is: `[{\u0027metadata\u0027: ...}, {\u0027metadata\u0027: ...}]`.\n\nThe test harness combines them into a top level key called \u0027documents\u0027 so they are all addressable via jsonpath queries.",
+      "parentUuid": "a798e1a2_85018e0d",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67675b05_fab6d342",
         "filename": "etc/deckhand/deckhand.conf.sample",
         "patchSetId": 12
