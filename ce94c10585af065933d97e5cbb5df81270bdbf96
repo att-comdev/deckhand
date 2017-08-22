@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "794f3f2a_2a048455",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T15:55:13Z",
+      "side": 1,
+      "message": "The intention is just to do a DELETE here. I\u0027ll see if there\u0027s a way to specify just DELETE... You can using other frameworks, not sure if falcon has that.",
+      "parentUuid": "3f205f49_afdab6fa",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c060359_3d33a2bd",
         "filename": "deckhand/control/documents.py",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-22T15:40:00Z",
       "side": 1,
       "message": "Does re-using this class for both list and detail views expose the `POST /documents/{document_id}` endpoint as well?",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f2c77cc_e1e078fd",
+        "filename": "deckhand/control/documents.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T15:55:13Z",
+      "side": 1,
+      "message": "I\u0027ll add a test to check whether a 405 is thrown for that. Though it should result in some error since on_post(self, req, resp, document_id) will be called (which doesn\u0027t exist above). I\u0027ll have to verify using a basic test -- and if not, check if there\u0027s middleware I can add to avoid having to create a separate class which feels excessive.",
+      "parentUuid": "4c060359_3d33a2bd",
       "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "9dbe2dd5_9a4e3588",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T15:55:13Z",
+      "side": 1,
+      "message": "No, Python does nothing specific here; params they should be sanitized, thanks.",
+      "parentUuid": "02c0c43a_274f5d68",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "839b1b4e_648587cd",
         "filename": "deckhand/tests/functional/gabbits/document-crud.yaml",
         "patchSetId": 12
@@ -64,6 +118,24 @@
       "writtenOn": "2017-08-22T15:40:29Z",
       "side": 1,
       "message": "I\u0027d encourage comments within each test to denote what fields are used for building the request and what are asserts on the response.",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36f70c8f_db563e5a",
+        "filename": "deckhand/tests/functional/gabbits/document-crud.yaml",
+        "patchSetId": 12
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T15:55:13Z",
+      "side": 1,
+      "message": "Fixed in next patch.",
+      "parentUuid": "839b1b4e_648587cd",
       "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "19c70005_375ff607",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T15:55:13Z",
+      "side": 1,
+      "message": "Yeah, fixed in next patch.",
+      "parentUuid": "c355591c_3be2e619",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67675b05_fab6d342",
         "filename": "etc/deckhand/deckhand.conf.sample",
         "patchSetId": 12
@@ -98,6 +188,24 @@
       "writtenOn": "2017-08-22T15:40:29Z",
       "side": 1,
       "message": "Should this be checked in or only available via the tox job for generation?",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9b6261d5_22fb84df",
+        "filename": "etc/deckhand/deckhand.conf.sample",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T15:55:13Z",
+      "side": 1,
+      "message": "It was auto-generated using tox -e genconfig. I didn\u0027t actually mean to include this and when I saw it, I just ignored  it because it\u0027ll eventually make it to the code base. But I\u0027ll remove it from this patchset to avoid confusion.",
+      "parentUuid": "67675b05_fab6d342",
       "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
