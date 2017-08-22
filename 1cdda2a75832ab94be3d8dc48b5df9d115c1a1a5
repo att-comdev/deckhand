@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb0405bf_12ebbc1c",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-08-22T16:33:50Z",
+      "side": 1,
+      "message": "Per Felipe\u0027s earlier point, this entry is in a weird pattern.  A POST almost never report a 204 NO CONTENT for obvious reason, but at the same time 201 is not appropriate as nothing is created.  Wouldn\u0027t this be some error telling the user that they are POSTING duplicate vs. silently ignoring this making the user think something happens while it is a noop.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 15
+      },
+      "revId": "1cdda2a75832ab94be3d8dc48b5df9d115c1a1a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "093b9ceb_b2a4c797",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-08-22T16:33:50Z",
+      "side": 1,
+      "message": "It is still weird that we are POSTing on a DELETE esp when you are removing the concept of tombstone.  What is being post here?",
+      "range": {
+        "startLine": 120,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 8
+      },
+      "revId": "1cdda2a75832ab94be3d8dc48b5df9d115c1a1a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb03deff_0ef8b9e9",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-08-22T16:33:50Z",
+      "side": 1,
+      "message": "204",
+      "range": {
+        "startLine": 121,
+        "startChar": 12,
+        "endLine": 121,
+        "endChar": 15
+      },
+      "revId": "1cdda2a75832ab94be3d8dc48b5df9d115c1a1a5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
