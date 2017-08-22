@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f205f49_afdab6fa",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T15:40:00Z",
+      "side": 1,
+      "message": "I don\u0027t think we should expose additional endpoints outside of those needed for requirements (from the design doc).\n\nAnything we expose is here is publicly accessible and will need to be supported, so I think we should keep the scope as small as possible.",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c060359_3d33a2bd",
+        "filename": "deckhand/control/documents.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T15:40:00Z",
+      "side": 1,
+      "message": "Does re-using this class for both list and detail views expose the `POST /documents/{document_id}` endpoint as well?",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c355591c_3be2e619",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T15:40:00Z",
+      "side": 1,
+      "message": "I think deckhand needs to return multi-document yaml, since that\u0027s what clients will expect.",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
