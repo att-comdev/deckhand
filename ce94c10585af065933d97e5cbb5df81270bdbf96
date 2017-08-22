@@ -177,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "a798e1a2_85018e0d",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T17:39:39Z",
+      "side": 1,
+      "message": "Actually, safe_load(string) is correct and list(safe_load_all(string)) isn\u0027t.\n\nsafe_load returns: {\u0027documents\u0027: [{\u0027metadata\u0027 ...}]}\nsafe_load_all returns: [{\u0027documents\u0027: [{\u0027metadata\u0027 ...}]}]\n\nThat is because the API for POST /documents in this patch set returns a dictionary whose topmost key is \u0027documents\u0027 which already returns the list of all created documents. safe_load_all re-wraps a correct response in a list which is wrong.",
+      "parentUuid": "19c70005_375ff607",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67675b05_fab6d342",
         "filename": "etc/deckhand/deckhand.conf.sample",
         "patchSetId": 12
