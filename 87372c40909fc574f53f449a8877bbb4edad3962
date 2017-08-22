@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a62d4bf4_86c2b926",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-22T16:00:57Z",
+      "side": 1,
+      "message": "I disagree: 201 is reserved for creation whereas in this case nothing was created. Perhaps a 200 is more appropriate than a 204 (even though the response is empty in this case).\n\nAccording to the 201 standard I see: \"The request has been fulfilled and resulted in a new resource being created.\" So I think it\u0027s misleading to use a 201 here.\n\nhttps://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html",
+      "parentUuid": "652b07b1_6b5ddc83",
+      "range": {
+        "startLine": 41,
+        "startChar": 12,
+        "endLine": 41,
+        "endChar": 15
+      },
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94c1bd8e_7dd15e1b",
         "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
         "patchSetId": 1
