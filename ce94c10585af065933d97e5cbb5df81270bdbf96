@@ -36,6 +36,40 @@
     },
     {
       "key": {
+        "uuid": "02c0c43a_274f5d68",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-22T15:40:29Z",
+      "side": 1,
+      "message": "Should params be sanitized at all? Seems like a dangerous pattern to directly use them as kwargs, but maybe that is the standard Python-way.",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "839b1b4e_648587cd",
+        "filename": "deckhand/tests/functional/gabbits/document-crud.yaml",
+        "patchSetId": 12
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-22T15:40:29Z",
+      "side": 1,
+      "message": "I\u0027d encourage comments within each test to denote what fields are used for building the request and what are asserts on the response.",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c355591c_3be2e619",
         "filename": "deckhand/tests/functional/test_gabbi.py",
         "patchSetId": 12
@@ -47,6 +81,23 @@
       "writtenOn": "2017-08-22T15:40:00Z",
       "side": 1,
       "message": "I think deckhand needs to return multi-document yaml, since that\u0027s what clients will expect.",
+      "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67675b05_fab6d342",
+        "filename": "etc/deckhand/deckhand.conf.sample",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-22T15:40:29Z",
+      "side": 1,
+      "message": "Should this be checked in or only available via the tox job for generation?",
       "revId": "ce94c10585af065933d97e5cbb5df81270bdbf96",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
