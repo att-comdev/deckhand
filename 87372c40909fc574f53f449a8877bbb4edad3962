@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "eb760851_74f7e607",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-multi-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "This test is what the intention is.  I\u0027ll try to clarify the docs.  POSTing documents to one bucket (b) should have no impact on documents in any other buckets.",
+      "parentUuid": "84bdb752_18268fad",
+      "range": {
+        "startLine": 60,
+        "startChar": 10,
+        "endLine": 60,
+        "endChar": 48
+      },
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f821c4c7_fc8f661b",
         "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
         "patchSetId": 1
@@ -59,6 +83,30 @@
       "writtenOn": "2017-08-20T22:45:32Z",
       "side": 1,
       "message": "204",
+      "range": {
+        "startLine": 41,
+        "startChar": 12,
+        "endLine": 41,
+        "endChar": 15
+      },
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "652b07b1_6b5ddc83",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "I see no reason to return a different response code, we can just return what we would normally return anyway.",
+      "parentUuid": "f821c4c7_fc8f661b",
       "range": {
         "startLine": 41,
         "startChar": 12,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "4ca3acf8_a41edcc8",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Quite right, thanks.",
+      "parentUuid": "94c1bd8e_7dd15e1b",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 64,
+        "endChar": 48
+      },
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef54d2e0_4eea5525",
         "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
         "patchSetId": 1
@@ -111,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "be3c36c1_630d96ac",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Indeed.  I will add validations in the tests for the bucket.",
+      "parentUuid": "ef54d2e0_4eea5525",
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19e427bd_5db508c0",
         "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
         "patchSetId": 1
@@ -122,6 +212,30 @@
       "writtenOn": "2017-08-20T22:45:32Z",
       "side": 1,
       "message": "preserved after update",
+      "range": {
+        "startLine": 83,
+        "startChar": 35,
+        "endLine": 83,
+        "endChar": 54
+      },
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e0a6e71_6323a5d0",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "19e427bd_5db508c0",
       "range": {
         "startLine": 83,
         "startChar": 35,
@@ -157,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "bfded63e_473075e9",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Quite right, fixed.",
+      "parentUuid": "923597ff_3113abae",
+      "range": {
+        "startLine": 99,
+        "startChar": 10,
+        "endLine": 99,
+        "endChar": 57
+      },
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b96a2a2_c723a56f",
         "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
         "patchSetId": 1
@@ -168,6 +306,30 @@
       "writtenOn": "2017-08-20T22:45:32Z",
       "side": 1,
       "message": "Verify deleted document is absent and revisions",
+      "range": {
+        "startLine": 105,
+        "startChar": 10,
+        "endLine": 105,
+        "endChar": 54
+      },
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "061af4f8_8e803750",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Updated.",
+      "parentUuid": "4b96a2a2_c723a56f",
       "range": {
         "startLine": 105,
         "startChar": 10,
@@ -220,6 +382,24 @@
     },
     {
       "key": {
+        "uuid": "743426a5_811b003e",
+        "filename": "deckhand/tests/functional/gabbits/resources/design-doc-layering-sample-missing-document.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Yeah, this was a mistake.  I was starting to think about other error conditions and decided this kind of error was really layering-related and therefore a mistake to worry about.",
+      "parentUuid": "70048ccc_96d2a000",
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2473f353_0b784ed7",
         "filename": "deckhand/tests/functional/gabbits/resources/design-doc-layering-sample-with-update.yaml",
         "patchSetId": 1
@@ -231,6 +411,24 @@
       "writtenOn": "2017-08-20T22:45:32Z",
       "side": 1,
       "message": "Nothing updated in this set of documents.",
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7a10b9f_226aa838",
+        "filename": "deckhand/tests/functional/gabbits/resources/design-doc-layering-sample-with-update.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Added a comment showing where the update is.",
+      "parentUuid": "2473f353_0b784ed7",
       "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -254,6 +452,24 @@
     },
     {
       "key": {
+        "uuid": "beb7f00c_897a89e1",
+        "filename": "docs/design.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "In what sense are they no longer valid?",
+      "parentUuid": "8997a1ca_b3f11455",
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f839fa1_82ca5f21",
         "filename": "docs/design.md",
         "patchSetId": 1
@@ -265,6 +481,24 @@
       "writtenOn": "2017-08-19T17:04:02Z",
       "side": 1,
       "message": "won\u0027t we want the bucket/collection name as a query param?",
+      "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43f1db32_7e7ab6c6",
+        "filename": "docs/design.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 1,
+      "message": "Yeah, I think we should expose this.  Probably via something like `status.bucket`?  Trying that for now.",
+      "parentUuid": "6f839fa1_82ca5f21",
       "revId": "87372c40909fc574f53f449a8877bbb4edad3962",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false

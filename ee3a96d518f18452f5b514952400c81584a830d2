@@ -22,6 +22,30 @@
       "revId": "ee3a96d518f18452f5b514952400c81584a830d2",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6377a8c_88d6d146",
+        "filename": "deckhand/tests/functional/gabbits/resources/sample-doc.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-22T13:14:57Z",
+      "side": 0,
+      "message": "I don\u0027t think schemas require this granularity of versioning.  We can open for discussion, but I think this sort of thing gets out of hand quickly.",
+      "parentUuid": "d2a37540_87d69127",
+      "range": {
+        "startLine": 2,
+        "startChar": 31,
+        "endLine": 2,
+        "endChar": 35
+      },
+      "revId": "ee3a96d518f18452f5b514952400c81584a830d2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
