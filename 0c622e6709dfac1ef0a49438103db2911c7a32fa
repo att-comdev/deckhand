@@ -16,6 +16,24 @@
       "revId": "0c622e6709dfac1ef0a49438103db2911c7a32fa",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10a72e46_563da21e",
+        "filename": "deckhand/control/base.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-23T17:39:45Z",
+      "side": 1,
+      "message": "Honestly, I\u0027m not sure yet. I\u0027ve seen it used by other OpenStack components for integration purposes with oslo.policy, but I\u0027ll explore the real value of it when I add oslo.policy support.",
+      "parentUuid": "5aee544f_468cb603",
+      "revId": "0c622e6709dfac1ef0a49438103db2911c7a32fa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
