@@ -16,6 +16,24 @@
       "revId": "bfe930bb8ccd7c6080dbac26722de9ac650485dd",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e45ac09_c078e370",
+        "filename": "docs/design.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-23T15:11:53Z",
+      "side": 1,
+      "message": "All documents must belong to a bucket, no random name will be assigned.  The only way to get documents in with this approach is as part of a specified bucket using PUT /buckets/{bucket_name}/documents.",
+      "parentUuid": "4f8df917_ba0ebb20",
+      "revId": "bfe930bb8ccd7c6080dbac26722de9ac650485dd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
