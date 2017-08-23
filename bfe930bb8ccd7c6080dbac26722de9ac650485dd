@@ -34,6 +34,24 @@
       "revId": "bfe930bb8ccd7c6080dbac26722de9ac650485dd",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2a2c8926_826d58c3",
+        "filename": "docs/design.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-23T16:02:28Z",
+      "side": 1,
+      "message": "Oh okay, just noticed you replaced POST /documents with the new endpoint.",
+      "parentUuid": "4e45ac09_c078e370",
+      "revId": "bfe930bb8ccd7c6080dbac26722de9ac650485dd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
