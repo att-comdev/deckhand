@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f8df917_ba0ebb20",
+        "filename": "docs/design.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-23T15:06:53Z",
+      "side": 1,
+      "message": "What happens if POST /documents is called? Is a randomly generated bucket name for that set of documents created?",
+      "revId": "bfe930bb8ccd7c6080dbac26722de9ac650485dd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
