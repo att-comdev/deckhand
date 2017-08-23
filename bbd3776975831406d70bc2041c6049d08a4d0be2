@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51c7ed27_1c8c0f1c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-23T21:35:17Z",
+      "side": 1,
+      "message": "This endpoint has been removed.",
+      "revId": "bbd3776975831406d70bc2041c6049d08a4d0be2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "017687f3_e9b7be8d",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-23T21:35:17Z",
+      "side": 1,
+      "message": "I think we might want 405 rather than 501.",
+      "revId": "bbd3776975831406d70bc2041c6049d08a4d0be2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9e1b1aa_635ef948",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-23T21:35:17Z",
+      "side": 1,
+      "message": "I don\u0027t think that this query param really fits the design.  If a document is part of a revision, it\u0027s part of that revision for all time.\n\n\"Deleting\" a document removes it from future revisions, not older revisions.",
+      "revId": "bbd3776975831406d70bc2041c6049d08a4d0be2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e9fb4af_e49bdb55",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 17
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-23T21:35:17Z",
+      "side": 1,
+      "message": "Apologies on this one, I would expect PUT to return 200 rather than 201.",
+      "revId": "bbd3776975831406d70bc2041c6049d08a4d0be2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
