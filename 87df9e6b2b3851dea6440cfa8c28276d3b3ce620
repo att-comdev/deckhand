@@ -16,6 +16,24 @@
       "revId": "87df9e6b2b3851dea6440cfa8c28276d3b3ce620",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b948fcc4_a33bd8a2",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T18:55:08Z",
+      "side": 1,
+      "message": "It might have to be refactored further in the future. For example, _some_ response bodies will probably be objects while others will be lists (as in this case). I don\u0027t think all response bodies in Deckhand are lists, but haven\u0027t double-checked.",
+      "parentUuid": "6ad8966e_83bf9d81",
+      "revId": "87df9e6b2b3851dea6440cfa8c28276d3b3ce620",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
