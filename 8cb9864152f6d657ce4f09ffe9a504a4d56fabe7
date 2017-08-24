@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed54026d_af487a47",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-multiple-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "200",
+      "range": {
+        "startLine": 24,
+        "startChar": 12,
+        "endLine": 24,
+        "endChar": 15
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b81e1fab_e0df6dfe",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-multiple-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "200",
+      "range": {
+        "startLine": 31,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 15
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88f3dfb0_82de7a3f",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-multiple-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "/s/documents//",
+      "range": {
+        "startLine": 37,
+        "startChar": 42,
+        "endLine": 37,
+        "endChar": 51
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6971113_97af1974",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-multiple-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "I don\u0027t mind, but we want substitution to not substitute directly into $.data and just return the actual secret values separately in $.data.values below?",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7c1617f7_24c5cd56",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-single-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "200",
+      "range": {
+        "startLine": 23,
+        "startChar": 12,
+        "endLine": 23,
+        "endChar": 15
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fd97c63_56cb857f",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-single-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "/s/documents//",
+      "range": {
+        "startLine": 29,
+        "startChar": 42,
+        "endLine": 29,
+        "endChar": 51
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e79c7929_46aacfbd",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-single-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "/s/documents//\n\nI can just change this all later, but technically this\u0027ll be removed when https://review.gerrithub.io/#/c/373635/ is merged.",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 17
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8dd87110_b6eeeb44",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-single-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T19:02:28Z",
+      "side": 1,
+      "message": "data.chart\n\n(Looks like judging by the way it\u0027s formatted in the resources file.)",
+      "range": {
+        "startLine": 33,
+        "startChar": 21,
+        "endLine": 33,
+        "endChar": 25
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
