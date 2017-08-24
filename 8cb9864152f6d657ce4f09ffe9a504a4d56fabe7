@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "0123b71a_fac0153b",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-multiple-bucket-with-substitution.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-24T20:04:36Z",
+      "side": 1,
+      "message": "Oops this comment I didn\u0027t mean to post.",
+      "parentUuid": "e6971113_97af1974",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "8cb9864152f6d657ce4f09ffe9a504a4d56fabe7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c1617f7_24c5cd56",
         "filename": "deckhand/tests/functional/gabbits/document-render-success-single-bucket-with-substitution.yaml",
         "patchSetId": 1
