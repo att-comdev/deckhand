@@ -1027,3 +1027,11 @@ HTTP/1.1 204 No Content
 ```
 
 This endpoint uses the `delete_tag` action.
+
+### POST `/rollback/{target_revision_id}`
+
+Creates a new revision that contains exactly the same set of documents as the
+revision specified by `target_revision_id`.
+
+This endpoint uses the `write_cleartext_document` and
+`write_encrypted_document` actions.
