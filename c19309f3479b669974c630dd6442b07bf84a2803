@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4955232_a9c1781b",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-25T15:48:36Z",
+      "side": 1,
+      "message": "This seems overly clever, not sure what the gap is with simply using separate resources is.",
+      "revId": "c19309f3479b669974c630dd6442b07bf84a2803",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3c9c16ad_8ab38a02",
+        "filename": "deckhand/control/common.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-25T15:48:36Z",
+      "side": 1,
+      "message": "I feel like paranoid security would want invalid params logged in someway, but probably is overly paranoid.",
+      "revId": "c19309f3479b669974c630dd6442b07bf84a2803",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b5d601f_791f152b",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-25T15:48:36Z",
+      "side": 1,
+      "message": "Again, seems overly complicated rather than just allowing Falcon determine allowed methods based on defined handlers in a resource.",
+      "revId": "c19309f3479b669974c630dd6442b07bf84a2803",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b4c6a43_81870f33",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-08-25T15:48:36Z",
+      "side": 1,
+      "message": "This is a nice pattern to standardize on.",
+      "revId": "c19309f3479b669974c630dd6442b07bf84a2803",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
