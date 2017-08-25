@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a36ab665_f767bd7e",
+        "filename": "deckhand/tests/functional/gabbits/rollback-success-single-bucket.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-25T14:13:51Z",
+      "side": 1,
+      "message": "to revision 1\n\nWould make it a lit bit clearer.",
+      "revId": "94c27de861af548f81cf0459c381075884d8c312",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
