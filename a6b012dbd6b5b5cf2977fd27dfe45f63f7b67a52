@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ee4b140_bea4a853",
+        "filename": "docs/design.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-25T16:28:34Z",
+      "side": 1,
+      "message": "I take it we only want to support sorting by the other query strings listed here? I.e. by metadata.label and schema. Otherwise we might be exposing implementation-specific columns like id or _metadata or whatever.",
+      "range": {
+        "startLine": 676,
+        "startChar": 3,
+        "endLine": 676,
+        "endChar": 7
+      },
+      "revId": "a6b012dbd6b5b5cf2977fd27dfe45f63f7b67a52",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
