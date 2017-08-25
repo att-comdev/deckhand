@@ -16,6 +16,24 @@
       "revId": "94c27de861af548f81cf0459c381075884d8c312",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "535087f0_d2f9e5cb",
+        "filename": "deckhand/tests/functional/gabbits/rollback-success-single-bucket.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-25T15:26:21Z",
+      "side": 1,
+      "message": "Good point -- updated.",
+      "parentUuid": "a36ab665_f767bd7e",
+      "revId": "94c27de861af548f81cf0459c381075884d8c312",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
