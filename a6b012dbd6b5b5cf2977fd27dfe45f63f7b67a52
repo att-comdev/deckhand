@@ -22,6 +22,30 @@
       "revId": "a6b012dbd6b5b5cf2977fd27dfe45f63f7b67a52",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3c7c948_cd11c296",
+        "filename": "docs/design.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-25T17:52:48Z",
+      "side": 1,
+      "message": "We can probably narrow the scope even further than just all of these things.\n\nThe keys I can imagine being useful are basically just schema and metadata.name.\n\nImplementing this can also reasonably be delayed (except for name sorting).",
+      "parentUuid": "2ee4b140_bea4a853",
+      "range": {
+        "startLine": 676,
+        "startChar": 3,
+        "endLine": 676,
+        "endChar": 7
+      },
+      "revId": "a6b012dbd6b5b5cf2977fd27dfe45f63f7b67a52",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
