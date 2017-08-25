@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12a07855_56c58c40",
+        "filename": "deckhand/control/revision_tags.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-25T22:27:24Z",
+      "side": 1,
+      "message": "Should do something like e.format_message() here before passing.",
+      "revId": "bb12f5c8f9d1eb4de1f57177979e352e9983dcb0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af6e9552_0bba6279",
+        "filename": "deckhand/control/revision_tags.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-25T22:27:24Z",
+      "side": 1,
+      "message": "Still need to make these exceptions consistent.",
+      "revId": "bb12f5c8f9d1eb4de1f57177979e352e9983dcb0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40404886_32add3f4",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-25T22:27:24Z",
+      "side": 1,
+      "message": "Need to document these are ordered by tag name by default",
+      "revId": "bb12f5c8f9d1eb4de1f57177979e352e9983dcb0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "067e1430_4702681e",
+        "filename": "deckhand/tests/functional/gabbits/revision-tag-success.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-08-25T22:27:24Z",
+      "side": 1,
+      "message": "Definitely need to fix the document up here",
+      "revId": "bb12f5c8f9d1eb4de1f57177979e352e9983dcb0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
