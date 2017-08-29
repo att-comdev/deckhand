@@ -3,8 +3,9 @@
 # 1) Creation of a single document
 # 2) Implicit creation of a revision
 # 3) Verify revision was created
-# 4) Delete the revision
-# 5) Verify the revision was deleted
+# 4) Verify revision list contains new revision
+# 5) Delete the revision
+# 6) Verify the revision was deleted
 
 defaults:
   request_headers:
@@ -37,6 +38,16 @@ tests:
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']
     status: 200
 
+    # Validates the newly created revision is in the revision list
+    # Asserts that status code and parts of the response body are correct.
+  - name: verify_revision_list_not_empty
+    desc: Verify that the list of revisions is not empty
+    GET: /api/v1.0/revisions
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].count: 1
+      $.[0].results[0].id: $HISTORY['initialize'].$RESPONSE['$.[0].status.revision']
+
     # Validates whether revision deletion works.
     # Required parameters:
     # path: revision_id.
@@ -58,3 +69,12 @@ tests:
       # Deckhand exceptions return the following content-type header by
       # default. TODO(fmontei): Override that later.
       content-type: 'application/json; charset=UTF-8'
+
+    # Validates the revision no longer appears in the revisions list
+    # Asserts that status code and parts of the response body are correct.
+  - name: verify_revision_list_empty
+    desc: Verify that the list of revisions is empty
+    GET: /api/v1.0/revisions
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].count: 0

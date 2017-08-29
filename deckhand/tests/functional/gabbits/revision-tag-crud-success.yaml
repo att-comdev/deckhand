@@ -1,0 +1,169 @@
+# Test success paths for document create, read, update and delete using a
+# single bucket.
+#
+#  1. Purges existing data to ensure test isolation
+#  2. Creates a revision with content irrelevant to these tests.
+#  3. Creates a second revision with content irrelevant to these tests.
+#  4. Adds a tag to the first revision.
+#  5. Verifies the tag data shows up as expected when directly queried
+#  6. Verifies the tag shows up in the detail query of the revision
+#  7. Verifies the tag shows up in the revision list
+#  8. Adds a different tag to the second revision.
+#  9. Verifies both tags show up in the revision list
+# 10. Adds the first tag to the second revision.
+# 11. Verifies all three tags show up in the revision list.
+# 12. Updates the original tag data
+# 13. Verifies the tag data was updated
+# 14. Delete a single tag
+# 15. Verifies the deleted tag is missing
+# 16. Verifies the list of revisions show the tag missing
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+  response_headers:
+    content-type: application/x-yaml
+
+tests:
+  - name: purge
+    desc: Begin testing from known state.
+    DELETE: /api/v1.0/revisions
+    status: 204
+
+  - name: rev_0
+    desc: Create initial documents
+    PUT: /api/v1.0/bucket/mop/documents
+    status: 200
+    data: <@resources/design-doc-layering-sample.yaml
+
+  - name: rev_1
+    desc: Update a single document, ignore other documents in the bucket
+    PUT: /api/v1.0/bucket/mop/documents
+    status: 201
+    data: <@resources/design-doc-layering-sample-with-update.yaml
+    skip: Not implemented.
+
+  - name: add_a_to_0
+    desc: Add tag "a" to first revision
+    PUT: /api/v1.0/revisions/$HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']/tags/a
+    status: 200
+    data:
+      first: tag
+      put: [to]
+      initial: revision
+    skip: Not implemented.
+
+  - name: verify_tag_a_on_0
+    desc: Verify the data for tag "a" on the first revision
+    GET: /api/v1.0/revisions/$HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']/tags/a
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].:
+        first: tag
+        put: [to]
+        initial: revision
+    skip: Not implemented.
+
+  - name: verify_tag_a_on_0_revision_detail
+    desc: Verify that tag "a" is on the first revision's detail page
+    PUT: /api/v1.0/revisions/$HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].tags.a.name: a
+    skip: Not implemented.
+
+  - name: verify_tag_a_on_0_revision_list
+    desc: Verify that tag "a" is on the first revision on list page
+    PUT: /api/v1.0/revisions
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].id: $HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']
+      $.[0].tags: [a]
+      $.[1].id: $HISTORY['rev_1'].$RESPONSE['$.[0].status.revision']
+      $.[1].tags: []
+    skip: Not implemented.
+
+  - name: add_b_to_1
+    desc: Add tag "b" to second revision
+    PUT: /api/v1.0/revisions/$HISTORY['rev_1'].$RESPONSE['$.[0].status.revision']/tags/a
+    status: 200
+    data:
+      second: tag
+      put: [on]
+      another: revision
+    skip: Not implemented.
+
+  - name: verify_tag_b_on_1_revision_list
+    desc: Verify that tag "b" is on the second revision on list page
+    PUT: /api/v1.0/revisions
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].id: $HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']
+      $.[0].tags: [a]
+      $.[1].id: $HISTORY['rev_1'].$RESPONSE['$.[0].status.revision']
+      $.[1].tags: [b]
+    skip: Not implemented.
+
+  - name: add_a_to_1
+    desc: Add tag "a" to second revision
+    PUT: /api/v1.0/revisions/$HISTORY['rev_1'].$RESPONSE['$.[0].status.revision']/tags/a
+    status: 200
+    data:
+      second: tag
+      put: [on]
+      another: revision
+    skip: Not implemented.
+
+  - name: verify_tag_a_on_1_revision_list
+    desc: Verify that tag "a" is on the first revision on list page
+    PUT: /api/v1.0/revisions
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].id: $HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']
+      $.[0].tags: [a]
+      $.[1].id: $HISTORY['rev_1'].$RESPONSE['$.[0].status.revision']
+      $.[1].tags: [a, b]
+    skip: Not implemented.
+
+  - name: update_a_on_0
+    desc: Update tag data for a on first revision
+    PUT: /api/v1.0/revisions/$HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']/tags/a
+    status: 200
+    data:
+      first: tag
+      with: new data
+    skip: Not implemented.
+
+  - name: verify_updated_tag_a_on_0
+    desc: Verify the updated data for tag "a" on the first revision
+    GET: /api/v1.0/revisions/$HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']/tags/a
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].:
+        first: tag
+        put: [to]
+        initial: revision
+    skip: Not implemented.
+
+  - name: delete_a_from_0
+    desc: Delete tag "a" from first revision
+    DELETE: /api/v1.0/revisions/$HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']/tags/a
+    status: 204
+    skip: Not implemented.
+
+  - name: verify_tag_a_removed_from_revision_0
+    desc: Verify that tag "a" data is not available
+    PUT: /api/v1.0/revisions
+    status: 404
+    skip: Not implemented.
+
+  - name: verify_tag_a_removed_from_revision_0_on_revision_list
+    desc: Verify that tag "a" was removed on the first revision on list page
+    PUT: /api/v1.0/revisions
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0].id: $HISTORY['rev_0'].$RESPONSE['$.[0].status.revision']
+      $.[0].tags: []
+      $.[1].id: $HISTORY['rev_1'].$RESPONSE['$.[0].status.revision']
+      $.[1].tags: [a, b]
+    skip: Not implemented.

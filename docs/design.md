@@ -713,12 +713,14 @@ results:
   - id: 0
     url: https://deckhand/api/v1.0/revisions/0
     createdAt: 2017-07-14T21:23Z
+    tags: [a, b, c]
     validationPolicies:
       site-deploy-validation:
         status: failed
   - id: 1
     url: https://deckhand/api/v1.0/revisions/1
     createdAt: 2017-07-16T01:15Z
+    tags: [b]
     validationPolicies:
       site-deploy-validation:
         status: succeeded
@@ -751,6 +753,10 @@ Sample response:
 id: 0
 url: https://deckhand/api/v1.0/revisions/0
 createdAt: 2017-07-14T021:23Z
+tags:
+  a:
+    name: a
+    url: https://deckhand/api/v1.0/revisions/0/tags/a
 validationPolicies:
   site-deploy-validation:
     url: https://deckhand/api/v1.0/revisions/0/documents?schema=deckhand/ValidationPolicy/v1&name=site-deploy-validation
@@ -885,7 +891,7 @@ errors:
 
 This endpoint uses the `read_validation` action.
 
-### POST `/revisions/{{revision_id}}/tags/{{tag}}`
+### PUT `/revisions/{{revision_id}}/tags/{{tag}}`
 
 Associate the revision with a collection of metadata, if provided, by way of
 a tag. The tag itself can be used to label the revision.
@@ -893,13 +899,12 @@ a tag. The tag itself can be used to label the revision.
 Sample request with body:
 
 ```http
-POST `/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags/foobar`
+PUT `/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags/foobar`
 Content-Type: application/x-yaml
 
 ---
-metadata:
-  - name: foo
-    thing: bar
+foo: baz
+bar: [buz]
 ...
 ```
 
@@ -911,62 +916,12 @@ HTTP/1.1 201 Created
 Location: https://deckhand/api/v1.0/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags/foobar
 
 ---
-tag: foobar
-metadata:
-  - name: foo
-    thing: bar
-...
-```
-
-Sample request without body:
-
-```http
-POST `/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags/foobar`
-Content-Type: application/x-yaml
-```
-
-Sample response:
-
-
-```http
-Content-Type: application/x-yaml
-HTTP/1.1 201 Created
-Location: https://deckhand/api/v1.0/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags/foobar
-
----
-tag: foobar
+foo: baz
+bar: [buz]
 ...
 ```
 
 This endpoint uses the `write_tag` action.
-
-### GET `/revisions/{{revision_id}}/tags`
-
-List the tags associated with a revision.
-
-Sample request with body:
-
-```http
-GET `/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags`
-```
-
-Sample response:
-
-```http
-Content-Type: application/x-yaml
-HTTP/1.1 200 OK
-
----
-- metadata:
-  name: foo
-  thing: bar
-- metadata:
-  name: baz
-  thing: qux
-...
-```
-
-This endpoint uses the `read_tag` action.
 
 ### GET `/revisions/{{revision_id}}/tags/{{tag}}`
 
@@ -985,9 +940,8 @@ Content-Type: application/x-yaml
 HTTP/1.1 200 OK
 
 ---
-metadata:
-  - name: foo
-    thing: bar
+one_thing: baz
+another_thing: bar
 ...
 ```
 
@@ -1001,25 +955,6 @@ Sample request with body:
 
 ```http
 GET `/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags/foo`
-```
-
-Sample response:
-
-```http
-Content-Type: application/x-yaml
-HTTP/1.1 204 No Content
-```
-
-This endpoint uses the `delete_tag` action.
-
-### DELETE `/revisions/{{revision_id}}/tags`
-
-Delete all tags associated with a revision.
-
-Sample request with body:
-
-```http
-GET `/revisions/0615b731-7f3e-478d-8ba8-a223eab4757e/tags`
 ```
 
 Sample response:
