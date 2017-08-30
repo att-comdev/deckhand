@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a7d46e2_b9af799f",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-08-30T13:35:27Z",
+      "side": 1,
+      "message": "Good to understand this limitation.  I wonder if we should consider more detailed content type header that specifies the difference?  e.g.  application/x-yaml+multidoc\n\nRegardless, I\u0027m OK with the workaround above for now.  Bryan might have some thoughts about a more specific content type.",
+      "revId": "7b0a69b39a1d56b1776900b4eb7c91416d57a9eb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
