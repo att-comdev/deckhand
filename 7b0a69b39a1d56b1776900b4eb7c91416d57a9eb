@@ -16,6 +16,24 @@
       "revId": "7b0a69b39a1d56b1776900b4eb7c91416d57a9eb",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d1a542d_93b7d814",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-08-30T13:55:52Z",
+      "side": 1,
+      "message": "I find content type to be one of those things I want to love but in practice... not so much love.  For example, we maybe should be using text/yaml, but yaml isn\u0027t registered, and it\u0027s questionable if these yaml\u0027s are workable without being processed by an application... so maybe text/x-yaml, or application/x-yaml.  Or maybe because of how registration is worked... text/x.yaml  but the x is discouraged, so maybe text/yaml.  +multidoc is yet more dreamup, and maybe we should use multipart to match form submission.  But it\u0027s not really like that either.  Perhaps our type should be application/yaml+sitedesign, since we could be semantically defining what a sitedesign is.\n\nI\u0027m fine with application/x-yaml+multidoc if you gain anything by it.",
+      "parentUuid": "8a7d46e2_b9af799f",
+      "revId": "7b0a69b39a1d56b1776900b4eb7c91416d57a9eb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
