@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01adea7c_617b3d76",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-05T14:52:11Z",
+      "side": 1,
+      "message": "Could add a check here for listing so that we cover https://github.com/att-comdev/deckhand/blob/master/docs/design.md#get-revisionsrevision_idvalidations as well.",
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1bd5cf92_26a2ee39",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-05T14:52:11Z",
+      "side": 1,
+      "message": "See comment below regarding this count variable. I think it only makes sense for list (/api/v1.0/revisions/$RESPONSE[\u0027$[0].status.revision\u0027]/validations)",
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e09fe43f_98b82556",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-05T14:52:11Z",
+      "side": 1,
+      "message": "This should be updated with bad data.\n\nThe desc should be changed to say invalid data.\nThe metadata.name should probably be bad.\nThe value for b should violate the schema validation such that it does fail the validation (i.e. b can be -1 or 101).",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 26
+      },
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05e88c0b_18ee4b72",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-05T14:52:11Z",
+      "side": 1,
+      "message": "This count variable doesn\u0027t comport with https://github.com/att-comdev/deckhand/blob/master/docs/design.md#post-revisionsrevision_idvalidationsname\n\nI believe the count only makes sense for listing not showing details (i.e. for /api/v1.0/revisions/$RESPONSE[\u0027$.[0].status.revision\u0027]/validations)",
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
