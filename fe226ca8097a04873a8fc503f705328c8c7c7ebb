@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8753f268_45569da8",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-05T17:27:32Z",
+      "side": 1,
+      "message": "Tests added for this.",
+      "parentUuid": "01adea7c_617b3d76",
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1bd5cf92_26a2ee39",
         "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
         "patchSetId": 1
@@ -59,6 +77,30 @@
     },
     {
       "key": {
+        "uuid": "e6ce27aa_2c6299eb",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-05T17:27:32Z",
+      "side": 1,
+      "message": "I\u0027ve updated this with bad data.",
+      "parentUuid": "e09fe43f_98b82556",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 26
+      },
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05e88c0b_18ee4b72",
         "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
         "patchSetId": 1
@@ -70,6 +112,24 @@
       "writtenOn": "2017-09-05T14:52:11Z",
       "side": 1,
       "message": "This count variable doesn\u0027t comport with https://github.com/att-comdev/deckhand/blob/master/docs/design.md#post-revisionsrevision_idvalidationsname\n\nI believe the count only makes sense for listing not showing details (i.e. for /api/v1.0/revisions/$RESPONSE[\u0027$.[0].status.revision\u0027]/validations)",
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc040ade_81375546",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-05T17:27:32Z",
+      "side": 1,
+      "message": "So individual validations might expire based on policy, so there can be multiple entries for a validation of a particular name.  That\u0027s why it\u0027s still a list to look at an individual validation (and why it\u0027s a POST .../validations/{name}).",
+      "parentUuid": "05e88c0b_18ee4b72",
       "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
