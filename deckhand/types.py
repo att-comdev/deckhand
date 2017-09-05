@@ -14,9 +14,11 @@
 
 DOCUMENT_SCHEMA_TYPES = (
     LAYERING_POLICY_SCHEMA,
+    PASSPHRASE_POLICY_SCHEMA,
     VALIDATION_POLICY_SCHEMA,
 ) = (
     'deckhand/LayeringPolicy/v1',
+    'deckhand/Passphrase/v1',
     'deckhand/ValidationPolicy/v1',
 )
 
