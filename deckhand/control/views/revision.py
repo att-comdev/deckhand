@@ -23,7 +23,9 @@ class ViewBuilder(common.ViewBuilder):
     def list(self, revisions):
         resp_body = {
             'count': len(revisions),
-            'results': []
+            'results': [],
+            'tags': set(),
+            'buckets': set()
         }
 
         for revision in revisions:
@@ -33,6 +35,11 @@ class ViewBuilder(common.ViewBuilder):
             result['count'] = len(revision.pop('documents'))
             resp_body['results'].append(result)
 
+            resp_body['tags'].update([t['tag'] for t in revision['tags']])
+
+        # Convert resp_body['tags'] into a list so it's formatted properly as
+        # a string.
+        resp_body['tags'] = sorted(list(resp_body['tags']))
         return resp_body
 
     def show(self, revision):
@@ -41,6 +48,7 @@ class ViewBuilder(common.ViewBuilder):
         Each revision's documents should only be validation policies.
         """
         validation_policies = []
+        revision_tags = {}
         success_status = 'success'
 
         for vp in revision['validation_policies']:
@@ -58,10 +66,14 @@ class ViewBuilder(common.ViewBuilder):
             if validation_policy['status'] != 'success':
                 success_status = 'failed'
 
+        for tag in revision['tags']:
+            revision_tags.setdefault(tag['tag'], {'name': tag['tag']})
+
         return {
             'id': revision.get('id'),
             'createdAt': revision.get('created_at'),
             'url': self._gen_url(revision),
             'validationPolicies': validation_policies,
-            'status': success_status
+            'status': success_status,
+            'tags': revision_tags
         }
