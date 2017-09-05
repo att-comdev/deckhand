@@ -23,15 +23,26 @@ class ViewBuilder(common.ViewBuilder):
     def list(self, revisions):
         resp_body = {
             'count': len(revisions),
-            'results': []
+            'results': [],
+            'tags': set(),
+            'buckets': set()
         }
 
         for revision in revisions:
-            result = {}
+            body = {}
+            rev_documents = revision.pop('documents')
+
             for attr in ('id', 'created_at'):
-                result[common.to_camel_case(attr)] = revision[attr]
-            result['count'] = len(revision.pop('documents'))
-            resp_body['results'].append(result)
+                body[common.to_camel_case(attr)] = revision[attr]
+            resp_body['results'].append(body)
+
+            resp_body['tags'].update([t['tag'] for t in revision['tags']])
+            resp_body['buckets'].update(
+                [d['bucket_id'] for d in rev_documents])
+
+        # Sort the collections to facilitate functional testing.
+        resp_body['tags'] = sorted(resp_body['tags'])
+        resp_body['buckets'] = sorted(resp_body['buckets'])
 
         return resp_body
 
@@ -41,6 +52,10 @@ class ViewBuilder(common.ViewBuilder):
         Each revision's documents should only be validation policies.
         """
         validation_policies = []
+        # TODO(fmontei): For the time being we're only returning the tag name,
+        # but eventually we'll return data associated with the tag, which is
+        # why this is a dictionary, not a list.
+        tags = {}
         success_status = 'success'
 
         for vp in revision['validation_policies']:
@@ -58,10 +73,17 @@ class ViewBuilder(common.ViewBuilder):
             if validation_policy['status'] != 'success':
                 success_status = 'failed'
 
+        for tag in revision['tags']:
+            tags.setdefault(tag['tag'], {'name': tag['tag']})
+
+        buckets = sorted(set([d['bucket_id'] for d in revision['documents']]))
+
         return {
             'id': revision.get('id'),
             'createdAt': revision.get('created_at'),
             'url': self._gen_url(revision),
             'validationPolicies': validation_policies,
-            'status': success_status
+            'status': success_status,
+            'tags': tags,
+            'buckets': buckets
         }
