@@ -133,6 +133,24 @@
       "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fd262c44_47078461",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-05T18:49:33Z",
+      "side": 1,
+      "message": "Thanks, makes sense.",
+      "parentUuid": "bc040ade_81375546",
+      "revId": "fe226ca8097a04873a8fc503f705328c8c7c7ebb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
