@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4c527fa_d1ea1a6f",
+        "filename": "deckhand/tests/functional/gabbits/revision-crud-success-single-bucket.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-06T14:02:29Z",
+      "side": 1,
+      "message": "I\u0027m surprised we\u0027re removing the \"results[0]\" portion of the path from buckets and tags here.\n\nThese buckets are meant to be associated with a revision, and should show the list of buckets that have documents present (not deleted) in the revision.  Same idea with tags, though we don\u0027t have to look at any history to know this particular answer.",
+      "revId": "26739f367f53f1cfddc31e673ace7c264c3e1df9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
