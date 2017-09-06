@@ -54,7 +54,7 @@ class DocumentFixture(object):
 class TestDbBase(base.DeckhandWithDBTestCase):
 
     def create_documents(self, bucket_name, documents,
-                          validation_policies=None):
+                          validation_policies=None, do_validation=True):
         if not validation_policies:
             validation_policies = []
 
@@ -66,9 +66,10 @@ class TestDbBase(base.DeckhandWithDBTestCase):
         docs = db_api.documents_create(
             bucket_name, documents, validation_policies)
 
-        for idx, doc in enumerate(docs):
-            self.validate_document(expected=documents[idx], actual=doc)
-            self.assertEqual(bucket_name, doc['bucket_id'])
+        if do_validation:
+            for idx, doc in enumerate(docs):
+                self.validate_document(expected=documents[idx], actual=doc)
+                self.assertEqual(bucket_name, doc['bucket_id'])
 
         return docs
 
