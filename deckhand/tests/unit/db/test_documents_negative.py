@@ -45,4 +45,4 @@ class TestDocumentsNegative(base.TestDbBase):
         self.assertRaises(errors.DocumentNotFound,
                           self.show_document,
                           do_validation=False,
-                          document_id=test_utils.rand_uuid_hex())
+                          id=test_utils.rand_uuid_hex())
