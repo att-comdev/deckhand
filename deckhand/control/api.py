@@ -23,6 +23,7 @@ from deckhand.control import base
 from deckhand.control import buckets
 from deckhand.control import middleware
 from deckhand.control import revision_documents
+from deckhand.control import revision_diffing
 from deckhand.control import revision_tags
 from deckhand.control import revisions
 from deckhand.control import secrets
@@ -65,6 +66,7 @@ def _get_routing_map():
         '/api/v1.0/bucket/[A-za-z0-9\-]+/documents': ['PUT'],
         '/api/v1.0/revisions': ['GET', 'DELETE'],
         '/api/v1.0/revisions/[A-za-z0-9\-]+': ['GET'],
+        '/api/v1.0/revisions/[A-za-z0-9\-]+/diff/[A-za-z0-9\-]+': ['GET'],
         '/api/v1.0/revisions/[A-za-z0-9\-]+/tags': ['GET', 'DELETE'],
         '/api/v1.0/revisions/[A-za-z0-9\-]+/tags/[A-za-z0-9\-]+': [
             'GET', 'POST', 'DELETE'],
@@ -100,6 +102,8 @@ def start_api(state_manager=None):
         ('revisions/{revision_id}', revisions.RevisionsResource()),
         ('revisions/{revision_id}/documents',
             revision_documents.RevisionDocumentsResource()),
+        ('revisions/{revision_id}/diff/{comparison_revision_id}',
+            revision_diffing.RevisionDiffingResource()),
         ('revisions/{revision_id}/tags', revision_tags.RevisionTagsResource()),
         ('revisions/{revision_id}/tags/{tag}',
             revision_tags.RevisionTagsResource()),
