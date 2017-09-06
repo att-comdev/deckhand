@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54f7f107_480555cf",
+        "filename": "deckhand/tests/functional/gabbits/revision-tag-crud-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-06T21:02:16Z",
+      "side": 1,
+      "message": "200",
+      "range": {
+        "startLine": 42,
+        "startChar": 12,
+        "endLine": 42,
+        "endChar": 15
+      },
+      "revId": "308d5ac133281047593b525de996ed266427950f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "346a71c4_7c1ac6cb",
+        "filename": "deckhand/tests/functional/gabbits/revision-tag-crud-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-06T21:02:16Z",
+      "side": 1,
+      "message": "Malformed",
+      "range": {
+        "startLine": 142,
+        "startChar": 6,
+        "endLine": 142,
+        "endChar": 12
+      },
+      "revId": "308d5ac133281047593b525de996ed266427950f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
