@@ -172,14 +172,16 @@ def _documents_create(values_list, session=None):
 
 def document_get(session=None, raw_dict=False, **filters):
     session = session or get_session()
-    if 'document_id' in filters:
-        filters['id'] = filters.pop('document_id')
 
-    try:
-        document = session.query(models.Document)\
-            .filter_by(**filters)\
-            .one()
-    except sa_orm.exc.NoResultFound:
+    # Retrieve the most recently created version of a document. Documents with
+    # the same metadata.name and schema can exist across different revisions,
+    # so it is necessary to use `first` instead of `one` to avoid errors.
+    document = session.query(models.Document)\
+        .filter_by(**filters)\
+        .order_by(models.Document.created_at.desc())\
+        .first()
+
+    if not document:
         raise errors.DocumentNotFound(document=filters)
 
     return document.to_dict(raw_dict=raw_dict)
@@ -260,28 +262,41 @@ def revision_delete_all(session=None):
         .delete(synchronize_session=False)
 
 
-def revision_get_documents(revision_id, session=None, **filters):
+def revision_get_documents(revision_id, session=None, include_history=False,
+                           **filters):
     """Return the documents that match filters for the specified `revision_id`.
 
     Deleted documents are not included unless deleted=True is provided in
     ``filters``.
 
+    :param revision_id: The ID corresponding to the ``Revision`` object.
+    :param session: Database session object.
+    :param include_history: Return all documents for revision history prior
+        and up to current revision, if ``True``.
     :raises: RevisionNotFound if the revision was not found.
     """
     session = session or get_session()
+    revision_documents = []
+
     try:
         revision = session.query(models.Revision)\
             .filter_by(id=revision_id)\
-            .one()\
-            .to_dict()
+            .one()
+        revision_documents = revision.to_dict()['documents']
+
+        if include_history:
+            older_revisions = session.query(models.Revision)\
+                .filter(models.Revision.created_at < revision.created_at)\
+                .order_by(models.Revision.created_at)\
+                .all()
+
+            map(lambda docs: revision_documents.extend(docs),
+                [r.to_dict()['documents'] for r in older_revisions])
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
 
-    if 'deleted' not in filters:
-        filters.update({'deleted': False})
-
     filtered_documents = _filter_revision_documents(
-        revision['documents'], **filters)
+        revision_documents, **filters)
 
     return filtered_documents
 
@@ -316,6 +331,59 @@ def _filter_revision_documents(documents, **filters):
             filtered_documents.append(document)
 
     return filtered_documents
+
+
+def revision_diff_get(revision_id, comparison_revision_id):
+    docs = (revision_get_documents(revision_id, include_history=True)
+            if revision_id != 0 else [])
+    comparison_docs = (revision_get_documents(comparison_revision_id,
+                                              include_history=True)
+                       if comparison_revision_id != 0 else [])
+
+    revision = revision_get(revision_id) if revision_id != 0 else None
+    comparison_revision = (revision_get(comparison_revision_id)
+                           if comparison_revision_id != 0 else None)
+
+    buckets = {}
+    comparison_buckets = {}
+
+    for doc in docs:
+        buckets.setdefault(doc['bucket_id'], [])
+        buckets[doc['bucket_id']].append(doc)
+
+    for doc in comparison_docs:
+        comparison_buckets.setdefault(doc['bucket_id'], [])
+        comparison_buckets[doc['bucket_id']].append(doc)
+
+    shared_buckets = set(buckets.keys()).intersection(
+        comparison_buckets.keys())
+    unshared_buckets = set(buckets.keys()).union(
+        comparison_buckets.keys()) - shared_buckets
+
+    result = {}
+
+    for bucket_id in shared_buckets:
+        unmodified = (sorted(buckets[bucket_id]) ==
+                      sorted(comparison_buckets[bucket_id]))
+        result[bucket_id] = 'unmodified' if unmodified else 'modified'
+
+    for bucket_id in unshared_buckets:
+        if not any([revision, comparison_revision]):
+            break
+        elif not all([revision, comparison_revision]):
+            result[bucket_id] = 'created'
+        elif revision['created_at'] > comparison_revision['created_at']:
+            if bucket_id not in buckets:
+                result[bucket_id] = 'deleted'
+            elif bucket_id not in comparison_buckets:
+                result[bucket_id] = 'created'
+        else:
+            if bucket_id not in buckets:
+                result[bucket_id] = 'created'
+            elif bucket_id not in comparison_buckets:
+                result[bucket_id] = 'deleted'
+
+    return result
 
 
 ####################
