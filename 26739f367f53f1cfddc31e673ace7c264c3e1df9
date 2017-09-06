@@ -16,6 +16,24 @@
       "revId": "26739f367f53f1cfddc31e673ace7c264c3e1df9",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70e7eb1b_3d6c7613",
+        "filename": "deckhand/tests/functional/gabbits/revision-crud-success-single-bucket.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-06T15:12:30Z",
+      "side": 1,
+      "message": "I removed it because it\u0027s inconsistent with the response body returned by the exact same endpoint for GET /api/v1.0/revisions in https://review.gerrithub.io/#/c/377209/5/deckhand/tests/functional/gabbits/revision-tag-success.yaml (for example L108 in that file).",
+      "parentUuid": "b4c527fa_d1ea1a6f",
+      "revId": "26739f367f53f1cfddc31e673ace7c264c3e1df9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
