@@ -34,6 +34,24 @@
       "revId": "26739f367f53f1cfddc31e673ace7c264c3e1df9",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6fac8ef_c62de3a1",
+        "filename": "deckhand/tests/functional/gabbits/revision-crud-success-single-bucket.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-06T15:38:49Z",
+      "side": 1,
+      "message": "Ok, I think we should resolve it the other way (by adding results[0] to the other checks) to allow for cleaner pagination going forward.",
+      "parentUuid": "70e7eb1b_3d6c7613",
+      "revId": "26739f367f53f1cfddc31e673ace7c264c3e1df9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
