@@ -68,8 +68,8 @@ class InvalidFormat(ApiError):
 
 
 class DocumentExists(DeckhandException):
-    msg_fmt = ("Document with kind %(kind)s and schemaVersion "
-               "%(schema_version)s already exists.")
+    msg_fmt = ("Document with metadata.name %(name)s and schema %(schema)s "
+               "already exists.")
     code = 409
 
 

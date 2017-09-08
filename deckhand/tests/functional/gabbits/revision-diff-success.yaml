@@ -34,7 +34,7 @@ tests:
       schema: example/Kind/v1
       metadata:
         schema: metadata/Document/v1
-        name: doc-a
+        name: doc
         layeringDefinition:
           abstract: false
           layer: site
@@ -51,7 +51,7 @@ tests:
       schema: example/Kind/v1
       metadata:
         schema: metadata/Document/v1
-        name: doc-b
+        name: doc
         layeringDefinition:
           abstract: false
           layer: site
@@ -68,7 +68,7 @@ tests:
       schema: example/Kind/v1
       metadata:
         schema: metadata/Document/v1
-        name: doc-c
+        name: doc
         layeringDefinition:
           abstract: false
           layer: site
@@ -85,7 +85,7 @@ tests:
       schema: example/Kind/v1
       metadata:
         schema: metadata/Document/v1
-        name: doc-d
+        name: doc
         layeringDefinition:
           abstract: false
           layer: site
@@ -100,7 +100,6 @@ tests:
     response_multidoc_jsonpaths:
       $.[0]:
         bucket_a: created
-    skip: Not implemented.
 
   - name: verify_null_second_revision
     desc: Validates response for null diff for second revision
@@ -110,7 +109,6 @@ tests:
       $.[0]:
         bucket_a: created
         bucket_b: created
-    skip: Not implemented.
 
   - name: verify_null_third_revision
     desc: Validates response for null diff for third revision
@@ -121,7 +119,6 @@ tests:
         bucket_a: created
         bucket_b: created
         bucket_c: created
-    skip: Not implemented.
 
   - name: verify_null_fourth_revision
     desc: Validates response for null diff for fourth revision
@@ -133,7 +130,6 @@ tests:
         bucket_b: created
         bucket_c: created
         bucket_d: created
-    skip: Not implemented.
 
   - name: verify_null_self
     desc: Validates response for null diff for fourth revision
@@ -141,7 +137,6 @@ tests:
     status: 200
     response_multidoc_jsonpaths:
       $.[0]: {}
-    skip: Not implemented.
 
   - name: update_c
     desc: Update document in bucket c
@@ -152,14 +147,24 @@ tests:
       schema: example/Kind/v1
       metadata:
         schema: metadata/Document/v1
-        name: doc-c
+        name: doc
         layeringDefinition:
           abstract: false
           layer: site
       data:
         new_value: 7
       ...
-    skip: Not implemented.
+
+  - name: verify_diff_between_initial_4_buckets_and_single_update
+    desc: Validates response for null diff between the first 4 buckets and single update
+    GET: /api/v1.0/revisions/$HISTORY['create_d'].$RESPONSE['$.[0].status.revision']/diff/$HISTORY['update_c'].$RESPONSE['$.[0].status.revision']
+    status: 200
+    response_multidoc_jsonpaths:
+      $.[0]:
+        bucket_a: unmodified
+        bucket_b: unmodified
+        bucket_c: modified
+        bucket_d: unmodified
 
   - name: delete_b
     desc: Delete documents from bucket b
@@ -184,7 +189,6 @@ tests:
       data:
         value: 5
       ...
-    skip: Not implemented.
 
   - name: delete_f
     desc: Delete documents from bucket b
@@ -209,7 +213,6 @@ tests:
       data:
         value: 6
       ...
-    skip: Not implemented.
 
   - name: verify_diff_between_initial_4_buckets_and_present
     desc: Validates response for null diff between the first 4 buckets and now
