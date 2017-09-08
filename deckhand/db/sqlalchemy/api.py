@@ -25,6 +25,7 @@ from oslo_db import exception as db_exception
 from oslo_db import options
 from oslo_db.sqlalchemy import session
 from oslo_log import log as logging
+from oslo_serialization import jsonutils as json
 import six
 import sqlalchemy.orm as sa_orm
 
@@ -89,37 +90,41 @@ def drop_db():
 
 
 def documents_create(bucket_name, documents, session=None):
-    session = session or get_session()
-    documents_created = _documents_create(documents, session)
-
-    if documents_created:
-        bucket = bucket_get_or_create(bucket_name)
-        revision = revision_create()
-
-        for doc in documents_created:
-            with session.begin():
-                doc['bucket_id'] = bucket['name']
-                doc['revision_id'] = revision['id']
-                doc.save(session=session)
-
-    return [d.to_dict() for d in documents_created]
-
-
-def _documents_create(values_list, session=None):
-    """Create a set of documents and associated schema.
+    """Create a set of documents and associated bucket.
 
     If no changes are detected, a new revision will not be created. This
     allows services to periodically re-register their schemas without
     creating unnecessary revisions.
 
-    :param values_list: List of documents to be saved.
+    :param bucket_name: Name of the bucket to be associated with documents.
+    :param documents: List of documents to be created.
+    :param validation_policies: List of validation policies to be saved.
+    :param session: Database session object.
+    :returns: List of created documents in dictionary format.
     """
+    session = session or get_session()
+    documents_changed = _documents_create(documents, session)
+
+    if documents_changed:
+        bucket = bucket_get_or_create(bucket_name)
+        revision = revision_create()
+
+        for doc in documents_changed:
+            with session.begin():
+                doc['bucket_id'] = bucket['name']
+                doc['revision_id'] = revision['id']
+                doc.save(session=session)
+
+    return [d.to_dict() for d in documents_changed]
+
+
+def _documents_create(values_list, session=None):
     values_list = copy.deepcopy(values_list)
     session = session or get_session()
     filters = [c for c in models.Document.UNIQUE_CONSTRAINTS
                if c != 'revision_id']
 
-    documents_to_change = []
+    do_create = False
     changed_documents = []
 
     def _document_changed(existing_document):
@@ -148,12 +153,20 @@ def _documents_create(values_list, session=None):
             existing_document = None
 
         if not existing_document:
-            documents_to_change.append(values)
-        elif existing_document and _document_changed(existing_document):
-            documents_to_change.append(values)
+            do_create = True
+        else:
+            if _document_changed(existing_document):
+                do_create = True
+            else:
+                # Since the document has not changed, reference the original
+                # revision in which it was created. This is necessary so that
+                # the correct revision history is maintained.
+                values['orig_revision_id'] = existing_document['revision_id']
 
-    if documents_to_change:
-        for values in documents_to_change:
+    # NOTE(fmontei): Create all documents, even unchanged ones, for the current
+    # revision. This makes the generation of the revision diff a lot easier.
+    if do_create:
+        for values in values_list:
             doc = _document_create(values)
             changed_documents.append(doc)
 
@@ -161,15 +174,26 @@ def _documents_create(values_list, session=None):
 
 
 def document_get(session=None, raw_dict=False, **filters):
-    session = session or get_session()
-    if 'document_id' in filters:
-        filters['id'] = filters.pop('document_id')
+    """Retrieve a document from the DB.
 
-    try:
-        document = session.query(models.Document)\
-            .filter_by(**filters)\
-            .one()
-    except sa_orm.exc.NoResultFound:
+    :param session: Database session object.
+    :param raw_dict: Whether to retrieve the exact way the data is stored in
+        DB if ``True``, else the way users expect the data.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
+    :returns: Dictionary representation of retrieved document.
+    """
+    session = session or get_session()
+
+    # Retrieve the most recently created version of a document. Documents with
+    # the same metadata.name and schema can exist across different revisions,
+    # so it is necessary to use `first` instead of `one` to avoid errors.
+    document = session.query(models.Document)\
+        .filter_by(**filters)\
+        .order_by(models.Document.created_at.desc())\
+        .first()
+
+    if not document:
         raise errors.DocumentNotFound(document=filters)
 
     return document.to_dict(raw_dict=raw_dict)
@@ -179,6 +203,16 @@ def document_get(session=None, raw_dict=False, **filters):
 
 
 def bucket_get_or_create(bucket_name, session=None):
+    """Retrieve or create bucket.
+
+    Retrieve the ``Bucket`` DB object by ``bucket_name`` if it exists
+    or else create a new ``Bucket`` DB object by ``bucket_name``.
+
+    :param bucket_name: Unique identifier used for creating or retrieving
+        a bucket.
+    :param session: Database session object.
+    :returns: Dictionary representation of created/retrieved bucket.
+    """
     session = session or get_session()
 
     try:
@@ -197,6 +231,11 @@ def bucket_get_or_create(bucket_name, session=None):
 ####################
 
 def revision_create(session=None):
+    """Create a revision.
+
+    :param session: Database session object.
+    :returns: Dictionary representation of created revision.
+    """
     session = session or get_session()
 
     revision = models.Revision()
@@ -209,6 +248,8 @@ def revision_create(session=None):
 def revision_get(revision_id, session=None):
     """Return the specified `revision_id`.
 
+    :param session: Database session object.
+    :returns: Dictionary representation of retrieved revision.
     :raises: RevisionNotFound if the revision was not found.
     """
     session = session or get_session()
@@ -236,7 +277,11 @@ def require_revision_exists(f):
 
 
 def revision_get_all(session=None):
-    """Return list of all revisions."""
+    """Return list of all revisions.
+
+    :param session: Database session object.
+    :returns: List of dictionary representations of retrieved revisions.
+    """
     session = session or get_session()
     revisions = session.query(models.Revision)\
         .all()
@@ -244,45 +289,73 @@ def revision_get_all(session=None):
 
 
 def revision_delete_all(session=None):
-    """Delete all revisions."""
+    """Delete all revisions.
+
+    :param session: Database session object.
+    :returns: None
+    """
     session = session or get_session()
     session.query(models.Revision)\
         .delete(synchronize_session=False)
 
 
-def revision_get_documents(revision_id, session=None, **filters):
+def revision_get_documents(revision_id, session=None, include_history=False,
+                           unique_only=True, **filters):
     """Return the documents that match filters for the specified `revision_id`.
 
-    Deleted documents are not included unless deleted=True is provided in
-    ``filters``.
-
+    :param revision_id: The ID corresponding to the ``Revision`` object.
+    :param session: Database session object.
+    :param include_history: Return all documents for revision history prior
+        and up to current revision, if ``True``.
+    :param unique_only: Return only unique documents if ``True.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
+    :returns: All revision documents for ``revision_id`` that match the
+        ``filters``, including document revision history if applicable.
     :raises: RevisionNotFound if the revision was not found.
     """
     session = session or get_session()
+    revision_documents = []
+
     try:
         revision = session.query(models.Revision)\
             .filter_by(id=revision_id)\
             .one()
-        older_revisions = session.query(models.Revision)\
-            .filter(models.Revision.created_at < revision.created_at)\
-            .order_by(models.Revision.created_at)\
-            .all()
+        revision_documents = revision.to_dict()['documents'] or []
+
+        if include_history:
+            older_revisions = session.query(models.Revision)\
+                .filter(models.Revision.created_at < revision.created_at)\
+                .order_by(models.Revision.created_at)\
+                .all()
+
+            # Include documents from older revisions in response body.
+            for older_revision in older_revisions:
+                revision_documents.extend(
+                    older_revision.to_dict()['documents'])
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
 
-    document_history = []
-    for rev in ([revision] + older_revisions):
-        document_history.extend(rev.to_dict()['documents'])
+    # Since documents that are unchanged across revisions need to be saved for
+    # each revision, we need to ensure that the original revision is shown
+    # for the document's `revision_id` to maintain the correct revision
+    # history.
+    for doc in revision_documents:
+        if 'orig_revision_id' in doc and doc['orig_revision_id']:
+            doc['revision_id'] = doc['orig_revision_id']
 
     filtered_documents = _filter_revision_documents(
-        document_history, **filters)
+        revision_documents, unique_only, **filters)
 
     return filtered_documents
 
 
-def _filter_revision_documents(documents, **filters):
+def _filter_revision_documents(documents, unique_only, **filters):
     """Return the list of documents that match filters.
 
+    :param unique_only: Return only unique documents if ``True.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
     :returns: List of documents that match specified filters.
     """
     # TODO(fmontei): Implement this as an sqlalchemy query.
@@ -293,7 +366,7 @@ def _filter_revision_documents(documents, **filters):
     for document in documents:
         # NOTE(fmontei): Only want to include non-validation policy documents
         # for this endpoint.
-        if document['schema'] in types.VALIDATION_POLICY_SCHEMA:
+        if document['schema'] == types.VALIDATION_POLICY_SCHEMA:
             continue
         match = True
 
@@ -315,11 +388,176 @@ def _filter_revision_documents(documents, **filters):
         if match:
             # Filter out redundant documents from previous revisions, i.e.
             # documents schema and metadata.name are repeated.
-            unique_key = tuple([document[filter] for filter in unique_filters])
+            if unique_only:
+                unique_key = tuple(
+                    [document[filter] for filter in unique_filters])
+            else:
+                unique_key = document['id']
             if unique_key not in filtered_documents:
                 filtered_documents[unique_key] = document
 
     return sorted(filtered_documents.values(), key=lambda d: d['created_at'])
+
+
+def revision_diff_get(revision_id, comparison_revision_id):
+    """Generate the diff between two revisions.
+
+    Generate the diff between the two revisions: `revision_id` and
+    `comparison_revision_id`. A basic comparison of the revisions in terms of
+    how the buckets involved have changed is generated. Only buckets with
+    existing documents in either of the two revisions in question will be
+    reported.
+
+    The ordering of the two revision IDs is interchangeable, i.e. no matter
+    the order, the same result is generated.
+
+    The differences include:
+
+        - "created": A bucket has been created between the revisions.
+        - "deleted": A bucket has been deleted between the revisions.
+        - "modified": A bucket has been modified between the revisions.
+        - "unmodified": A bucket remains unmodified between the revisions.
+
+    :param revision_id: ID of the first revision.
+    :param comparison_revision_id: ID of the second revision.
+    :returns: A dictionary, keyed with the bucket IDs, containing any of the
+        differences enumerated above.
+
+    Examples::
+
+        # GET /api/v1.0/revisions/6/diff/3
+        bucket_a: created
+        bucket_b: deleted
+        bucket_c: modified
+        bucket_d: unmodified
+
+        # GET /api/v1.0/revisions/0/diff/6
+        bucket_a: created
+        bucket_c: created
+        bucket_d: created
+
+        # GET /api/v1.0/revisions/6/diff/6
+        bucket_a: unmodified
+        bucket_c: unmodified
+        bucket_d: unmodified
+
+        # GET /api/v1.0/revisions/0/diff/0
+        {}
+    """
+    # Retrieve document history for each revision. Since `revision_id` of 0
+    # doesn't exist, treat it as a special case: empty list.
+    docs = (revision_get_documents(revision_id,
+                                   include_history=True,
+                                   unique_only=False)
+            if revision_id != 0 else [])
+    comparison_docs = (revision_get_documents(comparison_revision_id,
+                                              include_history=True,
+                                              unique_only=False)
+                       if comparison_revision_id != 0 else [])
+
+    revision = revision_get(revision_id) if revision_id != 0 else None
+    comparison_revision = (revision_get(comparison_revision_id)
+                           if comparison_revision_id != 0 else None)
+
+    # Each dictionary below, keyed with the bucket's name, references the list
+    # of documents related to each bucket.
+    buckets = {}
+    comparison_buckets = {}
+    for doc in docs:
+        buckets.setdefault(doc['bucket_id'], [])
+        buckets[doc['bucket_id']].append(doc)
+    for doc in comparison_docs:
+        comparison_buckets.setdefault(doc['bucket_id'], [])
+        comparison_buckets[doc['bucket_id']].append(doc)
+
+    # Exclude buckets that have no shared documents in either `revision_id` or
+    # `comparison_revision_id`.
+    if not (revision_id == 0 or comparison_revision_id == 0):
+        endpoint_revision_docs = {(d['name'], d['schema']) for d in docs
+                                   if d['revision_id'] == revision_id}
+        endpoint_revision_docs.union(
+            {(d['name'], d['schema']) for d in comparison_docs
+              if d['revision_id'] == comparison_revision_id})
+
+        # Exclude buckets with no matching documents belonging to
+        # `revision_id`.
+        for bucket_name, bucket_docs in copy.copy(buckets).items():
+            found = False
+            for d in bucket_docs:
+                if (d['name'], d['schema']) in endpoint_revision_docs:
+                    found = True
+                    break
+            if not found:
+                buckets.pop(bucket_name, None)
+
+        # Exclude buckets with no matching documents belonging to
+        # `comparison_revision_id`.
+        for bucket_name, bucket_docs in copy.copy(comparison_buckets).items():
+            found = False
+            for d in bucket_docs:
+                if (d['name'], d['schema']) in endpoint_revision_docs:
+                    found = True
+                    break
+            if not found:
+                comparison_buckets.pop(bucket_name, None)
+
+    # `shared_buckets` references buckets shared by both `revision_id` and
+    # `comparison_revision_id` -- i.e. their intersection.
+    shared_buckets = set(buckets.keys()).intersection(
+        comparison_buckets.keys())
+    # `unshared_buckets` references buckets not shared by both `revision_id`
+    # and `comparison_revision_id` -- i.e. their non-intersection.
+    unshared_buckets = set(buckets.keys()).union(
+        comparison_buckets.keys()) - shared_buckets
+
+    result = {}
+
+    def _compare_buckets(b1, b2):
+        # Checks whether buckets' documents are identical.
+        json_b1 = []
+        json_b2 = []
+
+        for d in b1:
+            json_b1.append(json.dumps(d, sort_keys=True))
+        for d in b2:
+            json_b2.append(json.dumps(d, sort_keys=True))
+
+        return sorted(json_b1) == sorted(json_b2)
+
+    # If the list of documents for each bucket is indentical, then the result
+    # is "unmodified", else "modified".
+    for bucket_id in shared_buckets:
+        unmodified = _compare_buckets(buckets[bucket_id],
+                                      comparison_buckets[bucket_id])
+        result[bucket_id] = 'unmodified' if unmodified else 'modified'
+
+    for bucket_id in unshared_buckets:
+        # If neither revision has documents, then there's nothing to compare.
+        # This is always True for revision_id == comparison_revision_id == 0.
+        if not any([revision, comparison_revision]):
+            break
+        # Else if one revision == 0 and the other revision != 0, then the
+        # bucket has been created. Which is zero or non-zero doesn't matter.
+        elif not all([revision, comparison_revision]):
+            result[bucket_id] = 'created'
+        # Else if `revision` is newer than `comparison_revision`, then if the
+        # `bucket_id` isn't in the `revision` buckets, then it has been
+        # deleted. Otherwise it has been created.
+        elif revision['created_at'] > comparison_revision['created_at']:
+            if bucket_id not in buckets:
+                result[bucket_id] = 'deleted'
+            elif bucket_id not in comparison_buckets:
+                result[bucket_id] = 'created'
+        # Else if `comparison_revision` is newer than `revision`, then if the
+        # `bucket_id` isn't in the `revision` buckets, then it has been
+        # created. Otherwise it has been deleted.
+        else:
+            if bucket_id not in buckets:
+                result[bucket_id] = 'created'
+            elif bucket_id not in comparison_buckets:
+                result[bucket_id] = 'deleted'
+
+    return result
 
 
 ####################
@@ -329,8 +567,15 @@ def _filter_revision_documents(documents, **filters):
 def revision_tag_create(revision_id, tag, data=None, session=None):
     """Create a revision tag.
 
+    If a tag already exists by name ``tag``, the request is ignored.
+
+    :param revision_id: ID corresponding to ``Revision`` DB object.
+    :param tag: Name of the revision tag.
+    :param data: Dictionary of data to be associated with tag.
+    :param session: Database session object.
     :returns: The tag that was created if not already present in the database,
         else None.
+    :raises RevisionTagBadFormat: If data is neither None nor dictionary.
     """
     session = session or get_session()
     tag_model = models.RevisionTag()
@@ -356,6 +601,9 @@ def revision_tag_create(revision_id, tag, data=None, session=None):
 def revision_tag_get(revision_id, tag, session=None):
     """Retrieve tag details.
 
+    :param revision_id: ID corresponding to ``Revision`` DB object.
+    :param tag: Name of the revision tag.
+    :param session: Database session object.
     :returns: None
     :raises RevisionTagNotFound: If ``tag`` for ``revision_id`` was not found.
     """
@@ -375,6 +623,8 @@ def revision_tag_get(revision_id, tag, session=None):
 def revision_tag_get_all(revision_id, session=None):
     """Return list of tags for a revision.
 
+    :param revision_id: ID corresponding to ``Revision`` DB object.
+    :param session: Database session object.
     :returns: List of tags for ``revision_id``, ordered by the tag name by
         default.
     """
@@ -390,6 +640,9 @@ def revision_tag_get_all(revision_id, session=None):
 def revision_tag_delete(revision_id, tag, session=None):
     """Delete a specific tag for a revision.
 
+    :param revision_id: ID corresponding to ``Revision`` DB object.
+    :param tag: Name of the revision tag.
+    :param session: Database session object.
     :returns: None
     """
     session = session or get_session()
@@ -404,6 +657,8 @@ def revision_tag_delete(revision_id, tag, session=None):
 def revision_tag_delete_all(revision_id, session=None):
     """Delete all tags for a revision.
 
+    :param revision_id: ID corresponding to ``Revision`` DB object.
+    :param session: Database session object.
     :returns: None
     """
     session = session or get_session()

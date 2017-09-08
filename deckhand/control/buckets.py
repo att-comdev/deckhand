@@ -59,8 +59,7 @@ class BucketsResource(api_base.BaseResource):
         except db_exc.DBDuplicateEntry as e:
             raise falcon.HTTPConflict(description=e.format_message())
         except Exception as e:
-            raise falcon.HTTPInternalServerError(
-                description=e.format_message())
+            raise falcon.HTTPInternalServerError(description=e)
 
         if created_documents:
             resp.body = self.to_yaml_body(
