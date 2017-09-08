@@ -60,7 +60,7 @@ class BucketsResource(api_base.BaseResource):
             raise falcon.HTTPConflict(description=e.format_message())
         except Exception as e:
             raise falcon.HTTPInternalServerError(
-                description=e.format_message())
+                description=e)
 
         if created_documents:
             resp.body = self.to_yaml_body(
