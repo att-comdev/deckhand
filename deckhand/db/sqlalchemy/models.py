@@ -110,7 +110,10 @@ class Revision(BASE, DeckhandBase):
 
     id = Column(String(36), primary_key=True,
                 default=lambda: str(uuid.uuid4()))
-    documents = relationship("Document")
+    # `primaryjoin` used below for sqlalchemy to distinguish between
+    # `Document.revision_id` and `Document.orig_revision_id`.
+    documents = relationship("Document",
+                             primaryjoin="Revision.id==Document.revision_id")
     tags = relationship("RevisionTag")
 
     def to_dict(self):
@@ -146,13 +149,23 @@ class Document(BASE, DeckhandBase):
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
     data = Column(oslo_types.JsonEncodedDict(), nullable=False)
-
     bucket_id = Column(Integer, ForeignKey('buckets.name', ondelete='CASCADE'),
                        nullable=False)
-
     revision_id = Column(
         Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
                             nullable=False)
+    # Used for documents that haven't changed across revisions but still have
+    # been carried over into newer revisions. This is necessary in order to
+    # roll back to previous revisions or to generate a revision diff. Without
+    # recording all the documents that were PUT in a revision, this is rather
+    # difficult. By using `orig_revision_id` it is therefore possible to
+    # maintain the correct revision history -- that is, remembering the exact
+    # revision a document was created in -- while still being able to roll
+    # back to all the documents that exist in a specific revision or generate
+    # an accurate revision diff report.
+    orig_revision_id = Column(
+        Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
+                            nullable=True)
 
 
 def register_models(engine):
