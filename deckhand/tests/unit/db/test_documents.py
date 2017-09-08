@@ -27,6 +27,7 @@ class TestDocuments(base.TestDbBase):
         self.assertEqual(1, len(documents))
 
         retrieved_document = self.show_document(id=documents[0]['id'])
+        self.assertIsNone(retrieved_document.pop('orig_revision_id'))
         self.assertEqual(documents[0], retrieved_document)
 
     def test_create_document_conflict(self):
@@ -57,6 +58,7 @@ class TestDocuments(base.TestDbBase):
         documents = self.create_documents(bucket_name, payload)
 
         revision = self.show_revision(documents[0]['revision_id'])
+        self.assertIsNone(revision['documents'][0].pop('orig_revision_id'))
         self.assertEqual(1, len(revision['documents']))
         self.assertEqual(documents[0], revision['documents'][0])
 
@@ -89,5 +91,7 @@ class TestDocuments(base.TestDbBase):
 
         documents = self.list_revision_documents(
             document['revision_id'], **filters)
+        self.assertIsNone(documents[0].pop('orig_revision_id'))
+
         self.assertEqual(1, len(documents))
         self.assertEqual(document, documents[0])
