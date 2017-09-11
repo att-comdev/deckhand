@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0313d027_9265b87f",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-11T14:16:43Z",
+      "side": 1,
+      "message": "``True``",
+      "range": {
+        "startLine": 356,
+        "startChar": 58,
+        "endLine": 356,
+        "endChar": 62
+      },
+      "revId": "900ee38507b09a977084fb3423c2beda7ab0838e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
