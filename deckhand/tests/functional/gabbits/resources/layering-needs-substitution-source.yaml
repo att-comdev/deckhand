@@ -2,7 +2,7 @@
 schema: deckhand/LayeringPolicy/v1
 metadata:
   schema: metadata/Control/v1
-  name: layering-policy
+  name: layering-policy-alt
 data:
   layerOrder:
     - global

@@ -29,7 +29,7 @@ tests:
     desc: Create documents in one bucket (a)
     PUT: /api/v1.0/bucket/a/documents
     status: 200
-    data: <@resources/layering-needs-substitution-source.yaml
+    data: <@resources/design-doc-layering-sample.yaml
 
   - name: verify_first_bucket
     desc: Verify document count and revisions
@@ -38,13 +38,16 @@ tests:
     response_multidoc_jsonpaths:
       $.[*].metadata.name:
         - layering-policy
-        - abstract-1234
-        - concrete-1234
+        - global-1234
+        - region-1234
+        - site-1234
       $.[*].status.revision:
         - "$RESPONSE['$.[0].status.revision']"
         - "$RESPONSE['$.[0].status.revision']"
         - "$RESPONSE['$.[0].status.revision']"
+        - "$RESPONSE['$.[0].status.revision']"
       $.[*].status.bucket:
+        - a
         - a
         - a
         - a
@@ -53,7 +56,7 @@ tests:
     desc: Create documents in a second bucket (b)
     PUT: /api/v1.0/bucket/b/documents
     status: 200
-    data: <@resources/passphrase.yaml
+    data: <@resources/layering-needs-substitution-source.yaml
 
   - name: verify_second_bucket
     desc: Verify document count and revisions
@@ -61,19 +64,16 @@ tests:
     status: 200
     response_multidoc_jsonpaths:
       $.[*].metadata.name:
-        - layering-policy
+        - layering-policy-alt
         - abstract-1234
         - concrete-1234
-        - my-passphrase
       $.[*].status.revision:
-        - "$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']"
-        - "$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']"
-        - "$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']"
+        - "$RESPONSE['$.[0].status.revision']"
+        - "$RESPONSE['$.[0].status.revision']"
         - "$RESPONSE['$.[0].status.revision']"
       $.[*].status.bucket:
-        - a
-        - a
-        - a
+        - b
+        - b
         - b
 
   - name: verify_first_revision_unchanged
@@ -83,9 +83,11 @@ tests:
     response_multidoc_jsonpaths:
       $.[*].metadata.name:
         - layering-policy
-        - abstract-1234
-        - concrete-1234
+        - global-1234
+        - region-1234
+        - site-1234
       $.[*].status.revision:
+        - "$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']"
@@ -93,3 +95,4 @@ tests:
         - a
         - a
         - a
+        - a 
