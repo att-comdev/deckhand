@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4879e4f3_be30b4a0",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-11T21:39:26Z",
+      "side": 1,
+      "message": "Need comment saying this handles the case where the PUT is empty string (delete all documents for that bucket).",
+      "revId": "1e1ab1c448b16e77695a91529a5ac99bf336f9aa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "589eb075_cd6f9b86",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-11T21:39:26Z",
+      "side": 1,
+      "message": "s/has/have",
+      "range": {
+        "startLine": 114,
+        "startChar": 41,
+        "endLine": 114,
+        "endChar": 44
+      },
+      "revId": "1e1ab1c448b16e77695a91529a5ac99bf336f9aa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1306b9ab_d5371dee",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-11T21:39:26Z",
+      "side": 1,
+      "message": "Should only LOG the name/schema for security reasons.",
+      "revId": "1e1ab1c448b16e77695a91529a5ac99bf336f9aa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2c1aa3d_ddbdbf6a",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-11T21:39:26Z",
+      "side": 1,
+      "message": "Should only LOG the name/schema for security reasons.",
+      "revId": "1e1ab1c448b16e77695a91529a5ac99bf336f9aa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
