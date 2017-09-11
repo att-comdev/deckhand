@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17c31e8a_31264197",
+        "filename": "deckhand/tests/functional/gabbits/revision-diff-success.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-11T13:22:09Z",
+      "side": 1,
+      "message": "I don\u0027t think these document names should be changed.  They\u0027re intended to be distinct documents, not the same one.",
+      "revId": "43df4df95da9c0b9791dea958e74433617e61c3a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08e92308_c0574233",
+        "filename": "deckhand/tests/functional/gabbits/revision-diff-success.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-11T13:22:09Z",
+      "side": 1,
+      "message": "This comment is referencing the above document name change:\n\nPUTting a document with the same name in a different bucket (that hasn\u0027t yet been deleted) results in a 409.",
+      "revId": "43df4df95da9c0b9791dea958e74433617e61c3a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "caccc237_92264e98",
+        "filename": "deckhand/tests/functional/gabbits/revision-diff-success.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-11T13:22:09Z",
+      "side": 1,
+      "message": "+1 good test addition.",
+      "revId": "43df4df95da9c0b9791dea958e74433617e61c3a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
