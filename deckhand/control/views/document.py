@@ -24,14 +24,23 @@ class ViewBuilder(common.ViewBuilder):
         resp_list = []
 
         for document in documents:
-            attrs = ['id', 'metadata', 'data', 'schema']
             if document['deleted']:
-                attrs.append('deleted')
+                continue
+
+            attrs = ['id', 'metadata', 'data', 'schema']
 
             resp_obj = {x: document[x] for x in attrs}
             resp_obj.setdefault('status', {})
             resp_obj['status']['bucket'] = document['bucket_id']
             resp_obj['status']['revision'] = document['revision_id']
+
+            resp_list.append(resp_obj)
+
+        if not resp_list and documents:
+            resp_obj = {}
+            resp_obj.setdefault('status', {})
+            resp_obj['status']['bucket'] = documents[0]['bucket_id']
+            resp_obj['status']['revision'] = documents[0]['revision_id']
 
             resp_list.append(resp_obj)
 

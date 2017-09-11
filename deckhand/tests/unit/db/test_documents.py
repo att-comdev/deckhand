@@ -199,3 +199,92 @@ class TestDocuments(base.TestDbBase):
                 'metadata']['storagePolicy'])
             self.assertTrue(created_documents[0]['is_secret'])
             self.assertEqual(rand_secret, created_documents[0]['data'])
+
+    def test_delete_document(self):
+        payload = self.documents_factory.gen_test(self.document_mapping)
+        bucket_name = test_utils.rand_name('bucket')
+        self.create_documents(bucket_name, payload)
+
+        documents = self.create_documents(bucket_name, payload[1:],
+                                          do_validation=False)
+        self.assertEqual(1, len(documents))
+        self.assertTrue(documents[0]['deleted'])
+        self.assertTrue(documents[0]['deleted_at'])
+        self.assertEqual(documents[0]['schema'], payload[0]['schema'])
+        self.assertEqual(documents[0]['name'], payload[0]['metadata']['name'])
+        self.assertEmpty(documents[0]['metadata'])
+        self.assertEmpty(documents[0]['data'])
+
+    def test_delete_all_documents(self):
+        payload = self.documents_factory.gen_test(self.document_mapping)
+        bucket_name = test_utils.rand_name('bucket')
+        documents = self.create_documents(bucket_name, payload)
+
+        self.assertIsInstance(documents, list)
+        self.assertEqual(3, len(documents))
+
+        documents = self.create_documents(bucket_name, [], do_validation=False)
+
+        for idx in range(3):
+            self.assertTrue(documents[idx]['deleted'])
+            self.assertTrue(documents[idx]['deleted_at'])
+            self.assertEqual(documents[idx]['schema'], payload[idx]['schema'])
+            self.assertEqual(documents[idx]['name'],
+                             payload[idx]['metadata']['name'])
+            self.assertEmpty(documents[idx]['metadata'])
+            self.assertEmpty(documents[idx]['data'])
+
+    def test_delete_and_create_document_in_same_payload(self):
+        payload = self.documents_factory.gen_test(self.document_mapping)
+        bucket_name = test_utils.rand_name('bucket')
+        # Create just 1 document.
+        documents = self.create_documents(bucket_name, payload[0])
+
+        # Create the document in payload[0] but create a new document for
+        # payload[1].
+        documents = self.create_documents(bucket_name, payload[1],
+                                          do_validation=False)
+        # Information about the deleted and created document should've been
+        # returned. The 1st document is the deleted one and the 2nd document
+        # is the created one.
+        self.assertEqual(2, len(documents))
+        self.assertTrue(documents[0]['deleted'])
+        self.assertTrue(documents[0]['deleted_at'])
+        self.assertFalse(documents[1]['deleted'])
+
+        for idx in range(1):
+            self.assertEqual(documents[idx]['schema'], payload[idx]['schema'])
+            self.assertEqual(documents[idx]['name'],
+                             payload[idx]['metadata']['name'])
+            self.assertEmpty(documents[idx]['metadata'])
+            self.assertEmpty(documents[idx]['data'])
+
+    def test_delete_and_create_many_documents_in_same_payload(self):
+        payload = self.documents_factory.gen_test(self.document_mapping)
+        bucket_name = test_utils.rand_name('bucket')
+        # Create just 1 document.
+        documents = self.create_documents(bucket_name, payload[1:])
+
+        # Create the document in payload[0] but create a new document for
+        # payload[1].
+        documents = self.create_documents(bucket_name, payload[0],
+                                          do_validation=False)
+        # The first document will be first, followed by the two deleted docs.
+        documents = sorted(documents, key=lambda d: d['deleted'])
+        # Information about the deleted and created document should've been
+        # returned. The 1st document is the deleted one and the 2nd document
+        # is the created one.
+        self.assertEqual(3, len(documents))
+        self.assertFalse(documents[0]['deleted'])
+        self.assertFalse(documents[0]['deleted_at'])
+        self.assertTrue(documents[1]['deleted'])
+        self.assertTrue(documents[2]['deleted'])
+        self.assertTrue(documents[1]['deleted_at'])
+        self.assertTrue(documents[2]['deleted_at'])
+
+        for idx in range(1, 2):
+            self.assertEqual(documents[idx]['schema'], payload[idx]['schema'])
+            self.assertEqual(documents[idx]['name'],
+                             payload[idx]['metadata']['name'])
+            self.assertEmpty(documents[idx]['metadata'])
+            self.assertEmpty(documents[idx]['data'])

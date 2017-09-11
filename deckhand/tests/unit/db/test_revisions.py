@@ -55,6 +55,32 @@ class TestRevisions(base.TestDbBase):
         self.assertEqual(created_documents[:-1] + updated_documents,
                          revision_documents)
 
+    def test_recreate_with_no_changes(self):
+        documents = [base.DocumentFixture.get_minimal_fixture()
+                     for _ in range(1)]
+        bucket_name = test_utils.rand_name('bucket')
+        created_documents = self.create_documents(bucket_name, documents)
+        recreated_documents = self.create_documents(bucket_name, documents)
+
+        created_rev_id = created_documents[0].pop('revision_id')
+        recreated_rev_id = recreated_documents[0].pop('revision_id')
+        recreated_orig_rev_id = recreated_documents[0].pop('orig_revision_id')
+
+        for attr in ('data', 'metadata', 'name', 'schema'):
+            self.assertEqual(
+                created_documents[0][attr], recreated_documents[0][attr])
+        self.assertEqual(created_rev_id, recreated_orig_rev_id)
+        self.assertEqual(created_rev_id + 1, recreated_rev_id)
+
+        revision_documents = self.list_revision_documents(recreated_rev_id)
+        docs_rev_id = revision_documents[0].pop('revision_id')
+
+        for attr in ('data', 'metadata', 'name', 'schema'):
+            self.assertEqual(
+                revision_documents[0][attr], recreated_documents[0][attr])
+        self.assertEqual(recreated_orig_rev_id, docs_rev_id)
+        self.assertEqual(recreated_rev_id, docs_rev_id + 1)
+
     def test_list_with_validation_policies(self):
         documents = [base.DocumentFixture.get_minimal_fixture()
                      for _ in range(4)]

@@ -33,9 +33,7 @@ from deckhand import errors
 from deckhand import types
 from deckhand import utils
 
-sa_logger = None
 LOG = logging.getLogger(__name__)
-
 CONF = cfg.CONF
 
 options.set_defaults(CONF)
@@ -92,19 +90,51 @@ def setup_db():
 
 def documents_create(bucket_name, documents, session=None):
     session = session or get_session()
-    documents_created = _documents_create(documents, session)
+    documents_to_create = _documents_create(documents, session)
 
-    if documents_created:
+    resp = []
+
+    document_history = [(d['schema'], d['name'])
+                        for d in revision_get_documents()]
+    documents_to_delete = [
+        h for h in document_history if h not in
+        [(d['schema'], d['metadata']['name']) for d in documents]]
+
+    # Only create a revision if any docs has been created, changed or deleted.
+    if any([documents_to_create, documents_to_delete]):
         bucket = bucket_get_or_create(bucket_name)
         revision = revision_create()
 
-        for doc in documents_created:
+    if documents_to_delete:
+        LOG.debug('Deleting documents: %s.' % documents_to_delete)
+        deleted_documents = []
+
+        for d in documents_to_delete:
+            doc = models.Document()
+            with session.begin():
+                doc['schema'] = d[0]
+                doc['name'] = d[1]
+                doc['data'] = {}
+                doc['_metadata'] = {}
+                doc['bucket_id'] = bucket['name']
+                doc['revision_id'] = revision['id']
+
+                doc.save(session=session)
+                doc.safe_delete(session=session)
+                deleted_documents.append(doc)
+
+        resp.extend([d.to_dict() for d in deleted_documents])
+
+    if documents_to_create:
+        LOG.debug('Creating documents: %s.' % documents_to_create)
+        for doc in documents_to_create:
             with session.begin():
                 doc['bucket_id'] = bucket['name']
                 doc['revision_id'] = revision['id']
                 doc.save(session=session)
+        resp.extend([d.to_dict() for d in documents_to_create])
 
-    return [d.to_dict() for d in documents_created]
+    return resp
 
 
 def _documents_create(values_list, session=None):
@@ -121,7 +151,7 @@ def _documents_create(values_list, session=None):
     filters = [c for c in models.Document.UNIQUE_CONSTRAINTS
                if c != 'revision_id']
 
-    documents_to_change = []
+    do_create = False
     changed_documents = []
 
     def _document_changed(existing_document):
@@ -151,28 +181,52 @@ def _documents_create(values_list, session=None):
             existing_document = None
 
         if not existing_document:
-            documents_to_change.append(values)
-        elif existing_document and _document_changed(existing_document):
-            documents_to_change.append(values)
+            do_create = True
+        else:
+            if _document_changed(existing_document):
+                do_create = True
+            else:
+                # Since the document has not changed, reference the original
+                # revision in which it was created. This is necessary so that
+                # the correct revision history is maintained.
+                if existing_document['orig_revision_id']:
+                    values['orig_revision_id'] = existing_document[
+                        'orig_revision_id']
+                else:
+                    values['orig_revision_id'] = existing_document[
+                        'revision_id']
 
-    if documents_to_change:
-        for values in documents_to_change:
-            doc = _document_create(values)
-            changed_documents.append(doc)
+    # NOTE(fmontei): Create all documents, even unchanged ones, for the current
+    # revision. This makes the generation of the revision diff a lot easier.
+    #if do_create:
+    for values in values_list:
+        doc = _document_create(values)
+        changed_documents.append(doc)
 
     return changed_documents
 
 
 def document_get(session=None, raw_dict=False, **filters):
-    session = session or get_session()
-    if 'document_id' in filters:
-        filters['id'] = filters.pop('document_id')
+    """Retrieve a document from the DB.
 
-    try:
-        document = session.query(models.Document)\
-            .filter_by(**filters)\
-            .one()
-    except sa_orm.exc.NoResultFound:
+    :param session: Database session object.
+    :param raw_dict: Whether to retrieve the exact way the data is stored in
+        DB if ``True``, else the way users expect the data.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
+    :returns: Dictionary representation of retrieved document.
+    """
+    session = session or get_session()
+
+    # Retrieve the most recently created version of a document. Documents with
+    # the same metadata.name and schema can exist across different revisions,
+    # so it is necessary to use `first` instead of `one` to avoid errors.
+    document = session.query(models.Document)\
+        .filter_by(**filters)\
+        .order_by(models.Document.created_at.desc())\
+        .first()
+
+    if not document:
         raise errors.DocumentNotFound(document=filters)
 
     return document.to_dict(raw_dict=raw_dict)
@@ -253,39 +307,72 @@ def revision_delete_all(session=None):
         .delete(synchronize_session=False)
 
 
-def revision_get_documents(revision_id, session=None, **filters):
+def revision_get_documents(revision_id=None, session=None,
+                           include_history=False, unique_only=True, **filters):
     """Return the documents that match filters for the specified `revision_id`.
 
-    Deleted documents are not included unless deleted=True is provided in
-    ``filters``.
-
+    :param revision_id: The ID corresponding to the ``Revision`` object. If the
+        ID is ``None``, then retrieve the latest revision, if one exists.
+    :param session: Database session object.
+    :param include_history: Return all documents for revision history prior
+        and up to current revision, if ``True``.
+    :param unique_only: Return only unique documents if ``True.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
+    :returns: All revision documents for ``revision_id`` that match the
+        ``filters``, including document revision history if applicable.
     :raises: RevisionNotFound if the revision was not found.
     """
     session = session or get_session()
+    revision_documents = []
+
     try:
-        revision = session.query(models.Revision)\
-            .filter_by(id=revision_id)\
-            .one()
-        older_revisions = session.query(models.Revision)\
-            .filter(models.Revision.created_at < revision.created_at)\
-            .order_by(models.Revision.created_at)\
-            .all()
+        if revision_id:
+            revision = session.query(models.Revision)\
+                .filter_by(id=revision_id)\
+                .one()
+        else:
+            # If no revision_id is specified, grab the newest one.
+            revision = session.query(models.Revision)\
+                .order_by(models.Revision.created_at.desc())\
+                .first()
+
+        revision_documents = (revision.to_dict()['documents']
+                              if revision else [])
+
+        if include_history:
+            older_revisions = session.query(models.Revision)\
+                .filter(models.Revision.created_at < revision.created_at)\
+                .order_by(models.Revision.created_at)\
+                .all()
+
+            # Include documents from older revisions in response body.
+            for older_revision in older_revisions:
+                revision_documents.extend(
+                    older_revision.to_dict()['documents'])
     except sa_orm.exc.NoResultFound:
         raise errors.RevisionNotFound(revision=revision_id)
 
-    document_history = []
-    for rev in ([revision] + older_revisions):
-        document_history.extend(rev.to_dict()['documents'])
+    # Since documents that are unchanged across revisions need to be saved for
+    # each revision, we need to ensure that the original revision is shown
+    # for the document's `revision_id` to maintain the correct revision
+    # history.
+    for doc in revision_documents:
+        if doc['orig_revision_id']:
+            doc['revision_id'] = doc['orig_revision_id']
 
     filtered_documents = _filter_revision_documents(
-        document_history, **filters)
+        revision_documents, unique_only, **filters)
 
     return filtered_documents
 
 
-def _filter_revision_documents(documents, **filters):
+def _filter_revision_documents(documents, unique_only, **filters):
     """Return the list of documents that match filters.
 
+    :param unique_only: Return only unique documents if ``True``.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
     :returns: List of documents that match specified filters.
     """
     # TODO(fmontei): Implement this as an sqlalchemy query.
@@ -296,7 +383,7 @@ def _filter_revision_documents(documents, **filters):
     for document in documents:
         # NOTE(fmontei): Only want to include non-validation policy documents
         # for this endpoint.
-        if document['schema'] in types.VALIDATION_POLICY_SCHEMA:
+        if document['schema'] == types.VALIDATION_POLICY_SCHEMA:
             continue
         match = True
 
@@ -318,7 +405,11 @@ def _filter_revision_documents(documents, **filters):
         if match:
             # Filter out redundant documents from previous revisions, i.e.
             # documents schema and metadata.name are repeated.
-            unique_key = tuple([document[filter] for filter in unique_filters])
+            if unique_only:
+                unique_key = tuple(
+                    [document[filter] for filter in unique_filters])
+            else:
+                unique_key = document['id']
             if unique_key not in filtered_documents:
                 filtered_documents[unique_key] = document
 
