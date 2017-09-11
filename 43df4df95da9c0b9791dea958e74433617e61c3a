@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "84eb0ab0_627d8101",
+        "filename": "deckhand/tests/functional/gabbits/revision-diff-success.yaml",
+        "patchSetId": 18
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-11T14:16:43Z",
+      "side": 1,
+      "message": "Right, I understand that. I had it originally working with different document names, then added additional logic to handle this case: \"Only buckets with existing documents in either of the two revisions in question will be reported; buckets with documents that are only present in revisions between the two being compared are omitted from this report.\"\n\nSo, the problem with using doc-a, doc-b, doc-c, doc-d, doc-e, is that when we take a diff between revision-a and revision-e, we will omit doc-b, doc-c and doc-d from the diff report, as neither doc-b, doc-c anddoc-d are \"documents that are only present in revisions between the two being compared\" which \"are omitted from this report\". That is my understanding of what is written above.\n\nIf that understanding is correct and we want to use doc-a, doc-b, doc-c, etc., then the bucket creation payloads needs to include doc-a, then doc-a and doc-b, then doc-a, doc-b, and doc-c.",
+      "parentUuid": "17c31e8a_31264197",
+      "revId": "43df4df95da9c0b9791dea958e74433617e61c3a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08e92308_c0574233",
         "filename": "deckhand/tests/functional/gabbits/revision-diff-success.yaml",
         "patchSetId": 18
