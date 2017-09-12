@@ -25,6 +25,7 @@ from deckhand.control import middleware
 from deckhand.control import revision_documents
 from deckhand.control import revision_tags
 from deckhand.control import revisions
+from deckhand.control import rollback
 from deckhand.db.sqlalchemy import api as db_api
 
 CONF = cfg.CONF
@@ -67,7 +68,8 @@ def _get_routing_map():
         '/api/v1.0/revisions/[A-za-z0-9\-]+/tags': ['GET', 'DELETE'],
         '/api/v1.0/revisions/[A-za-z0-9\-]+/tags/[A-za-z0-9\-]+': [
             'GET', 'POST', 'DELETE'],
-        '/api/v1.0/revisions/[A-za-z0-9\-]+/documents': ['GET']
+        '/api/v1.0/revisions/[A-za-z0-9\-]+/documents': ['GET'],
+        '/api/v1.0/rollback/[A-za-z0-9\-]+': ['POST']
     }
 
     for route in ROUTING_MAP.keys():
@@ -101,7 +103,8 @@ def start_api(state_manager=None):
             revision_documents.RevisionDocumentsResource()),
         ('revisions/{revision_id}/tags', revision_tags.RevisionTagsResource()),
         ('revisions/{revision_id}/tags/{tag}',
-            revision_tags.RevisionTagsResource())
+            revision_tags.RevisionTagsResource()),
+        ('rollback/{revision_id}', rollback.RollbackResource())
     ]
 
     for path, res in v1_0_routes:

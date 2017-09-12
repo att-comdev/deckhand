@@ -570,3 +570,45 @@ def revision_tag_delete_all(revision_id, session=None):
     session.query(models.RevisionTag)\
         .filter_by(revision_id=revision_id)\
         .delete(synchronize_session=False)
+
+
+####################
+
+
+@require_revision_exists
+def revision_rollback(revision_id, session=None):
+    """Rollback the latest revision to revision specified by ``revision_id``.
+
+    Rolls back the latest revision to the revision specified by ``revision_id``
+    thereby creating a new, carbon-copy revision.
+
+    :param revision_id: Revision ID to which to rollback.
+    :returns: The newly created revision.
+    """
+    session = session or get_session()
+
+    # Create a carbon-copy of the original revision.
+    orig_revision = revision_get(revision_id, session=session)
+
+    new_revision = models.Revision()
+    with session.begin():
+        new_revision.save(session=session)
+
+    # Create carbon-copies of the original revision documents.
+    orig_revision_documents = revision_get_documents(
+        revision_id, include_history=False, session=session)
+
+    for orig_document in orig_revision_documents:
+        orig_document['revision_id'] = new_revision['id']
+        orig_document['_metadata'] = orig_document.pop('metadata')
+
+        new_document = models.Document()
+        new_document.update({x: orig_document[x] for x in (
+            'name', '_metadata', 'data', 'schema', 'bucket_id')})
+        new_document['revision_id'] = new_revision['id']
+        new_document['orig_revision_id'] = orig_revision['id']
+
+        with session.begin():
+            new_document.save(session=session)
+
+    return new_revision.to_dict()
