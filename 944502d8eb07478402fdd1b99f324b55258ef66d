@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a633db14_4bea6a0f",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-13T16:34:13Z",
+      "side": 1,
+      "message": "Need to also fix up the revision id for the revision[\u0027documents\u0027] (something like this):\n\n    # Since documents that are unchanged across revisions need to be saved for\n    # each revision, we need to ensure that the original revision is shown\n    # for the document\u0027s `revision_id` to maintain the correct revision\n    # history.\n    for doc in revision[\u0027documents\u0027]:\n        if doc[\u0027orig_revision_id\u0027]:\n            doc[\u0027revision_id\u0027] \u003d doc[\u0027orig_revision_id\u0027]\n\nShould implement a helper function for this as it\u0027ll be done in 3 places.",
+      "revId": "944502d8eb07478402fdd1b99f324b55258ef66d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe6310f8_39990c02",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-13T16:34:13Z",
+      "side": 1,
+      "message": "Need to also fix up the revision id for the revision[\u0027documents\u0027] (something like this):\n\n    # Since documents that are unchanged across revisions need to be saved for\n    # each revision, we need to ensure that the original revision is shown\n    # for the document\u0027s `revision_id` to maintain the correct revision\n    # history.\n\n    for revision in revisions:\n        for doc in revision[\u0027documents\u0027]:\n            if doc[\u0027orig_revision_id\u0027]:\n                doc[\u0027revision_id\u0027] \u003d doc[\u0027orig_revision_id\u0027]\n\nShould implement a helper function for this as it\u0027ll be done in 3 places.",
+      "revId": "944502d8eb07478402fdd1b99f324b55258ef66d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
