@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90b563af_5fc88cac",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-17T07:03:09Z",
+      "side": 1,
+      "message": "Should include:\n\n    @require_revision_exists\n\nabove this.",
+      "revId": "b9f194909b19512c30e6722878fab1f1e2bf4437",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4628d4f2_24fe8f0e",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-17T07:03:09Z",
+      "side": 1,
+      "message": "Need note explaining why decorator `require_revision_exists` not needed here.",
+      "revId": "b9f194909b19512c30e6722878fab1f1e2bf4437",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
