@@ -16,6 +16,24 @@
       "revId": "28123de5b3f86da31a1f60ab30e4ea0fcec7e062",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "171d5fdb_0466dbdb",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-18T21:29:41Z",
+      "side": 1,
+      "message": "Thanks for the review. The code is actually wonky, now that I look at it. I think the case above handles this as well. I\u0027ll try removing this entire block of code, updating this function with a detailed docstring, and re-comitting.\n\nClearly if documents is initialized above (L27), then so will resp_list, meaning that L43 will probably never be executed, so I think it\u0027s actually dead code.",
+      "parentUuid": "baadd967_b7771a38",
+      "revId": "28123de5b3f86da31a1f60ab30e4ea0fcec7e062",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
