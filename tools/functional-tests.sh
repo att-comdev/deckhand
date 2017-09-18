@@ -44,7 +44,7 @@ log_section Creating config file
 CONF_DIR=$(mktemp -d)
 
 export DECKHAND_TEST_URL=http://localhost:9000
-export DATABASE_URL=postgres://deckhand:password@$POSTGRES_IP:$POSTGRES_PORT/deckhand
+export DATABASE_URL=postgresql+psycopg2://deckhand:password@$POSTGRES_IP:$POSTGRES_PORT/deckhand
 # Used by Deckhand's initialization script to search for config files.
 export OS_DECKHAND_CONFIG_DIR=$CONF_DIR
 
@@ -61,9 +61,7 @@ use_stderr = true
 [barbican]
 
 [database]
-# XXX For now, connection to postgres is not setup.
-#connection = $DATABASE_URL
-connection = sqlite://
+connection = $DATABASE_URL
 
 [keystone_authtoken]
 EOCONF
