@@ -19,6 +19,7 @@ from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy.ext import declarative
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
@@ -64,26 +65,19 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
     def items(self):
         return self.__dict__.items()
 
-    def to_dict(self, raw_dict=False):
+    def to_dict(self):
         """Convert the object into dictionary format.
-
-        :param raw_dict: Renames the key "_metadata" to "metadata".
         """
         d = self.__dict__.copy()
         # Remove private state instance, as it is not serializable and causes
         # CircularReference.
         d.pop("_sa_instance_state")
 
-        for k in ["created_at", "updated_at", "deleted_at", "deleted"]:
+        for k in ["created_at", "updated_at", "deleted_at"]:
             if k in d and d[k]:
                 d[k] = d[k].isoformat()
             else:
                 d.setdefault(k, None)
-
-        # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
-        # must be used to store document metadata information in the DB.
-        if not raw_dict and '_metadata' in self.keys():
-            d['metadata'] = d.pop('_metadata')
 
         return d
 
@@ -98,8 +92,9 @@ def gen_unique_constraint(table_name, *fields):
 class Bucket(BASE, DeckhandBase):
     __tablename__ = 'buckets'
 
-    name = Column(String(36), primary_key=True)
-    documents = relationship("Document")
+    id = Column(Integer, primary_key=True)
+    name = Column(String(36), unique=True)
+    documents = relationship("Document", backref="bucket")
 
 
 class Revision(BASE, DeckhandBase):
@@ -143,13 +138,30 @@ class Document(BASE, DeckhandBase):
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
     data = Column(oslo_types.JsonEncodedDict(), nullable=True)
     is_secret = Column(Boolean, nullable=False, default=False)
-
-    bucket_id = Column(Integer, ForeignKey('buckets.name', ondelete='CASCADE'),
+    bucket_id = Column(Integer, ForeignKey('buckets.id', ondelete='CASCADE'),
                        nullable=False)
-
     revision_id = Column(
         Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
                             nullable=False)
+
+    @hybrid_property
+    def bucket_name(self):
+        return self.bucket.name
+
+    def to_dict(self, raw_dict=False):
+        """Convert the object into dictionary format.
+
+        :param raw_dict: Renames the key "_metadata" to "metadata".
+        """
+        d = super(Document, self).to_dict()
+        d['bucket_name'] = self.bucket_name
+
+        # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
+        # must be used to store document metadata information in the DB.
+        if not raw_dict:
+            d['metadata'] = d.pop('_metadata')
+
+        return d
 
 
 def register_models(engine):
