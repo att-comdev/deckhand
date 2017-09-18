@@ -42,7 +42,7 @@ POSTGRES_PORT=$(
 
 
 export DECKHAND_TEST_URL=http://localhost:9000
-export DATABASE_URL=postgres://deckhand:password@$POSTGRES_IP:$POSTGRES_PORT/deckhand
+export DATABASE_URL=postgresql+psycopg2://deckhand:password@$POSTGRES_IP:5432/deckhand
 
 log_section Creating config file
 CONF_DIR=$(mktemp -d)
@@ -51,13 +51,12 @@ cat <<EOCONF > $CONF_DIR/deckhand.conf
 [DEFAULT]
 debug = true
 use_stderr = true
+
 [barbican]
 
 
 [database]
-# XXX For now, connection to postgres is not setup.
-#connection = $DATABASE_URL
-connection = sqlite://
+connection = $DATABASE_URL
 
 
 [keystone_authtoken]
