@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baadd967_b7771a38",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-09-18T19:25:31Z",
+      "side": 1,
+      "message": "maybe i\u0027m misreading the comment, but doesn\u0027t this if say if resp_list is empty and documents is not empty? The comments section indicates this should trigger when documents is empty.",
+      "revId": "28123de5b3f86da31a1f60ab30e4ea0fcec7e062",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
