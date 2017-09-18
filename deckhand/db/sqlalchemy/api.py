@@ -100,7 +100,7 @@ def documents_create(bucket_name, documents, session=None):
 
         for doc in documents_created:
             with session.begin():
-                doc['bucket_id'] = bucket['name']
+                doc['bucket_id'] = bucket['id']
                 doc['revision_id'] = revision['id']
                 doc.save(session=session)
 
