@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "450c2885_9c19f6d6",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-19T18:47:32Z",
+      "side": 0,
+      "message": "I think we want to keep this port-capturing code, because in the docker run statement above, I believe that a random port on the host is being connected with port 5432 within the container.\n\nIs that not what you\u0027re seeing?",
+      "revId": "e4423756a149a4b103c0a601ff3da6b1a2e00e5b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
