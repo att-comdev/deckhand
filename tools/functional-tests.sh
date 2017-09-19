@@ -91,7 +91,7 @@ if [ "x$TEST_STATUS" = "x0" ]; then
     log_section Done SUCCESS
 else
     log_section Deckhand Server Log
-    cat deckhand.log
+    # cat deckhand.log
     log_section Done FAILURE
     exit $TEST_STATUS
 fi
