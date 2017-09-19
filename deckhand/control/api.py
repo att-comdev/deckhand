@@ -23,6 +23,7 @@ from deckhand.control import buckets
 from deckhand.control import revision_documents
 from deckhand.control import revision_tags
 from deckhand.control import revisions
+from deckhand.control import rollback
 from deckhand.control import versions
 from deckhand.db.sqlalchemy import api as db_api
 
@@ -65,7 +66,8 @@ def start_api(state_manager=None):
             revision_documents.RevisionDocumentsResource()),
         ('revisions/{revision_id}/tags', revision_tags.RevisionTagsResource()),
         ('revisions/{revision_id}/tags/{tag}',
-            revision_tags.RevisionTagsResource())
+            revision_tags.RevisionTagsResource()),
+        ('rollback/{revision_id}', rollback.RollbackResource())
     ]
 
     for path, res in v1_0_routes:
