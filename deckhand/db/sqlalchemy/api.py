@@ -136,6 +136,7 @@ def documents_create(bucket_name, documents, session=None):
                 doc['name'] = d[1]
                 doc['data'] = {}
                 doc['_metadata'] = {}
+                doc['hash'] = utils.make_hash({})
                 doc['bucket_id'] = bucket['name']
                 doc['revision_id'] = revision['id']
 
@@ -170,13 +171,6 @@ def _documents_create(bucket_name, values_list, session=None):
 
     changed_documents = []
 
-    def _document_changed(existing_document):
-        # The document has changed if at least one value in ``values`` differs.
-        for key, val in values.items():
-            if val != existing_document[key]:
-                return True
-        return False
-
     def _document_create(values):
         document = models.Document()
         with session.begin():
@@ -186,6 +180,13 @@ def _documents_create(bucket_name, values_list, session=None):
     for values in values_list:
         values['_metadata'] = values.pop('metadata')
         values['name'] = values['_metadata']['name']
+
+        # Hash the combination of the document's metadata and data to later
+        # efficiently check whether those data have changed.
+        dict_to_hash = values['_metadata'].copy()
+        dict_to_hash.update(values['data'])
+        values['hash'] = utils.make_hash(dict_to_hash)
+
         values['is_secret'] = 'secret' in values['data']
 
         try:
@@ -207,7 +208,7 @@ def _documents_create(bucket_name, values_list, session=None):
                     name=existing_document['name'],
                     bucket=existing_document['bucket_id'])
 
-            if not _document_changed(existing_document):
+            if existing_document['hash'] == values['hash']:
                 # Since the document has not changed, reference the original
                 # revision in which it was created. This is necessary so that
                 # the correct revision history is maintained.
@@ -324,12 +325,14 @@ def revision_get(revision_id, session=None):
 
 def require_revision_exists(f):
     """Decorator to require the specified revision to exist.
-    Requires the wrapped function to use revision_id as the first argument.
-    """
 
+    Requires the wrapped function to use revision_id as the first argument. If
+    revision_id is not provided, then the check is not performed.
+    """
     @functools.wraps(f)
-    def wrapper(revision_id, *args, **kwargs):
-        revision_get(revision_id)
+    def wrapper(revision_id=None, *args, **kwargs):
+        if revision_id:
+            revision_get(revision_id)
         return f(revision_id, *args, **kwargs)
     return wrapper
 
@@ -362,6 +365,7 @@ def revision_delete_all(session=None):
         .delete(synchronize_session=False)
 
 
+@require_revision_exists
 def revision_get_documents(revision_id=None, include_history=True,
                            unique_only=True, session=None, **filters):
     """Return the documents that match filters for the specified `revision_id`.
@@ -475,6 +479,146 @@ def _filter_revision_documents(documents, unique_only, **filters):
                 filtered_documents[unique_key] = document
 
     return sorted(filtered_documents.values(), key=lambda d: d['created_at'])
+
+
+# NOTE(fmontei): No need to include `@require_revision_exists` decorator as
+# the this function immediately calls `revision_get_documents` for both
+# revision IDs, which has the decorator applied to it.
+def revision_diff_get(revision_id, comparison_revision_id):
+    """Generate the diff between two revisions.
+
+    Generate the diff between the two revisions: `revision_id` and
+    `comparison_revision_id`. A basic comparison of the revisions in terms of
+    how the buckets involved have changed is generated. Only buckets with
+    existing documents in either of the two revisions in question will be
+    reported.
+
+    The ordering of the two revision IDs is interchangeable, i.e. no matter
+    the order, the same result is generated.
+
+    The differences include:
+
+        - "created": A bucket has been created between the revisions.
+        - "deleted": A bucket has been deleted between the revisions.
+        - "modified": A bucket has been modified between the revisions.
+        - "unmodified": A bucket remains unmodified between the revisions.
+
+    :param revision_id: ID of the first revision.
+    :param comparison_revision_id: ID of the second revision.
+    :returns: A dictionary, keyed with the bucket IDs, containing any of the
+        differences enumerated above.
+
+    Examples::
+
+        # GET /api/v1.0/revisions/6/diff/3
+        bucket_a: created
+        bucket_b: deleted
+        bucket_c: modified
+        bucket_d: unmodified
+
+        # GET /api/v1.0/revisions/0/diff/6
+        bucket_a: created
+        bucket_c: created
+        bucket_d: created
+
+        # GET /api/v1.0/revisions/6/diff/6
+        bucket_a: unmodified
+        bucket_c: unmodified
+        bucket_d: unmodified
+
+        # GET /api/v1.0/revisions/0/diff/0
+        {}
+    """
+    # Retrieve document history for each revision. Since `revision_id` of 0
+    # doesn't exist, treat it as a special case: empty list.
+    docs = (revision_get_documents(revision_id,
+                                   include_history=True,
+                                   unique_only=False)
+            if revision_id != 0 else [])
+    comparison_docs = (revision_get_documents(comparison_revision_id,
+                                              include_history=True,
+                                              unique_only=False)
+                       if comparison_revision_id != 0 else [])
+
+    # Remove each deleted document and its older counterparts because those
+    # documents technically don't exist.
+    for doc_collection in (docs, comparison_docs):
+        for doc in copy.copy(doc_collection):
+            if doc['deleted']:
+                docs_to_delete = filter(
+                    lambda d:
+                        (d['schema'], d['name']) ==
+                        (doc['schema'], doc['name'])
+                        and d['created_at'] <= doc['deleted_at'],
+                    doc_collection)
+                for d in list(docs_to_delete):
+                    doc_collection.remove(d)
+
+    revision = revision_get(revision_id) if revision_id != 0 else None
+    comparison_revision = (revision_get(comparison_revision_id)
+                           if comparison_revision_id != 0 else None)
+
+    # Each dictionary below, keyed with the bucket's name, references the list
+    # of documents related to each bucket.
+    buckets = {}
+    comparison_buckets = {}
+    for doc in docs:
+        buckets.setdefault(doc['bucket_id'], [])
+        buckets[doc['bucket_id']].append(doc)
+    for doc in comparison_docs:
+        comparison_buckets.setdefault(doc['bucket_id'], [])
+        comparison_buckets[doc['bucket_id']].append(doc)
+
+    # `shared_buckets` references buckets shared by both `revision_id` and
+    # `comparison_revision_id` -- i.e. their intersection.
+    shared_buckets = set(buckets.keys()).intersection(
+        comparison_buckets.keys())
+    # `unshared_buckets` references buckets not shared by both `revision_id`
+    # and `comparison_revision_id` -- i.e. their non-intersection.
+    unshared_buckets = set(buckets.keys()).union(
+        comparison_buckets.keys()) - shared_buckets
+
+    result = {}
+
+    def _compare_buckets(b1, b2):
+        # Checks whether buckets' documents are identical.
+        return (sorted([d['hash'] for d in b1]) ==
+                sorted([d['hash'] for d in b2]))
+
+    # If the list of documents for each bucket is indentical, then the result
+    # is "unmodified", else "modified".
+    for bucket_id in shared_buckets:
+        unmodified = _compare_buckets(buckets[bucket_id],
+                                      comparison_buckets[bucket_id])
+        result[bucket_id] = 'unmodified' if unmodified else 'modified'
+
+    for bucket_id in unshared_buckets:
+        # If neither revision has documents, then there's nothing to compare.
+        # This is always True for revision_id == comparison_revision_id == 0.
+        if not any([revision, comparison_revision]):
+            break
+        # Else if one revision == 0 and the other revision != 0, then the
+        # bucket has been created. Which is zero or non-zero doesn't matter.
+        elif not all([revision, comparison_revision]):
+            result[bucket_id] = 'created'
+        # Else if `revision` is newer than `comparison_revision`, then if the
+        # `bucket_id` isn't in the `revision` buckets, then it has been
+        # deleted. Otherwise it has been created.
+        elif revision['created_at'] > comparison_revision['created_at']:
+            if bucket_id not in buckets:
+                result[bucket_id] = 'deleted'
+            elif bucket_id not in comparison_buckets:
+                result[bucket_id] = 'created'
+        # Else if `comparison_revision` is newer than `revision`, then if the
+        # `bucket_id` isn't in the `revision` buckets, then it has been
+        # created. Otherwise it has been deleted.
+        else:
+            if bucket_id not in buckets:
+                result[bucket_id] = 'created'
+            elif bucket_id not in comparison_buckets:
+                result[bucket_id] = 'deleted'
+
+    return result
 
 
 ####################
