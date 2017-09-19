@@ -20,6 +20,7 @@ from deckhand.control import buckets
 from deckhand.control import revision_documents
 from deckhand.control import revision_tags
 from deckhand.control import revisions
+from deckhand.control import rollback
 from deckhand.tests.unit import base as test_base
 
 
@@ -28,7 +29,7 @@ class TestApi(test_base.DeckhandTestCase):
     def setUp(self):
         super(TestApi, self).setUp()
         for resource in (buckets, revision_documents, revision_tags,
-                         revisions):
+                         revisions, rollback):
             resource_name = resource.__name__.split('.')[-1]
             resource_obj = mock.patch.object(
                 resource, '%sResource' % resource_name.title().replace(
@@ -58,7 +59,9 @@ class TestApi(test_base.DeckhandTestCase):
             mock.call('/api/v1.0/revisions/{revision_id}/tags',
                       self.revision_tags_resource()),
             mock.call('/api/v1.0/revisions/{revision_id}/tags/{tag}',
-                      self.revision_tags_resource())
+                      self.revision_tags_resource()),
+            mock.call('/api/v1.0/rollback/{revision_id}',
+                      self.rollback_resource())
         ])
         mock_config.parse_args.assert_called_once_with()
         mock_db_api.setup_db.assert_called_once_with()
