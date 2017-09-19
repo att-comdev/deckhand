@@ -140,6 +140,7 @@ class Document(BASE, DeckhandBase):
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
     data = Column(oslo_types.JsonEncodedDict(), nullable=True)
+    hash = Column(Integer, nullable=False)
     is_secret = Column(Boolean, nullable=False, default=False)
 
     bucket_id = Column(Integer, ForeignKey('buckets.name', ondelete='CASCADE'),
