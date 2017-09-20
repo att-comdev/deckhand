@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45e2b064_c80cc634",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-09-20T03:34:05Z",
+      "side": 1,
+      "message": "I might be missing the point here, but if you don\u0027t specify an on_ method on the associated resource, falcon will return a 405 for you\nhttp://falcon.readthedocs.io/en/stable/api/routing.html#routing",
+      "revId": "44d498239854a10ad55964070527d222ae62e4bf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
