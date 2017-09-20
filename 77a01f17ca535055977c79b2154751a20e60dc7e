@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c60bacc_b66d0bc5",
+        "filename": "setup.cfg",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-09-20T11:33:27Z",
+      "side": 1,
+      "message": "is warnerrors right here?  I thought I read that this should be warning-is-error now?  Or is that just in the sphinx section?",
+      "revId": "77a01f17ca535055977c79b2154751a20e60dc7e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
