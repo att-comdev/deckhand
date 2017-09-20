@@ -16,6 +16,24 @@
       "revId": "77a01f17ca535055977c79b2154751a20e60dc7e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85e595f4_2619570f",
+        "filename": "setup.cfg",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-20T20:41:01Z",
+      "side": 1,
+      "message": "Nice catch, warning-is-error is used below; this can safely be removed.",
+      "parentUuid": "4c60bacc_b66d0bc5",
+      "revId": "77a01f17ca535055977c79b2154751a20e60dc7e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
