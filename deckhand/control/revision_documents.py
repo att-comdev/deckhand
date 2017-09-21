@@ -20,6 +20,8 @@ from deckhand.control import common
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
+from deckhand import policy
+from deckhand import types
 
 LOG = logging.getLogger(__name__)
 
@@ -29,6 +31,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
 
     view_builder = document_view.ViewBuilder()
 
+    @policy.authorize('deckhand:list_cleartext_documents')
     @common.sanitize_params([
         'schema', 'metadata.name', 'metadata.layeringDefinition.abstract',
         'metadata.layeringDefinition.layer', 'metadata.label'])
@@ -45,6 +48,14 @@ class RevisionDocumentsResource(api_base.BaseResource):
                 revision_id, **sanitized_params)
         except errors.RevisionNotFound as e:
             raise falcon.HTTPNotFound(description=e.format_message())
+
+        for document in documents:
+            if any([document['schema'].startswith(t)
+                   for t in types.DOCUMENT_SECRET_TYPES]):
+                if not policy.conditional_authorize(
+                    'deckhand:list_encrypted_documents', req.context,
+                    do_raise=False):
+                    documents.remove(document)
 
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
