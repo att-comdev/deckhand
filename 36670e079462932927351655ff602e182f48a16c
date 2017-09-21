@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e833fe63_ea4178fc",
+        "filename": "tox.ini",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-21T05:10:37Z",
+      "side": 1,
+      "message": "I know this is not part of the patch set, but I think this is copied from Nova (or something).  Don\u0027t think deckhand has anything to do with xenserver :D",
+      "range": {
+        "startLine": 70,
+        "startChar": 56,
+        "endLine": 70,
+        "endChar": 72
+      },
+      "revId": "36670e079462932927351655ff602e182f48a16c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
