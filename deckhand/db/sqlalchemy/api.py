@@ -176,16 +176,9 @@ def _documents_create(bucket_name, values_list, session=None):
         return document
 
     for values in values_list:
-        values['_metadata'] = values.pop('metadata')
-        values['name'] = values['_metadata']['name']
-
-        # Hash the combination of the document's metadata and data to later
-        # efficiently check whether those data have changed.
-        dict_to_hash = values['_metadata'].copy()
-        dict_to_hash.update(values['data'])
-        values['hash'] = utils.make_hash(dict_to_hash)
-
+        values = _fill_in_metadata_defaults(values)
         values['is_secret'] = 'secret' in values['data']
+
         # Hash the combination of the document's metadata and data to later
         # efficiently check whether those data have changed.
         dict_to_hash = values['_metadata'].copy()
@@ -229,6 +222,16 @@ def _documents_create(bucket_name, values_list, session=None):
         changed_documents.append(doc)
 
     return changed_documents
+
+
+def _fill_in_metadata_defaults(values):
+    values['_metadata'] = values.pop('metadata')
+    values['name'] = values['_metadata']['name']
+
+    if not values['_metadata'].get('storagePolicy', None):
+        values['_metadata']['storagePolicy'] = 'cleartext'
+
+    return values
 
 
 def document_get(session=None, raw_dict=False, **filters):
@@ -394,6 +397,7 @@ def revision_get_documents(revision_id=None, include_history=True,
     :param filters: Dictionary attributes (including nested) used to filter
         out revision documents.
     :param session: Database session object.
+    :param filters: Key-value pairs used for filtering out revision documents.
     :returns: All revision documents for ``revision_id`` that match the
         ``filters``, including document revision history if applicable.
     :raises: RevisionNotFound if the revision was not found.
@@ -446,8 +450,11 @@ def _filter_revision_documents(documents, unique_only, **filters):
     """
     # TODO(fmontei): Implement this as an sqlalchemy query.
     filtered_documents = {}
-    unique_filters = [c for c in models.Document.UNIQUE_CONSTRAINTS
-                      if c != 'revision_id']
+    unique_filters = ('schema', 'name')
+    exclude_deleted = filters.pop('deleted', None) is False
+
+    if exclude_deleted:
+        documents = _exclude_deleted_documents(documents)
 
     for document in documents:
         # NOTE(fmontei): Only want to include non-validation policy documents
@@ -458,7 +465,6 @@ def _filter_revision_documents(documents, unique_only, **filters):
 
         for filter_key, filter_val in filters.items():
             actual_val = utils.multi_getattr(filter_key, document)
-
             if (isinstance(actual_val, bool)
                 and isinstance(filter_val, six.string_types)):
                 try:
@@ -468,12 +474,18 @@ def _filter_revision_documents(documents, unique_only, **filters):
                     # `actual_val` which is always boolean.
                     filter_val = None
 
-            if actual_val != filter_val:
-                match = False
+            if isinstance(filter_val, list):
+                if actual_val not in filter_val:
+                    match = False
+                    break
+            else:
+                if actual_val != filter_val:
+                    match = False
+                    break
 
         if match:
             # Filter out redundant documents from previous revisions, i.e.
-            # documents schema and metadata.name are repeated.
+            # documents whose schema and metadata.name are repeated.
             if unique_only:
                 unique_key = tuple(
                     [document[filter] for filter in unique_filters])
@@ -483,6 +495,19 @@ def _filter_revision_documents(documents, unique_only, **filters):
                 filtered_documents[unique_key] = document
 
     return sorted(filtered_documents.values(), key=lambda d: d['created_at'])
+
+
+def _exclude_deleted_documents(documents):
+    for doc in copy.copy(documents):
+        if doc['deleted']:
+            docs_to_delete = [
+                d for d in documents if
+                    (d['schema'], d['name']) == (doc['schema'], doc['name'])
+                    and d['created_at'] <= doc['deleted_at']
+            ]
+            for d in list(docs_to_delete):
+                documents.remove(d)
+    return documents
 
 
 # NOTE(fmontei): No need to include `@require_revision_exists` decorator as
@@ -546,17 +571,8 @@ def revision_diff(revision_id, comparison_revision_id):
 
     # Remove each deleted document and its older counterparts because those
     # documents technically don't exist.
-    for doc_collection in (docs, comparison_docs):
-        for doc in copy.copy(doc_collection):
-            if doc['deleted']:
-                docs_to_delete = filter(
-                    lambda d:
-                        (d['schema'], d['name']) ==
-                        (doc['schema'], doc['name'])
-                        and d['created_at'] <= doc['deleted_at'],
-                    doc_collection)
-                for d in list(docs_to_delete):
-                    doc_collection.remove(d)
+    for documents in (docs, comparison_docs):
+        documents = _exclude_deleted_documents(documents)
 
     revision = revision_get(revision_id) if revision_id != 0 else None
     comparison_revision = (revision_get(comparison_revision_id)
