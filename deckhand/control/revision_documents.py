@@ -20,6 +20,7 @@ from deckhand.control import common
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
+from deckhand import policy
 
 LOG = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
 
     view_builder = document_view.ViewBuilder()
 
+    @policy.enforce('deckhand:list_cleartext_documents')
     @common.sanitize_params([
         'schema', 'metadata.name', 'metadata.layeringDefinition.abstract',
         'metadata.layeringDefinition.layer', 'metadata.label'])

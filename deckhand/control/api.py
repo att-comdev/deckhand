@@ -42,7 +42,7 @@ def _get_config_files(env=None):
     return [os.path.join(dirname, config_file) for config_file in CONFIG_FILES]
 
 
-def start_api(state_manager=None):
+def start_api():
     """Main entry point for initializing the Deckhand API service.
 
     Create routes for the v1.0 API and sets up logging.
@@ -53,6 +53,7 @@ def start_api(state_manager=None):
 
     LOG = logging.getLogger(__name__)
     LOG.info('Initiated Deckhand logging.')
+    LOG.info(CONF.oslo_policy.policy_file)
 
     db_api.drop_db()
     db_api.setup_db()
@@ -79,3 +80,7 @@ def start_api(state_manager=None):
     control_api.add_route('/versions', versions.VersionsResource())
 
     return control_api
+
+
+if __name__ == '__main__':
+    start_api()
