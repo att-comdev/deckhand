@@ -36,6 +36,8 @@ consumption by other UCP services.
    :maxdepth: 2
 
    HACKING
+   policy-enforcement
+   testing
 
 .. toctree::
    :maxdepth: 1
