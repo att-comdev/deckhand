@@ -179,8 +179,7 @@ def _documents_create(bucket_name, values_list, session=None):
         return document
 
     for values in values_list:
-        values['_metadata'] = values.pop('metadata')
-        values['name'] = values['_metadata']['name']
+        values = _fill_in_metadata_defaults(values)
         values['is_secret'] = 'secret' in values['data']
 
         # Hash the document's metadata and data to later  efficiently check
@@ -226,6 +225,16 @@ def _documents_create(bucket_name, values_list, session=None):
         changed_documents.append(doc)
 
     return changed_documents
+
+
+def _fill_in_metadata_defaults(values):
+    values['_metadata'] = values.pop('metadata')
+    values['name'] = values['_metadata']['name']
+
+    if not values['_metadata'].get('storagePolicy', None):
+        values['_metadata']['storagePolicy'] = 'cleartext'
+
+    return values
 
 
 def _make_hash(data):
@@ -306,7 +315,7 @@ def revision_create(session=None):
     return revision.to_dict()
 
 
-def revision_get(revision_id, session=None):
+def revision_get(revision_id=None, session=None):
     """Return the specified `revision_id`.
 
     :param revision_id: The ID corresponding to the ``Revision`` object.
@@ -327,6 +336,29 @@ def revision_get(revision_id, session=None):
     revision['documents'] = _update_revision_history(revision['documents'])
 
     return revision
+
+
+def revision_get_latest(session=None):
+    """Return the latest revision.
+
+    :param session: Database session object.
+    :returns: Dictionary representation of latest revision.
+    :raises: RevisionNotFound if the latest revision was not found.
+    """
+    session = session or get_session()
+
+    latest_revision = session.query(models.Revision)\
+        .order_by(models.Revision.created_at.desc())\
+        .first()
+    if not latest_revision:
+        raise errors.RevisionNotFound(revision='latest')
+
+    latest_revision = latest_revision.to_dict()
+
+    latest_revision['documents'] = _update_revision_history(
+        latest_revision['documents'])
+
+    return latest_revision
 
 
 def require_revision_exists(f):
@@ -396,6 +428,7 @@ def revision_get_documents(revision_id=None, include_history=True,
     :param filters: Dictionary attributes (including nested) used to filter
         out revision documents.
     :param session: Database session object.
+    :param filters: Key-value pairs used for filtering out revision documents.
     :returns: All revision documents for ``revision_id`` that match the
         ``filters``, including document revision history if applicable.
     :raises: RevisionNotFound if the revision was not found.
@@ -448,8 +481,11 @@ def _filter_revision_documents(documents, unique_only, **filters):
     """
     # TODO(fmontei): Implement this as an sqlalchemy query.
     filtered_documents = {}
-    unique_filters = [c for c in models.Document.UNIQUE_CONSTRAINTS
-                      if c != 'revision_id']
+    unique_filters = ('schema', 'name')
+    exclude_deleted = filters.pop('deleted', None) is False
+
+    if exclude_deleted:
+        documents = _exclude_deleted_documents(documents)
 
     for document in documents:
         # NOTE(fmontei): Only want to include non-validation policy documents
@@ -460,7 +496,6 @@ def _filter_revision_documents(documents, unique_only, **filters):
 
         for filter_key, filter_val in filters.items():
             actual_val = utils.multi_getattr(filter_key, document)
-
             if (isinstance(actual_val, bool)
                 and isinstance(filter_val, six.string_types)):
                 try:
@@ -470,12 +505,18 @@ def _filter_revision_documents(documents, unique_only, **filters):
                     # `actual_val` which is always boolean.
                     filter_val = None
 
-            if actual_val != filter_val:
-                match = False
+            if isinstance(filter_val, list):
+                if actual_val not in filter_val:
+                    match = False
+                    break
+            else:
+                if actual_val != filter_val:
+                    match = False
+                    break
 
         if match:
             # Filter out redundant documents from previous revisions, i.e.
-            # documents schema and metadata.name are repeated.
+            # documents whose schema and metadata.name are repeated.
             if unique_only:
                 unique_key = tuple(
                     [document[filter] for filter in unique_filters])
@@ -486,6 +527,19 @@ def _filter_revision_documents(documents, unique_only, **filters):
 
     # TODO(fmontei): Sort by user-specified parameter.
     return sorted(filtered_documents.values(), key=lambda d: d['created_at'])
+
+
+def _exclude_deleted_documents(documents):
+    for doc in copy.copy(documents):
+        if doc['deleted']:
+            docs_to_delete = [
+                d for d in documents if
+                    (d['schema'], d['name']) == (doc['schema'], doc['name'])
+                    and d['created_at'] <= doc['deleted_at']
+            ]
+            for d in list(docs_to_delete):
+                documents.remove(d)
+    return documents
 
 
 # NOTE(fmontei): No need to include `@require_revision_exists` decorator as
@@ -549,17 +603,8 @@ def revision_diff(revision_id, comparison_revision_id):
 
     # Remove each deleted document and its older counterparts because those
     # documents technically don't exist.
-    for doc_collection in (docs, comparison_docs):
-        for doc in copy.copy(doc_collection):
-            if doc['deleted']:
-                docs_to_delete = filter(
-                    lambda d:
-                        (d['schema'], d['name']) ==
-                        (doc['schema'], doc['name'])
-                        and d['created_at'] <= doc['deleted_at'],
-                    doc_collection)
-                for d in list(docs_to_delete):
-                    doc_collection.remove(d)
+    for documents in (docs, comparison_docs):
+        documents = _exclude_deleted_documents(documents)
 
     revision = revision_get(revision_id) if revision_id != 0 else None
     comparison_revision = (revision_get(comparison_revision_id)
@@ -739,23 +784,18 @@ def revision_tag_delete_all(revision_id, session=None):
 ####################
 
 
-@require_revision_exists
-def revision_rollback(revision_id, session=None):
+def revision_rollback(revision_id, latest_revision, session=None):
     """Rollback the latest revision to revision specified by ``revision_id``.
 
     Rolls back the latest revision to the revision specified by ``revision_id``
     thereby creating a new, carbon-copy revision.
 
     :param revision_id: Revision ID to which to rollback.
+    :param latest_revision: Dictionary representation of the latest revision
+        in the system.
     :returns: The newly created revision.
     """
     session = session or get_session()
-
-    # We know that the last revision exists, since require_revision_exists
-    # ensures revision_id exists, which at the very least is the last revision.
-    latest_revision = session.query(models.Revision)\
-        .order_by(models.Revision.created_at.desc())\
-        .first()
     latest_revision_hashes = [
         (d['data_hash'], d['metadata_hash'])
         for d in latest_revision['documents']]

@@ -18,6 +18,7 @@ from deckhand.control import base as api_base
 from deckhand.control.views import revision as revision_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
+from deckhand import policy
 
 
 class RevisionsResource(api_base.BaseResource):
@@ -37,6 +38,7 @@ class RevisionsResource(api_base.BaseResource):
         else:
             self._list_revisions(req, resp)
 
+    @policy.authorize('deckhand:show_revision')
     def _show_revision(self, req, resp, revision_id):
         """Returns detailed description of a particular revision.
 
@@ -53,6 +55,7 @@ class RevisionsResource(api_base.BaseResource):
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = self.to_yaml_body(revision_resp)
 
+    @policy.authorize('deckhand:list_revisions')
     def _list_revisions(self, req, resp):
         revisions = db_api.revision_get_all()
         revisions_resp = self.view_builder.list(revisions)
@@ -61,6 +64,7 @@ class RevisionsResource(api_base.BaseResource):
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = self.to_yaml_body(revisions_resp)
 
+    @policy.authorize('deckhand:delete_revisions')
     def on_delete(self, req, resp):
         db_api.revision_delete_all()
         resp.append_header('Content-Type', 'application/x-yaml')
