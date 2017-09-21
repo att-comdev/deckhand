@@ -23,6 +23,7 @@ from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import document_validation
 from deckhand.engine import secrets_manager
 from deckhand import errors as deckhand_errors
+from deckhand import policy
 from deckhand import types
 
 LOG = logging.getLogger(__name__)
@@ -34,6 +35,7 @@ class BucketsResource(api_base.BaseResource):
     view_builder = document_view.ViewBuilder()
     secrets_mgr = secrets_manager.SecretsManager()
 
+    @policy.enforce('deckhand:create_cleartext_documents')
     def on_put(self, req, resp, bucket_name=None):
         document_data = req.stream.read(req.content_length or 0)
         try:
@@ -55,6 +57,8 @@ class BucketsResource(api_base.BaseResource):
         for document in documents:
             if any([document['schema'].startswith(t)
                     for t in types.DOCUMENT_SECRET_TYPES]):
+                # TODO(fmontei): Enforce deckhand:create_encrypted_documents
+                # conditionally here.
                 secret_data = self.secrets_mgr.create(document)
                 document['data'] = secret_data
 

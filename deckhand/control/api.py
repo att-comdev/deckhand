@@ -13,10 +13,12 @@
 # limitations under the License.
 
 import os
+import sys
 
 import falcon
 from oslo_config import cfg
 from oslo_log import log as logging
+from oslo_policy import policy as policy
 
 from deckhand.control import base
 from deckhand.control import buckets
@@ -27,6 +29,8 @@ from deckhand.control import revisions
 from deckhand.control import rollback
 from deckhand.control import versions
 from deckhand.db.sqlalchemy import api as db_api
+from deckhand import policies
+from deckhand import policy as deckhand_policy
 
 CONF = cfg.CONF
 logging.register_options(CONF)
@@ -42,7 +46,7 @@ def _get_config_files(env=None):
     return [os.path.join(dirname, config_file) for config_file in CONFIG_FILES]
 
 
-def start_api(state_manager=None):
+def start_api():
     """Main entry point for initializing the Deckhand API service.
 
     Create routes for the v1.0 API and sets up logging.
@@ -53,6 +57,19 @@ def start_api(state_manager=None):
 
     LOG = logging.getLogger(__name__)
     LOG.info('Initiated Deckhand logging.')
+
+    if '--no-policy' in sys.argv:
+        # WARNING(fmontei): Including this pyargv to uwsgi will run Deckhand
+        # without policy enforcement. This should only be done for functional
+        # testing.
+        # TODO(fmontei): Remove this once Keystone has been integrated into
+        # functional testing script.
+        deckhand_policy._ENFORCER = policy.Enforcer(CONF)
+        deckhand_policy.register_rules(
+            deckhand_policy._ENFORCER,
+            [policy.RuleDefault(r.name, '') for r in policies.list_rules()])
+        LOG.warning('Running Deckhand without policy enforcement. '
+                    'This should only be done for functional testing.')
 
     db_api.drop_db()
     db_api.setup_db()
@@ -79,3 +96,7 @@ def start_api(state_manager=None):
     control_api.add_route('/versions', versions.VersionsResource())
 
     return control_api
+
+
+if __name__ == '__main__':
+    start_api()

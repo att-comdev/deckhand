@@ -73,7 +73,8 @@ uwsgi \
     --callable deckhand_callable \
     --enable-threads \
     -L \
-    --pyargv "--config-file $CONF_DIR/deckhand.conf" &
+    --pyargv "--config-file $CONF_DIR/deckhand.conf" \
+    --pyargv "--no-policy" &
 
 # Give the server a chance to come up.  Better to poll a health check.
 sleep 5
