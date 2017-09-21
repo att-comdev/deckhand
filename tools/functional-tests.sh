@@ -35,15 +35,17 @@ POSTGRES_IP=$(
             $POSTGRES_ID
 )
 
-log_section Creating config file
 CONF_DIR=$(mktemp -d)
 
-export DECKHAND_TEST_URL=http://localhost:9000
-export DATABASE_URL=postgresql+psycopg2://deckhand:password@$POSTGRES_IP:5432/deckhand
-# Used by Deckhand's initialization script to search for config files.
-export OS_DECKHAND_CONFIG_DIR=$CONF_DIR
+function gen_config {
+    log_section Creating config file
 
-cp etc/deckhand/logging.conf.sample $CONF_DIR/logging.conf
+    export DECKHAND_TEST_URL=http://localhost:9000
+    export DATABASE_URL=postgresql+psycopg2://deckhand:password@$POSTGRES_IP:5432/deckhand
+    # Used by Deckhand's initialization script to search for config files.
+    export OS_DECKHAND_CONFIG_DIR=$CONF_DIR
+
+    cp etc/deckhand/logging.conf.sample $CONF_DIR/logging.conf
 
 cat <<EOCONF > $CONF_DIR/deckhand.conf
 [DEFAULT]
@@ -52,6 +54,10 @@ log_config_append = $CONF_DIR/logging.conf
 log_file = deckhand.log
 log_dir = .
 use_stderr = true
+policy_file = policy.yaml
+
+[oslo_policy]
+policy_file = policy.yaml
 
 [barbican]
 
@@ -61,11 +67,33 @@ connection = $DATABASE_URL
 [keystone_authtoken]
 EOCONF
 
-echo $CONF_DIR/deckhand.conf 1>&2
-cat $CONF_DIR/deckhand.conf 1>&2
+    echo $CONF_DIR/deckhand.conf 1>&2
+    cat $CONF_DIR/deckhand.conf 1>&2
 
-log_section Starting server
-rm -f deckhand.log
+    log_section Starting server
+    rm -f deckhand.log
+}
+
+function gen_policy {
+    log_section Creating policy file with liberal permissions
+
+    oslopolicy-sample-generator --config-file=etc/deckhand/policy-generator.conf
+
+    policy_file='etc/deckhand/policy.yaml.sample'
+    policy_pattern="deckhand\:"
+
+    touch $CONF_DIR/policy.yaml
+
+    sed -n "/$policy_pattern/p" "$policy_file" \
+        | sed 's/^../\"/' \
+        | sed 's/rule\:[A-Za-z\_\-]*/@/' > $CONF_DIR/policy.yaml
+
+    echo $CONF_DIR/'policy.yaml' 1>&2
+    cat $CONF_DIR/'policy.yaml' 1>&2
+}
+
+gen_config
+gen_policy
 
 uwsgi \
     --http :9000 \

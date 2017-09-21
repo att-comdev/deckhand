@@ -16,6 +16,7 @@ import yaml
 
 import falcon
 from oslo_log import log as logging
+import six
 
 from deckhand.control import base as api_base
 from deckhand.control.views import document as document_view
@@ -23,6 +24,7 @@ from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import document_validation
 from deckhand.engine import secrets_manager
 from deckhand import errors as deckhand_errors
+from deckhand import policy
 from deckhand import types
 
 LOG = logging.getLogger(__name__)
@@ -34,6 +36,7 @@ class BucketsResource(api_base.BaseResource):
     view_builder = document_view.ViewBuilder()
     secrets_mgr = secrets_manager.SecretsManager()
 
+    @policy.authorize('deckhand:create_cleartext_documents')
     def on_put(self, req, resp, bucket_name=None):
         document_data = req.stream.read(req.content_length or 0)
         try:
@@ -55,16 +58,17 @@ class BucketsResource(api_base.BaseResource):
         for document in documents:
             if any([document['schema'].startswith(t)
                     for t in types.DOCUMENT_SECRET_TYPES]):
+                policy.conditional_authorize(
+                    'deckhand:create_encrypted_documents', req.context)
                 secret_data = self.secrets_mgr.create(document)
                 document['data'] = secret_data
-
         try:
             documents.extend(validation_policies)
             created_documents = db_api.documents_create(bucket_name, documents)
         except deckhand_errors.DocumentExists as e:
             raise falcon.HTTPConflict(description=e.format_message())
         except Exception as e:
-            raise falcon.HTTPInternalServerError(description=e)
+            raise falcon.HTTPInternalServerError(description=six.text_type(e))
 
         if created_documents:
             resp.body = self.to_yaml_body(
