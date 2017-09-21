@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2563c034_a489e56f",
+        "filename": "doc/source/conf.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-21T05:23:59Z",
+      "side": 1,
+      "message": "can we change this to sphinx_rtd_theme?  see [0].\n\n[0] https://github.com/rtfd/sphinx_rtd_theme\n\nOnce this merge, I can publish this doc to rtfd similar to OSH.",
+      "range": {
+        "startLine": 85,
+        "startChar": 14,
+        "endLine": 85,
+        "endChar": 23
+      },
+      "revId": "3e40e06fd57a2400391709800bffd2e3d44d7d47",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
