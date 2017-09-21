@@ -18,6 +18,7 @@ from deckhand.control import base as api_base
 from deckhand.control.views import revision as revision_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
+from deckhand import policy
 
 
 class RollbackResource(api_base.BaseResource):
@@ -25,6 +26,7 @@ class RollbackResource(api_base.BaseResource):
 
     view_builder = revision_view.ViewBuilder()
 
+    @policy.authorize('deckhand:create_cleartext_documents')
     def on_post(self, req, resp, revision_id):
         try:
             revision = db_api.revision_rollback(revision_id)
