@@ -15,7 +15,11 @@
 import yaml
 
 import falcon
+from oslo_config import cfg
 from oslo_context import context
+from oslo_policy import policy
+
+CONF = cfg.CONF
 
 
 class BaseResource(object):
@@ -50,9 +54,10 @@ class BaseResource(object):
 
 class DeckhandRequest(falcon.Request):
 
-    def __init__(self, env, options=None):
+    def __init__(self, env, options=None, policy_enforcer=None):
         super(DeckhandRequest, self).__init__(env, options)
         self.context = context.RequestContext.from_environ(self.env)
+        self.policy_enforcer = policy_enforcer or policy.Enforcer(CONF)
 
     @property
     def project_id(self):
