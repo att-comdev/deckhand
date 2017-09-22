@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "43ff482e_80621bfd",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-22T06:17:09Z",
+      "side": 1,
+      "message": "This should be plural, and there is no GET /v1/buckets for now (I can see the value in it though).",
+      "parentUuid": "5d672169_90de573f",
+      "range": {
+        "startLine": 62,
+        "startChar": 10,
+        "endLine": 62,
+        "endChar": 16
+      },
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1891a74_af2fb2d2",
         "filename": "deckhand/control/api.py",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "1e1b226f_26db12ba",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-22T06:17:09Z",
+      "side": 1,
+      "message": "This is a verb",
+      "parentUuid": "b1891a74_af2fb2d2",
+      "range": {
+        "startLine": 70,
+        "startChar": 10,
+        "endLine": 70,
+        "endChar": 18
+      },
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaf7746b_35128f5f",
         "filename": "deckhand/utils.py",
         "patchSetId": 8
@@ -59,6 +107,30 @@
       "writtenOn": "2017-09-22T03:32:14Z",
       "side": 1,
       "message": "is it correct that this method returns tuple if o is set, tuple and list, but returns an int if it is a dictionary?",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 13
+      },
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50774060_95c25c3f",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-22T06:17:09Z",
+      "side": 1,
+      "message": "Yes, but honestly I\u0027m only using it for dict. I copy/pasted this from Stackoverflow just for the purposes of generating a dict hash.",
+      "parentUuid": "aaf7746b_35128f5f",
       "range": {
         "startLine": 66,
         "startChar": 4,
