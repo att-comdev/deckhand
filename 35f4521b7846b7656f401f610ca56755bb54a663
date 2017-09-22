@@ -96,6 +96,23 @@
     },
     {
       "key": {
+        "uuid": "010564a5_a6c43bcb",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-22T14:23:54Z",
+      "side": 1,
+      "message": "Not sure if this sort of thing should raise a 400 or something else.",
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaf7746b_35128f5f",
         "filename": "deckhand/utils.py",
         "patchSetId": 8
