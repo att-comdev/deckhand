@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d672169_90de573f",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-22T03:32:14Z",
+      "side": 1,
+      "message": "should this be buckets? can we have GET /vXXX/buckets?",
+      "range": {
+        "startLine": 62,
+        "startChar": 10,
+        "endLine": 62,
+        "endChar": 16
+      },
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1891a74_af2fb2d2",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-22T03:32:14Z",
+      "side": 1,
+      "message": "should this be plural? or is this a verb?",
+      "range": {
+        "startLine": 70,
+        "startChar": 10,
+        "endLine": 70,
+        "endChar": 18
+      },
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaf7746b_35128f5f",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-22T03:32:14Z",
+      "side": 1,
+      "message": "is it correct that this method returns tuple if o is set, tuple and list, but returns an int if it is a dictionary?",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 13
+      },
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
