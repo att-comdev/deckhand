@@ -113,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "a857a4bd_8f072450",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-09-23T13:05:12Z",
+      "side": 1,
+      "message": "even a 200 or 204 could work -  effectively the rollback was successful - the repo is in the state that was desired.  \nYou could also use something like a 409 Conflict, which I like to use when there are stateful \"problems\", and indicate in an associated message that the data is already at the target state.\nA 400 is fine too - you\u0027ve asked the API to do something invalid.",
+      "parentUuid": "010564a5_a6c43bcb",
+      "revId": "35f4521b7846b7656f401f610ca56755bb54a663",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aaf7746b_35128f5f",
         "filename": "deckhand/utils.py",
         "patchSetId": 8
