@@ -16,6 +16,23 @@
       "revId": "44d13887eb8d5fdad906602b8410bfef8d856307",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbb9fa6f_da67b2b9",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2017-09-25T12:48:35Z",
+      "side": 1,
+      "message": "I think that a reasonable alternative to this (which should also be secure for hashing secrets) would be to simply re-serialize the document in a consistent way (e.g. json with sorted keys and well-specified spacing) and then putting it through SHA256.\n\nI\u0027m actually not sure whether python\u0027s built in hash function is considered a secure hash, so it may not be suitable for secrets.",
+      "revId": "44d13887eb8d5fdad906602b8410bfef8d856307",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
