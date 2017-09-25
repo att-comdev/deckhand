@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "987333c5_d477922d",
+        "filename": "deckhand/tests/functional/gabbits/rollback-success-single-bucket.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-25T15:30:59Z",
+      "side": 1,
+      "message": "Probably something I overlooked; I\u0027ll fix it in next patch. I have to re-submit thanks to merge conflicts with the other patch getting merged.",
+      "parentUuid": "8f1ea07c_a20d9724",
+      "revId": "896c975c2fe6b2240194a0a50018074c03b04ec6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dce5ce14_069d1d8d",
         "filename": "deckhand/utils.py",
         "patchSetId": 9
