@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa6bf9f0_aa6cb927",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 28
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-09-25T01:15:47Z",
+      "side": 1,
+      "message": "I think you could do the symmetric difference: unshared_buckets \u003d buckets ^ comparison_buckets?  Maybe not...",
+      "revId": "44d13887eb8d5fdad906602b8410bfef8d856307",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
