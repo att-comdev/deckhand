@@ -15,7 +15,6 @@
 from oslo_db.sqlalchemy import models
 from oslo_db.sqlalchemy import types as oslo_types
 from oslo_utils import timeutils
-from sqlalchemy import BigInteger
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import DateTime
@@ -26,6 +25,7 @@ from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy import schema
 from sqlalchemy import String
+from sqlalchemy import Unicode
 
 
 # Declarative base class which maintains a catalog of classes and tables
@@ -141,7 +141,8 @@ class Document(BASE, DeckhandBase):
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
     data = Column(oslo_types.JsonEncodedDict(), nullable=True)
-    hash = Column(BigInteger, nullable=False)
+    data_hash = Column(Unicode, nullable=False)
+    metadata_hash = Column(Unicode, nullable=False)
     is_secret = Column(Boolean, nullable=False, default=False)
     bucket_id = Column(Integer, ForeignKey('buckets.id', ondelete='CASCADE'),
                        nullable=False)
