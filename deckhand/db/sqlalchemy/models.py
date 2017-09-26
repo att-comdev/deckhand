@@ -15,7 +15,6 @@
 from oslo_db.sqlalchemy import models
 from oslo_db.sqlalchemy import types as oslo_types
 from oslo_utils import timeutils
-from sqlalchemy import BigInteger
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import DateTime
@@ -23,6 +22,7 @@ from sqlalchemy.ext import declarative
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
+from sqlalchemy import LargeBinary
 from sqlalchemy.orm import relationship
 from sqlalchemy import schema
 from sqlalchemy import String
@@ -141,7 +141,8 @@ class Document(BASE, DeckhandBase):
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
     data = Column(oslo_types.JsonEncodedDict(), nullable=True)
-    hash = Column(BigInteger, nullable=False)
+    data_hash = Column(LargeBinary, nullable=False)
+    metadata_hash = Column(LargeBinary, nullable=False)
     is_secret = Column(Boolean, nullable=False, default=False)
     bucket_id = Column(Integer, ForeignKey('buckets.id', ondelete='CASCADE'),
                        nullable=False)
