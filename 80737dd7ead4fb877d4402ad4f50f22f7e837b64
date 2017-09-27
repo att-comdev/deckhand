@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "57b68597_585d7ec9",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-27T14:46:59Z",
+      "side": 1,
+      "message": "String doesn\u0027t work as sha256 generates unicode.\n\nAccording to [0] the only options are LargeBinary (which is DB agnostic or BYTEA which is compatible with Postgresql, so I could use that directly).\n\nHowever, looks like BYTEA is the same thing as LargeBinary [1].\n\n[0] https://stackoverflow.com/questions/27197965/what-type-is-used-to-store-byte-strings-in-sqlalchemy\n[1] http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html?highlight\u003dbytea#sqlalchemy.dialects.postgresql.BYTEA",
+      "parentUuid": "68f0c784_883ce811",
+      "range": {
+        "startLine": 144,
+        "startChar": 23,
+        "endLine": 144,
+        "endChar": 34
+      },
+      "revId": "80737dd7ead4fb877d4402ad4f50f22f7e837b64",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "203e9b97_ac439be8",
         "filename": "deckhand/db/sqlalchemy/models.py",
         "patchSetId": 1
