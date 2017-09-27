@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68f0c784_883ce811",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-27T06:20:44Z",
+      "side": 1,
+      "message": "hashlib.sha256() does not return variable length hash regardless of the input size.  It is an over kill to use a BLOB for hashes.",
+      "range": {
+        "startLine": 144,
+        "startChar": 23,
+        "endLine": 144,
+        "endChar": 34
+      },
+      "revId": "80737dd7ead4fb877d4402ad4f50f22f7e837b64",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "203e9b97_ac439be8",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-27T06:20:44Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 145,
+        "startChar": 27,
+        "endLine": 145,
+        "endChar": 38
+      },
+      "revId": "80737dd7ead4fb877d4402ad4f50f22f7e837b64",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
