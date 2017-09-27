@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "ab335096_be8b5b2e",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-09-27T14:57:35Z",
+      "side": 1,
+      "message": "Does this not work? http://docs.sqlalchemy.org/en/latest/core/type_basics.html#sqlalchemy.types.Unicode",
+      "parentUuid": "57b68597_585d7ec9",
+      "range": {
+        "startLine": 144,
+        "startChar": 23,
+        "endLine": 144,
+        "endChar": 34
+      },
+      "revId": "80737dd7ead4fb877d4402ad4f50f22f7e837b64",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "203e9b97_ac439be8",
         "filename": "deckhand/db/sqlalchemy/models.py",
         "patchSetId": 1
