@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ac22892_3a311ca0",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-28T00:54:19Z",
+      "side": 1,
+      "message": "include_secure \u003d policy.conditional_authorize(...)\nthen pass include_secure to DB\ncleaner",
+      "revId": "18608290d9dfbd8bfc8932b2363bc63862cca94a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
