@@ -15,6 +15,8 @@
 import re
 import string
 
+import jsonpath_ng
+
 
 def to_camel_case(s):
     """Convert string to camel case."""
@@ -28,12 +30,13 @@ def to_snake_case(name):
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
-def multi_getattr(multi_key, dict_data):
-    """Iteratively check for nested attributes in the YAML data.
+def jsonpath_parse(document, jsonpath):
+    """Parse value given JSON path in the document.
 
-    Check for nested attributes included in "dest" attributes in the data
-    section of the YAML file. For example, a "dest" attribute of
-    ".foo.bar.baz" should mean that the YAML data adheres to:
+    Retrieve the value corresponding to document[jsonpath] where ``jsonpath``
+    is a multi-part key. A multi-key is a series of keys and nested keys
+    concatenated together with ".". For exampple, ``jsonpath`` of
+    ".foo.bar.baz" should mean that ``document`` has the format:
 
     .. code-block:: yaml
 
@@ -42,21 +45,16 @@ def multi_getattr(multi_key, dict_data):
            bar:
                baz: <data_to_be_substituted_here>
 
-    :param multi_key: A multi-part key that references nested data in the
-        substitutable part of the YAML data, e.g. ".foo.bar.baz".
-    :param substitutable_data: The section of data in the YAML data that
+    :param document: The section of data in the YAML document that
         is intended to be substituted with secrets.
-    :returns: nested entry in ``dict_data`` if present; else None.
+    :param jsonpath: A multi-part key that references nested data in the
+        substitutable part of the ``document``, e.g. ".foo.bar.baz".
+    :returns: nested entry in ``document`` if present; else None.
     """
-    attrs = multi_key.split('.')
-    # Ignore the first attribute if it is "." as that is a self-reference.
-    if attrs[0] == '':
-        attrs = attrs[1:]
+    if jsonpath.startswith('.'):
+        jsonpath = '$' + jsonpath
 
-    data = dict_data
-    for attr in attrs:
-        if attr not in data:
-            return None
-        data = data.get(attr)
-
-    return data
+    p = jsonpath_ng.parse(jsonpath)
+    matches = p.find(document)
+    if matches:
+        return matches[0].value
