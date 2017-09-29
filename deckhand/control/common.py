@@ -34,6 +34,11 @@ def sanitize_params(allowed_params):
 
     :param allowed_params: The request's query string parameters.
     """
+    _mapping = {
+        'status.bucket': 'bucket_name',
+        'metadata.label': 'metadata.labels'
+    }
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(self, req, *func_args, **func_kwargs):
@@ -42,7 +47,10 @@ def sanitize_params(allowed_params):
 
             for key in req_params.keys():
                 if key in allowed_params:
-                    sanitized_params[key] = req_params[key]
+                    if key in _mapping:
+                        sanitized_params[_mapping[key]] = req_params[key]
+                    else:
+                        sanitized_params[key] = req_params[key]
 
             func_args = func_args + (sanitized_params,)
             return func(self, req, *func_args, **func_kwargs)

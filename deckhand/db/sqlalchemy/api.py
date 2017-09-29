@@ -176,16 +176,9 @@ def _documents_create(bucket_name, values_list, session=None):
         return document
 
     for values in values_list:
-        values['_metadata'] = values.pop('metadata')
-        values['name'] = values['_metadata']['name']
-
-        # Hash the combination of the document's metadata and data to later
-        # efficiently check whether those data have changed.
-        dict_to_hash = values['_metadata'].copy()
-        dict_to_hash.update(values['data'])
-        values['hash'] = utils.make_hash(dict_to_hash)
-
+        values = _fill_in_metadata_defaults(values)
         values['is_secret'] = 'secret' in values['data']
+
         # Hash the combination of the document's metadata and data to later
         # efficiently check whether those data have changed.
         dict_to_hash = values['_metadata'].copy()
@@ -229,6 +222,20 @@ def _documents_create(bucket_name, values_list, session=None):
         changed_documents.append(doc)
 
     return changed_documents
+
+
+def _fill_in_metadata_defaults(values):
+    values['_metadata'] = values.pop('metadata')
+    values['name'] = values['_metadata']['name']
+
+    if not values['_metadata'].get('storagePolicy', None):
+        values['_metadata']['storagePolicy'] = 'cleartext'
+
+    if ('layeringDefinition' in values['_metadata']
+        and 'abstract' not in values['_metadata']['layeringDefinition']):
+        values['_metadata']['layeringDefinition']['abstract'] = False
+
+    return values
 
 
 def document_get(session=None, raw_dict=False, **filters):
@@ -449,6 +456,20 @@ def _filter_revision_documents(documents, unique_only, **filters):
     unique_filters = [c for c in models.Document.UNIQUE_CONSTRAINTS
                       if c != 'revision_id']
 
+    def _transform_filter_val(actual_val, filter_val):
+        if (isinstance(actual_val, bool)
+            and isinstance(filter_val, six.string_types)):
+            try:
+                filter_val = ast.literal_eval(filter_val.title())
+            except ValueError:
+                # If not True/False, set to None to avoid matching
+                # `actual_val` which is always boolean.
+                filter_val = None
+        elif isinstance(actual_val, dict) and '=' in filter_val:
+            filter_pair = filter_val.split('=')
+            filter_val = {filter_pair[0]: filter_pair[1]}
+        return filter_val
+
     for document in documents:
         # NOTE(fmontei): Only want to include non-validation policy documents
         # for this endpoint.
@@ -459,17 +480,15 @@ def _filter_revision_documents(documents, unique_only, **filters):
         for filter_key, filter_val in filters.items():
             actual_val = utils.multi_getattr(filter_key, document)
 
-            if (isinstance(actual_val, bool)
-                and isinstance(filter_val, six.string_types)):
-                try:
-                    filter_val = ast.literal_eval(filter_val.title())
-                except ValueError:
-                    # If not True/False, set to None to avoid matching
-                    # `actual_val` which is always boolean.
-                    filter_val = None
-
-            if actual_val != filter_val:
-                match = False
+            if isinstance(filter_val, list):
+                if actual_val not in [_transform_filter_val(actual_val, x)
+                                      for x in filter_val]:
+                    match = False
+                    break
+            else:
+                if actual_val != _transform_filter_val(actual_val, filter_val):
+                    match = False
+                    break
 
         if match:
             # Filter out redundant documents from previous revisions, i.e.
