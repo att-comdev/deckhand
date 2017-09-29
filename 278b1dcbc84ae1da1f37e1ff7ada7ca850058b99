@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdec1c87_67b2200d",
+        "filename": "doc/source/policy-enforcement.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-29T05:03:35Z",
+      "side": 1,
+      "message": "true",
+      "range": {
+        "startLine": 27,
+        "startChar": 42,
+        "endLine": 27,
+        "endChar": 50
+      },
+      "revId": "278b1dcbc84ae1da1f37e1ff7ada7ca850058b99",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
