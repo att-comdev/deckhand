@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a64e5611_82277335",
+        "filename": "deckhand/control/rollback.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-29T06:02:53Z",
+      "side": 1,
+      "message": "This needs to be conditional as well (and need to do it for encrypted documents as well).",
+      "revId": "7da97e88872f2588678067f2b9ed6c2191b3ec02",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68247799_ccb56c65",
+        "filename": "deckhand/policies/document.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-29T06:02:53Z",
+      "side": 1,
+      "message": "This isn\u0027t true. It\u0027s conditionally enforced.",
+      "range": {
+        "startLine": 27,
+        "startChar": 18,
+        "endLine": 27,
+        "endChar": 58
+      },
+      "revId": "7da97e88872f2588678067f2b9ed6c2191b3ec02",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

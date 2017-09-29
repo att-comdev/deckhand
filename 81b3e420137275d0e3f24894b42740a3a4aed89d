@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0f659b6_c3faad48",
+        "filename": "deckhand/conf/config.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-09-29T06:02:53Z",
+      "side": 0,
+      "message": "Dead code that I forgot to clean up earlier.",
+      "revId": "81b3e420137275d0e3f24894b42740a3a4aed89d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
