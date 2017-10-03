@@ -291,6 +291,7 @@ def bucket_get_or_create(bucket_name, session=None):
 
 ####################
 
+
 def revision_create(session=None):
     """Create a revision.
 
@@ -459,7 +460,7 @@ def _filter_revision_documents(documents, unique_only, **filters):
         match = True
 
         for filter_key, filter_val in filters.items():
-            actual_val = utils.multi_getattr(filter_key, document)
+            actual_val = utils.jsonpath_parse(document, filter_key)
 
             if (isinstance(actual_val, bool)
                 and isinstance(filter_val, six.string_types)):
