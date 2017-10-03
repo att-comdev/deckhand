@@ -16,6 +16,7 @@ from falcon import testing as falcon_testing
 
 from deckhand.control import api
 from deckhand.tests.unit import base as test_base
+from deckhand.tests.unit import policy_fixture
 
 
 class BaseControllerTest(test_base.DeckhandWithDBTestCase,
@@ -25,3 +26,22 @@ class BaseControllerTest(test_base.DeckhandWithDBTestCase,
     def setUp(self):
         super(BaseControllerTest, self).setUp()
         self.app = falcon_testing.TestClient(api.start_api())
+        self.policy = self.useFixture(policy_fixture.RealPolicyFixture())
+        # Override default rules in the temporary policy file that is created
+        # in ``RealPolicyFixture`` with "@" which allows anyone to perform an
+        # action.
+        self.policy.set_rules('@')
+
+
+class BaseAdminControllerTest(test_base.DeckhandWithDBTestCase,
+                              falcon_testing.TestCase):
+    """Base admin class for unit testing falcon controllers.
+
+    Only users with admin credentials can execute any actions. Useful for
+    negative testing RBAC.
+    """
+
+    def setUp(self):
+        super(BaseAdminControllerTest, self).setUp()
+        self.app = falcon_testing.TestClient(api.start_api())
+        self.policy = self.useFixture(policy_fixture.RealPolicyFixture())
