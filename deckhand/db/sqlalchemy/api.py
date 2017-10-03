@@ -245,6 +245,7 @@ def document_get(session=None, raw_dict=False, **filters):
     :raises: DocumentNotFound if the document wasn't found.
     """
     session = session or get_session()
+    abstract = filters.pop('abstract', None)
 
     # Retrieve the most recently created version of a document. Documents with
     # the same metadata.name and schema can exist across different revisions,
@@ -253,11 +254,19 @@ def document_get(session=None, raw_dict=False, **filters):
         .filter_by(**filters)\
         .order_by(models.Document.created_at.desc())\
         .first()
+    document = document.to_dict(raw_dict=raw_dict) if document else {}
+
+    # TODO(fmontei): For this sort of query to be done using SQL, the data type
+    # for the _metadata column must be first changed to JSONB.
+    if abstract:
+        if abstract != document.get('metadata', {}).get(
+            'layeringDefinition', {}).get('abstract', None):
+            document = {}
 
     if not document:
         raise errors.DocumentNotFound(document=filters)
 
-    return document.to_dict(raw_dict=raw_dict)
+    return document
 
 
 ####################
@@ -290,6 +299,7 @@ def bucket_get_or_create(bucket_name, session=None):
 
 
 ####################
+
 
 def revision_create(session=None):
     """Create a revision.
@@ -459,7 +469,7 @@ def _filter_revision_documents(documents, unique_only, **filters):
         match = True
 
         for filter_key, filter_val in filters.items():
-            actual_val = utils.multi_getattr(filter_key, document)
+            actual_val = utils.jsonpath_parse(document, filter_key)
 
             if (isinstance(actual_val, bool)
                 and isinstance(filter_val, six.string_types)):
