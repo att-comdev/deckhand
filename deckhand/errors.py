@@ -34,7 +34,6 @@ class DeckhandException(Exception):
         if not message:
             try:
                 message = self.msg_fmt % kwargs
-
             except Exception:
                 message = self.msg_fmt
 

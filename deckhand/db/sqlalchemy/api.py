@@ -260,6 +260,31 @@ def document_get(session=None, raw_dict=False, **filters):
     return document.to_dict(raw_dict=raw_dict)
 
 
+def document_update_data(document_id, data, session=None):
+    """Update the document data corresponding to ``document_id``.
+
+    :param document_id: The ID of the document to update.
+    :param data: The document data to update.
+    :param session: Database session object.
+    :returns: Dictionary representation of updated document.
+    :raises: DocumentNotFound if the document wasn't found.
+    """
+    session = session or get_session()
+
+    try:
+        document = session.query(models.Document)\
+            .filter_by(id=document_id)\
+            .one()
+    except sa_orm.exc.NoResultFound:
+        raise errors.DocumentNotFound(document=document_id)
+
+    with session.begin():
+        document.update({'data': data})
+        document.save(session=session)
+
+    return document.to_dict()
+
+
 ####################
 
 

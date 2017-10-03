@@ -60,3 +60,39 @@ def multi_getattr(multi_key, dict_data):
         data = data.get(attr)
 
     return data
+
+
+def multi_setattr(multi_key, value, dict_data):
+    """Iteratively check for nested attributes in the YAML data.
+
+    Check for nested attributes included in "dest" attributes in the data
+    section of the YAML file. For example, a "dest" attribute of
+    ".foo.bar.baz" should mean that the YAML data adheres to:
+
+    .. code-block:: yaml
+
+       ---
+       foo:
+           bar:
+               baz: <data_to_be_substituted_here>
+
+    :param multi_key: A multi-part key that references nested data in the
+        substitutable part of the YAML data, e.g. ".foo.bar.baz".
+    :param substitutable_data: The section of data in the YAML data that
+        is intended to be substituted with secrets.
+    :returns: nested entry in ``dict_data`` if present; else None.
+    """
+    attrs = multi_key.split('.')[:-1]
+    last_attr = multi_key.split('.')[-1]
+    # Ignore the first attribute if it is "." as that is a self-reference.
+    if attrs[0] == '':
+        attrs = attrs[1:]
+
+    data = dict_data
+    for attr in attrs:
+        if attr not in data:
+            data.setdefault(attr, {})
+        data = data.get(attr)
+
+    data[last_attr] = value
+    return dict_data
