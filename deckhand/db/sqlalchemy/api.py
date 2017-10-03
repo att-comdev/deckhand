@@ -101,6 +101,8 @@ def documents_create(bucket_name, documents, session=None):
         documents.
     :param documents: List of documents to be created.
     :param validation_policies: List of validation policies to be created.
+    :param rendered: Whether the documents have been fully rendered. False
+        by default.
     :param session: Database session object.
     :returns: List of created documents in dictionary format.
     :raises DocumentExists: If the (document.schema, document.metadata.name)
@@ -291,6 +293,7 @@ def bucket_get_or_create(bucket_name, session=None):
 
 ####################
 
+
 def revision_create(session=None):
     """Create a revision.
 
@@ -459,7 +462,7 @@ def _filter_revision_documents(documents, unique_only, **filters):
         match = True
 
         for filter_key, filter_val in filters.items():
-            actual_val = utils.multi_getattr(filter_key, document)
+            actual_val = utils.jsonpath_parse(document, filter_key)
 
             if (isinstance(actual_val, bool)
                 and isinstance(filter_val, six.string_types)):
