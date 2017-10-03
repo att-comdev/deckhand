@@ -44,6 +44,19 @@ class BucketsResource(api_base.BaseResource):
             LOG.error(error_msg)
             raise falcon.HTTPBadRequest(description=e.format_message())
 
+        validation_policies = self._gen_validation_policies(documents)
+        documents.extend(validation_policies)
+        created_documents = self._gen_revision_documents(
+            bucket_name, documents)
+
+        if created_documents:
+            resp.body = self.to_yaml_body(
+                self.view_builder.list(created_documents))
+
+        resp.status = falcon.HTTP_200
+        resp.append_header('Content-Type', 'application/x-yaml')
+
+    def _gen_validation_policies(self, documents):
         # All concrete documents in the payload must successfully pass their
         # JSON schema validations. Otherwise raise an error.
         try:
@@ -57,17 +70,14 @@ class BucketsResource(api_base.BaseResource):
                     for t in types.DOCUMENT_SECRET_TYPES]):
                 secret_data = self.secrets_mgr.create(document)
                 document['data'] = secret_data
+        return validation_policies
 
+    def _gen_revision_documents(self, bucket_name, documents):
         try:
-            documents.extend(validation_policies)
             created_documents = db_api.documents_create(bucket_name, documents)
         except deckhand_errors.DocumentExists as e:
             raise falcon.HTTPConflict(description=e.format_message())
         except Exception as e:
             raise falcon.HTTPInternalServerError(description=e)
 
-        if created_documents:
-            resp.body = self.to_yaml_body(
-                self.view_builder.list(created_documents))
-        resp.status = falcon.HTTP_200
-        resp.append_header('Content-Type', 'application/x-yaml')
+        return created_documents

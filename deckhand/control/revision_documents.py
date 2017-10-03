@@ -19,6 +19,7 @@ from deckhand.control import base as api_base
 from deckhand.control import common
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
+from deckhand.engine import secrets_manager
 from deckhand import errors
 
 LOG = logging.getLogger(__name__)
@@ -49,3 +50,31 @@ class RevisionDocumentsResource(api_base.BaseResource):
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = self.to_yaml_body(self.view_builder.list(documents))
+
+
+class RenderedDocumentsResource(api_base.BaseResource):
+    """API resource for realizing rendering documents endpoints."""
+
+    view_builder = document_view.ViewBuilder()
+
+    @common.sanitize_params([
+        'schema', 'metadata.name', 'metadata.label'])
+    def on_get(self, req, resp, sanitized_params, revision_id):
+        try:
+            documents = db_api.revision_get_documents(
+                revision_id, **sanitized_params)
+        except (errors.RevisionNotFound) as e:
+            raise falcon.HTTPNotFound(description=e.format_message())
+
+        # TODO(fmontei): Currently the only phase of rendering that is
+        # performed is secret substitution, which can be done in any randomized
+        # order. However, secret substitution logic will have to be moved into
+        # a separate module that handles layering alongside substitution once
+        # layering has been fully integrated into this endpoint.
+        secrets_substitution = secrets_manager.SecretsSubstitution(documents)
+        rendered_documents = secrets_substitution.substitute_all()
+
+        resp.status = falcon.HTTP_200
+        resp.append_header('Content-Type', 'application/x-yaml')
+        resp.body = self.to_yaml_body(
+            self.view_builder.list(rendered_documents))
