@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from deckhand.control import common
+from deckhand import types
 
 
 class ViewBuilder(common.ViewBuilder):
@@ -42,6 +43,8 @@ class ViewBuilder(common.ViewBuilder):
         attrs = ['id', 'metadata', 'data', 'schema']
 
         for document in documents:
+            if document['schema'].startswith(types.VALIDATION_POLICY_SCHEMA):
+                continue
             resp_obj = {x: document[x] for x in attrs}
             resp_obj.setdefault('status', {})
             resp_obj['status']['bucket'] = document['bucket_name']
