@@ -21,7 +21,7 @@ revision_policies = [
     policy.DocumentedRuleDefault(
         base.POLICY_ROOT % 'show_revision',
         base.RULE_ADMIN_API,
-        "Show details for a revision tag.",
+        "Show details for a revision.",
         [
             {
                 'method': 'GET',
