@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d7e848a_3d7673e8",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-03T23:10:22Z",
+      "side": 1,
+      "message": "document",
+      "range": {
+        "startLine": 53,
+        "startChar": 32,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "revId": "6ad53e310ecc1d702755bcac019dca0f9528e88c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a62162ae_e2ad015c",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-03T23:10:22Z",
+      "side": 1,
+      "message": "dict",
+      "range": {
+        "startLine": 68,
+        "startChar": 46,
+        "endLine": 68,
+        "endChar": 52
+      },
+      "revId": "6ad53e310ecc1d702755bcac019dca0f9528e88c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67e78209_6016397d",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-03T23:10:22Z",
+      "side": 1,
+      "message": "document",
+      "range": {
+        "startLine": 75,
+        "startChar": 32,
+        "endLine": 75,
+        "endChar": 41
+      },
+      "revId": "6ad53e310ecc1d702755bcac019dca0f9528e88c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
