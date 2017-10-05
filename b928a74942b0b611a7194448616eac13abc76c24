@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c1e7ed7_ceecada6",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-05T15:06:45Z",
+      "side": 1,
+      "message": "Parse value in the data for the given ``jsonpath``",
+      "range": {
+        "startLine": 36,
+        "startChar": 7,
+        "endLine": 36,
+        "endChar": 50
+      },
+      "revId": "b928a74942b0b611a7194448616eac13abc76c24",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b062ad51_cd8ca069",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-05T15:06:45Z",
+      "side": 1,
+      "message": "not None",
+      "range": {
+        "startLine": 85,
+        "startChar": 54,
+        "endLine": 85,
+        "endChar": 58
+      },
+      "revId": "b928a74942b0b611a7194448616eac13abc76c24",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
