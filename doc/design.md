@@ -592,7 +592,7 @@ available immediately upon document ingestion.
 
 Here is a list of internal validations:
 
-* `deckhand-document-schema-validation` - All concrete documents in the
+* `deckhand-schema-validation` - All concrete documents in the
   revision successfully pass their JSON schema validations. Will cause
   this to report an error.
 * `deckhand-policy-validation` - All required policy documents are in-place,

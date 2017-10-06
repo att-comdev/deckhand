@@ -41,34 +41,49 @@ class BucketsResource(api_base.BaseResource):
             documents = list(yaml.safe_load_all(document_data))
         except yaml.YAMLError as e:
             error_msg = ("Could not parse the document into YAML data. "
-                         "Details: %s." % e)
+                         "Details: %s." % six.text_type(e))
             LOG.error(error_msg)
             raise falcon.HTTPBadRequest(description=six.text_type(e))
 
         # All concrete documents in the payload must successfully pass their
-        # JSON schema validations. Otherwise raise an error.
-        try:
-            validation_policies = document_validation.DocumentValidation(
-                documents).validate_all()
-        except deckhand_errors.InvalidDocumentFormat as e:
-            raise falcon.HTTPBadRequest(description=e.format_message())
-
-        for document in documents:
-            if any([document['schema'].startswith(t)
-                    for t in types.DOCUMENT_SECRET_TYPES]):
-                secret_data = self.secrets_mgr.create(document)
-                document['data'] = secret_data
-
-        try:
+        # JSON schema validations. If an error occurs, first save the failed
+        # validation policy along with the malformed documents for debugging
+        # and then raise an exception.
+        validation_policies, exceptions = self._gen_validation_policies(
+            bucket_name, documents)
+        if exceptions:
+            documents = validation_policies
+        else:
             documents.extend(validation_policies)
-            created_documents = db_api.documents_create(bucket_name, documents)
-        except deckhand_errors.DocumentExists as e:
-            raise falcon.HTTPConflict(description=e.format_message())
-        except Exception as e:
-            raise falcon.HTTPInternalServerError(description=e)
+        created_documents = self._gen_revision_documents(
+            bucket_name, documents)
+
+        if exceptions:
+            raise falcon.HTTPBadRequest(
+                description=[exc.format_message() for exc in exceptions])
 
         if created_documents:
             resp.body = self.to_yaml_body(
                 self.view_builder.list(created_documents))
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
+
+    def _gen_validation_policies(self, bucket_name, documents):
+        validation_policies, excs = document_validation.DocumentValidation(
+            documents).validate_all()
+        return validation_policies, excs
+
+    def _gen_revision_documents(self, bucket_name, documents):
+        for document in documents:
+            if any([document['schema'].startswith(t)
+                    for t in types.DOCUMENT_SECRET_TYPES]):
+                secret_data = self.secrets_mgr.create(document)
+                document['data'] = secret_data
+        try:
+            created_documents = db_api.documents_create(bucket_name, documents)
+        except deckhand_errors.DocumentExists as e:
+            raise falcon.HTTPConflict(description=e.format_message())
+        except Exception as e:
+            raise falcon.HTTPInternalServerError(description=six.text_type(e))
+
+        return created_documents

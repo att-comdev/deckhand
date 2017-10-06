@@ -67,7 +67,6 @@ class DeckhandTestCase(testtools.TestCase):
         Returns a started mock that will be automatically stopped after the
         test ran.
         """
-
         p = mock.patch.object(target, attribute, new, autospec=autospec)
         m = p.start()
         self.addCleanup(p.stop)

@@ -22,9 +22,9 @@ DOCUMENT_SCHEMA_TYPES = (
 ) = (
     'deckhand/Certificate',
     'deckhand/CertificateKey',
-    'deckhand/LayeringPolicy/v1',
+    'deckhand/LayeringPolicy',
     'deckhand/Passphrase',
-    'deckhand/ValidationPolicy/v1',
+    'deckhand/ValidationPolicy',
 )
 
 

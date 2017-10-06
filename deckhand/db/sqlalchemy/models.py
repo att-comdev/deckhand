@@ -139,7 +139,8 @@ class Document(BASE, DeckhandBase):
     # this approach is not compatible with all database types.
     # "metadata" is reserved, so use "_metadata" instead.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
-    data = Column(oslo_types.JsonEncodedDict(), nullable=True)
+    data = Column(oslo_types.JsonEncodedDict(), nullable=True, default={})
+    debug = Column(oslo_types.JsonEncodedDict(), nullable=True, default={})
     data_hash = Column(String, nullable=False)
     metadata_hash = Column(String, nullable=False)
     is_secret = Column(Boolean, nullable=False, default=False)

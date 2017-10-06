@@ -15,10 +15,17 @@
 import mock
 
 from deckhand.engine import document_validation
+from deckhand import errors
+from deckhand import factories
 from deckhand.tests.unit.engine import base as engine_test_base
 
 
 class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
+
+    def setUp(self):
+        super(TestDocumentValidation, self).setUp()
+        # Mock out DB module (i.e. retrieving DataSchema docs from DB).
+        self.patch('deckhand.db.sqlalchemy.api.documents_get_all')
 
     def test_init_document_validation(self):
         self._read_data('sample_document')
@@ -63,3 +70,196 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
         self.assertTrue(mock_log.info.called)
         self.assertIn("Skipping schema validation for abstract document",
                       mock_log.info.mock_calls[0][1][0])
+
+
+class TestDocumentDebugging(engine_test_base.TestDocumentValidationBase):
+
+    def setUp(self):
+        super(TestDocumentDebugging, self).setUp()
+        mock_uuid = self.patchobject(document_validation, 'uuidutils')
+        mock_uuid.generate_uuid.return_value = 'test'
+        # Mock out DB module (i.e. retrieving DataSchema docs from DB).
+        self.patch('deckhand.db.sqlalchemy.api.documents_get_all')
+
+    def _validate_errors(self, validation_docs, exceptions,
+                         expected_debug_section, expected_exc):
+        # Validate correct number of documents returned.
+        self.assertEqual(2, len(validation_docs))
+
+        debug_doc = validation_docs[0]
+        validation_doc = validation_docs[1]
+
+        # Validate debug document.
+        if 'schema' in expected_debug_section:
+            self.assertEqual('deckhand/Debug/v1', debug_doc['schema'])
+        self.assertIn('debug', debug_doc)
+        self.assertEqual(expected_debug_section, debug_doc['debug'])
+
+        # Validate validation policy.
+        self.assertEqual('deckhand/ValidationPolicy/v1',
+                         validation_doc['schema'])
+        self.assertEqual('deckhand-schema-validation',
+                         validation_doc['metadata']['name'])
+        self.assertEqual(
+            'failure', validation_doc['data']['validations'][0]['status'])
+
+        # Validate exception was thrown.
+        self.assertEqual(1, len(exceptions))
+        self.assertIsInstance(exceptions[0], expected_exc)
+
+    def test_all_missing_sections(self):
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            {}).validate_all()
+        expected_debug_section = {
+            'data': '[test] This required field is missing or invalid.',
+            'metadata': {
+                'name': '[test] This required field is missing or invalid.',
+                'schema': '[test] This required field is missing or invalid.'
+            },
+            'schema': ("[test] This required field is missing or invalid.")
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+    def test_schema_missing_itself(self):
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            {'data': {}, 'metadata': {}}).validate_all()
+        expected_debug_section = {
+            'metadata': {
+                'name': '[test] This required field is missing or invalid.',
+                'schema': '[test] This required field is missing or invalid.'
+            },
+            'schema': ("[test] This required field is missing or invalid.")
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+    def test_metadata_missing_itself(self):
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            {'data': {}, 'schema': 'test/test/v1'}).validate_all()
+        expected_debug_section = {
+            'metadata': {
+                'name': '[test] This required field is missing or invalid.',
+                'schema': '[test] This required field is missing or invalid.'
+            }
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+    def test_metadata_missing_internal_fields(self):
+        # Validate error thrown if metadata.name is missing.
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            {'data': {},
+             'metadata': {'schema': 'test/test/v1'},
+             'schema': 'test/test/v1'}).validate_all()
+        expected_debug_section = {
+            'metadata': {
+                'name': '[test] This required field is missing or invalid.'
+            }
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+        # Validate error thrown if metadata.schema is missing.
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            {'data': {},
+             'metadata': {'name': 'test'},
+             'schema': 'test/test/v1'}).validate_all()
+        expected_debug_section = {
+            'metadata': {
+                'schema': '[test] This required field is missing or invalid.'
+            }
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+    def test_data_missing_itself(self):
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            {'metadata': {}, 'schema': 'test/test/v1'}).validate_all()
+        expected_debug_section = {
+            'data': '[test] This required field is missing or invalid.',
+            'metadata': {
+                'name': '[test] This required field is missing or invalid.',
+                'schema': '[test] This required field is missing or invalid.'
+            }
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+    def test_data_with_wrong_type(self):
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            {'schema': 5}).validate_all()
+        expected_debug_section = {
+            'data': '[test] This required field is missing or invalid.',
+            'metadata': {
+                'name': '[test] This required field is missing or invalid.',
+                'schema': '[test] This required field is missing or invalid.'
+            },
+            'schema': ("[test] This field has the wrong type. Given: int, "
+                       "required: ['string'].")
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+    def test_pass_base_schema_fail_on_invalid_document_schema(self):
+        secrets_factory = factories.DocumentSecretFactory()
+        certificate = secrets_factory.gen_test(
+            'Certificate', 'cleartext', 'secret')
+        certificate['schema'] = 'foo/bar/v1'
+        # FIXME(fmontei): Fall back to the metadata's schema for validating
+        # generic documents until Deckhand completely supports dynamically
+        # registering new schemas via DataSchema documents. So, change the
+        # `metadata.schema` below to force test failure for now.
+        certificate['metadata']['schema'] = 'foo/bar/v1'
+
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            certificate).validate_all()
+        expected_debug_section = {
+            'schema': '[test] This required field is missing or invalid.'
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentSchema)
+
+    def test_pass_base_schema_fail_on_invalid_schema_pattern(self):
+        secrets_factory = factories.DocumentSecretFactory()
+        certificate = secrets_factory.gen_test(
+            'Certificate', 'cleartext', 'secret')
+        certificate['metadata']['schema'] = 'invalid_pattern'
+
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            certificate).validate_all()
+        expected_debug_section = {
+            'metadata': {
+                'schema': (
+                    'The value invalid_pattern does not match required '
+                    'pattern: ^(metadata/Document/v[1]{1}(\\.[0]{1}){0,1})$')
+            }
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)
+
+    def test_pass_base_schema_fail_on_layering_policy_schema(self):
+        documents_factory = factories.DocumentFactory(2, [1, 1])
+        layering_policy = documents_factory.gen_test({})[0]
+        del layering_policy['data']['layerOrder']
+
+        validation_docs, exceptions = document_validation.DocumentValidation(
+            layering_policy).validate_all()
+        expected_debug_section = {
+            'data': {
+                'layerOrder': (
+                    '[test] This required field is missing or invalid.')
+            }
+        }
+        self._validate_errors(
+            validation_docs, exceptions, expected_debug_section,
+            expected_exc=errors.InvalidDocumentFormat)

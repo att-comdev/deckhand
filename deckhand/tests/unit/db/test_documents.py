@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from deckhand import errors
 from deckhand import factories
 from deckhand.tests import test_utils
 from deckhand.tests.unit.db import base
 
 
-class TestDocuments(base.TestDbBase):
+class DocumentsBaseTest(base.TestDbBase):
 
     def setUp(self):
-        super(TestDocuments, self).setUp()
+        super(DocumentsBaseTest, self).setUp()
         # Will create 3 documents: layering policy, plus a global and site
         # document.
         self.secrets_factory = factories.DocumentSecretFactory()
@@ -31,6 +32,9 @@ class TestDocuments(base.TestDbBase):
             "_SITE_ACTIONS_1_": {
                 "actions": [{"method": "merge", "path": "."}]}
         }
+
+
+class TestDocuments(DocumentsBaseTest):
 
     def test_create_and_show_bucket(self):
         payload = self.documents_factory.gen_test(self.document_mapping)
@@ -233,7 +237,7 @@ class TestDocuments(base.TestDbBase):
         # Create just 1 document.
         documents = self.create_documents(bucket_name, payload[0])
 
-        # Create the document in payload[0] but create a new document for
+        # Delete the document in payload[0] and create a new document for
         # payload[1].
         documents = self.create_documents(bucket_name, payload[1])
         # Information about the deleted and created document should've been
@@ -281,3 +285,36 @@ class TestDocuments(base.TestDbBase):
                              payload[idx]['metadata']['name'])
             self.assertEmpty(documents[idx]['metadata'])
             self.assertEmpty(documents[idx]['data'])
+
+    def test_create_delete_then_recreate_document_in_different_bucket(self):
+        """Ordiniarly creating a document with the same metadata.name/schema
+        in a separate bucket raises an exception, but if we delete the document
+        and re-create it in a different bucket this should be a success
+        scenario.
+        """
+        payload = self.documents_factory.gen_test(self.document_mapping)
+        bucket_name = test_utils.rand_name('bucket')
+        alt_bucket_name = test_utils.rand_name('bucket')
+        # Create the documents in the first bucket.
+        documents = self.create_documents(bucket_name, payload)
+        self.assertEqual(3, len(documents))
+        self.assertEqual([bucket_name] * 3,
+                         [d['bucket_name'] for d in documents])
+        # Delete the documents from the first bucket.
+        self.create_documents(bucket_name, [])
+        # Re-create the documents in the second bucket.
+        documents = self.create_documents(alt_bucket_name, payload)
+        self.assertEqual(3, len(documents))
+        self.assertEqual([alt_bucket_name] * 3,
+                         [d['bucket_name'] for d in documents])
+
+
+class TestDocumentsNegative(DocumentsBaseTest):
+
+    def test_create_same_document_in_different_bucket_raises_exc(self):
+        payload = self.documents_factory.gen_test(self.document_mapping)
+        bucket_name = test_utils.rand_name('bucket')
+        alt_bucket_name = test_utils.rand_name('bucket')
+        self.create_documents(bucket_name, payload)
+        self.assertRaises(errors.DocumentExists, self.create_documents,
+                          alt_bucket_name, payload)

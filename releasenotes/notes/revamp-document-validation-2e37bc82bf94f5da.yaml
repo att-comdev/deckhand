@@ -1,0 +1,24 @@
+---
+features:
+  - |
+    Invalid documents are now saved in the database with debugging information
+    to help users understand why documents failed to validate. The debugging
+    information is high-level and includes the following categories:
+
+        - Required field is missing or is invalid.
+        - Field does not match the specified pattern in the schema.
+        - Field has the wrong type (e.g. the schema specifies integer bucket
+          a string was provided).
+fixes:
+  - |
+    A malformed payload to PUT '/bucket/{bucket_name}/documents' (i.e.
+    the docs in the payload fail schema validation) will now store
+    the malformed documents in the DB, along with an internal validation
+    policy marked as "failure" before raising an exception. This allows for
+    proper debugging to be possible.
+  - |
+    A document with a distinct metadata.name/schema can be re-created
+    in a different bucket after it has been deleted in its original
+    bucket. This is also true for layering policies.
+  - |
+    Only one layering policy is allowed to exist in the system at a time.
