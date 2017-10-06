@@ -25,20 +25,20 @@ LOG = logging.getLogger(__name__)
 
 
 class DocumentValidation(object):
-    """Class for document validation logic for YAML files.
-
-    This class is responsible for validating YAML files according to their
-    schema.
-
-    :param documents: Documents to be validated.
-    :type documents: List of dictionaries or dictionary.
-    """
 
     def __init__(self, documents):
+        """Class for document validation logic for YAML files.
+
+        This class is responsible for validating YAML files according to their
+        schema.
+
+        :param documents: Documents to be validated.
+        :type documents: List of dictionaries or dictionary.
+        """
         if not isinstance(documents, (list, tuple)):
             documents = [documents]
-
         self.documents = documents
+        self.validation_policy_factory = factories.ValidationPolicyFactory()
 
     class SchemaType(object):
         """Class for retrieving correct schema for pre-validation on YAML.
@@ -117,16 +117,20 @@ class DocumentValidation(object):
             document, including failed and succeeded validations.
         """
         internal_validation_docs = []
-        validation_policy_factory = factories.ValidationPolicyFactory()
+        original_exc = None
 
         for document in self.documents:
-            self._validate_one(document)
+            try:
+                self._validate_one(document)
+            except errors.InvalidDocumentFormat as e:
+                original_exc = e
+                deckhand_schema_validation = self.report_failure()
+                break
 
-        deckhand_schema_validation = validation_policy_factory.gen(
-            types.DECKHAND_SCHEMA_VALIDATION, status='success')
+        deckhand_schema_validation = self.report_success()
         internal_validation_docs.append(deckhand_schema_validation)
 
-        return internal_validation_docs
+        return internal_validation_docs, original_exc
 
     def _validate_one(self, document):
         # Subject every document to basic validation to verify that each
@@ -139,7 +143,7 @@ class DocumentValidation(object):
 
         doc_schema_type = self.SchemaType(document)
         if doc_schema_type.schema is None:
-            raise errors.UknownDocumentFormat(
+            raise errors.InvalidDocumentFormat(
                 document_type=document['schema'])
 
         # Perform more detailed validation on each document depending on
@@ -170,3 +174,13 @@ class DocumentValidation(object):
             doc_schema_type = self.SchemaType(document)
             return doc_schema_type is v1_0.document_schema
         return False
+
+    def report_success(self):
+        deckhand_schema_validation = self.validation_policy_factory.gen(
+            types.DECKHAND_SCHEMA_VALIDATION, status='success')
+        return deckhand_schema_validation
+
+    def report_failure(self):
+        deckhand_schema_validation = self.validation_policy_factory.gen(
+            types.DECKHAND_SCHEMA_VALIDATION, status='failure')
+        return deckhand_schema_validation

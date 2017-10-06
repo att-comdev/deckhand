@@ -41,11 +41,10 @@ class TestDocumentValidationNegative(
 
             # NOTE(fmontei): '$' must be escaped for regex to pass.
             expected_err = expected_err.replace('$', '\$')
-
-            with self.assertRaisesRegex(errors.InvalidDocumentFormat,
-                                        expected_err):
-                document_validation.DocumentValidation(
-                    invalid_data).validate_all()
+            validation_docs, exc = document_validation.DocumentValidation(
+                invalid_data).validate_all()
+            self.assertIsInstance(exc, errors.InvalidDocumentFormat)
+            self.assertRegexpMatches(exc.format_message(), expected_err)
 
     def test_certificate_key_missing_required_sections(self):
         self._read_data('sample_certificate_key')
