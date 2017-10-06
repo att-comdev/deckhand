@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4419d2d1_377966bb",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-06T21:10:29Z",
+      "side": 1,
+      "message": "Might as well use _apply_filters from the filters PS than do this nonsense.",
+      "range": {
+        "startLine": 259,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 25
+      },
+      "revId": "d442706aeb3997856cc79ad1a8ed757508424dcd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
