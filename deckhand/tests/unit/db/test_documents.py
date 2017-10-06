@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from deckhand import errors
 from deckhand import factories
 from deckhand.tests import test_utils
 from deckhand.tests.unit.db import base
@@ -233,7 +234,7 @@ class TestDocuments(base.TestDbBase):
         # Create just 1 document.
         documents = self.create_documents(bucket_name, payload[0])
 
-        # Create the document in payload[0] but create a new document for
+        # Delete the document in payload[0] and create a new document for
         # payload[1].
         documents = self.create_documents(bucket_name, payload[1])
         # Information about the deleted and created document should've been
@@ -281,3 +282,46 @@ class TestDocuments(base.TestDbBase):
                              payload[idx]['metadata']['name'])
             self.assertEmpty(documents[idx]['metadata'])
             self.assertEmpty(documents[idx]['data'])
+
+
+class LayeringPoliciesBase(base.TestDbBase):
+
+    def setUp(self):
+        super(LayeringPoliciesBase, self).setUp()
+        # Will create 3 documents: layering policy, plus a global and site
+        # document.
+        self.documents_factory = factories.DocumentFactory(2, [1, 1])
+        self.document_mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_DATA_1_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+
+    def _create_layering_policy(self):
+        bucket_name = test_utils.rand_name('bucket')
+        payload = self.documents_factory.gen_test(self.document_mapping)
+        self.create_documents(bucket_name, payload)
+        return bucket_name, payload[0]
+
+
+class TestLayeringPolicies(LayeringPoliciesBase):
+
+    def test_update_layering_policy(self):
+        bucket_name, layering_policy = self._create_layering_policy()
+        layering_policy['data'] = {'data': {'layerOrder': ['region', 'site']}}
+        self.create_documents(bucket_name, [layering_policy])
+
+    def test_create_new_layering_policy_after_first_deleted(self):
+        bucket_name, _ = self._create_layering_policy()
+        self.create_documents(bucket_name, [])
+        self._create_layering_policy()
+
+
+class TestLayeringPoliciesNegative(LayeringPoliciesBase):
+
+    def test_create_conflicting_layering_policy_fails(self):
+        _, layering_policy = self._create_layering_policy()
+        layering_policy['metadata']['name'] = 'another-layering-policy'
+        self.assertRaises(errors.ConflictingLayeringPolicy,
+                          self._create_layering_policy)
