@@ -17,7 +17,7 @@ schema = {
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^(deckhand/LayeringPolicy/v[1]{1}(\.[0]{1}){0,1})$'
+            'pattern': '^(deckhand/ValidationPolicy/v[1]{1}(\.[0]{1}){0,1})$'
         },
         'metadata': {
             'type': 'object',
@@ -34,14 +34,27 @@ schema = {
         'data': {
             'type': 'object',
             'properties': {
-                'layerOrder': {
+                'validations': {
                     'type': 'array',
-                    'items': {'type': 'string'}
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'name': {
+                                'type': 'string',
+                                'pattern': '^.*-(validation|verification)$'
+                            },
+                            # 'expiresAfter' is optional.
+                            'expiresAfter': {'type': 'string'}
+                        },
+                        'additionalProperties': False,
+                        'required': ['name']
+                    }
                 }
             },
             'additionalProperties': True,
-            'required': ['layerOrder']
-        }
+            'required': ['validations']
+        },
+        'debug': {'type': 'object'}
     },
     'additionalProperties': False,
     'required': ['schema', 'metadata', 'data']

@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This specifies the official JSON schema meta-schema. DataSchema documents
-# are used by various services to register new schemas that Deckhand can use
-# for validation.
 schema = {
     'type': 'object',
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^(deckhand/DataSchema/v[1]{1}(\.[0]{1}){0,1})$'
+            'pattern': '^(deckhand/LayeringPolicy/v[1]{1}(\.[0]{1}){0,1})$'
         },
         'metadata': {
             'type': 'object',
@@ -29,11 +26,7 @@ schema = {
                     'type': 'string',
                     'pattern': '^(metadata/Control/v[1]{1}(\.[0]{1}){0,1})$'
                 },
-                'name': {'type': 'string'},
-                # Labels are optional.
-                'labels': {
-                    'type': 'object'
-                }
+                'name': {'type': 'string'}
             },
             'additionalProperties': False,
             'required': ['schema', 'name']
@@ -41,13 +34,15 @@ schema = {
         'data': {
             'type': 'object',
             'properties': {
-                '$schema': {
-                    'type': 'string'
+                'layerOrder': {
+                    'type': 'array',
+                    'items': {'type': 'string'}
                 }
             },
-            'additionalProperties': False,
-            'required': ['$schema']
-        }
+            'additionalProperties': True,
+            'required': ['layerOrder']
+        },
+        'debug': {'type': 'object'}
     },
     'additionalProperties': False,
     'required': ['schema', 'metadata', 'data']

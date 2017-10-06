@@ -40,6 +40,51 @@ class DeckhandFactory(object):
         pass
 
 
+class DataSchemaFactory(DeckhandFactory):
+    """Class for auto-generating data schema templates for testing."""
+
+    DATA_SCHEMA_TEMPLATE = {
+        "data": {
+            "$schema": ""
+        },
+        "metadata": {
+            "schema": "metadata/Control/v1",
+            "name": "",
+            "labels": {}
+        },
+        "schema": "deckhand/DataSchema/v1"
+    }
+
+    def __init__(self):
+        """Constructor for ``DataSchemaFactory``.
+
+        Returns a template whose YAML representation is of the form::
+
+            ---
+            schema: deckhand/DataSchema/v1
+            metadata:
+                schema: metadata/Control/v1
+                name: promenade/Node/v1
+                labels:
+                    application: promenade
+            data:
+                $schema: http://blah
+            ...
+        """
+
+    def gen(self):
+        raise NotImplementedError()
+
+    def gen_test(self, metadata_name, schema_ref, **metadata_labels):
+        data_schema_template = copy.deepcopy(self.DATA_SCHEMA_TEMPLATE)
+
+        data_schema_template['metadata']['name'] = metadata_name
+        data_schema_template['metadata']['labels'] = metadata_labels
+        data_schema_template['data']['$schema'] = schema_ref
+
+        return data_schema_template
+
+
 class DocumentFactory(DeckhandFactory):
     """Class for auto-generating document templates for testing."""
 
@@ -67,7 +112,7 @@ class DocumentFactory(DeckhandFactory):
             "name": "",
             "schema": "metadata/Document/v%s" % DeckhandFactory.API_VERSION
         },
-        "schema": "example/Kind/v1.0"
+        "schema": "example/Kind/v1"
     }
 
     def __init__(self, num_layers, docs_per_layer):
@@ -129,8 +174,7 @@ class DocumentFactory(DeckhandFactory):
         self.docs_per_layer = docs_per_layer
 
     def gen(self):
-        # TODO(fmontei): Implement this if needed later.
-        pass
+        raise NotImplementedError
 
     def gen_test(self, mapping, site_abstract=True, region_abstract=True,
                  global_abstract=True, site_parent_selectors=None):
@@ -283,7 +327,7 @@ class DocumentSecretFactory(DeckhandFactory):
         """
 
     def gen(self):
-        pass
+        raise NotImplementedError()
 
     def gen_test(self, schema, storage_policy, data=None):
         if data is None:
@@ -302,6 +346,8 @@ class DocumentSecretFactory(DeckhandFactory):
 class ValidationPolicyFactory(DeckhandFactory):
     """Class for auto-generating validation policy templates for testing."""
 
+    VERSION = "v1"
+
     VALIDATION_POLICY_TEMPLATE = {
         "data": {
             "validations": []
@@ -310,7 +356,7 @@ class ValidationPolicyFactory(DeckhandFactory):
             "schema": "metadata/Control/%s" % DeckhandFactory.API_VERSION,
             "name": ""
         },
-        "schema": types.VALIDATION_POLICY_SCHEMA
+        "schema": types.VALIDATION_POLICY_SCHEMA + '/' + VERSION
     }
 
     def __init__(self):
@@ -319,9 +365,9 @@ class ValidationPolicyFactory(DeckhandFactory):
         Returns a template whose YAML representation is of the form::
 
             ---
-            schema: deckhand/ValidationPolicy/v1.0
+            schema: deckhand/ValidationPolicy/v1
             metadata:
-              schema: metadata/Control/v1.0
+              schema: metadata/Control/v1
               name: site-deploy-ready
             data:
               validations:
@@ -335,7 +381,8 @@ class ValidationPolicyFactory(DeckhandFactory):
         """
 
     def gen(self, validation_type, status):
-        if validation_type not in types.DECKHAND_VALIDATION_TYPES:
+        if not any([validation_type.startswith(type)
+                    for type in types.DECKHAND_VALIDATION_TYPES]):
             raise ValueError("The validation type must be in %s."
                              % types.DECKHAND_VALIDATION_TYPES)
 
