@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab9f9f13_1c5d6266",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-06T15:28:20Z",
+      "side": 1,
+      "message": "Should always just be 1, not a list.",
+      "revId": "1b73dbc46cd21eef0607befa4f5c58e21c95b4f1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
