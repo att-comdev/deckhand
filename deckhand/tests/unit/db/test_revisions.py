@@ -124,8 +124,8 @@ class TestRevisions(base.TestDbBase):
         self.assertIsInstance(revisions, list)
         self.assertEqual(1, len(revisions))
         self.assertEqual(5, len(revisions[0]['documents']))
-        self.assertEqual(types.VALIDATION_POLICY_SCHEMA,
-                         revisions[0]['documents'][-1]['schema'])
+        self.assertTrue(revisions[0]['documents'][-1]['schema'].startswith(
+            types.VALIDATION_POLICY_SCHEMA))
 
     def test_delete_all(self):
         all_created_documents = []

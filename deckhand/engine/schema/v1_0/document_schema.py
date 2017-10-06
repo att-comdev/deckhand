@@ -89,9 +89,8 @@ schema = {
             'additionalProperties': False,
             'required': ['schema', 'name', 'layeringDefinition']
         },
-        'data': {
-            'type': 'object'
-        }
+        'data': {'type': 'object'},
+        'debug': {'type': 'object'}
     },
     'additionalProperties': False,
     'required': ['schema', 'metadata', 'data']

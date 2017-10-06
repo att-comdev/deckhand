@@ -35,7 +35,8 @@ schema = {
             'additionalProperties': False,
             'required': ['schema', 'name', 'storagePolicy']
         },
-        'data': {'type': 'string'}
+        'data': {'type': 'string'},
+        'debug': {'type': 'object'}
     },
     'additionalProperties': False,
     'required': ['schema', 'metadata', 'data']
