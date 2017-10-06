@@ -46,25 +46,15 @@ class DeckhandException(Exception):
 
 
 class InvalidDocumentFormat(DeckhandException):
-    msg_fmt = ("The provided YAML failed schema validation. Details: "
-               "%(detail)s. Schema: %(schema)s.")
-    alt_msg_fmt = ("The provided %(document_type)s YAML failed schema "
-                   "validation. Details: %(detail)s. Schema: %(schema)s.")
-
-    def __init__(self, document_type=None, **kwargs):
-        if document_type:
-            self.msg_fmt = self.alt_msg_fmt
-            kwargs.update({'document_type': document_type})
-        super(InvalidDocumentFormat, self).__init__(**kwargs)
+    msg_fmt = ("The provided %(document_type)s YAML failed schema "
+               "validation. Details: %(detail)s. Schema: %(schema)s.")
+    code = 400
 
 
-# TODO(fmontei): Remove this in a future commit.
-class ApiError(Exception):
-    pass
-
-
-class InvalidFormat(ApiError):
-    """The YAML file is incorrectly formatted and cannot be read."""
+class InvalidDocumentSchema(DeckhandException):
+    msg_fmt = ("The provided %(document_schema)s is invalid. Supported "
+               "schemas: %(schema_list)s.")
+    code = 400
 
 
 class DocumentExists(DeckhandException):
@@ -137,3 +127,12 @@ class BarbicanException(DeckhandException):
 
     def __init__(self, message, code):
         super(BarbicanException, self).__init__(message=message, code=code)
+
+
+class ConflictingLayeringPolicy(DeckhandException):
+    msg_fmt = ("A layering policy by the name %(layering_policy)s already "
+               "exists in the system. The new layering policy with name "
+               "%(conflict)s cannot be created. To update the original, "
+               "pass in a layering policy with the same name or delete it, "
+               "then try again.")
+    code = 400

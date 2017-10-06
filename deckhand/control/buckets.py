@@ -46,29 +46,40 @@ class BucketsResource(api_base.BaseResource):
             raise falcon.HTTPBadRequest(description=six.text_type(e))
 
         # All concrete documents in the payload must successfully pass their
-        # JSON schema validations. Otherwise raise an error.
-        try:
-            validation_policies = document_validation.DocumentValidation(
-                documents).validate_all()
-        except deckhand_errors.InvalidDocumentFormat as e:
+        # JSON schema validations. If an error occurs, first save the failed
+        # validation policy along with the malformed documents for debugging
+        # and then raise an exception.
+        validation_policies, original_exc = self._gen_validation_policies(
+            bucket_name, documents)
+        documents.extend(validation_policies)
+        created_documents = self._gen_revision_documents(
+            bucket_name, documents)
+
+        if original_exc:
             raise falcon.HTTPBadRequest(description=e.format_message())
-
-        for document in documents:
-            if any([document['schema'].startswith(t)
-                    for t in types.DOCUMENT_SECRET_TYPES]):
-                secret_data = self.secrets_mgr.create(document)
-                document['data'] = secret_data
-
-        try:
-            documents.extend(validation_policies)
-            created_documents = db_api.documents_create(bucket_name, documents)
-        except deckhand_errors.DocumentExists as e:
-            raise falcon.HTTPConflict(description=e.format_message())
-        except Exception as e:
-            raise falcon.HTTPInternalServerError(description=e)
 
         if created_documents:
             resp.body = self.to_yaml_body(
                 self.view_builder.list(created_documents))
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
+
+    def _gen_validation_policies(self, bucket_name, documents):
+        validation_policies, exc = document_validation.DocumentValidation(
+            documents).validate_all()
+        return validation_policies, exc
+
+    def _gen_revision_documents(self, bucket_name, documents):
+        for document in documents:
+            if any([document['schema'].startswith(t)
+                    for t in types.DOCUMENT_SECRET_TYPES]):
+                secret_data = self.secrets_mgr.create(document)
+                document['data'] = secret_data
+        try:
+            created_documents = db_api.documents_create(bucket_name, documents)
+        except deckhand_errors.DocumentExists as e:
+            raise falcon.HTTPConflict(description=e.format_message())
+        except Exception as e:
+            raise falcon.HTTPInternalServerError(description=e)
+
+        return created_documents
