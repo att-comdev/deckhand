@@ -14,31 +14,37 @@
 
 import jsonschema
 from oslo_log import log as logging
+from oslo_utils import uuidutils
+import warlock
 
+from deckhand.engine import document as document_wrapper
 from deckhand.engine.schema import base_schema
 from deckhand.engine.schema import v1_0
 from deckhand import errors
 from deckhand import factories
 from deckhand import types
+from deckhand import utils
 
 LOG = logging.getLogger(__name__)
 
+_DEBUG_SCHEMA = "deckhand/Debug/v1"
+
 
 class DocumentValidation(object):
-    """Class for document validation logic for YAML files.
-
-    This class is responsible for validating YAML files according to their
-    schema.
-
-    :param documents: Documents to be validated.
-    :type documents: List of dictionaries or dictionary.
-    """
 
     def __init__(self, documents):
+        """Class for document validation logic for YAML files.
+
+        This class is responsible for validating YAML files according to their
+        schema.
+
+        :param documents: Documents to be validated.
+        :type documents: List of dictionaries or dictionary.
+        """
         if not isinstance(documents, (list, tuple)):
             documents = [documents]
-
-        self.documents = documents
+        self.documents = [document_wrapper.Document(d) for d in documents]
+        self.validation_policy_factory = factories.ValidationPolicyFactory()
 
     class SchemaType(object):
         """Class for retrieving correct schema for pre-validation on YAML.
@@ -97,6 +103,16 @@ class DocumentValidation(object):
                     return schema['schema'].schema
             return None
 
+    def report_success(self):
+        deckhand_schema_validation = self.validation_policy_factory.gen(
+            types.DECKHAND_SCHEMA_VALIDATION, status='success')
+        return deckhand_schema_validation
+
+    def report_failure(self):
+        deckhand_schema_validation = self.validation_policy_factory.gen(
+            types.DECKHAND_SCHEMA_VALIDATION, status='failure')
+        return deckhand_schema_validation
+
     def validate_all(self):
         """Pre-validate that the YAML file is correctly formatted.
 
@@ -117,40 +133,49 @@ class DocumentValidation(object):
             document, including failed and succeeded validations.
         """
         internal_validation_docs = []
-        validation_policy_factory = factories.ValidationPolicyFactory()
+        original_exc = None
 
+        #import pdb; pdb.set_trace()
         for document in self.documents:
-            self._validate_one(document)
+            try:
+                self._validate_one(document)
+            except errors.InvalidDocumentFormat as e:
+                original_exc = e
+                deckhand_schema_validation = self.report_failure()
+                break
 
-        deckhand_schema_validation = validation_policy_factory.gen(
-            types.DECKHAND_SCHEMA_VALIDATION, status='success')
+        if not original_exc:
+            deckhand_schema_validation = self.report_success()
         internal_validation_docs.append(deckhand_schema_validation)
 
-        return internal_validation_docs
+        return internal_validation_docs, original_exc
 
     def _validate_one(self, document):
-        # Subject every document to basic validation to verify that each
-        # main section is present (schema, metadata, data).
+        raw_dict = document.to_dict()
         try:
-            jsonschema.validate(document, base_schema.schema)
+            # Subject every document to basic validation to verify that each
+            # main section is present (schema, metadata, data).
+            jsonschema.validate(raw_dict, base_schema.schema)
         except jsonschema.exceptions.ValidationError as e:
-            raise errors.InvalidDocumentFormat(
+            debug_doc = self._create_debug_doc(base_schema.schema, raw_dict)
+            error = errors.InvalidDocumentFormat(
                 detail=e.message, schema=e.schema)
+            return error, debug_doc
 
-        doc_schema_type = self.SchemaType(document)
+        doc_schema_type = self.SchemaType(raw_dict)
         if doc_schema_type.schema is None:
-            raise errors.UknownDocumentFormat(
+            raise errors.InvalidDocumentFormat(
                 document_type=document['schema'])
 
         # Perform more detailed validation on each document depending on
         # its schema. If the document is abstract, validation errors are
         # ignored.
         try:
-            jsonschema.validate(document, doc_schema_type.schema)
+            jsonschema.validate(raw_dict, doc_schema_type.schema)
         except jsonschema.exceptions.ValidationError as e:
             # TODO(fmontei): Use the `Document` object wrapper instead
             # once other PR is merged.
-            if not self._is_abstract(document):
+            if not document.is_abstract():
                 raise errors.InvalidDocumentFormat(
                     detail=e.message, schema=e.schema,
                     document_type=document['schema'])
@@ -158,15 +183,35 @@ class DocumentValidation(object):
                 LOG.info('Skipping schema validation for abstract '
                          'document: %s.', document)
 
-    def _is_abstract(self, document):
-        try:
-            is_abstract = document['metadata']['layeringDefinition'][
-                'abstract'] is True
-            return is_abstract
-        # NOTE(fmontei): If the document is of ``document_schema`` type and
-        # no "layeringDefinition" or "abstract" property is found, then treat
-        # this as a validation error.
-        except KeyError:
-            doc_schema_type = self.SchemaType(document)
-            return doc_schema_type is v1_0.document_schema
-        return False
+    def _create_debug_doc(self, schema, document):
+        kwargs = self._gen_debug_doc_kwargs(schema, document, "$", {})
+        DebugDocument = warlock.model_factory(schema)   
+        debug_document = DebugDocument(**kwargs)
+        return debug_document
+
+    def _gen_debug_doc_kwargs(self, schema, data, path, kwargs):
+        if 'type' in schema:
+            if 'properties' not in schema:
+                prop_type = schema['type']
+                value = (utils.jsonpath_parse(data, path) or
+                         self._gen_debug_message(path, prop_type))
+                if 'object' in prop_type:
+                    value = {'COERCED_TO_DICT': value}
+                return utils.jsonpath_replace(kwargs, value, path)
+
+        for prop in schema.get('properties', {}):
+            jsonpath = path + "." + prop
+            result = self._gen_debug_doc_kwargs(
+                schema['properties'][prop], data, jsonpath, kwargs)
+            if result:
+                kwargs.update(result)
+
+        return kwargs
+
+    def _gen_debug_message(self, path, type):
+        if path == "$.schema":
+            return _DEBUG_SCHEMA
+        debug_msg = ("DEBUG: This required field (type=%s) is missing." % type)
+        if path == '$.metadata.name':
+            debug_msg += " EXTRA: %s." % uuidutils.generate_uuid()
+        return debug_msg

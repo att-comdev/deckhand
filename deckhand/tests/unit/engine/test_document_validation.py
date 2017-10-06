@@ -63,3 +63,10 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
         self.assertTrue(mock_log.info.called)
         self.assertIn("Skipping schema validation for abstract document",
                       mock_log.info.mock_calls[0][1][0])
+
+
+class TestDocumentValidationCoercion(engine_test_base.TestDocumentValidationBase):
+
+    def test_coerce_primitive_into_dict(self):
+        result = document_validation.DocumentValidation(
+            {'data': 'foobar'}).validate_all()
