@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "6b0d726b_6f551480",
+        "filename": "deckhand/factories.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-06T20:52:20Z",
+      "side": 1,
+      "message": "reword for 1-3 range.",
+      "revId": "b928a74942b0b611a7194448616eac13abc76c24",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7c1e7ed7_ceecada6",
         "filename": "deckhand/utils.py",
         "patchSetId": 10
