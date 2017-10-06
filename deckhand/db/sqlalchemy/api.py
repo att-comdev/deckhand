@@ -90,6 +90,38 @@ def setup_db():
     models.register_models(get_engine())
 
 
+def require_unique_layering_policy(f):
+    """Decorator to require that only one layering policy exists in the system.
+
+    Only one LayeringPolicy document can exist within the system at any time.
+    It is an error to attempt to insert a new LayeringPolicy document if it has
+    a different metadata.name than the existing document.
+
+    :raises ConflictingLayeringPolicy if a layering policy in the system
+        already exists and any of the documents to be created is also a
+        layeringPolicy but has a name that differs from the one already
+        registered.
+    """
+    @functools.wraps(f)
+    def wrapper(bucket_name, documents, *args, **kwargs):
+        # Should always have length 0 or 1.
+        layering_policies = revision_get_documents(
+            schema=types.LAYERING_POLICY_SCHEMA, deleted=False,
+            include_history=False)
+        layering_policy_names = [x['name'] for x in layering_policies]
+        conflicting_names = [
+            x['metadata']['name'] for x in documents
+            if x['metadata']['name'] not in layering_policy_names and
+               x['schema'].startswith(types.LAYERING_POLICY_SCHEMA)]
+        if layering_policy_names and conflicting_names:
+            raise errors.ConflictingLayeringPolicy(
+                layering_policy=layering_policy_names[0],
+                conflict=conflicting_names)
+        return f(bucket_name, documents, *args, **kwargs)
+    return wrapper
+
+
+@require_unique_layering_policy
 def documents_create(bucket_name, documents, session=None):
     """Create a set of documents and associated bucket.
 
@@ -189,7 +221,8 @@ def _documents_create(bucket_name, values_list, session=None):
 
         try:
             existing_document = document_get(
-                raw_dict=True, **{x: values[x] for x in filters})
+                raw_dict=True, deleted=False,
+                **{x: values[x] for x in filters})
         except errors.DocumentNotFound:
             # Ignore bad data at this point. Allow creation to bubble up the
             # error related to bad data.
@@ -228,14 +261,19 @@ def _documents_create(bucket_name, values_list, session=None):
 
 
 def _fill_in_metadata_defaults(values):
+    # Move this to validation module, then coerce the payload into something
+    # passable for the db module, then revamp debugging info for failed
+    # validations, then do unit tests.
     values['_metadata'] = values.pop('metadata')
     values['name'] = values['_metadata']['name']
 
     if not values['_metadata'].get('storagePolicy', None):
         values['_metadata']['storagePolicy'] = 'cleartext'
 
-    if ('layeringDefinition' in values['_metadata']
-        and 'abstract' not in values['_metadata']['layeringDefinition']):
+    if 'layeringDefinition' not in values['_metadata']:
+        values['_metadata'].setdefault('layeringDefinition', {})
+
+    if 'abstract' not in values['_metadata']['layeringDefinition']:
         values['_metadata']['layeringDefinition']['abstract'] = False
 
     return values
@@ -246,12 +284,14 @@ def _make_hash(data):
         json.dumps(data, sort_keys=True).encode('utf-8')).hexdigest()
 
 
-def document_get(session=None, raw_dict=False, **filters):
-    """Retrieve a document from the DB.
+def document_get(session=None, raw_dict=False, revision_id=None, **filters):
+    """Retrieve the first document for ``revision_id`` that match ``filters``.
 
     :param session: Database session object.
     :param raw_dict: Whether to retrieve the exact way the data is stored in
         DB if ``True``, else the way users expect the data.
+    :param revision_id: The ID corresponding to the ``Revision`` object. If the
+        ID is ``None``, then retrieve the latest revision, if one exists.
     :param filters: Dictionary attributes (including nested) used to filter
         out revision documents.
     :returns: Dictionary representation of retrieved document.
@@ -259,9 +299,19 @@ def document_get(session=None, raw_dict=False, **filters):
     """
     session = session or get_session()
 
-    # Retrieve the most recently created version of a document. Documents with
-    # the same metadata.name and schema can exist across different revisions,
-    # so it is necessary to use `first` instead of `one` to avoid errors.
+    if revision_id is None:
+        # If no revision_id is specified, grab the newest one.
+        revision = session.query(models.Revision)\
+            .order_by(models.Revision.created_at.desc())\
+            .first()
+        if revision:
+            filters['revision_id'] = revision.id
+    else:
+        filters['revision_id'] = revision_id
+
+    # Retrieve the most recently created document for the revision. Documents
+    # with the same metadata.name and schema can exist across different,
+    # revisions so i's necessary to use `first` to avoid errors.
     document = session.query(models.Document)\
         .filter_by(**filters)\
         .order_by(models.Document.created_at.desc())\
@@ -271,6 +321,41 @@ def document_get(session=None, raw_dict=False, **filters):
         raise errors.DocumentNotFound(document=filters)
 
     return document.to_dict(raw_dict=raw_dict)
+
+
+def documents_get_all(session=None, raw_dict=False, revision_id=None, **filters):
+    """Retrieve all documents for ``revision_id`` that match ``filters``.
+
+    :param session: Database session object.
+    :param raw_dict: Whether to retrieve the exact way the data is stored in
+        DB if ``True``, else the way users expect the data.
+    :param revision_id: The ID corresponding to the ``Revision`` object. If the
+        ID is ``None``, then retrieve the latest revision, if one exists.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
+    :returns: Dictionary representation of each retrieved document.
+    """
+    session = session or get_session()
+
+    if revision_id is None:
+        # If no revision_id is specified, grab the newest one.
+        revision = session.query(models.Revision)\
+            .order_by(models.Revision.created_at.desc())\
+            .first()
+        if revision:
+            filters['revision_id'] = revision.id
+    else:
+        filters['revision_id'] = revision_id
+
+    # Retrieve the most recently created documents for the revision, because
+    # documents with the same metadata.name and schema can exist across
+    # different revisions.
+    documents = session.query(models.Document)\
+        .filter_by(**filters)\
+        .order_by(models.Document.created_at.desc())\
+        .all()
+
+    return [document.to_dict(raw_dict=raw_dict) for document in documents]
 
 
 ####################
@@ -416,10 +501,14 @@ def _apply_filters(dct, **filters):
                     break
             else:
                 # Else both filters are string literals.
-                if actual_val != _transform_filter_bool(
-                        actual_val, filter_val):
-                    match = False
-                    break
+                if filter_key == 'schema':
+                    if not actual_val.startswith(filter_val):
+                        match = False
+                        break
+                else:
+                    if actual_val != filter_val:
+                        match = False
+                        break
 
     return match
 
@@ -471,7 +560,7 @@ def _filter_revision_documents(documents, unique_only, **filters):
     for document in documents:
         # NOTE(fmontei): Only want to include non-validation policy documents
         # for this endpoint.
-        if document['schema'] == types.VALIDATION_POLICY_SCHEMA:
+        if document['schema'].startswith(types.VALIDATION_POLICY_SCHEMA):
             continue
 
         if _apply_filters(document, **filters):
