@@ -14,31 +14,37 @@
 
 import jsonschema
 from oslo_log import log as logging
+from oslo_utils import uuidutils
+import warlock
 
+from deckhand.engine import document as document_wrapper
 from deckhand.engine.schema import base_schema
 from deckhand.engine.schema import v1_0
 from deckhand import errors
 from deckhand import factories
 from deckhand import types
+from deckhand import utils
 
 LOG = logging.getLogger(__name__)
 
+_DEBUG_SCHEMA = "deckhand/Debug/v1"
+
 
 class DocumentValidation(object):
-    """Class for document validation logic for YAML files.
-
-    This class is responsible for validating YAML files according to their
-    schema.
-
-    :param documents: Documents to be validated.
-    :type documents: List of dictionaries or dictionary.
-    """
 
     def __init__(self, documents):
+        """Class for document validation logic for YAML files.
+
+        This class is responsible for validating YAML files according to their
+        schema.
+
+        :param documents: Documents to be validated.
+        :type documents: List of dictionaries or dictionary.
+        """
         if not isinstance(documents, (list, tuple)):
             documents = [documents]
-
-        self.documents = documents
+        self.documents = [document_wrapper.Document(d) for d in documents]
+        self.validation_policy_factory = factories.ValidationPolicyFactory()
 
     class SchemaType(object):
         """Class for retrieving correct schema for pre-validation on YAML.
@@ -116,41 +122,58 @@ class DocumentValidation(object):
             document and values being the validations executed for that
             document, including failed and succeeded validations.
         """
-        internal_validation_docs = []
-        validation_policy_factory = factories.ValidationPolicyFactory()
+        validation_docs = []
+        exceptions = []
 
         for document in self.documents:
-            self._validate_one(document)
+            exc, debug_doc = self._validate_one(document)
+            if exc:
+                exceptions.append(exc)
+                validation_docs.append(debug_doc)
 
-        deckhand_schema_validation = validation_policy_factory.gen(
+        if exceptions:
+            deckhand_schema_validation = self._report_failure()
+        else:
+            deckhand_schema_validation = self._report_success()
+
+        validation_docs.append(deckhand_schema_validation)
+
+        return validation_docs, exceptions
+
+    def _report_success(self):
+        deckhand_schema_validation = self.validation_policy_factory.gen(
             types.DECKHAND_SCHEMA_VALIDATION, status='success')
-        internal_validation_docs.append(deckhand_schema_validation)
+        return deckhand_schema_validation
 
-        return internal_validation_docs
+    def _report_failure(self):
+        deckhand_schema_validation = self.validation_policy_factory.gen(
+            types.DECKHAND_SCHEMA_VALIDATION, status='failure')
+        return deckhand_schema_validation
 
     def _validate_one(self, document):
-        # Subject every document to basic validation to verify that each
-        # main section is present (schema, metadata, data).
+        raw_dict = document.to_dict()
         try:
-            jsonschema.validate(document, base_schema.schema)
+            # Subject every document to basic validation to verify that each
+            # main section is present (schema, metadata, data).
+            jsonschema.validate(raw_dict, base_schema.schema)
         except jsonschema.exceptions.ValidationError as e:
-            raise errors.InvalidDocumentFormat(
+            debug_doc = self._gen_debug_doc(base_schema.schema, raw_dict)
+            error = errors.InvalidDocumentFormat(
                 detail=e.message, schema=e.schema)
+            return error, debug_doc
 
-        doc_schema_type = self.SchemaType(document)
+        doc_schema_type = self.SchemaType(raw_dict)
         if doc_schema_type.schema is None:
-            raise errors.UknownDocumentFormat(
+            raise errors.InvalidDocumentFormat(
                 document_type=document['schema'])
 
         # Perform more detailed validation on each document depending on
         # its schema. If the document is abstract, validation errors are
         # ignored.
         try:
-            jsonschema.validate(document, doc_schema_type.schema)
+            jsonschema.validate(raw_dict, doc_schema_type.schema)
         except jsonschema.exceptions.ValidationError as e:
-            # TODO(fmontei): Use the `Document` object wrapper instead
-            # once other PR is merged.
-            if not self._is_abstract(document):
+            if not document.is_abstract():
                 raise errors.InvalidDocumentFormat(
                     detail=e.message, schema=e.schema,
                     document_type=document['schema'])
@@ -158,15 +181,71 @@ class DocumentValidation(object):
                 LOG.info('Skipping schema validation for abstract '
                          'document: %s.', document)
 
-    def _is_abstract(self, document):
-        try:
-            is_abstract = document['metadata']['layeringDefinition'][
-                'abstract'] is True
-            return is_abstract
-        # NOTE(fmontei): If the document is of ``document_schema`` type and
-        # no "layeringDefinition" or "abstract" property is found, then treat
-        # this as a validation error.
-        except KeyError:
-            doc_schema_type = self.SchemaType(document)
-            return doc_schema_type is v1_0.document_schema
-        return False
+    def _gen_debug_doc(self, schema, document):
+        kwargs = self._gen_debug_doc_kwargs(schema, document, "$", {})
+        DebugDocument = warlock.model_factory(schema)
+        debug_document = DebugDocument(**kwargs)
+        return debug_document
+
+    def _gen_debug_doc_kwargs(self, schema, section, path, kwargs):
+        if 'debug' in path:
+            return kwargs
+
+        if 'type' in schema:
+            if 'properties' not in schema:
+                # Determine if the required field is missing.
+                field_val = utils.jsonpath_parse(section, path)
+                missing = field_val is None
+
+                # Determine if the field has the wrong type.
+                required_type = schema['type']
+                if not isinstance(required_type, list):
+                    required_type = [required_type]
+                given_type = type(field_val).__name__
+                wrong_type = not any([self._compare_types(req_type, given_type)
+                                     for req_type in required_type])
+
+                # If the field is either missing or has the wrong type, then
+                # generate debug information.
+                if missing or wrong_type:
+                    field_val, debug_uuid = self._gen_debug_value(path)
+                    debug_msg, debug_path = self._gen_debug_message(
+                        debug_uuid, path, missing, wrong_type,
+                        given_type=given_type, required_type=required_type)
+                    kwargs.update(
+                        utils.jsonpath_replace(kwargs, debug_msg, debug_path))
+
+                return utils.jsonpath_replace(kwargs, field_val, path)
+
+        for prop in schema.get('properties', {}):
+            jsonpath = path + "." + prop
+            result = self._gen_debug_doc_kwargs(
+                schema['properties'][prop], section, jsonpath, kwargs)
+            if result:
+                kwargs.update(result)
+
+        return kwargs
+
+    def _gen_debug_value(self, path):
+        debug_uuid = uuidutils.generate_uuid()
+        if path == "$.schema":
+            return _DEBUG_SCHEMA, debug_uuid
+        debug_msg = "[%s]" % debug_uuid
+        return debug_msg, debug_uuid
+
+    def _gen_debug_message(self, debug_uuid, path, missing, wrong_type,
+                           **kwargs):
+        if missing:
+            msg = "[%s] This required field is missing." % debug_uuid
+        elif wrong_type:
+            msg = ("[%s] This field has the wrong type. Given: %s, required: "
+                   "%s." % (debug_uuid, kwargs['given_type'],
+                            kwargs['required_type']))
+        else:
+            msg = "[%s] Unknown issue with this field." % debug_uuid
+        return msg, "$.debug" + path[1:] 
+
+    def _compare_types(self, expected, actual):
+        if expected == 'object' and actual == 'dict':
+            return True
+        return expected.startswith(actual)

@@ -67,7 +67,7 @@ class DocumentFactory(DeckhandFactory):
             "name": "",
             "schema": "metadata/Document/v%s" % DeckhandFactory.API_VERSION
         },
-        "schema": "example/Kind/v1.0"
+        "schema": "example/Kind/v1"
     }
 
     def __init__(self, num_layers, docs_per_layer):
@@ -302,6 +302,8 @@ class DocumentSecretFactory(DeckhandFactory):
 class ValidationPolicyFactory(DeckhandFactory):
     """Class for auto-generating validation policy templates for testing."""
 
+    VERSION = "v1"
+
     VALIDATION_POLICY_TEMPLATE = {
         "data": {
             "validations": []
@@ -310,7 +312,7 @@ class ValidationPolicyFactory(DeckhandFactory):
             "schema": "metadata/Control/%s" % DeckhandFactory.API_VERSION,
             "name": ""
         },
-        "schema": types.VALIDATION_POLICY_SCHEMA
+        "schema": types.VALIDATION_POLICY_SCHEMA + '/' + VERSION
     }
 
     def __init__(self):
@@ -319,9 +321,9 @@ class ValidationPolicyFactory(DeckhandFactory):
         Returns a template whose YAML representation is of the form::
 
             ---
-            schema: deckhand/ValidationPolicy/v1.0
+            schema: deckhand/ValidationPolicy/v1
             metadata:
-              schema: metadata/Control/v1.0
+              schema: metadata/Control/v1
               name: site-deploy-ready
             data:
               validations:
@@ -335,7 +337,8 @@ class ValidationPolicyFactory(DeckhandFactory):
         """
 
     def gen(self, validation_type, status):
-        if validation_type not in types.DECKHAND_VALIDATION_TYPES:
+        if not any([validation_type.startswith(type)
+                    for type in types.DECKHAND_VALIDATION_TYPES]):
             raise ValueError("The validation type must be in %s."
                              % types.DECKHAND_VALIDATION_TYPES)
 
