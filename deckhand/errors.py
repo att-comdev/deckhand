@@ -58,15 +58,6 @@ class InvalidDocumentFormat(DeckhandException):
         super(InvalidDocumentFormat, self).__init__(**kwargs)
 
 
-# TODO(fmontei): Remove this in a future commit.
-class ApiError(Exception):
-    pass
-
-
-class InvalidFormat(ApiError):
-    """The YAML file is incorrectly formatted and cannot be read."""
-
-
 class DocumentExists(DeckhandException):
     msg_fmt = ("Document with schema %(schema)s and metadata.name "
                "%(name)s already exists in bucket %(bucket)s.")
@@ -137,3 +128,11 @@ class BarbicanException(DeckhandException):
 
     def __init__(self, message, code):
         super(BarbicanException, self).__init__(message=message, code=code)
+
+
+class ConflictingLayeringPolicy(DeckhandException):
+    msg_fmt = ("A layering policy by the name %(layering_policy)s already "
+               "exists in the system. The new layering policy with name "
+               "%(conflict)s cannot be created. To update the original, "
+               "pass in a layering policy with the same name or delete it, "
+               "then try again.")
