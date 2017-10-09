@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e9d35ba_756708b0",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-09T04:33:34Z",
+      "side": 1,
+      "message": "Should use an enum to enumerate list of all valid document schemas in base validation schema. Then this won\u0027t be necessary.",
+      "range": {
+        "startLine": 165,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 49
+      },
+      "revId": "8678f102a0f93bd12e5968320bdbe92bd46780f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5610f67_64d73477",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-09T04:33:34Z",
+      "side": 1,
+      "message": "Move _fill_in_missing_metadata() from DB module to here.",
+      "revId": "8678f102a0f93bd12e5968320bdbe92bd46780f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59580738_a941fb07",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-09T04:33:34Z",
+      "side": 1,
+      "message": "Rename to expected_type",
+      "range": {
+        "startLine": 201,
+        "startChar": 16,
+        "endLine": 201,
+        "endChar": 29
+      },
+      "revId": "8678f102a0f93bd12e5968320bdbe92bd46780f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
