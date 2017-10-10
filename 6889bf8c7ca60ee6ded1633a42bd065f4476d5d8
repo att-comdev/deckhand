@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cf85241_1ed14981",
+        "filename": "deckhand/tests/unit/control/base.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-10T23:56:22Z",
+      "side": 1,
+      "message": "s/is/are",
+      "range": {
+        "startLine": 30,
+        "startChar": 67,
+        "endLine": 30,
+        "endChar": 69
+      },
+      "revId": "6889bf8c7ca60ee6ded1633a42bd065f4476d5d8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3524ddc_de661b5d",
+        "filename": "deckhand/tests/unit/control/base.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-10T23:56:22Z",
+      "side": 1,
+      "message": "s/actions/action",
+      "range": {
+        "startLine": 40,
+        "startChar": 54,
+        "endLine": 40,
+        "endChar": 62
+      },
+      "revId": "6889bf8c7ca60ee6ded1633a42bd065f4476d5d8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4655c25c_f495a918",
+        "filename": "deckhand/tests/unit/control/base.py",
+        "patchSetId": 18
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-10T23:56:22Z",
+      "side": 1,
+      "message": "Provide code block example",
+      "revId": "6889bf8c7ca60ee6ded1633a42bd065f4476d5d8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
