@@ -24,6 +24,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+ChangeLog
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -48,6 +49,7 @@ coverage.xml
 .testrepository/*
 cover/*
 results/*
+.stestr/
 
 # Translations
 *.mo
@@ -65,7 +67,8 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+doc/_build/
+doc/source/_static/
 
 # PyBuilder
 target/
