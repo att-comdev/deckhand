@@ -39,6 +39,8 @@ class ViewBuilder(common.ViewBuilder):
                 continue
             if document['schema'].startswith(types.VALIDATION_POLICY_SCHEMA):
                 continue
+            if document['deleted']:
+                continue
             resp_obj = {x: document[x] for x in attrs}
             resp_obj.setdefault('status', {})
             resp_obj['status']['bucket'] = document['bucket_name']
