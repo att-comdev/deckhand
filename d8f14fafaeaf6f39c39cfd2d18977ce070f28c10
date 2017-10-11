@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0765a9a_f3193e8f",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-11T03:14:25Z",
+      "side": 1,
+      "message": "is this just:\n\n  nested_filters \u003d {k:v for k,v in filters.items() if \u0027.\u0027 in k} ?",
+      "range": {
+        "startLine": 267,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 56
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf0ed700_a416f102",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-11T03:14:25Z",
+      "side": 1,
+      "message": "This sort of fused back filters with nested_filter split by the .pop on L270 - if 270 is changed to a get, do we need this update?",
+      "range": {
+        "startLine": 285,
+        "startChar": 4,
+        "endLine": 285,
+        "endChar": 34
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1368ed7c_10588ba0",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-11T03:14:25Z",
+      "side": 1,
+      "message": "is this a double negative?  Missing substitution in document data or perhaps Substitution patter not found in document data.",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 94,
+        "endChar": 48
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3124a58d_5a7dc4fd",
+        "filename": "deckhand/factories.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-11T03:14:25Z",
+      "side": 1,
+      "message": "must be 1, 2 or 3? Sounds odd to be either 1 through 3.",
+      "range": {
+        "startLine": 115,
+        "startChar": 48,
+        "endLine": 115,
+        "endChar": 54
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eab1604f_758a5f8a",
+        "filename": "releasenotes/notes/secret-substitution-6eff2c93bf11d82e.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-11T03:14:25Z",
+      "side": 1,
+      "message": "``",
+      "range": {
+        "startLine": 5,
+        "startChar": 4,
+        "endLine": 5,
+        "endChar": 5
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
