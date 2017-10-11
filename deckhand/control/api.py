@@ -20,6 +20,7 @@ from oslo_log import log as logging
 
 from deckhand.control import base
 from deckhand.control import buckets
+from deckhand.control import middleware
 from deckhand.control import revision_diffing
 from deckhand.control import revision_documents
 from deckhand.control import revision_tags
@@ -57,7 +58,9 @@ def start_api():
     db_api.drop_db()
     db_api.setup_db()
 
-    control_api = falcon.API(request_type=base.DeckhandRequest)
+    middlewares = [middleware.AuthMiddleware()]
+    control_api = falcon.API(request_type=base.DeckhandRequest,
+                             middleware=middlewares)
 
     v1_0_routes = [
         ('bucket/{bucket_name}/documents', buckets.BucketsResource()),
