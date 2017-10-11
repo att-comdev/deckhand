@@ -190,6 +190,29 @@
     },
     {
       "key": {
+        "uuid": "55e7341e_8ef69c73",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-11T03:51:14Z",
+      "side": 1,
+      "message": "/",
+      "range": {
+        "startLine": 101,
+        "startChar": 55,
+        "endLine": 101,
+        "endChar": 56
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eab1604f_758a5f8a",
         "filename": "releasenotes/notes/secret-substitution-6eff2c93bf11d82e.yaml",
         "patchSetId": 19
