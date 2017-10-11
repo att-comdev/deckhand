@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4d190875_f5d4926d",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-11T06:40:07Z",
+      "side": 1,
+      "message": "ah - short of the other nits, we can fix this as part of the TODO later.",
+      "parentUuid": "178650d9_8d94eeec",
+      "range": {
+        "startLine": 267,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 56
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf0ed700_a416f102",
         "filename": "deckhand/db/sqlalchemy/api.py",
         "patchSetId": 19
