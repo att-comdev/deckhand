@@ -47,6 +47,9 @@ function gen_config {
 
     cp etc/deckhand/logging.conf.sample $CONF_DIR/logging.conf
 
+# NOTE: allow_anonymous_access allows these functional tests to get around
+# Keystone authentication, but the context that is provided has zero privileges
+# so we must also override the policy file for authorization to pass.
 cat <<EOCONF > $CONF_DIR/deckhand.conf
 [DEFAULT]
 debug = true
@@ -54,6 +57,7 @@ log_config_append = $CONF_DIR/logging.conf
 log_file = deckhand.log
 log_dir = .
 use_stderr = true
+allow_anonymous_access = true
 
 [oslo_policy]
 policy_file = policy.yaml
