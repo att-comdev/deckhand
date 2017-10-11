@@ -50,10 +50,7 @@ class BaseResource(object):
 
 
 class DeckhandRequest(falcon.Request):
-
-    def __init__(self, env, options=None):
-        super(DeckhandRequest, self).__init__(env, options)
-        self.context = context.RequestContext.from_environ(self.env)
+    context_type = context.RequestContext
 
     @property
     def project_id(self):
