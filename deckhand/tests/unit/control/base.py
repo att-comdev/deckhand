@@ -27,3 +27,19 @@ class BaseControllerTest(test_base.DeckhandWithDBTestCase,
         super(BaseControllerTest, self).setUp()
         self.app = falcon_testing.TestClient(api.start_api())
         self.policy = self.useFixture(policy_fixture.RealPolicyFixture())
+
+    def tearDown(self):
+        super(BaseControllerTest, self).tearDown()
+        # Validate whether policy enforcement happened the way we expected it
+        # to. This check is really only meaningful if ``self.policy.set_rules``
+        # is used within the context of a test that inherits from this class.
+        self.assertTrue(
+            set(self.policy.expected_policy_actions).issubset(
+                set(self.policy.actual_policy_actions)),
+            'The expected policy actions passed to ``self.policy.set_rules`` '
+            'do not match the policy actions that were actually enforced by '
+            'Deckhand. Expected policies %s should be a subset of actual '
+            'policies: %s. There is either a bug with the test or with '
+            'policy enforcement in the controller.' % (
+                self.policy.expected_policy_actions,
+                self.policy.actual_policy_actions))
