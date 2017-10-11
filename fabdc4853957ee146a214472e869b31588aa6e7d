@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0143b37b_479057d5",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 20
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-11T15:22:48Z",
+      "side": 1,
+      "message": "Forgot to add policy enforcement here.",
+      "revId": "fabdc4853957ee146a214472e869b31588aa6e7d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
