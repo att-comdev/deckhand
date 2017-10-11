@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "178650d9_8d94eeec",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-11T03:42:28Z",
+      "side": 1,
+      "message": "No because this code still keeps the nested_filters in filters. I need 1) the nested filters (e.g. metadata.schema ) in a separate dict and 2) filters to only contain regular filters like \"revision_id\". Honestly I could just pass all of filters to _apply_filters but the idea is to transition over completely to filtering via sqlalchemy which will require many changes.",
+      "parentUuid": "b0765a9a_f3193e8f",
+      "range": {
+        "startLine": 267,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 56
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf0ed700_a416f102",
         "filename": "deckhand/db/sqlalchemy/api.py",
         "patchSetId": 19
@@ -36,6 +60,30 @@
       "writtenOn": "2017-10-11T03:14:25Z",
       "side": 1,
       "message": "This sort of fused back filters with nested_filter split by the .pop on L270 - if 270 is changed to a get, do we need this update?",
+      "range": {
+        "startLine": 285,
+        "startChar": 4,
+        "endLine": 285,
+        "endChar": 34
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b817f8d_261e3b32",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-11T03:42:28Z",
+      "side": 1,
+      "message": "No you wouldn\u0027t, but can\u0027t just do a basic get.",
+      "parentUuid": "bf0ed700_a416f102",
       "range": {
         "startLine": 285,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d047fc09_aa11916e",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-11T03:42:28Z",
+      "side": 1,
+      "message": "Yeah, double negative. Should just be \"Substitution pattern not found in...\"",
+      "parentUuid": "1368ed7c_10588ba0",
+      "range": {
+        "startLine": 94,
+        "startChar": 16,
+        "endLine": 94,
+        "endChar": 48
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3124a58d_5a7dc4fd",
         "filename": "deckhand/factories.py",
         "patchSetId": 19
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "e0cabfff_1eba5b4a",
+        "filename": "deckhand/factories.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-11T03:42:28Z",
+      "side": 1,
+      "message": "Yeah 1, 2 or 3.",
+      "parentUuid": "3124a58d_5a7dc4fd",
+      "range": {
+        "startLine": 115,
+        "startChar": 48,
+        "endLine": 115,
+        "endChar": 54
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eab1604f_758a5f8a",
         "filename": "releasenotes/notes/secret-substitution-6eff2c93bf11d82e.yaml",
         "patchSetId": 19
@@ -105,6 +201,30 @@
       "writtenOn": "2017-10-11T03:14:25Z",
       "side": 1,
       "message": "``",
+      "range": {
+        "startLine": 5,
+        "startChar": 4,
+        "endLine": 5,
+        "endChar": 5
+      },
+      "revId": "d8f14fafaeaf6f39c39cfd2d18977ce070f28c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20c2c987_bd73e5bd",
+        "filename": "releasenotes/notes/secret-substitution-6eff2c93bf11d82e.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-11T03:42:28Z",
+      "side": 1,
+      "message": "Fixed in next patch",
+      "parentUuid": "eab1604f_758a5f8a",
       "range": {
         "startLine": 5,
         "startChar": 4,
