@@ -25,7 +25,7 @@ CONF = cfg.CONF
 
 
 class TestBucketsController(test_base.BaseControllerTest):
-    """Test suite for validating positive scenarios for bucket controller."""
+    """Test suite for validating positive scenarios for buckets controller."""
 
     def test_put_bucket(self):
         rules = {'deckhand:create_cleartext_documents': '@'}

@@ -31,7 +31,7 @@ the request body have a `metadata.storagePolicy` of "cleartext".""",
         [
             {
                 'method': 'PUT',
-                'path': '/api/v1.0/bucket/{bucket_name}/documents'
+                'path': '/api/v1.0/revisions/{revision_id}/documents'
             },
             {
                 'method': 'POST',
@@ -51,7 +51,7 @@ the request body have a `metadata.storagePolicy` of "encrypted".""",
         [
             {
                 'method': 'PUT',
-                'path': '/api/v1.0/bucket/{bucket_name}/documents'
+                'path': '/api/v1.0/revisions/{revision_id}/documents'
             },
             {
                 'method': 'POST',
