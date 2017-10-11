@@ -25,7 +25,7 @@ CONF = cfg.CONF
 
 
 class TestBucketsController(test_base.BaseControllerTest):
-    """Test suite for validating positive scenarios for bucket controller."""
+    """Test suite for validating positive scenarios for buckets controller."""
 
     def test_put_bucket(self):
         rules = {'deckhand:create_cleartext_documents': '@'}
@@ -57,6 +57,7 @@ class TestBucketsController(test_base.BaseControllerTest):
                                      body=yaml.safe_dump_all(payload))
             self.assertEqual(200, resp.status_code)
             created_documents = list(yaml.safe_load_all(resp.text))
+
             self.assertEqual(1, len(created_documents))
             expected = sorted([(d['schema'], d['metadata']['name'])
                                for d in payload])
