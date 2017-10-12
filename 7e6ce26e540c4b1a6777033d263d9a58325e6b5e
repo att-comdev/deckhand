@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a0bf2860_0d7bf736",
+        "filename": "deckhand/control/buckets.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-12T17:32:12Z",
+      "side": 1,
+      "message": "If there\u0027s a use case for us to encrypt any document, then I don\u0027t see an issue with that. I just thought that we only wanted to encrypt the data section of specific types of documents. I\u0027ll make the change because the open-ended approach of any document is better.",
+      "parentUuid": "cf23e707_b22134d6",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "933f85af_2c1744bf",
         "filename": "deckhand/control/buckets.py",
         "patchSetId": 21
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "84dc79fb_2fc7cd30",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-12T17:32:12Z",
+      "side": 1,
+      "message": "Good point. The hierarchy will be changed to:\n\n1) Always enforce cleartext via decorator.\n2) If storagePolicy is encrypted for any document, enforce the encrypted policy conditionally.",
+      "parentUuid": "fa8ae3b7_d41ad8b6",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "906ac2ba_ed4b911c",
         "filename": "deckhand/control/views/document.py",
         "patchSetId": 21
@@ -64,6 +100,24 @@
       "writtenOn": "2017-10-12T03:18:13Z",
       "side": 1,
       "message": "buckete \u003d bucket",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa56d06b_4183aedc",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-12T17:32:12Z",
+      "side": 1,
+      "message": "Actually this is all dead code that I need to remove. Thanks for pointing it out. L36 already handles this case.",
+      "parentUuid": "906ac2ba_ed4b911c",
       "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -98,6 +152,24 @@
       "writtenOn": "2017-10-12T03:18:13Z",
       "side": 1,
       "message": "\u0027either\u0027 -\u003e \u0027be\u0027 ?",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72cb9067_bfd41e5d",
+        "filename": "deckhand/factories.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-12T17:32:12Z",
+      "side": 1,
+      "message": "Fixed in next patch.",
+      "parentUuid": "03e7c960_0ae16387",
       "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
