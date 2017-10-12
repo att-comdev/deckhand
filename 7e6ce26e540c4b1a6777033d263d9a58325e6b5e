@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf23e707_b22134d6",
+        "filename": "deckhand/control/buckets.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-12T03:18:13Z",
+      "side": 1,
+      "message": "so only secrets can have encrypted storage policy? I thought storage policy drove whether or not things were encrypted, and anything COULD be stored encrypted. Maybe I\u0027m remembering wrong or missing the point?  I know in later parts of this PS, we drive based on storage policy without talking about secrets.  This might be 100% correct, just want to make sure.",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "933f85af_2c1744bf",
+        "filename": "deckhand/control/buckets.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-12T03:18:13Z",
+      "side": 1,
+      "message": "JSON / YAML, or is this a thing where json schema works for yaml?",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa8ae3b7_d41ad8b6",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-12T03:18:13Z",
+      "side": 1,
+      "message": "so.. if I have auth to see encrypted, I can see encrypted parts of the design, but not cleartext?  Seems like there is a logical hierarchy here, or perhaps a flag for \"unmask encrypted\" that would require additional authorization?  Mostly it seems strange that I could have permission to see encrypted, but not cleartext.",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "906ac2ba_ed4b911c",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-12T03:18:13Z",
+      "side": 1,
+      "message": "buckete \u003d bucket",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c19ad532_5e909f73",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-12T03:18:13Z",
+      "side": 1,
+      "message": "so... (not resp_list) and documents \u003c\u003c\u003c what you have\nor...  not (resp_list and documents)",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03e7c960_0ae16387",
+        "filename": "deckhand/factories.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-12T03:18:13Z",
+      "side": 1,
+      "message": "\u0027either\u0027 -\u003e \u0027be\u0027 ?",
+      "revId": "7e6ce26e540c4b1a6777033d263d9a58325e6b5e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
