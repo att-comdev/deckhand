@@ -16,6 +16,24 @@
       "revId": "e58cc096888e84562c7b99f036d027e822ce0d7d",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af2841c0_4c0c35f0",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-13T19:18:56Z",
+      "side": 1,
+      "message": "Rebase issue. Problem with having too many open patches.",
+      "parentUuid": "cdd671de_1cd7a541",
+      "revId": "e58cc096888e84562c7b99f036d027e822ce0d7d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
