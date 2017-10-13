@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdd671de_1cd7a541",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-13T12:47:27Z",
+      "side": 1,
+      "message": "help me understand how this helps with what\u0027s at line 38?  Seems like a copy/paste err?",
+      "revId": "e58cc096888e84562c7b99f036d027e822ce0d7d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
