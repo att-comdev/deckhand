@@ -1,7 +1,25 @@
+========
 Deckhand
 ========
-A foundational python REST YAML processing engine providing data and secrets
-management to other platform services.
+
+Deckhand is a document-based configuration storage service built with
+auditability and validation in mind.
+
+Essential Functionality
+=======================
+
+* layering - helps reduce duplication in configuration while maintaining
+  auditability across many sites
+* substitution - provides separation between secret data and other
+  configuration data, while allowing a simple interface for clients
+* revision history - improves auditability and enables services to provide
+  functional validation of a well-defined collection of documents that are
+  meant to operate together
+* validation - allows services to implement and register different kinds of
+  validations and report errors
+
+Getting Started
+===============
 
 To generate a configuration file automatically::
 

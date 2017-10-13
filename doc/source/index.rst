@@ -38,6 +38,12 @@ User's Guide
 .. toctree::
    :maxdepth: 2
 
+   documents
+   document_types
+   validation
+   substitution
+   layering
+   revision_history
    policy-enforcement
 
 Developer's Guide
