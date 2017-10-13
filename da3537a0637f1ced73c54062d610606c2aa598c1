@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe232265_9eab9a5d",
+        "filename": "deckhand/context.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-13T05:01:00Z",
+      "side": 1,
+      "message": "I am hoping we can get rid of these \"tenant\" (v2) nomenclature at some point.  Note that v2 is gone in Q.",
+      "range": {
+        "startLine": 30,
+        "startChar": 20,
+        "endLine": 30,
+        "endChar": 26
+      },
+      "revId": "da3537a0637f1ced73c54062d610606c2aa598c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32f411a1_d16f0490",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-13T05:01:00Z",
+      "side": 1,
+      "message": "nit: ``resp_list``",
+      "range": {
+        "startLine": 49,
+        "startChar": 39,
+        "endLine": 49,
+        "endChar": 50
+      },
+      "revId": "da3537a0637f1ced73c54062d610606c2aa598c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33ae0c74_55fa13e1",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-13T05:01:00Z",
+      "side": 1,
+      "message": "This gets fuzzy for me - can this be written:\n\n  [document_wrapper.Document(d) for d in documents if d.get_substitutions()]",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 48
+      },
+      "revId": "da3537a0637f1ced73c54062d610606c2aa598c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b120ae6_e1d54e82",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-13T05:01:00Z",
+      "side": 1,
+      "message": "Can this be rewritten as:\n\n   kwargs.setdefault(\u0027code\u0027, 500)\n\nYou are just adding in a key-value pair \"code\":X if it doesn\u0027t get pass in part of the kwargs.  As **kwargs is scoped to this function and it isn\u0027t used elsewhere, I am not sure if we need to keep self.kwargs.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 20
+      },
+      "revId": "da3537a0637f1ced73c54062d610606c2aa598c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "820137c1_25dcf181",
+        "filename": "deckhand/factories.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-13T05:01:00Z",
+      "side": 1,
+      "message": "This always feel oddly unfortunate the \"region\" shows up in the middle, just imagine we can do something cool like:\n\n   layer_order \u003d [\"global\", \"region\", \"site\"][:num_layers]",
+      "range": {
+        "startLine": 112,
+        "startChar": 27,
+        "endLine": 112,
+        "endChar": 54
+      },
+      "revId": "da3537a0637f1ced73c54062d610606c2aa598c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad62f170_d0c4e74a",
+        "filename": "deckhand/policies/document.py",
+        "patchSetId": 24
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-13T05:01:00Z",
+      "side": 1,
+      "message": "``",
+      "range": {
+        "startLine": 46,
+        "startChar": 20,
+        "endLine": 46,
+        "endChar": 21
+      },
+      "revId": "da3537a0637f1ced73c54062d610606c2aa598c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
