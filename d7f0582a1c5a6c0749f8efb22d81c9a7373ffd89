@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a4cc05f_5074bded",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-14T21:50:58Z",
+      "side": 1,
+      "message": "Does this mean for each {{tag}} I enter, there can be multiple metadata tag?  I.e, Can I do:\n\n   POST /revisions/1234/tags/heroes\n\n   ---\n   metadata:\n      - name: wow\n        thing: illidan\n   metadata:\n      - name: diablo\n        thing: diablo\n\nIf so, when we do a delete  - and we do DELETE /tags/heroes - does that delete both metadata?  or is it DELETE /tags/wow to delete just (wow,illidan) one?\n\nCan we edit the thing: field?  would that be another POST?",
+      "range": {
+        "startLine": 374,
+        "startChar": 34,
+        "endLine": 374,
+        "endChar": 47
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14610db4_5ab2c9c3",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-14T21:50:58Z",
+      "side": 1,
+      "message": "should this be just:\n\n  ---\n  metadata:\n    - name: john\n      thing: smith\n    - name: illidan\n      thing: stormrage",
+      "range": {
+        "startLine": 446,
+        "startChar": 0,
+        "endLine": 449,
+        "endChar": 13
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb211ce5_bdf04abe",
+        "filename": "doc/source/documents.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-14T21:50:58Z",
+      "side": 1,
+      "message": "not needed",
+      "range": {
+        "startLine": 103,
+        "startChar": 5,
+        "endLine": 103,
+        "endChar": 9
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f492ee89_7b7658cf",
+        "filename": "doc/source/layering.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-14T21:50:58Z",
+      "side": 1,
+      "message": "these ... are not needed",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 116,
+        "endChar": 5
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "817796a8_bfd66b55",
+        "filename": "doc/source/layering.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-14T21:50:58Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 134,
+        "startChar": 2,
+        "endLine": 134,
+        "endChar": 5
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b3ee4b7f_19343222",
+        "filename": "doc/source/layering.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-14T21:50:58Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 5
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95da7342_1f8cbaab",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-14T21:50:58Z",
+      "side": 1,
+      "message": "``?",
+      "range": {
+        "startLine": 45,
+        "startChar": 2,
+        "endLine": 45,
+        "endChar": 3
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
