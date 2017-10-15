@@ -104,6 +104,24 @@
       "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd10d2e_a863fede",
+        "filename": "etc/deckhand/deckhand-paste.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-15T22:35:05Z",
+      "side": 1,
+      "message": "it is dotting i and crossing t - given that most OS services have it and the effort is minimal (just a paste), and if security audit asks for it, it is there even we don\u0027t use  cross origin interactions. If it is not needed - this can be taken out fairly painlessly.",
+      "parentUuid": "8b57068d_7aa2273c",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
