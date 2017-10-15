@@ -86,6 +86,24 @@
       "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b57068d_7aa2273c",
+        "filename": "etc/deckhand/deckhand-paste.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-15T22:15:58Z",
+      "side": 1,
+      "message": "no issues, just curious since we had no configuration set up other than to have the filter.  I think the use case is pretty limited for service-\u003e service comms in the control plane, but I might not be thinking right.",
+      "parentUuid": "211bc21f_7aaf6558",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
