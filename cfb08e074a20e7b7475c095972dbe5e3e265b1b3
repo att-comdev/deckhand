@@ -122,6 +122,24 @@
       "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e9b2992_c7d3a912",
+        "filename": "etc/deckhand/deckhand-paste.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-15T23:29:13Z",
+      "side": 1,
+      "message": "works for me. No reason to remove it.",
+      "parentUuid": "9cd10d2e_a863fede",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
