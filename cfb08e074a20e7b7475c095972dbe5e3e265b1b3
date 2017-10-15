@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6beff8fd_b64a7301",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-15T22:06:20Z",
+      "side": 1,
+      "message": "You can blame me for this as I added this into the Nautilus POC since I just wanted all the API code to return a plain dictionary and use this common middleware to map the dictionary to JSON.  If your entire API returns yaml - you might update this  to YAMLTranslator.",
+      "parentUuid": "b1386706_4e8c6f19",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f62af1d_b23e1584",
         "filename": "deckhand/tests/unit/base.py",
         "patchSetId": 8
@@ -47,6 +65,24 @@
       "writtenOn": "2017-10-15T21:32:19Z",
       "side": 1,
       "message": "What is the use case for CORS in UCP",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "211bc21f_7aaf6558",
+        "filename": "etc/deckhand/deckhand-paste.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-10-15T22:06:20Z",
+      "side": 1,
+      "message": "For MVP - none, but inclusion of this with minimal effort will allow us to leverage this security feature in the future.  Unless there are problems you are seeing in UCP as a result of CORS.",
+      "parentUuid": "ce2f7d3d_1333097b",
       "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
