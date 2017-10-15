@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1386706_4e8c6f19",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-15T21:32:19Z",
+      "side": 1,
+      "message": "So, we json translate for all messages with a body? I see this wired in as standard middleware, but it\u0027s conditional since most of the deckhand api is YAML, right? How does that occur?",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f62af1d_b23e1584",
+        "filename": "deckhand/tests/unit/base.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-15T21:32:19Z",
+      "side": 1,
+      "message": "This is here to prevent execution of code in the imported stuff??? I read the Docs (maybe not well enough), and not sure I understand the point- perhaps you can catch me up offline sometime.",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce2f7d3d_1333097b",
+        "filename": "etc/deckhand/deckhand-paste.ini",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-15T21:32:19Z",
+      "side": 1,
+      "message": "What is the use case for CORS in UCP",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
