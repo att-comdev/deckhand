@@ -91,6 +91,42 @@
     },
     {
       "key": {
+        "uuid": "3de30153_2d08dc97",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-16T03:57:19Z",
+      "side": 1,
+      "message": "if there are no exceptions to the YAML, great! This is a nice, clean way to handle an aspect.",
+      "parentUuid": "121b5cc7_2905c0a1",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f594e29_8f3f579b",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-16T03:57:19Z",
+      "side": 1,
+      "message": "It was the errors I was thinking of... nothing else.  Yes SY has some trouble with this since it\u0027s a JSON interface with YAML in the case of the design documents.",
+      "parentUuid": "66e6be5a_f63cff4c",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f62af1d_b23e1584",
         "filename": "deckhand/tests/unit/base.py",
         "patchSetId": 8
