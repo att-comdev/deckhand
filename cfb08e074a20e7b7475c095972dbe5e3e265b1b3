@@ -144,6 +144,24 @@
     },
     {
       "key": {
+        "uuid": "7621eda9_0e486786",
+        "filename": "deckhand/tests/unit/base.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-16T18:49:02Z",
+      "side": 1,
+      "message": "It\u0027s for `import fixtures` below.\n\nThe interpreter gets confused when it tries to import fixtures since there\u0027s a relative module of fixtures in deckhand.tests.unit as well so I believe this makes the interpreter interpret all the imports as absolute paths.",
+      "parentUuid": "7f62af1d_b23e1584",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce2f7d3d_1333097b",
         "filename": "etc/deckhand/deckhand-paste.ini",
         "patchSetId": 8
