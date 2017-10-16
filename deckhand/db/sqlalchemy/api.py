@@ -248,7 +248,7 @@ def _make_hash(data):
         json.dumps(data, sort_keys=True).encode('utf-8')).hexdigest()
 
 
-def document_get(session=None, raw_dict=False, **filters):
+def document_get(session=None, as_dict=True, raw_dict=False, **filters):
     """Retrieve a document from the DB.
 
     :param session: Database session object.
@@ -266,7 +266,7 @@ def document_get(session=None, raw_dict=False, **filters):
     # "regular" filters via sqlalchemy and all nested filters via Python.
     nested_filters = {}
     for f in filters.copy():
-        if '.' in f:
+        if any([x in f for x in ('.', 'schema')]):
             nested_filters.setdefault(f, filters.pop(f))
 
     # Documents with the the same metadata.name and schema can exist across
@@ -280,10 +280,60 @@ def document_get(session=None, raw_dict=False, **filters):
     for doc in documents:
         d = doc.to_dict(raw_dict=raw_dict)
         if _apply_filters(d, **nested_filters):
-            return d
+            return d if as_dict else doc
 
     filters.update(nested_filters)
     raise errors.DocumentNotFound(document=filters)
+
+
+def document_get_all(session=None, raw_dict=False, revision_id=None,
+                     **filters):
+    """Retrieve all documents for ``revision_id`` that match ``filters``.
+
+    :param session: Database session object.
+    :param raw_dict: Whether to retrieve the exact way the data is stored in
+        DB if ``True``, else the way users expect the data.
+    :param revision_id: The ID corresponding to the ``Revision`` object. If the
+        ID is ``None``, then retrieve the latest revision, if one exists.
+    :param filters: Dictionary attributes (including nested) used to filter
+        out revision documents.
+    :returns: Dictionary representation of each retrieved document.
+    """
+    session = session or get_session()
+
+    if revision_id is None:
+        # If no revision_id is specified, grab the newest one.
+        revision = session.query(models.Revision)\
+            .order_by(models.Revision.created_at.desc())\
+            .first()
+        if revision:
+            filters['revision_id'] = revision.id
+    else:
+        filters['revision_id'] = revision_id
+
+    # TODO(fmontei): Currently Deckhand doesn't support filtering by nested
+    # JSON fields via sqlalchemy. For now, filter the documents using all
+    # "regular" filters via sqlalchemy and all nested filters via Python.
+    nested_filters = {}
+    for f in filters.copy():
+        if any([x in f for x in ('.', 'schema')]):
+            nested_filters.setdefault(f, filters.pop(f))
+
+    # Retrieve the most recently created documents for the revision, because
+    # documents with the same metadata.name and schema can exist across
+    # different revisions.
+    documents = session.query(models.Document)\
+        .filter_by(**filters)\
+        .order_by(models.Document.created_at.desc())\
+        .all()
+
+    final_documents = []
+    for doc in documents:
+        d = doc.to_dict(raw_dict=raw_dict)
+        if _apply_filters(d, **nested_filters):
+            final_documents.append(d)
+
+    return final_documents
 
 
 ####################
@@ -452,10 +502,15 @@ def _apply_filters(dct, **filters):
                     break
             else:
                 # Else both filters are string literals.
-                if actual_val != _transform_filter_bool(
-                        actual_val, filter_val):
-                    match = False
-                    break
+                if filter_key in ['metadata.schema', 'schema']:
+                    if not actual_val.startswith(filter_val):
+                        match = False
+                        break
+                else:
+                    if actual_val != _transform_filter_bool(actual_val,
+                                                            filter_val):
+                        match = False
+                        break
 
     return match
 
@@ -914,3 +969,50 @@ def revision_rollback(revision_id, latest_revision, session=None):
         new_revision['documents'])
 
     return new_revision
+
+
+####################
+
+
+@require_revision_exists
+def validation_create(revision_id, val_name, val_data, session=None):
+    session = session or get_session()
+
+    validation_policy = document_get(as_dict=False,
+                                     revision_id=revision_id,
+                                     schema=types.VALIDATION_POLICY_SCHEMA)
+    payload = {'name': val_name}
+    payload.update(val_data)
+
+    # NOTE(fmontei): To update a `oslo_types.JsonEncodedDict`, you have to
+    # assign existing value to a temporary variable, update, then assign back.
+    to_update = copy.deepcopy(validation_policy.to_dict()['data'])
+    to_update['validations'].append(payload)
+
+    with session.begin():
+        validation_policy.update({'data': to_update})
+        validation_policy.save(session=session)
+
+    return validation_policy.to_dict()['data']['validations'][-1]
+
+
+@require_revision_exists
+def validation_get(revision_id, val_name, session=None):
+    session = session or get_session()
+
+    filters = {'revision_id': revision_id,
+               'schema': types.VALIDATION_POLICY_SCHEMA, 
+               'data.validations.name': [val_name]}
+
+    validation_policy = document_get(revision_id=revision_id,
+                                     schema=types.VALIDATION_POLICY_SCHEMA)
+
+    #return validation_policy.to_dict()['data']['validations'][-1]
+
+
+@require_revision_exists
+def validation_get_all(revision_id, session=None):
+    session = session or get_session()
+    validation_policy = document_get(revision_id=revision_id,
+                                     schema=types.VALIDATION_POLICY_SCHEMA)
+    return validation_policy['data']['validations']

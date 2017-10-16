@@ -12,20 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import itertools
-
-from deckhand.policies import base
-from deckhand.policies import document
-from deckhand.policies import revision
-from deckhand.policies import revision_tag
-from deckhand.policies import validation
+from deckhand.control import common
+from deckhand import types
+from deckhand import utils
 
 
-def list_rules():
-    return itertools.chain(
-        base.list_rules(),
-        document.list_rules(),
-        revision.list_rules(),
-        revision_tag.list_rules(),
-        validation.list_rules()
-    )
+class ViewBuilder(common.ViewBuilder):
+    """Model validation API responses as a python dictionary."""
+
+    _collection_name = 'validations'
+
+    def list(self, validations):
+        return [self.show(v) for v in validations]
+
+    def show(self, validation):
+        default_validator = {'name': 'deckhand', 'version': '1.0'}
+        return {
+            'status': validation.get('status'),
+            'validator': validation.get('validator', default_validator)
+        }
