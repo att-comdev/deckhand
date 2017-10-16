@@ -14,6 +14,8 @@
 
 import functools
 
+import falcon
+
 
 class ViewBuilder(object):
     """Model API responses as dictionaries."""
