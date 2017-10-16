@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "66e6be5a_f63cff4c",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-16T00:06:26Z",
+      "side": 1,
+      "message": "What do you mean we don\u0027t have all YAML or all JSON? I think that one inconsistency with Deckhand responses is that they are all YAML *except* for errors (as the falcon error exceptions use JSON formatting) and this might be an area where that conversion between JSON and YAML for everything could happen.\n\n...I\u0027m assuming everything returned by Deckhand *should* be YAML.\n\nIn Shipyard\u0027s case this sort of thing can\u0027t be done though from what I gather.",
+      "parentUuid": "80133610_e7a625a5",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f62af1d_b23e1584",
         "filename": "deckhand/tests/unit/base.py",
         "patchSetId": 8
