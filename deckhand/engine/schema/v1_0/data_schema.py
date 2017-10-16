@@ -49,7 +49,7 @@ schema = {
                     'type': 'string'
                 }
             },
-            'additionalProperties': False,
+            'additionalProperties': True,
             'required': ['$schema']
         }
     },
