@@ -15,10 +15,17 @@
 import mock
 
 from deckhand.engine import document_validation
+from deckhand import errors
+from deckhand import factories
 from deckhand.tests.unit.engine import base as engine_test_base
 
 
 class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
+
+    def setUp(self):
+        super(TestDocumentValidation, self).setUp()
+        # Mock out DB module (i.e. retrieving DataSchema docs from DB).
+        self.patch('deckhand.db.sqlalchemy.api.document_get_all')
 
     def test_init_document_validation(self):
         self._read_data('sample_document')
