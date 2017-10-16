@@ -31,7 +31,13 @@ LOG = logging.getLogger(__name__)
 
 
 class BucketsResource(api_base.BaseResource):
-    """API resource for realizing CRUD operations for buckets."""
+    """API resource for realizing CRUD operations for buckets.
+
+    All concrete documents in the payload must successfully pass their
+    JSON schema validations. If an error occurs, first save the failed
+    validation policy along with the malformed documents for debugging
+    and then raise an exception.
+    """
 
     view_builder = document_view.ViewBuilder()
     secrets_mgr = secrets_manager.SecretsManager()
@@ -50,7 +56,8 @@ class BucketsResource(api_base.BaseResource):
         # NOTE: Must validate documents before doing policy enforcement,
         # because we expect certain formatting of the documents while doing
         # policy enforcement.
-        validation_policies = self._create_validation_policies(documents)
+        doc_validator = document_validation.DocumentValidation(documents)
+        validation_policies, exceptions = doc_validator.validate_all()
 
         for document in documents:
             if document['metadata'].get('storagePolicy') == 'encrypted':
@@ -60,28 +67,21 @@ class BucketsResource(api_base.BaseResource):
 
         self._prepare_secret_documents(documents)
 
-        # Save all the documents, including validation policies.
-        documents_to_create = documents + validation_policies
+        if exceptions:
+            documents_to_create = validation_policies
+        else:
+            documents_to_create = documents + validation_policies
         created_documents = self._create_revision_documents(
-            bucket_name, list(documents_to_create))
+            bucket_name, documents_to_create)
+
+        if exceptions:
+            raise falcon.HTTPBadRequest(
+                description=[exc.format_message() for exc in exceptions])
 
         if created_documents:
             resp.body = self.view_builder.list(created_documents)
         resp.status = falcon.HTTP_200
         resp.append_header('Content-Type', 'application/x-yaml')
-
-    def _create_validation_policies(self, documents):
-        # All concrete documents in the payload must successfully pass their
-        # JSON schema validations. Otherwise raise an error.
-        try:
-            validation_policies = document_validation.DocumentValidation(
-                documents).validate_all()
-        except deckhand_errors.InvalidDocumentFormat as e:
-            # FIXME(fmontei): Save the malformed documents and the failed
-            # validation policy in the DB for future debugging, and only
-            # afterward raise an exception.
-            raise falcon.HTTPBadRequest(description=e.format_message())
-        return validation_policies
 
     def _prepare_secret_documents(self, secret_documents):
         # Encrypt data for secret documents, if any.
