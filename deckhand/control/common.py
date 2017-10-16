@@ -14,6 +14,8 @@
 
 import functools
 
+import falcon
+
 
 class ViewBuilder(object):
     """Model API responses as dictionaries."""
@@ -84,6 +86,37 @@ def sanitize_params(allowed_params):
 
             func_args = func_args + (sanitized_params,)
             return func(self, req, *func_args, **func_kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def enforce_content_types(valid_content_types):
+    """Decorator handling content type enforcement on behalf of REST verbs."""
+
+    if not isinstance(valid_content_types, list):
+        valid_content_types = [valid_content_types]
+
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapper(self, req, *func_args, **func_kwargs):
+            content_type = (req.content_type.split(';', 1)[0].strip()
+                            if req.content_type else '')
+
+            if not content_type:
+                raise falcon.HTTPMissingHeader('Content-Type')
+            elif content_type not in valid_content_types:
+                message = (
+                    "Unexpected content type: {type}. Expected content types "
+                    "are: {expected}."
+                ).format(
+                    type=req.content_type.decode('utf-8'),
+                    expected=valid_content_types
+                )
+                raise falcon.HTTPUnsupportedMediaType(description=message)
+
+            return f(self, req, *func_args, **func_kwargs)
 
         return wrapper
 
