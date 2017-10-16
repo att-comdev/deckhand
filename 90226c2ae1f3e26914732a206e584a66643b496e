@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2dc3664_6f305b1a",
+        "filename": "deckhand/control/buckets.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-16T20:00:21Z",
+      "side": 1,
+      "message": "Forgot to remove all these resp.append_header() which is now done by middleware. Can remove in follow-up PS if no other issues here.",
+      "revId": "90226c2ae1f3e26914732a206e584a66643b496e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
