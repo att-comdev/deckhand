@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import dateutil.parser
+
 from oslo_db.sqlalchemy import models
 from oslo_db.sqlalchemy import types as oslo_types
 from oslo_utils import timeutils
@@ -80,6 +82,19 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
                 d.setdefault(k, None)
 
         return d
+
+    @classmethod
+    def from_dict(cls, dct):
+        table_cols = [c.key for c in cls.__table__.columns]
+        kwargs = {}
+        for col in table_cols:
+            col_val = dct.get(col)
+            try:
+                col_val = dateutil.parser.parse(col_val)
+            except:
+                pass
+            kwargs.setdefault(col, col_val)
+        return cls(**kwargs)
 
 
 def gen_unique_constraint(table_name, *fields):
@@ -176,6 +191,9 @@ class Document(BASE, DeckhandBase):
 
         if not raw_dict:
             d['metadata'] = d.pop('_metadata')
+
+        if 'bucket' in d:
+            d.pop('bucket')
 
         return d
 
