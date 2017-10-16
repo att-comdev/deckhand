@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a15da8e6_4fd63fa6",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-16T19:13:21Z",
+      "side": 1,
+      "message": "These response bodies are wrong anyway so I\u0027m fixing them next patch.\n\nBut currently to update you\u0027d probably have to DELETE then POST a tag with the same name. Probably should implement a PUT for an update.\n\nAnd revisions support multiple tags, so if multiple exist a list is returned.",
+      "parentUuid": "6a4cc05f_5074bded",
+      "range": {
+        "startLine": 374,
+        "startChar": 34,
+        "endLine": 374,
+        "endChar": 47
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14610db4_5ab2c9c3",
         "filename": "doc/source/api_ref.rst",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-10-14T21:50:58Z",
       "side": 1,
       "message": "should this be just:\n\n  ---\n  metadata:\n    - name: john\n      thing: smith\n    - name: illidan\n      thing: stormrage",
+      "range": {
+        "startLine": 446,
+        "startChar": 0,
+        "endLine": 449,
+        "endChar": 13
+      },
+      "revId": "d7f0582a1c5a6c0749f8efb22d81c9a7373ffd89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d9a6238_47f3c90f",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-16T19:13:21Z",
+      "side": 1,
+      "message": "Yeah",
+      "parentUuid": "14610db4_5ab2c9c3",
       "range": {
         "startLine": 446,
         "startChar": 0,
