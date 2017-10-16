@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "121b5cc7_2905c0a1",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-16T00:07:26Z",
+      "side": 1,
+      "message": "For clarification: I\u0027d like to go with Tin\u0027s suggestion of using YAMLTranslator here if you agree, Bryan.",
+      "parentUuid": "66e6be5a_f63cff4c",
+      "revId": "cfb08e074a20e7b7475c095972dbe5e3e265b1b3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f62af1d_b23e1584",
         "filename": "deckhand/tests/unit/base.py",
         "patchSetId": 8
