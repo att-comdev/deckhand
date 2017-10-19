@@ -131,3 +131,11 @@ class BarbicanException(DeckhandException):
 class PolicyNotAuthorized(DeckhandException):
     msg_fmt = "Policy doesn't allow %(action)s to be performed."
     code = 403
+
+
+class ConflictingLayeringPolicy(DeckhandException):
+    msg_fmt = ("A layering policy by the name %(layering_policy)s already "
+               "exists in the system. The new layering policy with name "
+               "%(conflict)s cannot be created. To create a layering policy "
+               "with a new name, delete the current one first.")
+    code = 409
