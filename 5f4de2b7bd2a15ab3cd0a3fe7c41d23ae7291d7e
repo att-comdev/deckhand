@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a393fb3a_4030c4ae",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 16
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-20T17:44:09Z",
+      "side": 1,
+      "message": "Need to remove this from this comment.",
+      "range": {
+        "startLine": 241,
+        "startChar": 43,
+        "endLine": 241,
+        "endChar": 54
+      },
+      "revId": "5f4de2b7bd2a15ab3cd0a3fe7c41d23ae7291d7e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
