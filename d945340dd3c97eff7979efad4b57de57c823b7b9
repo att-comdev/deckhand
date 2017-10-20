@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f8f1dca_76ce840d",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-20T13:22:11Z",
+      "side": 1,
+      "message": "Do you think we\u0027ll have other \"unique\" documents like this that we\u0027d be served by a more generic implementation? I think this is fine/great for now, but if we do add more, I think we\u0027d want to move to a different way of handling unique docs.",
+      "revId": "d945340dd3c97eff7979efad4b57de57c823b7b9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
