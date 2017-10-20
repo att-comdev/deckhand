@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eaf4e0de_7ff3dc76",
+        "filename": "deckhand/control/common.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-20T19:00:51Z",
+      "side": 1,
+      "message": "Will actually use this in a follow-up.",
+      "range": {
+        "startLine": 95,
+        "startChar": 4,
+        "endLine": 95,
+        "endChar": 25
+      },
+      "revId": "78224535f0dcffdd7be2a8be03779e8592bd8f98",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
