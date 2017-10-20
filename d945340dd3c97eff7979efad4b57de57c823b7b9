@@ -16,6 +16,24 @@
       "revId": "d945340dd3c97eff7979efad4b57de57c823b7b9",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c03dbfb_cdb96993",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-20T18:34:16Z",
+      "side": 1,
+      "message": "Good idea. I will add a kwarg called ``schema`` to allow this work with different schemas and then rename this to something like ``require_unique_document_schema``.",
+      "parentUuid": "8f8f1dca_76ce840d",
+      "revId": "d945340dd3c97eff7979efad4b57de57c823b7b9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
