@@ -114,7 +114,26 @@ class YAMLTranslator(HookableMiddlewareMixin, object):
         ``falcon`` middleware.
     """
 
+    def process_request(self, req, resp):
+        """Enforce content type enforcement on behalf of REST verbs."""
+        valid_content_types = ['application/x-yaml']
+        content_type = (req.content_type.split(';', 1)[0].strip()
+                        if req.content_type else '')
+
+        if not content_type:
+            raise falcon.HTTPMissingHeader('Content-Type')
+        elif content_type not in valid_content_types:
+            message = (
+                "Unexpected content type: {type}. Expected content types "
+                "are: {expected}."
+            ).format(
+                type=req.content_type.decode('utf-8'),
+                expected=valid_content_types
+            )
+            raise falcon.HTTPUnsupportedMediaType(description=message)
+
     def process_response(self, req, resp, resource):
+        """Convert responses to ``application/x-yaml`` content type."""
         resp.set_header('Content-Type', 'application/x-yaml')
 
         for attr in ('body', 'data'):

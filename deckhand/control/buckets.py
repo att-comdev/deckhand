@@ -68,7 +68,6 @@ class BucketsResource(api_base.BaseResource):
         if created_documents:
             resp.body = self.view_builder.list(created_documents)
         resp.status = falcon.HTTP_200
-        resp.append_header('Content-Type', 'application/x-yaml')
 
     def _create_validation_policies(self, documents):
         # All concrete documents in the payload must successfully pass their
