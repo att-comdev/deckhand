@@ -39,7 +39,7 @@ tests:
     response_multidoc_jsonpaths:
       $.[0].id: $HISTORY['initialize'].$RESPONSE['$.[0].status.revision']
       $.[0].buckets: [mop]
-      $.[0].tags: {}
+      $.[0].tags: []
 
     # Validates whether revision was created.
     # Asserts that status code and response headers are correct.
