@@ -52,10 +52,7 @@ class ViewBuilder(common.ViewBuilder):
         Each revision's documents should only be validation policies.
         """
         validation_policies = []
-        # TODO(fmontei): For the time being we're only returning the tag name,
-        # but eventually we'll return data associated with the tag, which is
-        # why this is a dictionary, not a list.
-        tags = {}
+        tags = []
         success_status = 'success'
 
         for vp in [d for d in revision['documents']
@@ -75,7 +72,7 @@ class ViewBuilder(common.ViewBuilder):
                 success_status = 'failed'
 
         for tag in revision['tags']:
-            tags.setdefault(tag['tag'], {'name': tag['tag']})
+            tags.append({'name': tag['tag'], 'data': tag['data']})
 
         buckets = sorted(
             set([d['bucket_name'] for d in revision['documents']]))
@@ -86,6 +83,6 @@ class ViewBuilder(common.ViewBuilder):
             'url': self._gen_url(revision),
             'validationPolicies': validation_policies,
             'status': success_status,
-            'tags': tags,
+            'tags': sorted(tags, key=lambda t: t['name']),
             'buckets': buckets
         }
