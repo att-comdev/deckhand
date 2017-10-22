@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a833e18_e6bc3e0f",
+        "filename": "deckhand/control/validations.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-10-22T03:55:43Z",
+      "side": 1,
+      "message": "not an issue, but this could be a bit more DRY if moved up to line 65ish, and these 3 methods not be so aware of the HTTPness of things.",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 29
+      },
+      "revId": "f56aa40d928ac1ffc7b0c9346542296a68913b23",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
