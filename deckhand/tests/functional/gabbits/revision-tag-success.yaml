@@ -48,8 +48,7 @@ tests:
     status: 201
 
     response_multidoc_jsonpaths:
-      $[0].data: {}
-      $[0].tag: foo
+      $[0].foo: {}
 
   - name: show_tag
     desc: Verify showing created tag works
@@ -57,15 +56,15 @@ tests:
     status: 200
 
     response_multidoc_jsonpaths:
-      $[0].data: {}
-      $[0].tag: foo
+      $[0].foo: {}
 
   - name: verify_revision_detail_foo
     desc: Verify showing created tag on revision detail
     GET: /api/v1.0/revisions/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']
     status: 200
     response_multidoc_jsonpaths:
-      $.[0].tags.foo.name: foo
+      $.[0].tags:
+        foo: {}
 
   - name: verify_revision_list_foo
     desc: Verify showing created tag on revision list
@@ -81,9 +80,9 @@ tests:
     data: <@resources/sample-tag-data.yaml
 
     response_multidoc_jsonpaths:
-      $[0].tag: bar
-      $[0].data.last: good
-      $[0].data.random: data
+      $[0].bar:
+        last: good
+        random: data
 
   - name: list_tags
     desc: Verify listing tags contains created tag
@@ -91,19 +90,20 @@ tests:
     status: 200
 
     response_multidoc_jsonpaths:
-      $.[0].tag: bar
-      $.[0].data.last: good
-      $.[0].data.random: data
-      $.[1].tag: foo
-      $.[1].data: {}
+      $[0].bar:
+        last: good
+        random: data
+      $[0].foo: {}
 
   - name: verify_revision_detail_bar
     desc: Verify showing created tag on revision detail
     GET: /api/v1.0/revisions/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']
     status: 200
     response_multidoc_jsonpaths:
-      $.[0].tags.bar.name: bar
-      $.[0].tags.foo.name: foo
+      $[0].tags.bar:
+        last: good
+        random: data
+      $[0].tags.foo: {}
 
   - name: verify_revision_list_bar
     desc: Verify showing created tag on revision list
@@ -123,16 +123,18 @@ tests:
     status: 200
 
     response_multidoc_jsonpaths:
-      $.[0].tag: bar
-      $.[0].data.last: good
-      $.[0].data.random: data
+      $[0].bar:
+        last: good
+        random: data
 
   - name: verify_revision_detail_deleted_foo
     desc: Verify not showing deleted tag on revision detail
     GET: /api/v1.0/revisions/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']
     status: 200
     response_multidoc_jsonpaths:
-      $.[0].tags.bar.name: bar
+      $[0].tags.bar:
+        last: good
+        random: data
 
   - name: verify_revision_list_deleted_foo
     desc: Verify not showing deleted tag on revision list
@@ -166,4 +168,4 @@ tests:
     status: 200
 
     response_multidoc_jsonpaths:
-      $: null
+      $.[0]: {}
