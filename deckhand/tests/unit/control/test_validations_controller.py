@@ -427,7 +427,8 @@ class TestValidationsController(test_base.BaseControllerTest):
 
     def test_validation_with_registered_data_schema_expect_mixed(self):
         rules = {'deckhand:create_cleartext_documents': '@',
-                 'deckhand:list_validations': '@'}
+                 'deckhand:list_validations': '@',
+                 'deckhand:show_validation': '@'}
         self.policy.set_rules(rules)
 
         # Register a `DataSchema` against which the test document will be
@@ -488,6 +489,32 @@ class TestValidationsController(test_base.BaseControllerTest):
             ]
         }
         self.assertEqual(expected_body, body)
+
+        resp = self.app.simulate_get(
+            '/api/v1.0/revisions/%s/validations/%s' % (
+                revision_id, types.DECKHAND_SCHEMA_VALIDATION))
+        self.assertEqual(200, resp.status_code)
+        body = yaml.safe_load(resp.text)
+        expected_body = {
+            'count': 2,
+            'results': [{'id': 0, 'status': 'failure'},  # fail_doc failed.
+                        {'id': 1, 'status': 'success'}]  # pass_doc succeeded.
+        }
+        self.assertEqual(expected_body, body)
+
+        # Validate that fail_doc validation failed for the expected reason.
+        resp = self.app.simulate_get(
+            '/api/v1.0/revisions/%s/validations/%s/0' % (
+                revision_id, types.DECKHAND_SCHEMA_VALIDATION))
+        self.assertEqual(200, resp.status_code)
+        body = yaml.safe_load(resp.text)
+        expected_errors = [{
+            'schema': 'example/foo/v1',
+            'name': 'test_doc',
+            'message': "'fail' is not of type 'integer'"
+        }]
+        self.assertIn('errors', body)
+        self.assertEqual(expected_errors, body['errors'])
 
     def test_document_without_data_section_saves_but_fails_validation(self):
         """Validate that a document without the data section is saved to the
