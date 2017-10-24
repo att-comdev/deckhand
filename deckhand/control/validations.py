@@ -19,6 +19,7 @@ from oslo_log import log as logging
 import six
 
 from deckhand.control import base as api_base
+from deckhand.control import common
 from deckhand.control.views import validation as validation_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
@@ -32,6 +33,7 @@ class ValidationsResource(api_base.BaseResource):
 
     view_builder = validation_view.ViewBuilder()
 
+    @common.expected_errors([400, 403, 404])
     @policy.authorize('deckhand:create_validation')
     def on_post(self, req, resp, revision_id, validation_name):
         validation_data = req.stream.read(req.content_length or 0)
@@ -53,6 +55,7 @@ class ValidationsResource(api_base.BaseResource):
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = self.view_builder.show(resp_body)
 
+    @common.expected_errors([403, 404])
     def on_get(self, req, resp, revision_id, validation_name=None,
                entry_id=None):
         if all([validation_name, entry_id]):

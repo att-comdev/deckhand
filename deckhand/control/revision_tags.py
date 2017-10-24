@@ -18,6 +18,7 @@ import falcon
 from oslo_log import log as logging
 
 from deckhand.control import base as api_base
+from deckhand.control import common
 from deckhand.control.views import revision_tag as revision_tag_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
@@ -29,6 +30,7 @@ LOG = logging.getLogger(__name__)
 class RevisionTagsResource(api_base.BaseResource):
     """API resource for realizing CRUD for revision tags."""
 
+    @common.expected_errors([400, 403, 404])
     @policy.authorize('deckhand:create_tag')
     def on_post(self, req, resp, revision_id, tag=None):
         """Creates a revision tag."""
@@ -54,6 +56,7 @@ class RevisionTagsResource(api_base.BaseResource):
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = resp_body
 
+    @common.expected_errors([403, 404])
     def on_get(self, req, resp, revision_id, tag=None):
         """Show tag details or list all tags for a revision."""
         if tag:
@@ -88,6 +91,7 @@ class RevisionTagsResource(api_base.BaseResource):
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = resp_body
 
+    @common.expected_errors([403, 404])
     def on_delete(self, req, resp, revision_id, tag=None):
         """Deletes a single tag or deletes all tags for a revision."""
         if tag:

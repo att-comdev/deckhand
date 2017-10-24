@@ -15,6 +15,7 @@
 import falcon
 
 from deckhand.control import base as api_base
+from deckhand.control import common
 from deckhand.control.views import revision as revision_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
@@ -26,6 +27,7 @@ class RollbackResource(api_base.BaseResource):
 
     view_builder = revision_view.ViewBuilder()
 
+    @common.expected_errors([400, 403, 404])
     @policy.authorize('deckhand:create_cleartext_documents')
     def on_post(self, req, resp, revision_id):
         try:

@@ -15,6 +15,7 @@
 import falcon
 
 from deckhand.control import base as api_base
+from deckhand.control import common
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand import errors
 from deckhand import policy
@@ -23,6 +24,7 @@ from deckhand import policy
 class RevisionDiffingResource(api_base.BaseResource):
     """API resource for realizing revision diffing."""
 
+    @common.expected_errors([403, 404])
     @policy.authorize('deckhand:show_revision_diff')
     def on_get(self, req, resp, revision_id, comparison_revision_id):
         if revision_id == '0':
