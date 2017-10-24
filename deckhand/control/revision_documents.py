@@ -31,6 +31,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
 
     view_builder = document_view.ViewBuilder()
 
+    @common.expected_errors([403, 404])
     @policy.authorize('deckhand:list_cleartext_documents')
     @common.sanitize_params([
         'schema', 'metadata.name', 'metadata.layeringDefinition.abstract',
@@ -81,6 +82,7 @@ class RenderedDocumentsResource(api_base.BaseResource):
 
     view_builder = document_view.ViewBuilder()
 
+    @common.expected_errors([403, 404])
     @policy.authorize('deckhand:list_cleartext_documents')
     @common.sanitize_params([
         'schema', 'metadata.name', 'metadata.label'])

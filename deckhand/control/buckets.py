@@ -19,6 +19,7 @@ from oslo_log import log as logging
 import six
 
 from deckhand.control import base as api_base
+from deckhand.control import common
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import document_validation
@@ -36,6 +37,7 @@ class BucketsResource(api_base.BaseResource):
     view_builder = document_view.ViewBuilder()
     secrets_mgr = secrets_manager.SecretsManager()
 
+    @common.expected_errors([400, 403, 404, 409])
     @policy.authorize('deckhand:create_cleartext_documents')
     def on_put(self, req, resp, bucket_name=None):
         document_data = req.stream.read(req.content_length or 0)

@@ -27,6 +27,7 @@ class RevisionsResource(api_base.BaseResource):
 
     view_builder = revision_view.ViewBuilder()
 
+    @common.expected_errors([403, 404])
     def on_get(self, req, resp, revision_id=None):
         """Returns list of existing revisions.
 
@@ -66,6 +67,7 @@ class RevisionsResource(api_base.BaseResource):
         resp.append_header('Content-Type', 'application/x-yaml')
         resp.body = revisions_resp
 
+    @common.expected_errors([403])
     @policy.authorize('deckhand:delete_revisions')
     def on_delete(self, req, resp):
         db_api.revision_delete_all()

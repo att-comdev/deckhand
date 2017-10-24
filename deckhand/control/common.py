@@ -14,6 +14,13 @@
 
 import functools
 
+import falcon
+from oslo_log import log as logging
+
+from deckhand import errors as deckhand_errors
+
+LOG = logging.getLogger(__name__)
+
 
 class ViewBuilder(object):
     """Model API responses as dictionaries."""
@@ -88,3 +95,47 @@ def sanitize_params(allowed_params):
         return wrapper
 
     return decorator
+
+
+def expected_errors(errors):
+    """Decorator for raising expected exceptions as ``falcon``-based errors.
+    Unexpected exceptions are raised as ``falcon.HTTPInternalServerError``.
+
+    Deckhand only raises 400, 403, 404 and 409 exceptions from controllers, so
+    these are the only conversions that need to be handled.
+    """
+    def decorator(f):
+        @functools.wraps(f)
+        def wrapped(*args, **kwargs):
+            try:
+                return f(*args, **kwargs)
+            except Exception as exc:
+                if isinstance(exc, deckhand_errors.DeckhandException):
+                    if isinstance(errors, int):
+                        t_errors = (errors,)
+                    else:
+                        t_errors = errors
+                    if exc.code in t_errors:
+                        falcon_exc = _get_falcon_error_from_code(exc.code)
+                        raise falcon_exc(description=exc.format_message())
+                elif isinstance(exc, falcon.HTTPError):
+                    raise
+
+                LOG.exception("Unexpected exception in API method")
+                msg = 'Unexpected API Error. %s' % type(exc)
+                raise falcon.HTTPInternalServerError(description=msg)
+
+        return wrapped
+
+    return decorator
+
+
+def _get_falcon_error_from_code(code):
+    if code == 400:
+        return falcon.HTTPBadRequest
+    elif code == 403:
+        return falcon.HTTPForbidden
+    elif code == 409:
+        return falcon.HTTPConflict
+    else:
+        return falcon.HTTPInternalServerError
