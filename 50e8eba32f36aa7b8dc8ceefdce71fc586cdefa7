@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f158fe1f_8060a136",
+        "filename": "charts/deckhand/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-10-25T13:15:28Z",
+      "side": 1,
+      "message": "The script needs to move into a HTK script that can be injected into a job. Seems like the role data most naturally fits in the endpoints.identity.auth stanza somewhere.",
+      "revId": "50e8eba32f36aa7b8dc8ceefdce71fc586cdefa7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
