@@ -31,6 +31,13 @@ images:
 
 release_group: null
 
+bootstrap:
+  enabled: true
+  script: |
+    openstack project create --or-show --description "UCP" ucp
+    openstack user create --or-show --password password --project ucp ucp_admin
+    openstack role add --project ucp --user ucp_admin admin
+
 network:
   ingress:
     public: true
