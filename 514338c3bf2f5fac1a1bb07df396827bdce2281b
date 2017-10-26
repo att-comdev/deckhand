@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92b7c195_a592653a",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-10-26T19:44:19Z",
+      "side": 1,
+      "message": "I don\u0027t think six is needed here - we should be focused entirely on Python 3.5+ compatibility.",
+      "revId": "514338c3bf2f5fac1a1bb07df396827bdce2281b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0696eb60_410e8737",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-10-26T19:44:19Z",
+      "side": 1,
+      "message": "Should you set the resp Content-Type header here?",
+      "revId": "514338c3bf2f5fac1a1bb07df396827bdce2281b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
