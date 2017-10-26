@@ -103,4 +103,3 @@
 # all posted error details.
 # GET  /api/v1.0/revisions/{revision_id}/validations/{validation_name}/entries/{entry_id}
 #"deckhand:show_validation": "rule:admin_api"
-
