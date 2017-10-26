@@ -19,6 +19,8 @@ from gabbi import driver
 from gabbi.driver import test_pytest  # noqa
 from gabbi.handlers import jsonhandler
 
+from deckhand.tests.functional import fixtures
+
 TESTS_DIR = 'gabbits'
 
 
@@ -52,9 +54,10 @@ def pytest_generate_tests(metafunc):
     # are needed because we use `pytest-html` which throws an error without
     # `host`.
     driver.py_test_generator(
-        test_dir, url=os.environ['DECKHAND_TEST_URL'], host='localhost',
+        test_dir,
         # NOTE(fmontei): When there are multiple handlers listed that accept
         # the same content-type, the one that is earliest in the list will be
         # used. Thus, we cannot specify multiple content handlers for handling
         # list/dictionary responses from the server using different handlers.
-        content_handlers=[MultidocJsonpaths], metafunc=metafunc)
+        content_handlers=[MultidocJsonpaths], metafunc=metafunc,
+        intercept=fixtures.setup_app, fixture_module=fixtures)
