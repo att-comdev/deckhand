@@ -70,5 +70,17 @@ def init_application():
     return app
 
 
+def init_test_application(paste_file):
+    """Main entry point for initializing the Deckhand API service.
+
+    Create routes for the v1.0 API and sets up logging.
+    """
+    db_api.drop_db()
+    db_api.setup_db()
+
+    app = deploy.loadapp('config:%s' % paste_file, name='deckhand_noauth_api')
+    return app
+
+
 if __name__ == '__main__':
     init_application()

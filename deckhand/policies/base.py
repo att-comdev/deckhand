@@ -20,6 +20,9 @@ RULE_ADMIN_API = 'rule:admin_api'
 
 rules = [
     policy.RuleDefault(
+        "default",
+        "role:admin"),
+    policy.RuleDefault(
         "admin_api",
         "role:admin",
         "Default rule for most Admin APIs.")
