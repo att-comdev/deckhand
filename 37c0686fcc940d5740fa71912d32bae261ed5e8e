@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "531cf3dd_f6a92397",
+        "filename": "deckhand/tests/functional/test_gabbi.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-10-29T20:08:25Z",
+      "side": 1,
+      "message": "Remove this",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 55,
+        "endChar": 13
+      },
+      "revId": "37c0686fcc940d5740fa71912d32bae261ed5e8e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
