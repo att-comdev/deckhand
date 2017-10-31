@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e5e3fdb_288d2622",
+        "filename": "Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-10-31T13:56:53Z",
+      "side": 1,
+      "message": "Is worth linting the RST docs with something like [0]?\n\n[0] https://pypi.python.org/pypi/restructuredtext_lint",
+      "revId": "6ff443de2d35bc12d8aee66d722a155218d22530",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6569e7b8_dcb913e7",
+        "filename": "Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-10-31T13:56:53Z",
+      "side": 1,
+      "message": "Need to check the environment for proxy variables and add --build-arg to the docker command setting them inside the build environment.",
+      "revId": "6ff443de2d35bc12d8aee66d722a155218d22530",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
