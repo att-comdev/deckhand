@@ -110,6 +110,37 @@ class TestBucketsController(test_base.BaseControllerTest):
                 'secret': payload[-1]['data']}
             _do_test([payload[-1]])
 
+    def test_create_delete_then_recreate_document_in_different_bucket(self):
+        """Ordiniarly creating a document with the same metadata.name/schema
+        in a separate bucket raises an exception, but if we delete the document
+        and re-create it in a different bucket this should be a success
+        scenario.
+        """
+        payload = factories.DocumentFactory(2, [1, 1]).gen_test({})
+        bucket_name = test_utils.rand_name('bucket')
+        alt_bucket_name = test_utils.rand_name('bucket')
+        # Create the documents in the first bucket.
+        resp = self.app.simulate_put(
+            '/api/v1.0/buckets/%s/documents' % bucket_name,
+            headers={'Content-Type': 'application/x-yaml'},
+            body=yaml.safe_dump_all(payload))
+        import pdb; pdb.set_trace()
+        documents = list(yaml.safe_load_all(resp.text))
+        self.assertEqual(3, len(documents))
+        self.assertEqual([bucket_name] * 3,
+                         [d['bucket_name'] for d in documents])
+        # Delete the documents from the first bucket.
+        self.create_documents(bucket_name, [])
+        # Re-create the documents in the second bucket.
+        resp = self.app.simulate_put(
+            '/api/v1.0/buckets/%s/documents' % alt_bucket_name,
+            headers={'Content-Type': 'application/x-yaml'},
+            body=yaml.safe_dump_all(payload))
+        documents = list(yaml.safe_load_all(resp.text))
+        self.assertEqual(3, len(documents))
+        self.assertEqual([alt_bucket_name] * 3,
+                         [d['bucket_name'] for d in documents])
+
 
 class TestBucketsControllerNegative(test_base.BaseControllerTest):
     """Test suite for validating negative scenarios for bucket controller."""
@@ -161,6 +192,19 @@ schema:
         self.assertEqual(409, resp.status_code)
         resp_error = ' '.join(resp.text.split())
         self.assertRegexpMatches(resp_error, error_re)
+
+    def test_create_same_document_in_different_bucket_raises_exc(self):
+        payload = factories.DocumentFactory(1, [1]).gen_test({})[0]
+        bucket_name = test_utils.rand_name('bucket')
+        alt_bucket_name = test_utils.rand_name('bucket')
+        resp = self.app.simulate_put(
+            '/api/v1.0/buckets/mop/documents',
+            headers={'Content-Type': 'application/x-yaml'},
+            body=payload)
+        self.assertRaises(errors.DocumentExists, self.app.simulate_put,
+                          '/api/v1.0/buckets/mop/documents',
+                          headers={'Content-Type': 'application/x-yaml'},
+                          body=payload)
 
 
 class TestBucketsControllerNegativeRBAC(test_base.BaseControllerTest):

@@ -128,9 +128,6 @@ def require_unique_document_schema(schema=None):
             existing_documents = revision_get_documents(
                 schema=schema, deleted=False, include_history=False)
             existing_document_names = [x['name'] for x in existing_documents]
-            # `conflict_names` is calculated by checking whether any documents
-            # in `documents` is a layering policy with a name not found in
-            # `existing_documents`.
             conflicting_names = [
                 x['metadata']['name'] for x in documents
                 if x['metadata']['name'] not in existing_document_names and
@@ -320,7 +317,7 @@ def document_get(session=None, raw_dict=False, **filters):
     :param filters: Dictionary attributes (including nested) used to filter
         out revision documents.
     :returns: Dictionary representation of retrieved document.
-    :raises: DocumentNotFound if the document wasn't found.
+    :raises DocumentNotFound: if the document wasn't found.
     """
     session = session or get_session()
 
@@ -452,7 +449,7 @@ def revision_get(revision_id=None, session=None):
     :param revision_id: The ID corresponding to the ``Revision`` object.
     :param session: Database session object.
     :returns: Dictionary representation of retrieved revision.
-    :raises: RevisionNotFound if the revision was not found.
+    :raises RevisionNotFound: if the revision was not found.
     """
     session = session or get_session()
 
@@ -474,7 +471,7 @@ def revision_get_latest(session=None):
 
     :param session: Database session object.
     :returns: Dictionary representation of latest revision.
-    :raises: RevisionNotFound if the latest revision was not found.
+    :raises RevisionNotFound: if the latest revision was not found.
     """
     session = session or get_session()
 
@@ -682,7 +679,7 @@ def revision_get_documents(revision_id=None, include_history=True,
     :param filters: Key-value pairs used for filtering out revision documents.
     :returns: All revision documents for ``revision_id`` that match the
         ``filters``, including document revision history if applicable.
-    :raises: RevisionNotFound if the revision was not found.
+    :raises RevisionNotFound: if the revision was not found.
     """
     session = session or get_session()
     revision_documents = []
