@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b64e21b_abea07e1",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-11-06T04:59:35Z",
+      "side": 1,
+      "message": "semantically, I think it is better to use \u003d\u003d, as we are just checking if they match the same value, but that\u0027s nit.  See: https://stackoverflow.com/questions/15008380/double-equals-vs-is-in-python",
+      "range": {
+        "startLine": 326,
+        "startChar": 19,
+        "endLine": 326,
+        "endChar": 21
+      },
+      "revId": "8a03a57ed0d07b7d6b31cecca0797900be618698",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c84fbd6_0c6f6f13",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-11-06T04:59:35Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 375,
+        "startChar": 19,
+        "endLine": 375,
+        "endChar": 21
+      },
+      "revId": "8a03a57ed0d07b7d6b31cecca0797900be618698",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
