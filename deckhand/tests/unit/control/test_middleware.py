@@ -16,27 +16,69 @@ import yaml
 
 import mock
 
+from deckhand import factories
 from deckhand.tests.unit.control import base as test_base
 
 
 class TestYAMLTranslator(test_base.BaseControllerTest):
 
+    def __init__(self):
+        documents_factory = factories.DocumentFactory(2, [1, 1])
+        document_mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_DATA_1_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+        self.payload = documents_factory.gen_test(document_mapping)
+
     def test_request_with_correct_content_type(self):
+        resp = self.app.simulate_put(
+            '/buckets/b1/documents',
+            headers={'Content-Type': 'application/x-yaml'},
+            body=yaml.safe_dump_all(self.payload),
+        )
+        self.assertEqual(200, resp.status_code)
+
+    def test_request_with_no_content_type_on_get(self):
         resp = self.app.simulate_get(
-            '/versions', headers={'Content-Type': 'application/x-yaml'})
+            '/versions',
+            headers={})
+        self.assertEqual(200, resp.status_code)
+
+    def test_request_with_superfluous_content_type_on_get(self):
+        resp = self.app.simulate_get(
+            '/versions',
+            headers={'Content-Type': 'application/x-yaml'},
+        )
         self.assertEqual(200, resp.status_code)
 
     def test_request_with_correct_content_type_plus_encoding(self):
-        resp = self.app.simulate_get(
-            '/versions',
-            headers={'Content-Type': 'application/x-yaml;encoding=utf-8'})
+        resp = self.app.simulate_put(
+            '/buckets/b1/documents',
+            headers={'Content-Type': 'application/x-yaml;encoding=utf-8'},
+            body=yaml.safe_dump_all(self.payload),
+        )
         self.assertEqual(200, resp.status_code)
 
 
 class TestYAMLTranslatorNegative(test_base.BaseControllerTest):
 
+    def __init__(self):
+        documents_factory = factories.DocumentFactory(2, [1, 1])
+        document_mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_DATA_1_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+        self.payload = documents_factory.gen_test(document_mapping)
+
     def test_request_without_content_type_raises_exception(self):
-        resp = self.app.simulate_get('/versions')
+        resp = self.app.simulate_put(
+            '/versions',
+            body=yaml.safe_dump_all(self.payload),
+        )
         self.assertEqual(400, resp.status_code)
 
         expected = {
@@ -60,8 +102,12 @@ class TestYAMLTranslatorNegative(test_base.BaseControllerTest):
         self.assertEqual(expected, yaml.safe_load(resp.content))
 
     def test_request_with_invalid_content_type_raises_exception(self):
-        resp = self.app.simulate_get(
-            '/versions', headers={'Content-Type': 'application/json'})
+        resp = self.app.simulate_put(
+            '/versions',
+            headers={'Content-Type': 'application/json'},
+            body=yaml.safe_dump_all(self.payload),
+        )
+
         self.assertEqual(415, resp.status_code)
 
         expected = {
@@ -92,7 +138,9 @@ class TestYAMLTranslatorNegative(test_base.BaseControllerTest):
         because it hasn't been registered as an official MIME type yet.
         """
         resp = self.app.simulate_get(
-            '/versions', headers={'Content-Type': 'application/yaml'})
+            '/versions', headers={'Content-Type': 'application/yaml'},
+            body=yaml.safe_dump_all(self.payload),
+        )
         self.assertEqual(415, resp.status_code)
 
         expected = {
