@@ -268,6 +268,7 @@ class DocumentValidation(object):
         validation_results = []
 
         for document in self.documents:
+            print("The Document: %s" % str(document))
             result = self._validate_one(document)
             validation_results.append(result)
 
