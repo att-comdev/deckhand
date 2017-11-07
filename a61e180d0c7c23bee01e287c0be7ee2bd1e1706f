@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "f46396c8_e6405ff1",
+        "filename": "deckhand/tests/unit/control/base.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-11-07T03:54:18Z",
+      "side": 1,
+      "message": "I\u0027ll leave the code gnoming to you in this case - I tried to repeat a pattern I saw elsewhere where the base class did this for it\u0027s descendent test classes, so I copied.",
+      "parentUuid": "0d2d28bb_9c9456ae",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 18
+      },
+      "revId": "a61e180d0c7c23bee01e287c0be7ee2bd1e1706f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72cc08f7_c5e632a6",
         "filename": "deckhand/tests/unit/control/test_middleware.py",
         "patchSetId": 23
