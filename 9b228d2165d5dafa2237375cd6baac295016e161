@@ -16,6 +16,24 @@
       "revId": "9b228d2165d5dafa2237375cd6baac295016e161",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2a9fd38_d9e0e37c",
+        "filename": "deckhand/tests/unit/control/test_versions_controller.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-07T06:08:01Z",
+      "side": 1,
+      "message": "Nice catch, fixed in next patch.",
+      "parentUuid": "97a1323a_fdd05563",
+      "revId": "9b228d2165d5dafa2237375cd6baac295016e161",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
