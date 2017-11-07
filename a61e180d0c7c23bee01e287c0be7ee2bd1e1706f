@@ -92,6 +92,30 @@
       "revId": "a61e180d0c7c23bee01e287c0be7ee2bd1e1706f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39ccfa5b_6e908349",
+        "filename": "deckhand/tests/unit/control/test_middleware.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-11-07T03:45:52Z",
+      "side": 1,
+      "message": "I\u0027ve added a test for PUTs with empty body with both the header and without. Both pass as expected.  because I keyed off of req.content_length and not check for the presence of the header, falcon request does a little bit of the magic for us.",
+      "parentUuid": "16254bbb_ba4cf749",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 42
+      },
+      "revId": "a61e180d0c7c23bee01e287c0be7ee2bd1e1706f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
