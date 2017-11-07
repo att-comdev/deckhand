@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "8cf38ea1_2cdca3a1",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-07T02:48:54Z",
+      "side": 1,
+      "message": "Looks like this\u0027ll work for the PUT + empty response body use case.",
+      "range": {
+        "startLine": 126,
+        "startChar": 8,
+        "endLine": 126,
+        "endChar": 29
+      },
+      "revId": "a61e180d0c7c23bee01e287c0be7ee2bd1e1706f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d2d28bb_9c9456ae",
+        "filename": "deckhand/tests/unit/control/base.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-07T02:48:54Z",
+      "side": 1,
+      "message": "Kinda don\u0027t like having this here, but I\u0027ll just refactor this correctly later so it\u0027s put in the base unit test class. I need to streamline a way for generating test resources more easily, frankly, as there are too many inconsistencies right now.",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 18
+      },
+      "revId": "a61e180d0c7c23bee01e287c0be7ee2bd1e1706f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72cc08f7_c5e632a6",
         "filename": "deckhand/tests/unit/control/test_middleware.py",
         "patchSetId": 23
@@ -13,6 +59,30 @@
       "writtenOn": "2017-11-07T01:40:04Z",
       "side": 1,
       "message": "what if you PUT empty things?  I.e. per the code, content-length\u003d0?  Since the logic is in place, we should add 1 more test.",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 42
+      },
+      "revId": "a61e180d0c7c23bee01e287c0be7ee2bd1e1706f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16254bbb_ba4cf749",
+        "filename": "deckhand/tests/unit/control/test_middleware.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-07T02:48:54Z",
+      "side": 1,
+      "message": "Interesting. And that is a valid use case Tin. Because an empty request body is tantamount to deleting all the documents.\n\nSo we should have a test for validating that a PUT with empty response does not raise an exception.",
+      "parentUuid": "72cc08f7_c5e632a6",
       "range": {
         "startLine": 131,
         "startChar": 12,
