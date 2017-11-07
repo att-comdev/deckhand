@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b453e2a3_cb456926",
+        "filename": "deckhand/tests/unit/control/base.py",
+        "patchSetId": 25
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-07T05:51:52Z",
+      "side": 1,
+      "message": "Rebase issue, was moved to fixtures module in https://review.gerrithub.io/#/c/385521/",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 52,
+        "endChar": 51
+      },
+      "revId": "a354d9889c9efaca48ac6a277de3c8b596ea659b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
