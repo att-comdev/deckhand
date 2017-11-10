@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9efaf2d_06da06b2",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-10T09:19:21Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 95,
+        "startChar": 66,
+        "endLine": 95,
+        "endChar": 69
+      },
+      "revId": "ce799bd7584c3018ecab84c18eef9b025363d440",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8b3a87c_79c678a4",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-10T09:19:21Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 106,
+        "startChar": 2,
+        "endLine": 106,
+        "endChar": 13
+      },
+      "revId": "ce799bd7584c3018ecab84c18eef9b025363d440",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e21032c5_ecd915d3",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-10T09:19:21Z",
+      "side": 1,
+      "message": "depending on whether all the validations succeeded in the",
+      "range": {
+        "startLine": 107,
+        "startChar": 10,
+        "endLine": 107,
+        "endChar": 33
+      },
+      "revId": "ce799bd7584c3018ecab84c18eef9b025363d440",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
