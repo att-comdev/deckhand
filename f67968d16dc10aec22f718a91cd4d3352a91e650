@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56e5e172_aa473bb9",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-11-11T21:22:26Z",
+      "side": 1,
+      "message": "As discussed, this looks suspect as we generally don\u0027t match against the text in addition to the status code (No Content, Ok, Internal Server Error), as that title can be changed.  This probably needs to be looked at later to see why we can\u0027t do a match against just the code 204.",
+      "range": {
+        "startLine": 151,
+        "startChar": 27,
+        "endLine": 151,
+        "endChar": 41
+      },
+      "revId": "f67968d16dc10aec22f718a91cd4d3352a91e650",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
