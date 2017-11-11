@@ -212,6 +212,7 @@ conf:
       pipeline: authtoken api
   deckhand:
     DEFAULT:
+      allow_anonymous_access: true
       debug: true
       log_file: deckhand.log
       use_stderr: true
