@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b7f5b3e_fdba5ca0",
+        "filename": "deckhand/control/health.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-16T22:09:05Z",
+      "side": 1,
+      "message": "The problem with this design is that it\u0027s not foolproof.\n\nFor example:\n\n    class HealthResource(BaseResource):\n        def on_get(self, req, resp, resource_id)\n            if resource_id:\n                _get_health_status_details(resource_id)\n            else:\n                _get_health_status()\n\nWhile this example above is contrived, it demonstrates that we can use the same resource for list and show, both of which are GET; and if we want list to skip auth but show to do auth, then this implementation isn\u0027t robust enough.\n\nIt\u0027s definitely possible to use req.path in the middleware and match that against some kind of regular expression...\n\nBut for our use case we can probably just use this, although I think including a NOTE above the `no_authentication_methods` in BaseResource would be good to explain this limitation.",
+      "revId": "b77257cbf6758989341b1712bfed6cb417a42272",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae470859_9e409416",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-16T22:09:05Z",
+      "side": 1,
+      "message": "It\u0027d be cleaner to rewrite this as:\n\n    skip_auth \u003d False\n    if req.method in resource.no_authentication_methods:\n        skip_auth \u003d True\n    if req.headers.get(\u0027X-IDENTITY-STATUS\u0027) \u003d\u003d \u0027Confirmed\u0027 or skip_auth:\n        ...\n    elif CONF.allow_anonymous_access:\n        ...\n    else:\n       ...",
+      "revId": "b77257cbf6758989341b1712bfed6cb417a42272",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3acf29a9_f54bda28",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-16T22:09:05Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be needed as all the resources inherit from BaseResource inside which you defined `no_authentication_methods`.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 16
+      },
+      "revId": "b77257cbf6758989341b1712bfed6cb417a42272",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
