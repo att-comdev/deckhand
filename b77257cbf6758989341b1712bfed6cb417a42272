@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e354b12c_1a103783",
+        "filename": "deckhand/control/health.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-11-21T22:33:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b7f5b3e_fdba5ca0",
+      "revId": "b77257cbf6758989341b1712bfed6cb417a42272",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae470859_9e409416",
         "filename": "deckhand/control/middleware.py",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "5dfbfe47_19a49a3a",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-11-21T22:33:16Z",
+      "side": 1,
+      "message": "See note below about desiring to keep the attribute error handling.",
+      "parentUuid": "ae470859_9e409416",
+      "revId": "b77257cbf6758989341b1712bfed6cb417a42272",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3acf29a9_f54bda28",
         "filename": "deckhand/control/middleware.py",
         "patchSetId": 2
@@ -47,6 +83,30 @@
       "writtenOn": "2017-11-16T22:09:05Z",
       "side": 1,
       "message": "This shouldn\u0027t be needed as all the resources inherit from BaseResource inside which you defined `no_authentication_methods`.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 16
+      },
+      "revId": "b77257cbf6758989341b1712bfed6cb417a42272",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "889563b5_9b0cfb54",
+        "filename": "deckhand/control/middleware.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-11-21T22:33:16Z",
+      "side": 1,
+      "message": "This guards against resources being defined that do not inherit from BaseResource - however unlikely that may be. I feel this better reflects the desire to have to be explicit about not needing authentication. \nLeaving this in complicates the refactoring noted above, and as such, I\u0027m going to leave it alone.",
+      "parentUuid": "3acf29a9_f54bda28",
       "range": {
         "startLine": 50,
         "startChar": 0,
