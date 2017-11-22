@@ -22,6 +22,30 @@
       "revId": "8cc63164d2ef085ec549a2421668e33763c08337",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9501484_e9fda332",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-11-22T19:25:27Z",
+      "side": 1,
+      "message": "Not sure what semantic you\u0027re talking about, I was just referencing the change from process_request to process_resource in the middleware.",
+      "parentUuid": "1569108f_c69e37af",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 33
+      },
+      "revId": "8cc63164d2ef085ec549a2421668e33763c08337",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
