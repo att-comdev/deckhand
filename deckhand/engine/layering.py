@@ -15,9 +15,14 @@
 import collections
 import copy
 
+from oslo_log import log as logging
+
 from deckhand.engine import document
 from deckhand.engine import utils
 from deckhand import errors
+from deckhand import types
+
+LOG = logging.getLogger(__name__)
 
 
 class DocumentLayering(object):
@@ -25,31 +30,35 @@ class DocumentLayering(object):
 
     Layering is controlled in two places:
 
-    1. The `LayeringPolicy` control document, which defines the valid layers
+    1. The ``LayeringPolicy`` control document, which defines the valid layers
        and their order of precedence.
-    2. In the `metadata.layeringDefinition` section of normal
-       (`metadata.schema=metadata/Document/v1.0`) documents.
+    2. In the ``metadata.layeringDefinition`` section of normal
+       (``metadata.schema=metadata/Document/v1.0``) documents.
 
     .. note::
 
-        Only documents with the same `schema` are allowed to be layered
+        Only documents with the same ``schema`` are allowed to be layered
         together into a fully rendered document.
     """
 
     SUPPORTED_METHODS = ('merge', 'replace', 'delete')
-    LAYERING_POLICY_SCHEMA = 'deckhand/LayeringPolicy/v1.0'
 
-    def __init__(self, documents):
+    def __init__(self, layering_policy, documents):
         """Contructor for ``DocumentLayering``.
 
-        :param documents: List of YAML documents represented as dictionaries.
+        :param layering_policy: The document with schema
+            ``deckhand/LayeringPolicy`` needed for layering.
+        :param documents: List of all other documents to be layered together
+            in accordance with the ``layerOrder`` defined by the
+            LayeringPolicy document.
         """
+        self.layering_policy = document.Document(layering_policy)
         self.documents = [document.Document(d) for d in documents]
-        self._find_layering_policy()
+        self.layer_order = list(self.layering_policy['data']['layerOrder'])
         self.layered_docs = self._calc_document_children()
 
     def render(self):
-        """Perform layering on the set of `documents`.
+        """Perform layering on the list of ``self.documents``.
 
         Each concrete document will undergo layering according to the actions
         defined by its `layeringDefinition`.
@@ -57,7 +66,7 @@ class DocumentLayering(object):
         :returns: the list of rendered documents (does not include layering
             policy document).
         """
-        # ``rendered_data_by_layer`` agglomerates the set of changes across all
+        # ``rendered_data_by_layer`` tracks the set of changes across all
         # actions across each layer for a specific document.
         rendered_data_by_layer = {}
 
@@ -174,37 +183,6 @@ class DocumentLayering(object):
                     child=child_data, parent=rendered_data, key=last_key)
 
         return overall_data
-
-    def _find_layering_policy(self):
-        """Retrieve the current layering policy.
-
-        :raises LayeringPolicyMalformed: If the `layerOrder` could not be
-            found in the LayeringPolicy or if it is not a list.
-        :raises LayeringPolicyNotFound: If system has no layering policy.
-        """
-        # TODO(fmontei): There should be a DB call here to fetch the layering
-        # policy from the DB.
-        for doc in self.documents:
-            if doc.to_dict()['schema'] == self.LAYERING_POLICY_SCHEMA:
-                self.layering_policy = doc
-                break
-
-        if not hasattr(self, 'layering_policy'):
-            raise errors.LayeringPolicyNotFound(
-                schema=self.LAYERING_POLICY_SCHEMA)
-
-        # TODO(fmontei): Rely on schema validation or some such for this.
-        try:
-            self.layer_order = list(self.layering_policy['data']['layerOrder'])
-        except KeyError:
-            raise errors.LayeringPolicyMalformed(
-                schema=self.LAYERING_POLICY_SCHEMA,
-                document=self.layering_policy)
-
-        if not isinstance(self.layer_order, list):
-            raise errors.LayeringPolicyMalformed(
-                schema=self.LAYERING_POLICY_SCHEMA,
-                document=self.layering_policy)
 
     def _calc_document_children(self):
         """Determine each document's children.

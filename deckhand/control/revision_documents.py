@@ -24,6 +24,7 @@ from deckhand.engine import document_validation
 from deckhand.engine import secrets_manager
 from deckhand import errors
 from deckhand import policy
+from deckhand import types
 
 LOG = logging.getLogger(__name__)
 
@@ -103,6 +104,14 @@ class RenderedDocumentsResource(api_base.BaseResource):
             LOG.exception(six.text_type(e))
             raise falcon.HTTPNotFound(description=e.format_message())
 
+        # layering_policy = self._find_layering_policy(documents)
+        # if not layering_policy:
+        #     error_msg = ("LayeringPolicy not found for revision %d. One must "
+        #                  "exist for the current revision for document "
+        #                  "rendering.")
+        #     LOG.error(error_msg)
+        #     raise falcon.HTTPNotFound(description=error_msg)
+
         # TODO(fmontei): Currently the only phase of rendering that is
         # performed is secret substitution, which can be done in any randomized
         # order. However, secret substitution logic will have to be moved into
@@ -130,3 +139,10 @@ class RenderedDocumentsResource(api_base.BaseResource):
 
         resp.status = falcon.HTTP_200
         resp.body = self.view_builder.list(rendered_documents)
+
+    def _find_layering_policy(self, documents):
+        """Retrieve the layering policy."""
+        for doc in documents:
+            if doc['schema'].startswith(types.LAYERING_POLICY_SCHEMA):
+                return doc
+        return None
