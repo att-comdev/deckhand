@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
+
 import falcon
 from oslo_log import log as logging
 import six
@@ -21,9 +23,10 @@ from deckhand.control import common
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import document_validation
-from deckhand.engine import secrets_manager
+from deckhand.engine import layering
 from deckhand import errors
 from deckhand import policy
+from deckhand import types
 
 LOG = logging.getLogger(__name__)
 
@@ -103,30 +106,39 @@ class RenderedDocumentsResource(api_base.BaseResource):
             LOG.exception(six.text_type(e))
             raise falcon.HTTPNotFound(description=e.format_message())
 
-        # TODO(fmontei): Currently the only phase of rendering that is
-        # performed is secret substitution, which can be done in any randomized
-        # order. However, secret substitution logic will have to be moved into
-        # a separate module that handles layering alongside substitution once
-        # layering has been fully integrated into this endpoint.
-        secrets_substitution = secrets_manager.SecretsSubstitution(documents)
-        try:
-            rendered_documents = secrets_substitution.substitute_all()
-        except errors.DocumentNotFound as e:
-            LOG.error('Failed to render the documents because a secret '
-                      'document could not be found.')
-            LOG.exception(six.text_type(e))
-            raise falcon.HTTPNotFound(description=e.format_message())
+        layering_policy = self._extract_layering_policy(documents)
+        if layering_policy is None:
+            LOG.error('No layering policy found so could not render '
+                      'the documents for revision %s.', revision_id)
+            resp.status = falcon.HTTP_409
+            resp.body = self.view_builder.list(documents)
+        else:
+            document_layering = layering.DocumentLayering(layering_policy,
+                                                          documents)
+            rendered_documents = document_layering.render()
 
+            resp.status = falcon.HTTP_200
+            resp.body = self.view_builder.list(rendered_documents)
+            self._post_validate(rendered_documents)
+
+    def _extract_layering_policy(self, documents):
+        for doc in copy.copy(documents):
+            if doc['schema'].startswith(types.LAYERING_POLICY_SCHEMA):
+                layering_policy = doc
+                documents.remove(doc)
+                return layering_policy
+        return None
+
+    def _post_validate(self, rendered_documents):
         # Perform schema validation post-rendering to ensure that rendering
         # and substitution didn't break anything.
-        doc_validator = document_validation.DocumentValidation(documents)
+        doc_validator = document_validation.DocumentValidation(
+            rendered_documents)
         try:
             doc_validator.validate_all()
         except (errors.InvalidDocumentFormat,
                 errors.InvalidDocumentSchema) as e:
+            LOG.error('Failed to post-validate rendered documents.')
             LOG.exception(e.format_message())
             raise falcon.HTTPInternalServerError(
                 description=e.format_message())
-
-        resp.status = falcon.HTTP_200
-        resp.body = self.view_builder.list(rendered_documents)
