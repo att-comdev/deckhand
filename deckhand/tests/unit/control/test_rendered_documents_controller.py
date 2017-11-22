@@ -35,8 +35,8 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
         # Create 2 docs: one concrete, one abstract.
         documents_factory = factories.DocumentFactory(2, [1, 1])
         payload = documents_factory.gen_test(
-            {}, global_abstract=False, region_abstract=True)[1:]
-        concrete_doc = payload[0]
+            {}, global_abstract=False, region_abstract=True)
+        concrete_doc = payload[1]
 
         resp = self.app.simulate_put(
             '/api/v1.0/buckets/mop/documents',
@@ -125,8 +125,8 @@ class TestRenderedDocumentsControllerNegative(
         self.policy.set_rules(rules)
 
         # Create a document for a bucket.
-        secrets_factory = factories.DocumentSecretFactory()
-        payload = [secrets_factory.gen_test('Certificate', 'cleartext')]
+        documents_factory = factories.DocumentFactory(1, [1])
+        payload = documents_factory.gen_test({})
         resp = self.app.simulate_put(
             '/api/v1.0/buckets/mop/documents',
             headers={'Content-Type': 'application/x-yaml'},
@@ -161,8 +161,8 @@ class TestRenderedDocumentsControllerNegativeRBAC(
         self.policy.set_rules(rules)
 
         # Create a document for a bucket.
-        secrets_factory = factories.DocumentSecretFactory()
-        payload = [secrets_factory.gen_test('Certificate', 'cleartext')]
+        documents_factory = factories.DocumentFactory(1, [1])
+        payload = [documents_factory.gen_test({})[0]]
         resp = self.app.simulate_put(
             '/api/v1.0/buckets/mop/documents',
             headers={'Content-Type': 'application/x-yaml'},
@@ -185,8 +185,13 @@ class TestRenderedDocumentsControllerNegativeRBAC(
         self.policy.set_rules(rules)
 
         # Create a document for a bucket.
+        documents_factory = factories.DocumentFactory(1, [1])
+        layering_policy = documents_factory.gen_test({})[0]
         secrets_factory = factories.DocumentSecretFactory()
-        payload = [secrets_factory.gen_test('Certificate', 'encrypted')]
+        encrypted_document = secrets_factory.gen_test('Certificate',
+                                                      'encrypted')
+        payload = [layering_policy, encrypted_document]
+
         with mock.patch.object(buckets.BucketsResource, 'secrets_mgr',
                                autospec=True) as mock_secrets_mgr:
             mock_secrets_mgr.create.return_value = {
