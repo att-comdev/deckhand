@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "101d42ba_aa44b368",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-11-24T21:50:35Z",
+      "side": 1,
+      "message": "Sorry for not raising this earlier and piecemealing review (blaming too much turkey), but should this be a variable?  Right now this just loops through a bunch of tables and execute the same SQL repeatedly? I.e. that variable ``table`` isn\u0027t used anywhere",
+      "range": {
+        "startLine": 628,
+        "startChar": 37,
+        "endLine": 628,
+        "endChar": 46
+      },
+      "revId": "74f1d3c125ee24b780f52c2981c6f1780fe2b899",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
