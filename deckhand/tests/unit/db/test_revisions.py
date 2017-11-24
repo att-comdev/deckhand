@@ -156,6 +156,12 @@ class TestRevisions(base.TestDbBase):
             self.assertRaisesRegex(errors.DocumentNotFound, error_re,
                                    self.show_document, **filters)
 
+        # Validate that the revision counter was reset back to 1.
+        bucket_name = test_utils.rand_name('bucket')
+        created_documents = self.create_documents(
+            bucket_name, [base.DocumentFixture.get_minimal_fixture()])
+        self.assertEqual(1, created_documents[0]['revision_id'])
+
     def test_revision_history_multiple_buckets(self):
         documents = base.DocumentFixture.get_minimal_fixture()
         alt_documents = base.DocumentFixture.get_minimal_fixture()
