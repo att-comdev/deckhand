@@ -608,14 +608,23 @@ def revision_get_all(session=None, **filters):
 
 
 def revision_delete_all(session=None):
-    """Delete all revisions.
+    """Delete all revisions and resets primary key index back to 1 for each
+    table in the database.
 
     :param session: Database session object.
     :returns: None
     """
-    session = session or get_session()
-    session.query(models.Revision)\
-        .delete(synchronize_session=False)
+    engine = get_engine()
+    if engine.name == 'postgresql':
+        # NOTE(fmontei): While cascade should delete all data from all tables,
+        # we also need to reset the index to 1 for each table.
+        for table in ['buckets', 'revisions', 'revision_tags', 'documents',
+                      'validations']:
+            engine.execute(
+                text("TRUNCATE TABLE revisions RESTART IDENTITY CASCADE;")
+                .execution_options(autocommit=True))
+    else:
+        raw_query("DELETE FROM revisions;")
 
 
 def _exclude_deleted_documents(documents):
