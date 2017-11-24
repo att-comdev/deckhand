@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ed8f0da_3c8d1d5e",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-11-24T17:53:43Z",
+      "side": 1,
+      "message": "this variable is no longer used in the method",
+      "range": {
+        "startLine": 610,
+        "startChar": 24,
+        "endLine": 610,
+        "endChar": 31
+      },
+      "revId": "d1f36c938f5472c4fd683f0163463f7643fed562",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
