@@ -22,6 +22,30 @@
       "revId": "74f1d3c125ee24b780f52c2981c6f1780fe2b899",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3de5f51_4da7e0d2",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-25T01:42:17Z",
+      "side": 1,
+      "message": "Thanks, it\u0027s supposed to be, fixed in next patch",
+      "parentUuid": "101d42ba_aa44b368",
+      "range": {
+        "startLine": 628,
+        "startChar": 37,
+        "endLine": 628,
+        "endChar": 46
+      },
+      "revId": "74f1d3c125ee24b780f52c2981c6f1780fe2b899",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
