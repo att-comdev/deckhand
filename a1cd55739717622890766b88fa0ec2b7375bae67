@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23b4e486_72f1b440",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-11-27T19:20:34Z",
+      "side": 1,
+      "message": "This is kind of a mess. Would like to add a Matcher-like class for some of this stuff, but right now this is handling confusion between promenade/Node/v1 and promenade/Node/v1.0.\n\nThat versioning mess needs to be standardized on. (The problem is ubiquitous, Promenade is just an example).",
+      "revId": "a1cd55739717622890766b88fa0ec2b7375bae67",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
