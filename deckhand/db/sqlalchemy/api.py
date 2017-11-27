@@ -571,12 +571,30 @@ def _apply_filters(dct, **filters):
                     filter_val.items()).issubset(set(actual_val.items()))
                 if not is_subset:
                     return False
+            # Else both filters are string literals.
             else:
                 if isinstance(actual_val, bool):
                     filter_val = _transform_filter_bool(filter_val)
 
-                # Else both filters are string literals.
-                if filter_key in ['metadata.schema', 'schema']:
+                if filter_key == 'schema':
+                    try:
+                        namespace = actual_val.split('/')[0]
+                    except IndexError:
+                        namespace = None
+                    try:
+                        kind = actual_val.split('/')[0]
+                    except IndexError:
+                        kind = None
+                    # Filtering by schema must support namespace matching
+                    # (e.g. schema=promenade) such that all kind and schema
+                    # documents with promenade namespace are returned, or
+                    # (e.g. schema=promenade/Node) such that all version
+                    # schemas with namespace=schema and kind=Node are returned.
+                    if not (actual_val.startswith(filter_val) or
+                            namespace == filter_val or
+                            (namespace + '/' + kind) == filter_val):
+                        return False
+                elif filter_key == 'metadata.schema':
                     if not actual_val.startswith(filter_val):
                         return False
                 else:
