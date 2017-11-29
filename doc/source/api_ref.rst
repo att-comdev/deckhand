@@ -108,6 +108,9 @@ Supported query string parameters:
 
 * ``tag`` - string, optional, repeatable - Used to select revisions that have
   been tagged with particular tags.
+* ``sort`` - string, optional, repeatable - Defines the sort order for returning
+  results.  Default is by creation date.  Repeating this parameter indicates use
+  of multi-column sort with the most significant sorting column applied first.
 
 Sample response:
 

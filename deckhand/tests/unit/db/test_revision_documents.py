@@ -21,9 +21,8 @@ class TestRevisionDocumentsFiltering(base.TestDbBase):
     def test_document_filtering_by_bucket_name(self):
         document = base.DocumentFixture.get_minimal_fixture()
         bucket_name = test_utils.rand_name('bucket')
-        self.create_documents(bucket_name, document)
-
-        revision_id = self.create_documents(bucket_name, [])[0]['revision_id']
+        revision_id = self.create_documents(bucket_name, [document])[0][
+            'revision_id']
 
         filters = {'bucket_name': bucket_name}
         retrieved_documents = self.list_revision_documents(
@@ -37,7 +36,8 @@ class TestRevisionDocumentsFiltering(base.TestDbBase):
         bucket_name = test_utils.rand_name('bucket')
         self.create_documents(bucket_name, documents)
 
-        revision_id = self.create_documents(bucket_name, [])[0]['revision_id']
+        revision_id = self.create_documents(bucket_name, [])[0][
+            'revision_id']
         retrieved_documents = self.list_revision_documents(
             revision_id, include_history=False, deleted=False)
 
@@ -113,3 +113,62 @@ class TestRevisionDocumentsFiltering(base.TestDbBase):
                 **{'metadata.storagePolicy': ['wrong_val', 'encrypted']})
 
             self.assertEmpty(retrieved_documents)
+
+    def test_document_sorting_by_metadata_name(self):
+        documents = base.DocumentFixture.get_minimal_multi_fixture(count=3)
+        expected_names = ['bar', 'baz', 'foo']
+        for idx in range(len(documents)):
+            documents[idx]['metadata']['name'] = expected_names[idx]
+
+        bucket_name = test_utils.rand_name('bucket')
+        revision_id = self.create_documents(bucket_name, documents)[0][
+            'revision_id']
+
+        retrieved_documents = self.list_revision_documents(
+            revision_id, sort_by='metadata.name')
+
+        self.assertEqual(3, len(retrieved_documents))
+        self.assertEqual(expected_names,
+                         [d['metadata']['name'] for d in retrieved_documents])
+
+    def test_document_sorting_by_schema(self):
+        documents = base.DocumentFixture.get_minimal_multi_fixture(count=3)
+        expected_schemas = ['deckhand/Certificate/v1',
+                            'deckhand/CertificateKey/v1',
+                            'deckhand/LayeringPolicy/v1']
+        for idx in range(len(documents)):
+            documents[idx]['schema'] = expected_schemas[idx]
+
+        bucket_name = test_utils.rand_name('bucket')
+        revision_id = self.create_documents(bucket_name, documents)[0][
+            'revision_id']
+
+        retrieved_documents = self.list_revision_documents(
+            revision_id, sort_by='schema')
+
+        self.assertEqual(3, len(retrieved_documents))
+        self.assertEqual(expected_schemas,
+                         [d['schema'] for d in retrieved_documents])
+
+    def test_document_sorting_by_metadata_name_and_schema(self):
+        documents = base.DocumentFixture.get_minimal_multi_fixture(count=3)
+        expected_names = ['foo', 'baz', 'bar']
+        expected_schemas = ['deckhand/Certificate/v1',
+                            'deckhand/Certificate/v1',
+                            'deckhand/LayeringPolicy/v1']
+        for idx in range(len(documents)):
+            documents[idx]['metadata']['name'] = expected_names[idx]
+            documents[idx]['schema'] = expected_schemas[idx]
+
+        bucket_name = test_utils.rand_name('bucket')
+        revision_id = self.create_documents(bucket_name, documents)[0][
+            'revision_id']
+
+        retrieved_documents = self.list_revision_documents(
+            revision_id, sort_by=['schema', 'metadata.name'])
+
+        self.assertEqual(3, len(retrieved_documents))
+        self.assertEqual(['baz', 'foo', 'bar'],
+                         [d['metadata']['name'] for d in retrieved_documents])
+        self.assertEqual(expected_schemas,
+                         [d['schema'] for d in retrieved_documents])

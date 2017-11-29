@@ -37,7 +37,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
     @common.sanitize_params([
         'schema', 'metadata.name', 'metadata.layeringDefinition.abstract',
         'metadata.layeringDefinition.layer', 'metadata.label',
-        'status.bucket'])
+        'status.bucket', 'sort'])
     def on_get(self, req, resp, sanitized_params, revision_id):
         """Returns all documents for a `revision_id`.
 
@@ -49,6 +49,10 @@ class RevisionDocumentsResource(api_base.BaseResource):
         include_encrypted = policy.conditional_authorize(
             'deckhand:list_encrypted_documents', req.context, do_raise=False)
 
+        sort_by = None
+        if 'sort' in sanitized_params:
+            sort_by = sanitized_params.pop('sort')
+
         filters = sanitized_params.copy()
         filters['metadata.storagePolicy'] = ['cleartext']
         if include_encrypted:
@@ -57,7 +61,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
 
         try:
             documents = db_api.revision_get_documents(
-                revision_id, **filters)
+                revision_id, sort_by=sort_by, **filters)
         except errors.RevisionNotFound as e:
             LOG.exception(six.text_type(e))
             raise falcon.HTTPNotFound(description=e.format_message())
