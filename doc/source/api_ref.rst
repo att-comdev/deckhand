@@ -122,7 +122,9 @@ Sample response:
       url: https://deckhand/api/v1.0/revisions/1
       createdAt: 2017-07-14T21:23Z
       buckets: [mop]
-      tags: [a, b, c]
+      tags:
+        - name: a
+          data: {}
       validationPolicies:
         site-deploy-validation:
           status: failure
@@ -130,7 +132,11 @@ Sample response:
       url: https://deckhand/api/v1.0/revisions/2
       createdAt: 2017-07-16T01:15Z
       buckets: [flop, mop]
-      tags: [b]
+      tags:
+        - name: b
+          data:
+            random: stuff
+            foo: bar
       validationPolicies:
         site-deploy-validation:
           status: success
@@ -167,6 +173,8 @@ Sample response:
   tags:
     a:
       name: a
+      data:
+        random: stuff
       url: https://deckhand/api/v1.0/revisions/1/tags/a
   validationPolicies:
     site-deploy-validation:
