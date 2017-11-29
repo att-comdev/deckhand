@@ -651,6 +651,7 @@ def _exclude_deleted_documents(documents):
 def _filter_revision_documents(documents, unique_only, **filters):
     """Return the list of documents that match filters.
 
+    :param documents: List of documents to apply ``filters`` to.
     :param unique_only: Return only unique documents if ``True``.
     :param filters: Dictionary attributes (including nested) used to filter
         out revision documents.
@@ -665,11 +666,6 @@ def _filter_revision_documents(documents, unique_only, **filters):
         documents = _exclude_deleted_documents(documents)
 
     for document in documents:
-        # NOTE(fmontei): Only want to include non-validation policy documents
-        # for this endpoint.
-        if document['schema'].startswith(types.VALIDATION_POLICY_SCHEMA):
-            continue
-
         if _apply_filters(document, **filters):
             # Filter out redundant documents from previous revisions, i.e.
             # documents schema and metadata.name are repeated.
@@ -681,13 +677,13 @@ def _filter_revision_documents(documents, unique_only, **filters):
             if unique_key not in filtered_documents:
                 filtered_documents[unique_key] = document
 
-    # TODO(fmontei): Sort by user-specified parameter.
-    return sorted(filtered_documents.values(), key=lambda d: d['created_at'])
+    return filtered_documents.values()
 
 
 @require_revision_exists
 def revision_get_documents(revision_id=None, include_history=True,
-                           unique_only=True, session=None, **filters):
+                           unique_only=True, session=None, sort_by=None,
+                           **filters):
     """Return the documents that match filters for the specified `revision_id`.
 
     :param revision_id: The ID corresponding to the ``Revision`` object. If the
@@ -696,9 +692,8 @@ def revision_get_documents(revision_id=None, include_history=True,
         and up to current revision, if ``True``. Default is ``True``.
     :param unique_only: Return only unique documents if ``True. Default is
         ``True``.
-    :param filters: Dictionary attributes (including nested) used to filter
-        out revision documents.
     :param session: Database session object.
+    :param sort_by: Key by which to sort revisions.
     :param filters: Key-value pairs used for filtering out revision documents.
     :returns: All revision documents for ``revision_id`` that match the
         ``filters``, including document revision history if applicable.
@@ -737,7 +732,7 @@ def revision_get_documents(revision_id=None, include_history=True,
     revision_documents = _update_revision_history(revision_documents)
 
     filtered_documents = _filter_revision_documents(
-        revision_documents, unique_only, **filters)
+        revision_documents, unique_only, sort_by=sort_by, **filters)
 
     return filtered_documents
 
