@@ -50,3 +50,15 @@ schema = {
     'additionalProperties': False,
     'required': ['schema', 'metadata', 'data']
 }
+
+"""JSON schema against which all documents with ``deckhand/LayeringPolicy/v1``
+``schema`` are validated.
+
+This schema is used to sanity-check all LayeringPolicy documents that are
+passed to Deckhand. This schema is only enforced after validation for
+:py:data:`~deckhand.engine.schema.base_schema` has passed. Failure to pass
+this schema will result in an error entry being created for the validation
+with name ``deckhand-schema-validation`` corresponding to the created revision.
+"""
+
+__all__ = ['schema']

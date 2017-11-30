@@ -34,3 +34,10 @@ schema = {
     'additionalProperties': False,
     'required': ['schema', 'metadata']
 }
+"""Base JSON schema against which all Deckhand documents are validated.
+
+This schema is used to sanity-check all documents that are passed to Deckhand.
+Failure to pass this schema results in a critical error.
+"""
+
+__all__ = ['schema']
