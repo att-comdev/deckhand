@@ -35,7 +35,7 @@ BASE = declarative.declarative_base()
 class DeckhandBase(models.ModelBase, models.TimestampMixin):
     """Base class for Deckhand Models."""
 
-    __table_args__ = {'mysql_engine': 'Postgre', 'mysql_charset': 'utf8'}
+    __table_args__ = {'mysql_engine': 'InnoDB', 'mysql_charset': 'utf8'}
     __table_initialized__ = False
     __protected_attributes__ = set([
         "created_at", "updated_at", "deleted_at", "deleted"])
