@@ -40,7 +40,7 @@ class BucketsResource(api_base.BaseResource):
     def on_put(self, req, resp, bucket_name=None):
         document_data = req.stream.read(req.content_length or 0)
         try:
-            documents = list(yaml.safe_load_all(document_data))
+            documents = list(yaml.safe_load_all(document_data)) or []
         except yaml.YAMLError as e:
             error_msg = ("Could not parse the document into YAML data. "
                          "Details: %s." % e)
@@ -70,8 +70,7 @@ class BucketsResource(api_base.BaseResource):
         created_documents = self._create_revision_documents(
             bucket_name, documents, validations)
 
-        if created_documents:
-            resp.body = self.view_builder.list(created_documents)
+        resp.body = self.view_builder.list(created_documents)
         resp.status = falcon.HTTP_200
 
     def _prepare_secret_documents(self, secret_documents):
