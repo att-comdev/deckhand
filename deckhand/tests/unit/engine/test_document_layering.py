@@ -12,18 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
+
 from deckhand.engine import layering
 from deckhand import errors
 from deckhand import factories
 from deckhand.tests.unit import base as test_base
+from deckhand import types
 
 
 class TestDocumentLayering(test_base.DeckhandTestCase):
 
+    def _extract_layering_policy(self, documents):
+        for doc in copy.copy(documents):
+            if doc['schema'].startswith(types.LAYERING_POLICY_SCHEMA):
+                layering_policy = doc
+                documents.remove(doc)
+                return layering_policy
+        return None
+
     def _test_layering(self, documents, site_expected=None,
                        region_expected=None, global_expected=None,
                        exception_expected=None):
-        document_layering = layering.DocumentLayering(documents)
+        layering_policy = self._extract_layering_policy(documents)
+        document_layering = layering.DocumentLayering(
+            layering_policy, documents)
 
         if all([site_expected, region_expected, global_expected,
                 exception_expected]):
@@ -56,19 +69,22 @@ class TestDocumentLayering(test_base.DeckhandTestCase):
                 site_expected = [site_expected]
 
             for idx, expected in enumerate(site_expected):
-                self.assertEqual(expected, site_docs[idx].get('data'))
+                self.assertEqual(expected, site_docs[idx].get('data'),
+                                 'Actual site data does not match expected.')
         if region_expected:
             if not isinstance(region_expected, list):
                 region_expected = [region_expected]
 
             for idx, expected in enumerate(region_expected):
-                self.assertEqual(expected, region_docs[idx].get('data'))
+                self.assertEqual(expected, region_docs[idx].get('data'),
+                                 'Actual region data does not match expected.')
         if global_expected:
             if not isinstance(global_expected, list):
                 global_expected = [global_expected]
 
             for idx, expected in enumerate(global_expected):
-                self.assertEqual(expected, global_docs[idx].get('data'))
+                self.assertEqual(expected, global_docs[idx].get('data'),
+                                 'Actual global data does not match expected.')
 
 
 class TestDocumentLayering2Layers(TestDocumentLayering):
