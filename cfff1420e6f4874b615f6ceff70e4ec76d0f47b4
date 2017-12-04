@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4d74863_da20f164",
+        "filename": "deckhand/tests/functional/gabbits/document-render-error-layering-policy-conflict.yaml",
+        "patchSetId": 15
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-04T15:31:09Z",
+      "side": 1,
+      "message": "This needs to be updated",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 45
+      },
+      "revId": "cfff1420e6f4874b615f6ceff70e4ec76d0f47b4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
