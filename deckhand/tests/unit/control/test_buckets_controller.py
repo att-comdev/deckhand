@@ -45,6 +45,7 @@ class TestBucketsController(test_base.BaseControllerTest):
             '/api/v1.0/buckets/mop/documents',
             headers={'Content-Type': 'application/x-yaml'},
             body=yaml.safe_dump_all(payload))
+        import pdb; pdb.set_trace()
         self.assertEqual(200, resp.status_code)
         created_documents = list(yaml.safe_load_all(resp.text))
         self.assertEqual(3, len(created_documents))
