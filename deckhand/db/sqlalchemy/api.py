@@ -926,7 +926,13 @@ def revision_tag_create(revision_id, tag, data=None, session=None):
             tag_model.save(session=session)
         resp = tag_model.to_dict()
     except db_exception.DBDuplicateEntry:
-        resp = None
+        # Update the revision tag if it already exists.
+        tag_to_update = session.query(models.RevisionTag)\
+            .filter_by(tag=tag, revision_id=revision_id)\
+            .one()
+        tag_to_update.update({'data': data})
+        tag_to_update.save(session=session)
+        resp = tag_to_update.to_dict()
 
     return resp
 
@@ -980,11 +986,10 @@ def revision_tag_delete(revision_id, tag, session=None):
     :param session: Database session object.
     :returns: None
     """
-    session = session or get_session()
-    result = session.query(models.RevisionTag)\
-                .filter_by(tag=tag, revision_id=revision_id)\
-                .delete(synchronize_session=False)
-    if result == 0:
+    query = raw_query(
+        "DELETE FROM revision_tags WHERE tag='%s' AND revision_id=%s;" % (
+            tag, revision_id))
+    if query.rowcount == 0:
         raise errors.RevisionTagNotFound(tag=tag, revision=revision_id)
 
 
