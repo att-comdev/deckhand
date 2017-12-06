@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "d742a223_daad147b",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-06T22:44:06Z",
+      "side": 1,
+      "message": "That was an accident, was experimenting with something and didn\u0027t notice this slip in",
+      "parentUuid": "6eb350c6_9b335e22",
+      "revId": "7570893ce53169746da5dbfd55b4941082835e18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc4bdd6b_3892d814",
         "filename": "deckhand/utils.py",
         "patchSetId": 17
@@ -53,6 +71,24 @@
       "writtenOn": "2017-12-06T22:10:58Z",
       "side": 1,
       "message": "Should this be [0-9]+ to allow for versions \u003e 9?",
+      "revId": "7570893ce53169746da5dbfd55b4941082835e18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc464759_7eefd80b",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-06T22:44:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc4bdd6b_3892d814",
       "revId": "7570893ce53169746da5dbfd55b4941082835e18",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
