@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70de3314_448f1e38",
+        "filename": "deckhand/tests/unit/test_policy.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-06T20:50:29Z",
+      "side": 1,
+      "message": "This is actually all AT\u0026T copyright as I wrote all this below.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 32
+      },
+      "revId": "e6325b9fc2f529c718af4550ac0e50a21fcf7316",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
