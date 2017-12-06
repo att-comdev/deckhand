@@ -22,6 +22,40 @@
       "revId": "7570893ce53169746da5dbfd55b4941082835e18",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6eb350c6_9b335e22",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-12-06T22:10:58Z",
+      "side": 1,
+      "message": "I don\u0027t understand the switch to InnoDB, or the reference to mysql at all?",
+      "revId": "7570893ce53169746da5dbfd55b4941082835e18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc4bdd6b_3892d814",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-12-06T22:10:58Z",
+      "side": 1,
+      "message": "Should this be [0-9]+ to allow for versions \u003e 9?",
+      "revId": "7570893ce53169746da5dbfd55b4941082835e18",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
