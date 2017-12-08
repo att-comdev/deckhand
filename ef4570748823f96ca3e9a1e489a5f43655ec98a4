@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "abfbe487_0a20b1d3",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-08T15:33:47Z",
+      "side": 1,
+      "message": "I may have misunderstood the code I just reviewed by I thought the new result would be some like\n\n  tags:\n    a: {}\n\ninstead of\n\n  tags:\n    - name: a\n      data: {}",
+      "revId": "ef4570748823f96ca3e9a1e489a5f43655ec98a4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3453d54d_602e7214",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-08T15:33:47Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "ef4570748823f96ca3e9a1e489a5f43655ec98a4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3673fbc8_47b79e0e",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-08T15:33:47Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "ef4570748823f96ca3e9a1e489a5f43655ec98a4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
