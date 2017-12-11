@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7330311_6eb16487",
+        "filename": "deckhand/client/exceptions.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2017-12-11T19:43:10Z",
+      "side": 1,
+      "message": "I would be consistent with single or double quotes for all the message strings.  Lines 116, 122, etc., all use double quotes.",
+      "revId": "79e115d2372a10554695b1d9e7aafa94018a9c81",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6960917_8a310d70",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2017-12-11T19:43:10Z",
+      "side": 1,
+      "message": "Why not use single quotes around tag?  Or, single quotes around the whole msg_fmt to avoid the escape characters?\n\nI haven\u0027t read the user story, but why is tag the only variable quoted in these message formats?",
+      "revId": "79e115d2372a10554695b1d9e7aafa94018a9c81",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
