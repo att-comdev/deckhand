@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9667437f_1847b677",
+        "filename": "deckhand/client/exceptions.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-11T20:38:04Z",
+      "side": 1,
+      "message": "Done, though this is entirely optional. See: https://www.python.org/dev/peps/pep-0008/#id25",
+      "parentUuid": "e7330311_6eb16487",
+      "revId": "79e115d2372a10554695b1d9e7aafa94018a9c81",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6960917_8a310d70",
         "filename": "deckhand/errors.py",
         "patchSetId": 13
@@ -30,6 +48,24 @@
       "writtenOn": "2017-12-11T19:43:10Z",
       "side": 1,
       "message": "Why not use single quotes around tag?  Or, single quotes around the whole msg_fmt to avoid the escape characters?\n\nI haven\u0027t read the user story, but why is tag the only variable quoted in these message formats?",
+      "revId": "79e115d2372a10554695b1d9e7aafa94018a9c81",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8afaadcf_f8138b4f",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-11T20:38:04Z",
+      "side": 1,
+      "message": "Agreed, makes it more readable",
+      "parentUuid": "d6960917_8a310d70",
       "revId": "79e115d2372a10554695b1d9e7aafa94018a9c81",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
