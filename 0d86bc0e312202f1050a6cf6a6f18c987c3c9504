@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8d286e6_19cf25db",
+        "filename": "deckhand/client/exceptions.py",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2017-12-11T22:54:30Z",
+      "side": 1,
+      "message": "I\u0027m not clear on why many of these exceptions are here? Seems like most are not used anywhere in the code. e.g. AmbiguousEndpoints",
+      "revId": "0d86bc0e312202f1050a6cf6a6f18c987c3c9504",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
