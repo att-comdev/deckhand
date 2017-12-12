@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5f9de6b_7bfec7a7",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-12T21:26:28Z",
+      "side": 0,
+      "message": "Need to reinclude this comment",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 70
+      },
+      "revId": "7487ba3a34ba9deb4c2903f16535012dcad7cda8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

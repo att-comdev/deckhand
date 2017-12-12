@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "990d68a9_aa7d4a1a",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-12T21:26:28Z",
+      "side": 1,
+      "message": "Need to change logging.conf to pipe everything out to stdout/stderr in container then print it out with $STDOUT below",
+      "range": {
+        "startLine": 160,
+        "startChar": 4,
+        "endLine": 160,
+        "endChar": 20
+      },
+      "revId": "826cb2952354149913b5a260b612df72a545f18c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
