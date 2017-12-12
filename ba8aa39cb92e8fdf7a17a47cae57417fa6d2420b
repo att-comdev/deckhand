@@ -33,6 +33,24 @@
       "revId": "ba8aa39cb92e8fdf7a17a47cae57417fa6d2420b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f44d900_22429be0",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-12T22:14:19Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure that we weren\u0027t once upon a time so I just used it. Technically if it\u0027s an open source project my excuse is going to be \"because I\u0027m so benevolent that I\u0027m thinking about other companies\u0027 future use cases.\"",
+      "parentUuid": "28b10879_9965c89f",
+      "revId": "ba8aa39cb92e8fdf7a17a47cae57417fa6d2420b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
