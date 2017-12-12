@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a77b0d0_0cf061b8",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-12T22:04:46Z",
+      "side": 1,
+      "message": "\u0027dct\u0027?",
+      "revId": "ba8aa39cb92e8fdf7a17a47cae57417fa6d2420b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28b10879_9965c89f",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-12T22:04:46Z",
+      "side": 1,
+      "message": "What is the need for six when we shouldn\u0027t be supporting Python 2?",
+      "revId": "ba8aa39cb92e8fdf7a17a47cae57417fa6d2420b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
