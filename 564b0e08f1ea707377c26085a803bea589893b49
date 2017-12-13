@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bae86b4_a4f17cea",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-13T17:01:51Z",
+      "side": 1,
+      "message": "Should probably put this on L46",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 17
+      },
+      "revId": "564b0e08f1ea707377c26085a803bea589893b49",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
