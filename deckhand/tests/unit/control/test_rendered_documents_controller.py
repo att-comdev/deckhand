@@ -26,6 +26,12 @@ from deckhand.tests.unit.control import base as test_base
 
 class TestRenderedDocumentsController(test_base.BaseControllerTest):
 
+    def setUp(self):
+        super(TestRenderedDocumentsController, self).setUp()
+        data_schema_factory = factories.DataSchemaFactory()
+        self.data_schema = data_schema_factory.gen_test(
+            'example/Kind/v1.0', {})
+
     def test_list_rendered_documents_exclude_abstract_documents(self):
         rules = {'deckhand:list_cleartext_documents': '@',
                  'deckhand:list_encrypted_documents': '@',
@@ -41,7 +47,7 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
         resp = self.app.simulate_put(
             '/api/v1.0/buckets/mop/documents',
             headers={'Content-Type': 'application/x-yaml'},
-            body=yaml.safe_dump_all(payload))
+            body=yaml.safe_dump_all(payload + [self.data_schema]))
         self.assertEqual(200, resp.status_code)
         revision_id = list(yaml.safe_load_all(resp.text))[0]['status'][
             'revision']
@@ -53,17 +59,21 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
             headers={'Content-Type': 'application/x-yaml'})
         self.assertEqual(200, resp.status_code)
 
+        # Ignore the DataSchema document.
         rendered_documents = list(yaml.safe_load_all(resp.text))
+        rendered_documents = [d for d in rendered_documents
+                              if d['schema'] != self.data_schema['schema']]
+
         self.assertEqual(1, len(rendered_documents))
-        is_abstract = rendered_documents[0]['metadata']['layeringDefinition'][
+        is_abstract = rendered_documents[-1]['metadata']['layeringDefinition'][
             'abstract']
         self.assertFalse(is_abstract)
         for key, value in concrete_doc.items():
             if isinstance(value, dict):
                 self.assertDictContainsSubset(value,
-                                              rendered_documents[0][key])
+                                              rendered_documents[-1][key])
             else:
-                self.assertEqual(value, rendered_documents[0][key])
+                self.assertEqual(value, rendered_documents[-1][key])
 
     def test_list_rendered_documents_exclude_deleted_documents(self):
         """Verifies that documents from previous revisions that have been
@@ -84,7 +94,7 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
         resp = self.app.simulate_put(
             '/api/v1.0/buckets/mop/documents',
             headers={'Content-Type': 'application/x-yaml'},
-            body=yaml.safe_dump_all(payload))
+            body=yaml.safe_dump_all(payload + [self.data_schema]))
         self.assertEqual(200, resp.status_code)
 
         # Create 2nd document (exclude 1st document).
@@ -94,18 +104,22 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
         resp = self.app.simulate_put(
             '/api/v1.0/buckets/mop/documents',
             headers={'Content-Type': 'application/x-yaml'},
-            body=yaml.safe_dump_all([payload[0]]))
+            body=yaml.safe_dump_all([payload[0], self.data_schema]))
         self.assertEqual(200, resp.status_code)
         revision_id = list(yaml.safe_load_all(resp.text))[0]['status'][
             'revision']
 
-        # Verify that only the 2nd is returned for revision_id=2.
+        # Verify that only the 2nd is returned.
         resp = self.app.simulate_get(
             '/api/v1.0/revisions/%s/rendered-documents' % revision_id,
             headers={'Content-Type': 'application/x-yaml'})
         self.assertEqual(200, resp.status_code)
 
+        # Ignore the DataSchema document.
         rendered_documents = list(yaml.safe_load_all(resp.text))
+        rendered_documents = [d for d in rendered_documents
+                              if d['schema'] != self.data_schema['schema']]
+
         self.assertEqual(1, len(rendered_documents))
         self.assertEqual(second_name,
                          rendered_documents[0]['metadata']['name'])

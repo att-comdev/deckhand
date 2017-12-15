@@ -177,8 +177,8 @@ class InvalidDocumentFormat(DeckhandException):
 
 
 class InvalidDocumentSchema(DeckhandException):
-    msg_fmt = ("The provided %(document_schema)s is invalid. Supported "
-               "schemas: %(schema_list)s.")
+    msg_fmt = ("The provided document schema %(document_schema)s is invalid. "
+               "Supported schemas (namespace/kind): %(schema_list)s.")
     code = 400
 
 

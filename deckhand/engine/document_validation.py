@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import abc
 import copy
 import re
 
 import jsonschema
 from oslo_log import log as logging
+import six
 
-from deckhand.db.sqlalchemy import api as db_api
-from deckhand.engine import document as document_wrapper
 from deckhand.engine.schema import base_schema
 from deckhand.engine.schema import v1_0
 from deckhand import errors
@@ -28,114 +28,114 @@ from deckhand import types
 LOG = logging.getLogger(__name__)
 
 
-class DocumentValidation(object):
+@six.add_metaclass(abc.ABCMeta)
+class BaseValidator(object):
+    """Abstract base validator.
 
-    def __init__(self, documents):
-        """Class for document validation logic for YAML files.
+    Sub-classes should override this to implement schema-specific document
+    validation.
+    """
 
-        This class is responsible for validating YAML files according to their
-        schema.
+    @abc.abstractmethod
+    def validate(self, document):
+        """Validate whether ``document`` passes schema validation."""
 
-        :param documents: Documents to be validated.
-        :type documents: list[dict]
+
+class GenericValidator(BaseValidator):
+
+    def validate(self, document):
+        """Validates whether ``document``passes basic schema validation.
+
+        Sanity-checks each document for mandatory keys like "metadata" and
+        "schema".
+
+        Applies even to abstract documents, as they must be consumed by
+        concrete documents, so basic formatting is mandatory.
+
+        Failure to pass this results in an error.
+
+        :raises RuntimeError: If the Deckhand schema itself is invalid.
+        :raises errors.InvalidDocumentFormat: If the document failed schema
+            validation.
+        :returns: None
         """
-        self.documents = []
-
-        if not isinstance(documents, (list, tuple)):
-            documents = [documents]
-
         try:
-            for document in documents:
-                doc = copy.deepcopy(document)
-                # NOTE(fmontei): Remove extraneous top-level keys so that fully
-                # rendered documents pass schema validation.
-                for key in doc.copy():
-                    if key not in ('metadata', 'schema', 'data'):
-                        doc.pop(key)
-                self.documents.append(document_wrapper.Document(doc))
-        except Exception:
-            raise errors.InvalidDocumentFormat(
-                detail='Document could not be converted into a dictionary',
-                schema='Unknown')
+            jsonschema.validate(document, base_schema.schema)
+        except jsonschema.exceptions.SchemaError as e:
+            raise RuntimeError(
+                'Unknown error occurred while attempting to use Deckhand '
+                'schema. Details: %s.' % six.text_type(e))
+        except jsonschema.exceptions.ValidationError as e:
+            LOG.error('Document failed top-level schema validation. Details: '
+                      '%s.', e.message)
+            # NOTE(fmontei): Raise here because if the document fails sanity
+            # check then this is a critical failure.
+            raise errors.InvalidDocumentFormat(detail=e.message,
+                                               schema=e.schema)
 
-    class SchemaType(object):
-        """Class for retrieving correct schema for pre-validation on YAML.
 
-        Retrieves the schema that corresponds to "apiVersion" in the YAML
-        data. This schema is responsible for performing pre-validation on
-        YAML data.
-        """
+class SchemaValidator(BaseValidator):
 
-        schema_versions_info = [
-            {'id': 'deckhand/CertificateKey',
-             'schema': v1_0.certificate_key_schema,
-             'version': '1.0'},
-            {'id': 'deckhand/Certificate',
-             'schema': v1_0.certificate_schema,
-             'version': '1.0'},
-            {'id': 'deckhand/DataSchema',
-             'schema': v1_0.data_schema_schema,
-             'version': '1.0'},
-            {'id': 'deckhand/LayeringPolicy',
-             'schema': v1_0.layering_policy_schema,
-             'version': '1.0'},
-            {'id': 'deckhand/Passphrase',
-             'schema': v1_0.passphrase_schema,
-             'version': '1.0'},
-            {'id': 'deckhand/ValidationPolicy',
-             'schema': v1_0.validation_policy_schema,
-             'version': '1.0'},
-            # FIXME(fmontei): Remove this once all Deckhand tests have been
-            # refactored to account for dynamic schema registeration via
-            # `DataSchema` documents. Otherwise most tests will fail.
-            {'id': 'metadata/Document',
-             'schema': v1_0.document_schema,
-             'version': '1.0'}]
+        # TODO(fmontei): Make this work with different API versions, if needed.
+        _schema_versions_info = {
+            'deckhand/CertificateKey': v1_0.certificate_key_schema,
+            'deckhand/Certificate': v1_0.certificate_schema,
+            'deckhand/DataSchema': v1_0.data_schema_schema,
+            'deckhand/LayeringPolicy': v1_0.layering_policy_schema,
+            'deckhand/Passphrase': v1_0.passphrase_schema,
+            'deckhand/ValidationPolicy': v1_0.validation_policy_schema,
+            # Represents a generic document schema.
+            '*': v1_0.document_schema.schema
+        }
 
-        schema_re = re.compile(
+        _schema_re = re.compile(
             '^([A-Za-z]+\/[A-Za-z]+\/v[1]{1}(\.[0]{1}){0,1})$')
 
-        @classmethod
-        def _register_data_schemas(cls):
+        def __init__(self, data_schemas):
+            super(SchemaValidator, self).__init__()
+            self.data_schemas = data_schemas
+            self.registered_schemas = self._register_all_schemas()
+
+        def _register_all_schemas(self):
             """Dynamically detect schemas for document validation that have
             been registered by external services via ``DataSchema`` documents.
+
+            :returns: All schemas contained in ``_schema_versions_info`` in
+                addition to registered ``DataSchema`` documents found in the
+                DB.
             """
-            data_schemas = db_api.document_get_all(
-                schema=types.DATA_SCHEMA_SCHEMA, revision_id='latest')
 
-            for data_schema in data_schemas:
-                if cls.schema_re.match(data_schema['metadata']['name']):
-                    schema_id = '/'.join(
-                        data_schema['metadata']['name'].split('/')[:2])
-                else:
-                    schema_id = data_schema['metadata']['name']
-                cls.schema_versions_info.append({
-                    'id': schema_id,
-                    'schema': data_schema['data'],
-                    'version': '1.0',
-                    'registered': True,
-                })
+            registered_schemas = copy.copy(
+                SchemaValidator._schema_versions_info)
 
-        @classmethod
-        def _get_schema_by_property(cls, schema_re, field):
-            if schema_re.match(field):
-                schema_id = '/'.join(field.split('/')[:2])
-            else:
-                schema_id = field
+            for data_schema in self.data_schemas:
+                try:
+                    if SchemaValidator._schema_re.match(
+                            data_schema['metadata']['name']):
+                        schema_prefix = '/'.join(
+                            data_schema['metadata']['name'].split('/')[:2])
+                    else:
+                        schema_prefix = data_schema['metadata']['name']
 
-            matching_schemas = []
+                    validation_schema = copy.deepcopy(
+                        SchemaValidator._schema_versions_info['*'])
+                    validation_schema['properties']['data'] = (
+                        data_schema['data'])
+                except (KeyError, TypeError):
+                    continue
 
-            for schema in cls.schema_versions_info:
-                # Can't use `startswith` below to avoid namespace false
-                # positives like `CertificateKey` and `Certificate`.
-                if schema_id == schema['id']:
-                    if schema not in matching_schemas:
-                        matching_schemas.append(schema)
-            return matching_schemas
+                # Coerce a dictionary-formatted document into an object so it's
+                # consistent with the other module-level schemas contained in
+                # ``SchemaValidator._schema_versions_info``.
+                class Schema(object):
+                    schema = validation_schema
+                registered_schemas.setdefault(schema_prefix, Schema())
 
-        @classmethod
-        def get_schemas(cls, doc):
-            """Retrieve the relevant schema based on the document's ``schema``.
+            return registered_schemas
+
+        def _get_schemas(self, document):
+            """Retrieve the relevant schemas based on the document's
+            ``schema``.
 
             :param dict doc: The document used for finding the correct schema
                 to validate it based on its ``schema``.
@@ -143,18 +143,121 @@ class DocumentValidation(object):
                 validation.
             :rtype: dict
             """
-            cls._register_data_schemas()
 
-            # FIXME(fmontei): Remove this once all Deckhand tests have been
-            # refactored to account for dynamic schema registeration via
-            # ``DataSchema`` documents. Otherwise most tests will fail.
-            for doc_field in [doc['schema'], doc['metadata']['schema']]:
-                matching_schemas = cls._get_schema_by_property(
-                    cls.schema_re, doc_field)
-                if matching_schemas:
-                    return matching_schemas
+            if SchemaValidator._schema_re.match(document['schema']):
+                target_schema_prefix = (
+                    '/'.join(document['schema'].split('/')[:2]))
+            else:
+                target_schema_prefix = document['schema']
 
-            return []
+            matching_schemas = []
+            for schema_prefix, schema in self.registered_schemas.items():
+                # Can't use `startswith` below to avoid namespace false
+                # positives like `CertificateKey` and `Certificate`.
+                if target_schema_prefix == schema_prefix:
+                    if schema not in matching_schemas:
+                        matching_schemas.append(schema)
+
+            return matching_schemas
+
+        def validate(self, document):
+            """Perform more detailed validation on each document depending on
+            its schema. If the document is abstract, then no validation is
+            performed.
+
+            Does not apply to abstract documents.
+
+            :raises RuntimeError: If the Deckhand schema itself is invalid.
+            :raises errors.InvalidDocumentFormat: If Deckhand could not find
+                schemas used to validate the document further.
+            :returns: An error message following schema validation failure.
+                Else None.
+            :rtype: str
+            """
+            try:
+                is_abstract = document['metadata']['layeringDefinition'][
+                    'abstract']
+            except KeyError:
+                is_abstract = False
+
+            if is_abstract is True:
+                LOG.info('Skipping schema validation for abstract '
+                         'document: %s.', document)
+                return
+
+            schemas_to_use = self._get_schemas(document)
+            if not schemas_to_use:
+                LOG.debug('Document schema %s not recognized.',
+                          document['schema'])
+                # Raise here because if Deckhand cannot even determine which
+                # schemas to use for further validation, then no meaningful
+                # validation can be performed, so this is a critical failure.
+                raise errors.InvalidDocumentSchema(
+                    document_schema=document['schema'],
+                    schema_list=[
+                        s for s in self.registered_schemas if s != '*'])
+
+            for schema_to_use in schemas_to_use:
+                try:
+                    schema_validator = schema_to_use.schema
+                    jsonschema.validate(document, schema_validator)
+                except jsonschema.exceptions.SchemaError as e:
+                    raise RuntimeError(
+                        'Unknown error occurred while attempting to use'
+                        'Deckhand schema. Details: %s.' % six.text_type(e))
+                except jsonschema.exceptions.ValidationError as e:
+                    LOG.error(
+                        'Document failed schema validation for schema %s.'
+                        'Details: %s.', document['schema'], e.message)
+                    return e.message
+
+
+class DocumentValidation(object):
+
+    def __init__(self, documents):
+        """Class for document validation logic for documents.
+
+        This class is responsible for validating documents according to their
+        schema.
+
+        ``DataSchema`` documents must be validated first, as they are in turn
+        used to validate other documents.
+
+        :param documents: Documents to be validated.
+        :type documents: :func:`list[dict]`
+
+        """
+
+        data_schemas = []
+        all_other_documents = []
+
+        if not isinstance(documents, (list, tuple)):
+            documents = [documents]
+
+        for document in documents:
+            if not isinstance(document, dict):
+                continue
+            _document = copy.deepcopy(document)
+            # FIXME(fmontei): Remove extraneous top-level keys so that fully
+            # rendered documents pass schema validation. This should be handled
+            # more carefully later.
+            for key in document:
+                if key not in ('metadata', 'schema', 'data'):
+                    _document.pop(key)
+            if _document.get('schema', '').startswith(
+                    types.DATA_SCHEMA_SCHEMA):
+                data_schemas.append(_document)
+            else:
+                all_other_documents.append(_document)
+
+        self.documents = data_schemas + all_other_documents
+
+        # NOTE(fmontei): The order of the validators is important. The
+        # ``GenericValidator`` must come first.
+        self._validators = [
+            GenericValidator(),
+            SchemaValidator(data_schemas)
+        ]
 
     def _format_validation_results(self, results):
         """Format the validation result to be compatible with database
@@ -183,60 +286,16 @@ class DocumentValidation(object):
         return formatted_results
 
     def _validate_one(self, document):
-        raw_dict = document.to_dict()
-        try:
-            # Subject every document to basic validation to verify that each
-            # main section is present (schema, metadata, data).
-            jsonschema.validate(raw_dict, base_schema.schema)
-        except jsonschema.exceptions.ValidationError as e:
-            LOG.debug('Document failed top-level schema validation. Details: '
-                      '%s.', e.message)
-            # NOTE(fmontei): Raise here because if we fail basic schema
-            # validation, then there is no point in continuing.
-            raise errors.InvalidDocumentFormat(
-                detail=e.message, schema=e.schema)
-
-        schemas_to_use = self.SchemaType.get_schemas(raw_dict)
-
-        if not schemas_to_use:
-            LOG.debug('Document schema %s not recognized.',
-                      document.get_schema())
-            # NOTE(fmontei): Raise here because if Deckhand cannot even
-            # determine which schema to use for further validation, then there
-            # is no point in trying to continue validation.
-            raise errors.InvalidDocumentSchema(
-                document_schema=document.get_schema(),
-                schema_list=[
-                    s['id'] for s in self.SchemaType.schema_versions_info])
-
         result = {'errors': []}
 
-        # Perform more detailed validation on each document depending on
-        # its schema. If the document is abstract, validation errors are
-        # ignored.
-        if document.is_abstract():
-            LOG.info('Skipping schema validation for abstract '
-                     'document: %s.', raw_dict)
-        else:
-
-            for schema_to_use in schemas_to_use:
-                try:
-                    if isinstance(schema_to_use['schema'], dict):
-                        schema_validator = schema_to_use['schema']
-                        jsonschema.validate(raw_dict.get('data', {}),
-                                            schema_validator)
-                    else:
-                        schema_validator = schema_to_use['schema'].schema
-                        jsonschema.validate(raw_dict, schema_validator)
-                except jsonschema.exceptions.ValidationError as e:
-                    LOG.error(
-                        'Document failed schema validation for schema %s.'
-                        'Details: %s.', document.get_schema(), e.message)
-                    result['errors'].append({
-                        'schema': document.get_schema(),
-                        'name': document.get_name(),
-                        'message': e.message.replace('u\'', '\'')
-                    })
+        for validator in self._validators:
+            error_message = validator.validate(document)
+            if error_message:
+                result['errors'].append({
+                    'schema': document['schema'],
+                    'name': document['metadata']['name'],
+                    'message': error_message
+                })
 
         if result['errors']:
             result.setdefault('status', 'failure')
@@ -246,12 +305,14 @@ class DocumentValidation(object):
         return result
 
     def validate_all(self):
-        """Pre-validate that the YAML file is correctly formatted.
+        """Pre-validate that all documents are correctly formatted.
 
-        All concrete documents in the revision successfully pass their JSON
-        schema validations. The result of the validation is stored under
+        All concrete documents in the revision must successfully pass their
+        JSON schema validations. The result of the validation is stored under
         the "deckhand-document-schema-validation" validation namespace for
         a document revision.
+
+        All abstract documents must themselves be sanity-checked.
 
         Validation is broken up into 2 stages:
 
@@ -280,9 +341,9 @@ class DocumentValidation(object):
             validation and the failure is deemed critical.
         :raises errors.InvalidDocumentSchema: If no JSON schema for could be
             found for executing document validation.
+        :raises RuntimeError: If a Deckhand schema itself is invalid.
         """
         validation_results = []
-
         for document in self.documents:
             result = self._validate_one(document)
             validation_results.append(result)
