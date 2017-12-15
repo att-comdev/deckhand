@@ -44,14 +44,14 @@ schema = {
     'properties': {
         'schema': {
             'type': 'string',
-            'pattern': '^([A-Za-z]+/[A-Za-z]+/v[1]{1}(\.[0]{1}){0,1})$'
+            'pattern': '^[A-Za-z]+/[A-Za-z]+/v[0-9](.0)?$'
         },
         'metadata': {
             'type': 'object',
             'properties': {
                 'schema': {
                     'type': 'string',
-                    'pattern': '^(metadata/Document/v[1]{1}(\.[0]{1}){0,1})$'
+                    'pattern': '^metadata/Document/v[0-9](.0)?$'
                 },
                 'name': {'type': 'string'},
                 'labels': {'type': 'object'},
