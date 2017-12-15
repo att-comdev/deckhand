@@ -84,13 +84,8 @@ class DocumentValidation(object):
              'version': '1.0'},
             {'id': 'deckhand/ValidationPolicy',
              'schema': v1_0.validation_policy_schema,
-             'version': '1.0'},
-            # FIXME(fmontei): Remove this once all Deckhand tests have been
-            # refactored to account for dynamic schema registeration via
-            # `DataSchema` documents. Otherwise most tests will fail.
-            {'id': 'metadata/Document',
-             'schema': v1_0.document_schema,
-             'version': '1.0'}]
+             'version': '1.0'}
+        ]
 
         schema_re = re.compile(
             '^([A-Za-z]+\/[A-Za-z]+\/v[1]{1}(\.[0]{1}){0,1})$')
@@ -100,8 +95,10 @@ class DocumentValidation(object):
             """Dynamically detect schemas for document validation that have
             been registered by external services via ``DataSchema`` documents.
             """
+            cls.registered_data_schemas = copy.copy(cls.schema_versions_info)
+
             data_schemas = db_api.document_get_all(
-                schema=types.DATA_SCHEMA_SCHEMA, revision_id='latest')
+                schema=types.DATA_SCHEMA_SCHEMA, deleted=False)
 
             for data_schema in data_schemas:
                 if cls.schema_re.match(data_schema['metadata']['name']):
@@ -109,29 +106,20 @@ class DocumentValidation(object):
                         data_schema['metadata']['name'].split('/')[:2])
                 else:
                     schema_id = data_schema['metadata']['name']
-                cls.schema_versions_info.append({
+
+                validation_schema = copy.deepcopy(v1_0.document_schema.schema)
+                validation_schema['properties']['data'] = data_schema['data']
+
+                class Schema(object):
+                    schema = validation_schema
+                new_entry = {
                     'id': schema_id,
-                    'schema': data_schema['data'],
+                    'schema': Schema(),
                     'version': '1.0',
-                    'registered': True,
-                })
-
-        @classmethod
-        def _get_schema_by_property(cls, schema_re, field):
-            if schema_re.match(field):
-                schema_id = '/'.join(field.split('/')[:2])
-            else:
-                schema_id = field
-
-            matching_schemas = []
-
-            for schema in cls.schema_versions_info:
-                # Can't use `startswith` below to avoid namespace false
-                # positives like `CertificateKey` and `Certificate`.
-                if schema_id == schema['id']:
-                    if schema not in matching_schemas:
-                        matching_schemas.append(schema)
-            return matching_schemas
+                }
+                if schema_id not in [
+                        s['id'] for s in cls.registered_data_schemas]:
+                    cls.registered_data_schemas.append(new_entry)
 
         @classmethod
         def get_schemas(cls, doc):
@@ -145,16 +133,20 @@ class DocumentValidation(object):
             """
             cls._register_data_schemas()
 
-            # FIXME(fmontei): Remove this once all Deckhand tests have been
-            # refactored to account for dynamic schema registeration via
-            # ``DataSchema`` documents. Otherwise most tests will fail.
-            for doc_field in [doc['schema'], doc['metadata']['schema']]:
-                matching_schemas = cls._get_schema_by_property(
-                    cls.schema_re, doc_field)
-                if matching_schemas:
-                    return matching_schemas
+            if cls.schema_re.match(doc['schema']):
+                schema_id = '/'.join(doc['schema'].split('/')[:2])
+            else:
+                schema_id = doc['schema']
 
-            return []
+            matching_schemas = []
+            for schema in cls.registered_data_schemas:
+                # Can't use `startswith` below to avoid namespace false
+                # positives like `CertificateKey` and `Certificate`.
+                if schema_id == schema['id']:
+                    if schema not in matching_schemas:
+                        matching_schemas.append(schema)
+
+            return matching_schemas
 
     def _format_validation_results(self, results):
         """Format the validation result to be compatible with database
@@ -197,7 +189,6 @@ class DocumentValidation(object):
                 detail=e.message, schema=e.schema)
 
         schemas_to_use = self.SchemaType.get_schemas(raw_dict)
-
         if not schemas_to_use:
             LOG.debug('Document schema %s not recognized.',
                       document.get_schema())
@@ -218,16 +209,12 @@ class DocumentValidation(object):
             LOG.info('Skipping schema validation for abstract '
                      'document: %s.', raw_dict)
         else:
-
             for schema_to_use in schemas_to_use:
                 try:
-                    if isinstance(schema_to_use['schema'], dict):
-                        schema_validator = schema_to_use['schema']
-                        jsonschema.validate(raw_dict.get('data', {}),
-                                            schema_validator)
-                    else:
-                        schema_validator = schema_to_use['schema'].schema
-                        jsonschema.validate(raw_dict, schema_validator)
+                    schema_validator = schema_to_use['schema'].schema
+                    jsonschema.validate(raw_dict, schema_validator)
+                # except jsonschema.exceptions.SchemaError as e:
+                #     print e
                 except jsonschema.exceptions.ValidationError as e:
                     LOG.error(
                         'Document failed schema validation for schema %s.'

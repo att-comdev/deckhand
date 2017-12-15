@@ -21,6 +21,10 @@ from deckhand.tests.unit.control import base as test_base
 
 class TestYAMLTranslator(test_base.BaseControllerTest):
 
+    def setUp(self):
+        super(TestYAMLTranslator, self).setUp()
+        self._register_default_data_schema_document('armada/Manifest/v1.0')
+
     def test_request_with_correct_content_type(self):
         rules = {'deckhand:create_cleartext_documents': '@'}
         self.policy.set_rules(rules)
