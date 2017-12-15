@@ -28,6 +28,10 @@ CONF = cfg.CONF
 class TestBucketsController(test_base.BaseControllerTest):
     """Test suite for validating positive scenarios for buckets controller."""
 
+    def setUp(self):
+        super(TestBucketsController, self).setUp()
+        self._register_default_data_schema_document()
+
     def test_put_bucket(self):
         rules = {'deckhand:create_cleartext_documents': '@'}
         self.policy.set_rules(rules)
@@ -56,8 +60,9 @@ class TestBucketsController(test_base.BaseControllerTest):
 
     def test_put_bucket_with_secret(self):
         def _do_test(payload):
+            bucket_name = test_utils.rand_name('bucket')
             resp = self.app.simulate_put(
-                '/api/v1.0/buckets/mop/documents',
+                '/api/v1.0/buckets/%s/documents' % bucket_name,
                 headers={'Content-Type': 'application/x-yaml'},
                 body=yaml.safe_dump_all(payload))
             self.assertEqual(200, resp.status_code)
@@ -98,11 +103,7 @@ class TestBucketsController(test_base.BaseControllerTest):
         # `metadata.storagePolicy`='encrypted'. In the case below,
         # a generic document is tested.
         documents_factory = factories.DocumentFactory(1, [1])
-        document_mapping = {
-            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}}
-        }
-        payload = documents_factory.gen_test(document_mapping,
-                                             global_abstract=False)
+        payload = documents_factory.gen_test({}, global_abstract=False)
         payload[-1]['metadata']['storagePolicy'] = 'encrypted'
         with mock.patch.object(buckets.BucketsResource, 'secrets_mgr',
                                autospec=True) as mock_secrets_mgr:
@@ -139,6 +140,8 @@ class TestBucketsController(test_base.BaseControllerTest):
             '/api/v1.0/buckets/%s/documents' % bucket_name,
             headers={'Content-Type': 'application/x-yaml'}, body=None)
         self.assertEqual(200, resp.status_code)
+
+        self._register_default_data_schema_document()
 
         # Re-create the documents in the second bucket.
         resp = self.app.simulate_put(

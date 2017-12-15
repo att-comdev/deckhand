@@ -30,6 +30,10 @@ class TestRevisionDocumentsControllerNegativeRBAC(
     empty.
     """
 
+    def setUp(self):
+        super(TestRevisionDocumentsControllerNegativeRBAC, self).setUp()
+        self._register_default_data_schema_document()
+
     def test_list_cleartext_revision_documents_insufficient_permissions(self):
         rules = {'deckhand:list_cleartext_documents': 'rule:admin_api',
                  'deckhand:create_cleartext_documents': '@'}
@@ -83,6 +87,10 @@ class TestRevisionDocumentsControllerNegativeRBAC(
 
 
 class TestRevisionDocumentsControllerSorting(test_base.BaseControllerTest):
+
+    def setUp(self):
+        super(TestRevisionDocumentsControllerSorting, self).setUp()
+        self._register_default_data_schema_document()
 
     def test_list_revision_documents_sorting_metadata_name(self):
         rules = {'deckhand:list_cleartext_documents': '@',

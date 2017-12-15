@@ -17,6 +17,7 @@ import yaml
 
 from falcon import testing as falcon_testing
 
+from deckhand import factories
 from deckhand import service
 from deckhand.tests.unit import base as test_base
 from deckhand.tests.unit import fixtures
@@ -44,3 +45,27 @@ class BaseControllerTest(test_base.DeckhandWithDBTestCase,
         with open(test_yaml_path, 'r') as yaml_file:
             yaml_data = yaml_file.read()
         self.data = yaml.safe_load(yaml_data)
+
+    def _register_default_data_schema_document(self, schema_name=None,
+                                               do_set_rules=True):
+        """Registers default ``DataSchema`` document needed for document with
+        ``schema``='example/Kind/v1.0' to be recognized by Deckhand.
+
+        This should be called in the ``setUp`` method for a subclass so that
+        the `DataSchema` is pre-registered before the tests that rely on it
+        are called.
+        """
+        if not schema_name:
+            schema_name = 'example/Kind/v1.0'
+
+        if do_set_rules:
+            rules = {'deckhand:create_cleartext_documents': '@'}
+            self.policy.set_rules(rules)
+
+        data_schema_factory = factories.DataSchemaFactory()
+        payload = data_schema_factory.gen_test(schema_name, {})
+        resp = self.app.simulate_put(
+            '/api/v1.0/buckets/mop/documents',
+            headers={'Content-Type': 'application/x-yaml'},
+            body=yaml.safe_dump(payload))
+        self.assertEqual(200, resp.status_code)

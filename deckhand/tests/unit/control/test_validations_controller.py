@@ -57,6 +57,10 @@ validator:
 class TestValidationsController(test_base.BaseControllerTest):
     """Test suite for validating positive scenarios for bucket controller."""
 
+    def setUp(self):
+        super(TestValidationsController, self).setUp()
+        self._register_default_data_schema_document()
+
     def _create_revision(self, payload=None):
         if not payload:
             documents_factory = factories.DocumentFactory(2, [1, 1])
@@ -381,8 +385,7 @@ class TestValidationsController(test_base.BaseControllerTest):
             global_abstract=False)[-1]
         doc_to_test['schema'] = 'example/Doc/v1'
 
-        revision_id = self._create_revision(
-            payload=[doc_to_test])
+        revision_id = self._create_revision(payload=[doc_to_test])
 
         # Validate that the validation was created and passed.
         resp = self.app.simulate_get(

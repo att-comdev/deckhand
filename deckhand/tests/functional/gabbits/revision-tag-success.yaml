@@ -36,7 +36,12 @@ tests:
     status: 204
     response_headers: null
 
-    # Create a revision implicitly by creating a document.
+  - name: initialize_data_schemas
+    desc: Create initial data schemas document needed to pass document validation
+    PUT: /api/v1.0/buckets/mop/documents
+    status: 200
+    data: <@resources/required-schemas.yaml
+
   - name: initialize
     desc: Create initial documents
     PUT: /api/v1.0/buckets/mop/documents
@@ -76,9 +81,10 @@ tests:
     GET: /api/v1.0/revisions
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 1
-      $.[0].results[0].tags.`len`: 1
-      $.[0].results[0].tags: [foo]
+      # NOTE(fmontei): 2 revisions includes the one created for `initialize_data_schemas`
+      $.[0].results.`len`: 2
+      $.[0].results[1].tags.`len`: 1
+      $.[0].results[1].tags: [foo]
 
   - name: create_tag_with_data
     desc: Create a tag with data for the revision
@@ -124,9 +130,10 @@ tests:
     GET: /api/v1.0/revisions
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 1
-      $.[0].results[0].tags.`len`: 2
-      $.[0].results[0].tags: [bar, foo]
+      # NOTE(fmontei): 2 revisions includes the one created for `initialize_data_schemas`
+      $.[0].results.`len`: 2
+      $.[0].results[1].tags.`len`: 2
+      $.[0].results[1].tags: [bar, foo]
 
   - name: delete_tag
     desc: Verify deleting tag works
@@ -162,9 +169,10 @@ tests:
     GET: /api/v1.0/revisions
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 1
-      $.[0].results[0].tags.`len`: 1
-      $.[0].results[0].tags: [bar]
+      # NOTE(fmontei): 2 revisions includes the one created for `initialize_data_schemas`
+      $.[0].results.`len`: 2
+      $.[0].results[1].tags.`len`: 1
+      $.[0].results[1].tags: [bar]
 
   - name: delete_all_tags
     desc: Verify deleting tag works
@@ -185,8 +193,9 @@ tests:
     GET: /api/v1.0/revisions
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 1
-      $.[0].results[0].tags: []
+      # NOTE(fmontei): 2 revisions includes the one created for `initialize_data_schemas`
+      $.[0].results.`len`: 2
+      $.[0].results[1].tags: []
 
   - name: verify_tag_delete_all
     desc: Verify all tags have been deleted

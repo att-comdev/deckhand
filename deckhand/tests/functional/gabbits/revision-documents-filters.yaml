@@ -20,6 +20,12 @@ tests:
     status: 204
     response_headers: null
 
+  - name: initialize_data_schemas
+    desc: Create initial data schemas document needed to pass document validation
+    PUT: /api/v1.0/buckets/mop/documents
+    status: 200
+    data: <@resources/required-schemas.yaml
+
   - name: initialize
     desc: Create initial documents
     PUT: /api/v1.0/buckets/mop/documents

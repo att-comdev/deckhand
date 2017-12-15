@@ -26,6 +26,10 @@ from deckhand.tests.unit.control import base as test_base
 
 class TestRenderedDocumentsController(test_base.BaseControllerTest):
 
+    def setUp(self):
+        super(TestRenderedDocumentsController, self).setUp()
+        self._register_default_data_schema_document()
+
     def test_list_rendered_documents_exclude_abstract_documents(self):
         rules = {'deckhand:list_cleartext_documents': '@',
                  'deckhand:list_encrypted_documents': '@',
@@ -99,7 +103,7 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
         revision_id = list(yaml.safe_load_all(resp.text))[0]['status'][
             'revision']
 
-        # Verify that only the 2nd is returned for revision_id=2.
+        # Verify that only the 2nd is returned.
         resp = self.app.simulate_get(
             '/api/v1.0/revisions/%s/rendered-documents' % revision_id,
             headers={'Content-Type': 'application/x-yaml'})
@@ -109,7 +113,10 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
         self.assertEqual(1, len(rendered_documents))
         self.assertEqual(second_name,
                          rendered_documents[0]['metadata']['name'])
-        self.assertEqual(2, rendered_documents[0]['status']['revision'])
+        # NOTE(fmontei): The revision_id is 3 because in `setUp` above the
+        # first revision is created with a `DataSchema` document followed by
+        # 2 more revisions in this test.
+        self.assertEqual(3, rendered_documents[0]['status']['revision'])
 
 
 class TestRenderedDocumentsControllerNegative(
