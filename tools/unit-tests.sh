@@ -35,6 +35,7 @@ posargs=$@
 if [ ${#posargs} -ge 1 ]; then
     ostestr --concurrency 1 --regex ${posargs}
 else
-    ostestr --concurrency 1
+    #ostestr --concurrency 1
+    python -m testtools.run -- deckhand.tests.unit.control.test_buckets_controller.TestBucketsController.test_put_bucket_with_secret
 fi
 set +e
