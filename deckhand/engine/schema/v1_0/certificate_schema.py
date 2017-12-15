@@ -31,7 +31,8 @@ schema = {
                 'layeringDefinition': {
                     'type': 'object',
                     'properties': {
-                        'layer': {'type': 'string'}
+                        'layer': {'type': 'string'},
+                        'abstract': {'type': 'boolean'}
                     }
                 },
                 'storagePolicy': {

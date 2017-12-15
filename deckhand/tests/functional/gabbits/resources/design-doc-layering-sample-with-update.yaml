@@ -54,4 +54,11 @@ metadata:
         path: .
 data:
   b: 5  # This value is updated
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: example/Kind/v1
+data:
+  $schema: http://json-schema.org/schema#
 ...

@@ -52,15 +52,19 @@ tests:
   - name: verify_revision_1
     desc: Verify initial document count and revisions
     GET: /api/v1.0/revisions/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 4
+      $.`len`: 5
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - region-1234
         - site-1234
       $.[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
@@ -70,20 +74,29 @@ tests:
         - mop
         - mop
         - mop
-      $.[3].data.b: 4
+        - mop
+      $.[1].data.a:
+        x: 1
+        y: 2
+      $.[3].data.a.z: 3
+      $.[4].data.b: 4
 
   - name: verify_revision_2
     desc: Verify updated document count and revisions
     GET: /api/v1.0/revisions/$HISTORY['update_single_document'].$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 4
+      $.`len`: 5
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - region-1234
         - site-1234
       $.[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
@@ -93,19 +106,28 @@ tests:
         - mop
         - mop
         - mop
-      $.[3].data.b: 5
+        - mop
+      $.[1].data.a:
+        x: 1
+        y: 2
+      $.[3].data.a.z: 3
+      $.[4].data.b: 5
 
   - name: verify_revision_3
     desc: Verify document deletion
     GET: /api/v1.0/revisions/$HISTORY['delete_document'].$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 3
+      $.`len`: 4
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - site-1234
       $.[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['update_single_document'].$RESPONSE['$.[0].status.revision']"
@@ -113,20 +135,28 @@ tests:
         - mop
         - mop
         - mop
-      $.[2].data.b: 5
+        - mop
+      $.[1].data.a:
+        x: 1
+        y: 2
+      $.[3].data.b: 5
 
   - name: verify_revision_4
     desc: Verify rollback revision
     GET: /api/v1.0/revisions/$HISTORY['rollback'].$RESPONSE['$.[0].id']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 4
+      $.`len`: 5
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - region-1234
         - site-1234
       $.[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['rollback'].$RESPONSE['$.[0].id']"
@@ -136,4 +166,9 @@ tests:
         - mop
         - mop
         - mop
-      $.[3].data.b: 4
+        - mop
+      $.[1].data.a:
+        x: 1
+        y: 2
+      $.[3].data.a.z: 3
+      $.[4].data.b: 4
