@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77997000_de467e22",
+        "filename": "doc/source/api_client.rst",
+        "patchSetId": 16
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011947
+      },
+      "writtenOn": "2017-12-15T04:14:19Z",
+      "side": 1,
+      "message": "Will be good to also have information on how to set up the client using keystone token",
+      "revId": "b47f421abf0cf31a16219c527e850e48a658dfc4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
