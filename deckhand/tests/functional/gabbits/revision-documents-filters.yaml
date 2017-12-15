@@ -118,25 +118,6 @@ tests:
       $.[0].metadata.name: site-1234
       $.[0].metadata.layeringDefinition.layer: site
 
-  - name: filter_by_bucket_name
-    desc: Verify revision documents filtered by status.bucket
-    GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
-    query_parameters:
-      status.bucket: mop
-    status: 200
-    response_multidoc_jsonpaths:
-      $.`len`: 4
-      $.[*].metadata.name:
-        - layering-policy
-        - global-1234
-        - region-1234
-        - site-1234
-      $.[*].status.bucket:
-        - mop
-        - mop
-        - mop
-        - mop
-
   - name: sort_by_metadata_name
     desc: Verify revision documents sorted by metadata.name
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
@@ -150,6 +131,26 @@ tests:
         - layering-policy
         - region-1234
         - site-1234
+
+  - name: filter_by_bucket_name
+    desc: Verify revision documents filtered by status.bucket
+    GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      status.bucket: mop
+      sort: metadata.name
+    status: 200
+    response_multidoc_jsonpaths:
+      $.`len`: 4
+      $.[*].metadata.name:
+        - global-1234
+        - layering-policy
+        - region-1234
+        - site-1234
+      $.[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
 
   - name: sort_by_schema
     desc: Verify revision documents sorted by schema
