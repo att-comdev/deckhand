@@ -53,7 +53,10 @@ class Document(object):
         return self._inner['metadata']['name']
 
     def get_layer(self):
-        return self._inner['metadata']['layeringDefinition']['layer']
+        try:
+            return self._inner['metadata']['layeringDefinition']['layer']
+        except Exception:
+            return None
 
     def get_parent_selector(self):
         """Return the `parentSelector` for the document.
