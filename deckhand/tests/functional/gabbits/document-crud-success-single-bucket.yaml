@@ -54,12 +54,15 @@ tests:
   - name: verify_initial
     desc: Verify initial document count and revisions
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 4
+      $.`len`: 5
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - region-1234
         - site-1234
       $.[*].status.revision:
@@ -67,7 +70,9 @@ tests:
         - "$RESPONSE['$.[0].status.revision']"
         - "$RESPONSE['$.[0].status.revision']"
         - "$RESPONSE['$.[0].status.revision']"
+        - "$RESPONSE['$.[0].status.revision']"
       $.[*].status.bucket:
+        - mop
         - mop
         - mop
         - mop
@@ -85,9 +90,15 @@ tests:
     status: 200
     response_multidoc_jsonpaths:
       $.`len`: 4
+    query_parameters:
+      sort: metadata.name
+    status: 200
+    response_multidoc_jsonpaths:
+      $.`len`: 5
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - region-1234
         - site-1234
       $.[*].status.revision:
@@ -95,7 +106,9 @@ tests:
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
       $.[*].status.bucket:
+        - mop
         - mop
         - mop
         - mop
@@ -110,15 +123,19 @@ tests:
   - name: verify_update
     desc: Verify updated document count and revisions
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 4
+      $.`len`: 5
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - region-1234
         - site-1234
       $.[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
@@ -128,17 +145,21 @@ tests:
         - mop
         - mop
         - mop
-      $.[3].data.b: 5
+        - mop
+      $.[4].data.b: 5
 
   - name: verify_initial_documents_preserved_after_update
     desc: Verify initial documents count and revisions preserved after update
     GET: /api/v1.0/revisions/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
-      $.`len`: 4
+      $.`len`: 5
       $.[*].metadata.name:
-        - layering-policy
+        - example/Kind/v1
         - global-1234
+        - layering-policy
         - region-1234
         - site-1234
       $.[*].status.revision:
@@ -146,12 +167,14 @@ tests:
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$RESPONSE['$.[0].status.revision']"
       $.[*].status.bucket:
         - mop
         - mop
         - mop
         - mop
-      $.[3].data.b: 4
+        - mop
+      $.[4].data.b: 4
 
   - name: delete_document
     desc: Delete a single document
@@ -162,65 +185,80 @@ tests:
   - name: verify_delete
     desc: Verify document deletion
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
-    status: 200
-    response_multidoc_jsonpaths:
-      $.`len`: 3
-      $.[*].status.revision:
-        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
-        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
-        - "$HISTORY['update_single_document'].$RESPONSE['$.[0].status.revision']"
-      $.[*].metadata.name:
-        - layering-policy
-        - global-1234
-        - site-1234
-      $.[*].status.bucket:
-        - mop
-        - mop
-        - mop
-      $.[2].data.b: 5
-
-  - name: verify_initial_documents_preserved_after_delete
-    desc: Verify initial documents count and revisions
-    GET: /api/v1.0/revisions/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
     status: 200
     response_multidoc_jsonpaths:
       $.`len`: 4
-      $.[*].metadata.name:
-        - layering-policy
-        - global-1234
-        - region-1234
-        - site-1234
-      $.[*].status.revision:
-        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
-        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
-        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
-        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
-      $.[*].status.bucket:
-        - mop
-        - mop
-        - mop
-        - mop
-      $.[3].data.b: 4
-
-  - name: verify_updated_documents_preserved_after_delete
-    desc: Verify updated documents count and revisions preserved after delete
-    GET: /api/v1.0/revisions/$HISTORY['update_single_document'].$RESPONSE['$.[0].status.revision']/documents
-    status: 200
-    response_multidoc_jsonpaths:
-      $.`len`: 4
-      $.[*].metadata.name:
-        - layering-policy
-        - global-1234
-        - region-1234
-        - site-1234
       $.[*].status.revision:
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
         - "$HISTORY['update_single_document'].$RESPONSE['$.[0].status.revision']"
+      $.[*].metadata.name:
+        - example/Kind/v1
+        - global-1234
+        - layering-policy
+        - site-1234
       $.[*].status.bucket:
         - mop
         - mop
         - mop
         - mop
       $.[3].data.b: 5
+
+  - name: verify_initial_documents_preserved_after_delete
+    desc: Verify initial documents count and revisions
+    GET: /api/v1.0/revisions/$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
+    status: 200
+    response_multidoc_jsonpaths:
+      $.`len`: 5
+      $.[*].metadata.name:
+        - example/Kind/v1
+        - global-1234
+        - layering-policy
+        - region-1234
+        - site-1234
+      $.[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+      $.[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
+        - mop
+      $.[4].data.b: 4
+
+  - name: verify_updated_documents_preserved_after_delete
+    desc: Verify updated documents count and revisions preserved after delete
+    GET: /api/v1.0/revisions/$HISTORY['update_single_document'].$RESPONSE['$.[0].status.revision']/documents
+    query_parameters:
+      sort: metadata.name
+    status: 200
+    response_multidoc_jsonpaths:
+      $.`len`: 5
+      $.[*].metadata.name:
+        - example/Kind/v1
+        - global-1234
+        - layering-policy
+        - region-1234
+        - site-1234
+      $.[*].status.revision:
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['initialize'].$RESPONSE['$.[0].status.revision']"
+        - "$HISTORY['update_single_document'].$RESPONSE['$.[0].status.revision']"
+      $.[*].status.bucket:
+        - mop
+        - mop
+        - mop
+        - mop
+        - mop
+      $.[4].data.b: 5

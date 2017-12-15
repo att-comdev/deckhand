@@ -51,10 +51,11 @@ tests:
     status: 200
     response_multidoc_jsonpaths:
       $.`len`: 1
-      $.[0].count: 1
-      $.[0].results[0].id: $HISTORY['initialize'].$RESPONSE['$.[0].status.revision']
-      $.[0].results[0].buckets: [mop]
-      $.[0].results[0].tags: []
+      # NOTE(fmontei): 2 revisions includes the one created for `initialize_data_schemas`
+      $.[0].count: 2
+      $.[0].results[1].id: $HISTORY['initialize'].$RESPONSE['$.[0].status.revision']
+      $.[0].results[1].buckets: [mop]
+      $.[0].results[1].tags: []
 
     # Validates whether revision deletion works.
     # Required parameters:

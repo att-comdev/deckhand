@@ -96,11 +96,13 @@ tests:
       sort: id
     status: 200
     response_multidoc_jsonpaths:
-      $.[0].results.`len`: 3
+      # NOTE(fmontei): 4 IDs includes the one created for `initialize_data_schemas`
+      $.[0].results.`len`: 4
       $.[0].results[*].id:
         - 1
         - 2
         - 3
+        - 4
 
   - name: verify_sort_by_id_desc
     desc: Verify revision documents sorted by ID, in descending order
@@ -110,8 +112,10 @@ tests:
       order: desc
     status: 200
     response_multidoc_jsonpaths:
-      $.[0].results.`len`: 3
+      # NOTE(fmontei): 4 IDs includes the one created for `initialize_data_schemas`
+      $.[0].results.`len`: 4
       $.[0].results[*].id:
+        - 4
         - 3
         - 2
         - 1

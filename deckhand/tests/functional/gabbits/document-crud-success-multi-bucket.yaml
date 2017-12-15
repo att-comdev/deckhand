@@ -35,6 +35,11 @@ tests:
   - name: verify_first_bucket
     desc: Verify document count and revisions
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
+    # NOTE(fmontei): Filter out `DataSchema` documents.
+    query_parameters:
+      schema: 
+        - example/Kind/v1
+        - deckhand/LayeringPolicy/v1
     status: 200
     response_multidoc_jsonpaths:
       $.`len`: 3
@@ -60,6 +65,12 @@ tests:
   - name: verify_second_bucket
     desc: Verify document count and revisions
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/documents
+    # NOTE(fmontei): Filter out `DataSchema` documents.
+    query_parameters:
+      schema: 
+        - example/Kind/v1
+        - deckhand/LayeringPolicy/v1
+        - deckhand/Passphrase/v1
     status: 200
     response_multidoc_jsonpaths:
       $.`len`: 4
@@ -83,6 +94,11 @@ tests:
     desc: Verify initial revision is unchanged
     GET: /api/v1.0/revisions/$HISTORY['create_a'].$RESPONSE['$.[0].status.revision']/documents
     status: 200
+    # NOTE(fmontei): Filter out `DataSchema` documents.
+    query_parameters:
+      schema: 
+        - example/Kind/v1
+        - deckhand/LayeringPolicy/v1
     response_multidoc_jsonpaths:
       $.`len`: 3
       $.[*].metadata.name:
