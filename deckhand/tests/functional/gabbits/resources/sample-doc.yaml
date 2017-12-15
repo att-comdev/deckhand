@@ -43,4 +43,11 @@ data:
       data: here
     values:
       some_url: http://admin:INSERT_PASSWORD_HERE@service-name:8080/v1
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: promenade/ResourceType/v1
+data:
+  $schema: http://json-schema.org/schema#
 ...

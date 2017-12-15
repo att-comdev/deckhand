@@ -28,6 +28,9 @@ tests:
     status: 204
     response_headers: null
 
+    # NOTE(fmontei): Created a DataSchema document below to register
+    # example/Kind/v1, but create it within the first revision so as to not
+    # overcomplicate the diff tests below.
   - name: create_a
     desc: Create documents in bucket a
     PUT: /api/v1.0/buckets/bucket_a/documents
@@ -43,6 +46,13 @@ tests:
           layer: site
       data:
         value: 1
+      ---
+      schema: deckhand/DataSchema/v1
+      metadata:
+        schema: metadata/Control/v1
+        name: example/Kind/v1
+      data:
+        $schema: http://json-schema.org/schema#
       ...
 
   - name: create_b
@@ -60,7 +70,6 @@ tests:
           layer: site
       data:
         value: 2
-      ...
 
   - name: create_c
     desc: Create documents in bucket c
@@ -77,7 +86,6 @@ tests:
           layer: site
       data:
         value: 3
-      ...
 
   - name: create_d
     desc: Create documents in bucket d
@@ -94,7 +102,6 @@ tests:
           layer: site
       data:
         value: 4
-      ...
 
   - name: verify_null_first_revision
     desc: Validates response for null diff for first revision
@@ -161,7 +168,6 @@ tests:
           layer: site
       data:
         new_value: 7
-      ...
 
   - name: verify_diff_between_initial_4_buckets_and_single_update
     desc: Validates response for null diff between the first 4 buckets and single update
@@ -196,7 +202,6 @@ tests:
           layer: site
       data:
         value: mistake
-      ...
 
   - name: delete_mistake
     desc: Delete documents from bucket mistake
@@ -236,7 +241,6 @@ tests:
           layer: site
       data:
         value: 6
-      ...
 
   - name: verify_diff_between_initial_4_buckets_and_present
     desc: Validates response for null diff between the first 4 buckets and now

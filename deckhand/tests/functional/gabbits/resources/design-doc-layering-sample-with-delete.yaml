@@ -36,4 +36,11 @@ metadata:
         path: .
 data:
   b: 5
+---
+schema: deckhand/DataSchema/v1
+metadata:
+  schema: metadata/Control/v1
+  name: example/Kind/v1
+data:
+  $schema: http://json-schema.org/schema#
 ...

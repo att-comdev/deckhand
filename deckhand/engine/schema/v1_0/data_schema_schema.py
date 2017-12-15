@@ -43,7 +43,7 @@ schema = {
                     'enum': ['encrypted', 'cleartext']
                 }
             },
-            'additionalProperties': False,
+            'additionalProperties': True,  # Can include layeringDefinition.
             'required': ['schema', 'name']
         },
         'data': {
