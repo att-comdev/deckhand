@@ -118,9 +118,6 @@ EOCONF
 cat <<EOCONF > $CONF_DIR/deckhand.conf
 [DEFAULT]
 debug = true
-# NOTE: Use the location of this file inside the mounted volume in the
-# container.
-log_config_append = /etc/deckhand/logging.conf
 publish_errors = true
 use_stderr = true
 # NOTE: allow_anonymous_access allows these functional tests to get around
@@ -147,6 +144,12 @@ connection = $DATABASE_URL
 # auth_url = http://127.0.0.1/identity
 # auth_type = password
 EOCONF
+
+# Only set up logging if running Deckhand via uwsgi. The container already has
+# values for logging.
+if [ -z "$DECKHAND_IMAGE" ]; then
+    sed '1 a log_config_append = '"$CONF_DIR"'/logging.conf' $CONF_DIR/deckhand.conf
+fi
 
     echo $CONF_DIR/deckhand.conf 1>&2
     cat $CONF_DIR/deckhand.conf 1>&2
