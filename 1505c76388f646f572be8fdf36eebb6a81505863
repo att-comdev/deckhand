@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d420f1_152f8b26",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-18T13:20:34Z",
+      "side": 1,
+      "message": "Comment is confusing as you are really just casting values for columns ending in \u0027_id\u0027, not any string that represents an integer.",
+      "revId": "1505c76388f646f572be8fdf36eebb6a81505863",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb10e961_b2539584",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 23
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-18T13:20:34Z",
+      "side": 1,
+      "message": "nit: no need to end queries w/ semi-colons in sqlalchemy",
+      "range": {
+        "startLine": 907,
+        "startChar": 36,
+        "endLine": 907,
+        "endChar": 37
+      },
+      "revId": "1505c76388f646f572be8fdf36eebb6a81505863",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
