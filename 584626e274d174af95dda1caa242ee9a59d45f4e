@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c990e7d_df3fcadf",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "Would encourage use of \u0027lazy validation\u0027 [0] so the response includes all validation errors, not just the first.\n\n[0] https://python-jsonschema.readthedocs.io/en/latest/validate/#jsonschema.IValidator.iter_errors",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "adc95ed3_63d0c105",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "Why not include the version in the key? A version change, almost by definition, means a different schema.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d42c268_5c7e2841",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "I believe this can simplified to \u0027^[a-zA-Z]+\\/[a-zA-Z]+/v1(.0)?$\u0027",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83cdd227_d2b2f4a0",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "What is the point to stripping the version out of the schema if it is v1/v1.0? This shouldn\u0027t be a magical version.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6f7903d_c148aa50",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "I believe external (read as not specified by Deckhand) schemas are only going to validate the `data` section of a document, not the full document.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a646d87f_629cbded",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "Again, encourage lazy validation to capture all errors.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ff27be8_ef4ff045",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "validation should be able to return a list of errors.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f9ecd18b_9f2ff066",
+        "filename": "deckhand/engine/schema/v1_0/data_schema_schema.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2017-12-19T20:21:28Z",
+      "side": 1,
+      "message": "You should define \u0027layerDefinition\u0027 as a property and not include it in required. By setting this to True, you are allowing any type of additional property.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
