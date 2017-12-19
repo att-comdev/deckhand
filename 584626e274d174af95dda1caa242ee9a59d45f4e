@@ -121,6 +121,29 @@
     },
     {
       "key": {
+        "uuid": "1c322d97_ffa6dae0",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-19T21:20:57Z",
+      "side": 1,
+      "message": "and",
+      "range": {
+        "startLine": 346,
+        "startChar": 38,
+        "endLine": 346,
+        "endChar": 40
+      },
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9ecd18b_9f2ff066",
         "filename": "deckhand/engine/schema/v1_0/data_schema_schema.py",
         "patchSetId": 5
