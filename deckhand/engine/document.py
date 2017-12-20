@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import six
-
 
 class Document(object):
     """Object wrapper for documents.
@@ -40,10 +38,8 @@ class Document(object):
         concrete.
         """
         try:
-            abstract = self._inner['metadata']['layeringDefinition'][
-                'abstract']
-            return six.text_type(abstract) == 'True'
-        except KeyError:
+            return self._inner['metadata']['layeringDefinition']['abstract']
+        except Exception:
             return False
 
     def get_schema(self):
@@ -53,7 +49,10 @@ class Document(object):
         return self._inner['metadata']['name']
 
     def get_layer(self):
-        return self._inner['metadata']['layeringDefinition']['layer']
+        try:
+            return self._inner['metadata']['layeringDefinition']['layer']
+        except Exception:
+            return False
 
     def get_parent_selector(self):
         """Return the `parentSelector` for the document.
