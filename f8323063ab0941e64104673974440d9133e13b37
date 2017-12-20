@@ -22,6 +22,29 @@
       "revId": "f8323063ab0941e64104673974440d9133e13b37",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b8090c8_0f14241e",
+        "filename": "doc/source/api_client.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-12-20T02:40:33Z",
+      "side": 1,
+      "message": "at some point we should stop advertising this deprecated method - I can submit a PS to do this as a follow up.",
+      "range": {
+        "startLine": 61,
+        "startChar": 1,
+        "endLine": 62,
+        "endChar": 52
+      },
+      "revId": "f8323063ab0941e64104673974440d9133e13b37",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
