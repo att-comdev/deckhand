@@ -112,17 +112,24 @@ def from_response(response, body, url, method=None):
     cls = _code_map.get(response.status_code, ClientException)
 
     try:
-        body = yaml.safe_load(body)
+        kwargs = yaml.safe_load(body)
     except yaml.YAMLError as e:
-        body = {}
+        kwargs = {}
         LOG.debug('Could not convert error from server into dict: %s',
                   six.text_type(e))
 
-    kwargs = body
-    kwargs.update({
-        'code': response.status_code,
-        'method': method,
-        'url': url,
-    })
+    if isinstance(kwargs, dict):
+        kwargs.update({
+            'code': response.status_code,
+            'method': method,
+            'url': url
+        })
+    else:
+        kwargs = {
+            'code': response.status_code,
+            'method': method,
+            'url': url,
+            'message': body
+        }
 
     return cls(**kwargs)
