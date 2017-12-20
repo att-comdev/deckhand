@@ -1,18 +1,18 @@
 ..
-      Copyright 2017 AT&T Intellectual Property.
-      All Rights Reserved.
+    Copyright 2017 AT&T Intellectual Property.
+    All Rights Reserved.
 
-      Licensed under the Apache License, Version 2.0 (the "License"); you may
-      not use this file except in compliance with the License. You may obtain
-      a copy of the License at
+    Licensed under the Apache License, Version 2.0 (the "License"); you may
+    not use this file except in compliance with the License. You may obtain
+    a copy of the License at
 
-          http://www.apache.org/licenses/LICENSE-2.0
+        http://www.apache.org/licenses/LICENSE-2.0
 
-      Unless required by applicable law or agreed to in writing, software
-      distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-      WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-      License for the specific language governing permissions and limitations
-      under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+    License for the specific language governing permissions and limitations
+    under the License.
 
 .. _bucket:
 
@@ -30,3 +30,22 @@ deleted in the created revision.
 
 This feature allows the separation of concerns when delivering different
 categories of documents, while making the delivered payload more declarative.
+
+Access Levels
+-------------
+
+Documents can be sourced from different buckets and be used in conjunction to
+perform layering and substitution. But only the bucket that owns a document
+can manage it.
+
+In other words:
+
+* Documents can be **read** from any bucket.
+
+  * This is useful so that documents from different buckets can be used
+    together for layering and substitution.
+
+* Documents can only be **written** by the bucket that owns them.
+
+  * This is useful because it offers the concept of ownership to a document in
+    which only the bucket that owns the document can manage it.

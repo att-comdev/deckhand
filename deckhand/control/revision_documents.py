@@ -94,7 +94,8 @@ class RenderedDocumentsResource(api_base.BaseResource):
 
     @policy.authorize('deckhand:list_cleartext_documents')
     @common.sanitize_params([
-        'schema', 'metadata.name', 'metadata.label', 'status.bucket'])
+        'schema', 'metadata.name', 'metadata.label', 'status.bucket', 'order',
+        'sort'])
     def on_get(self, req, resp, sanitized_params, revision_id):
         include_encrypted = policy.conditional_authorize(
             'deckhand:list_encrypted_documents', req.context, do_raise=False)
@@ -119,15 +120,25 @@ class RenderedDocumentsResource(api_base.BaseResource):
         # Filters to be applied post-rendering, because many documents are
         # involved in rendering. User filters can only be applied once all
         # documents have been rendered.
+        order_by = sort_by = None
+        if 'order' in sanitized_params:
+            order_by = sanitized_params.pop('order')
+        if 'sort' in sanitized_params:
+            sort_by = sanitized_params.pop('sort')
+
         user_filters = sanitized_params.copy()
         user_filters['metadata.layeringDefinition.abstract'] = False
-        final_documents = [
+
+        rendered_documents = [
             d for d in rendered_documents if utils.deepfilter(
                 d, **user_filters)]
 
+        sorted_documents = utils.multisort(
+            rendered_documents, sort_by, order_by)
+
         resp.status = falcon.HTTP_200
-        resp.body = self.view_builder.list(final_documents)
-        self._post_validate(final_documents)
+        resp.body = self.view_builder.list(sorted_documents)
+        self._post_validate(sorted_documents)
 
     def _retrieve_layering_policy(self):
         try:

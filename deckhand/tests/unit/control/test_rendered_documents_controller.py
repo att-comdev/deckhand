@@ -235,3 +235,54 @@ class TestRenderedDocumentsControllerNegativeRBAC(
             headers={'Content-Type': 'application/x-yaml'})
         self.assertEqual(200, resp.status_code)
         self.assertEmpty(list(yaml.safe_load_all(resp.text)))
+
+
+class TestRenderedDocumentsControllerSorting(test_base.BaseControllerTest):
+
+    def test_rendered_documents_sorting_metadata_name(self):
+        rules = {'deckhand:list_cleartext_documents': '@',
+                 'deckhand:list_encrypted_documents': '@',
+                 'deckhand:create_cleartext_documents': '@'}
+        self.policy.set_rules(rules)
+
+        documents_factory = factories.DocumentFactory(2, [1, 1])
+        documents = documents_factory.gen_test({}, global_abstract=False,
+            region_abstract=False, site_abstract=False)
+        expected_names = ['bar', 'baz', 'foo']
+        for idx in range(len(documents)):
+            documents[idx]['metadata']['name'] = expected_names[idx]
+        # Only 2 documents should be returned: global and site documents. The
+        # layeringPolicy is excluded from the response.
+        expected_names = expected_names[1:]
+
+        resp = self.app.simulate_put(
+            '/api/v1.0/buckets/mop/documents',
+            headers={'Content-Type': 'application/x-yaml'},
+            body=yaml.safe_dump_all(documents))
+        self.assertEqual(200, resp.status_code)
+        revision_id = list(yaml.safe_load_all(resp.text))[0]['status'][
+            'revision']
+
+        # Test ascending order.
+        resp = self.app.simulate_get(
+            '/api/v1.0/revisions/%s/rendered-documents' % revision_id,
+            params={'sort': 'metadata.name'}, params_csv=False,
+            headers={'Content-Type': 'application/x-yaml'})
+        self.assertEqual(200, resp.status_code)
+        retrieved_documents = list(yaml.safe_load_all(resp.text))
+
+        self.assertEqual(2, len(retrieved_documents))
+        self.assertEqual(expected_names,
+                         [d['metadata']['name'] for d in retrieved_documents])
+
+        # Test descending order.
+        resp = self.app.simulate_get(
+            '/api/v1.0/revisions/%s/rendered-documents' % revision_id,
+            params={'sort': 'metadata.name', 'order': 'desc'},
+            params_csv=False, headers={'Content-Type': 'application/x-yaml'})
+        self.assertEqual(200, resp.status_code)
+        retrieved_documents = list(yaml.safe_load_all(resp.text))
+
+        self.assertEqual(2, len(retrieved_documents))
+        self.assertEqual(list(reversed(expected_names)),
+                         [d['metadata']['name'] for d in retrieved_documents])
