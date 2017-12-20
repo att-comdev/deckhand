@@ -118,11 +118,19 @@ def from_response(response, body, url, method=None):
         LOG.debug('Could not convert error from server into dict: %s',
                   six.text_type(e))
 
-    kwargs = body
-    kwargs.update({
-        'code': response.status_code,
-        'method': method,
-        'url': url,
-    })
+    if isinstance(body, dict):
+        kwargs = body
+        kwargs.update({
+            'code': response.status_code,
+            'method': method,
+            'url': url,
+        })
+    else:
+        kwargs = {
+            'code': 503,
+            'url': 'Unknown',
+            'method': 'GET',
+            'message': body
+        }
 
     return cls(**kwargs)
