@@ -91,14 +91,17 @@ GET ``/revisions/{revision_id}/rendered-documents``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Returns a multi-document YAML of fully layered and substituted documents. No
-abstract documents will be returned. This is the primary endpoint that
-consumers will interact with for their configuration.
+abstract documents will be returned and the ``layeringPolicy`` document is not
+returned either. This is the primary endpoint that consumers will interact with
+for their configuration.
 
 Valid query parameters are the same as for
 ``/revisions/{revision_id}/documents``, minus the paremters in
 ``metadata.layeringDetinition``, which are not supported.
 
-Raises a 500 Internal Server Error if rendered documents fail schema
+Raises a ``409 Conflict`` if a ``layeringPolicy`` document could not be found.
+
+Raises a ``500 Internal Server Error`` if rendered documents fail schema
 validation.
 
 GET ``/revisions``

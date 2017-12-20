@@ -59,11 +59,8 @@ class RevisionsResource(api_base.BaseResource):
     @policy.authorize('deckhand:list_revisions')
     @common.sanitize_params(['tag', 'order', 'sort'])
     def _list_revisions(self, req, resp, sanitized_params):
-        order_by = sort_by = None
-        if 'order' in sanitized_params:
-            order_by = sanitized_params.pop('order')
-        if 'sort' in sanitized_params:
-            sort_by = sanitized_params.pop('sort')
+        order_by = sanitized_params.pop('order', None)
+        sort_by = sanitized_params.pop('sort', None)
 
         revisions = db_api.revision_get_all(**sanitized_params)
         sorted_revisions = utils.multisort(revisions, sort_by, order_by)
