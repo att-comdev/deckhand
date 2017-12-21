@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f466199a_e33b5c47",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success-ucp-sample.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-21T20:36:10Z",
+      "side": 1,
+      "message": "Copy/paste, fix it for this patch",
+      "range": {
+        "startLine": 1,
+        "startChar": 24,
+        "endLine": 1,
+        "endChar": 54
+      },
+      "revId": "c26cef2a0d903e6b4937c5c786fd0b29807bccff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
