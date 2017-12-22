@@ -23,6 +23,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
+from sqlalchemy import PickleType
 from sqlalchemy import String
 from sqlalchemy import UniqueConstraint
 
@@ -131,7 +132,7 @@ class Document(BASE, DeckhandBase):
     # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
     # must be used to store document metadata information in the DB.
     _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
-    data = Column(oslo_types.JsonEncodedDict(), nullable=True, default={})
+    data = Column(PickleType, nullable=True)
     data_hash = Column(String, nullable=False)
     metadata_hash = Column(String, nullable=False)
     is_secret = Column(Boolean, nullable=False, default=False)
