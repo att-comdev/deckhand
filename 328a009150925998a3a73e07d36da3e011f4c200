@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f02f9caa_632ca9d4",
+        "filename": "deckhand/tests/functional/gabbits/resources/layering-needs-substitution-source.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-26T23:45:28Z",
+      "side": 1,
+      "message": "No need for this change",
+      "revId": "328a009150925998a3a73e07d36da3e011f4c200",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e1756b4f_9a16f5cd",
+        "filename": "deckhand/tests/functional/gabbits/resources/sample-doc.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-26T23:45:28Z",
+      "side": 1,
+      "message": "Probably can remove this",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 41
+      },
+      "revId": "328a009150925998a3a73e07d36da3e011f4c200",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90e72af2_24b8855e",
+        "filename": "deckhand/tests/functional/gabbits/revision-diff-success.yaml",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-26T23:45:28Z",
+      "side": 1,
+      "message": "No idea why I made these changes, probably a delete mistake",
+      "revId": "328a009150925998a3a73e07d36da3e011f4c200",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "129cf549_40f171f0",
+        "filename": "deckhand/tests/unit/base.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-26T23:45:28Z",
+      "side": 1,
+      "message": "Can probably undo this too",
+      "revId": "328a009150925998a3a73e07d36da3e011f4c200",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37482af7_55f3c3cb",
+        "filename": "deckhand/tests/unit/control/test_middleware.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-26T23:45:28Z",
+      "side": 1,
+      "message": "Can remove this",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 74
+      },
+      "revId": "328a009150925998a3a73e07d36da3e011f4c200",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb0830cb_2e365cd3",
+        "filename": "deckhand/tests/unit/control/test_middleware.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-26T23:45:28Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 74
+      },
+      "revId": "328a009150925998a3a73e07d36da3e011f4c200",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b79bed3_a75b3ab4",
+        "filename": "deckhand/tests/unit/control/test_validations_controller.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-26T23:45:28Z",
+      "side": 1,
+      "message": "Can probably undo these changes too, though technically should be broken up into 2 test cases: DataSchema in prev payload and DataSchema in curr payload",
+      "revId": "328a009150925998a3a73e07d36da3e011f4c200",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
