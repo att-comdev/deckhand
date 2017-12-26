@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0bba482_0775fe12",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-12-26T04:39:59Z",
+      "side": 1,
+      "message": "is this the same as:\n\n   order_by \u003d sanitized_params.pop(\u0027order\u0027, None)",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 52
+      },
+      "revId": "e618617e08f725c28d91746d2b39acbbf3c3e2e4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7068eb1_18166a9e",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-12-26T04:39:59Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 127,
+        "endChar": 50
+      },
+      "revId": "e618617e08f725c28d91746d2b39acbbf3c3e2e4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
