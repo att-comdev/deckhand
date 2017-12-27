@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8903c412_411eaed9",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-27T21:47:41Z",
+      "side": 1,
+      "message": "Still need to do this.",
+      "parentUuid": "1c990e7d_df3fcadf",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adc95ed3_63d0c105",
         "filename": "deckhand/engine/document_validation.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2017-12-19T20:21:28Z",
       "side": 1,
       "message": "Why not include the version in the key? A version change, almost by definition, means a different schema.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1967382f_c378212e",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-27T21:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adc95ed3_63d0c105",
       "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "b6b53706_ea120be8",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-27T21:47:41Z",
+      "side": 1,
+      "message": "Done, and fixed this in other places too (i.e. in schema sub-package inside engine)",
+      "parentUuid": "7d42c268_5c7e2841",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83cdd227_d2b2f4a0",
         "filename": "deckhand/engine/document_validation.py",
         "patchSetId": 5
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "9169feff_e38ccd70",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-27T21:47:41Z",
+      "side": 1,
+      "message": "I removed this and abstracted it out somewhere else in the latest patch. It\u0027s done because the .0 ending is superfluous -- some documents have it, others don\u0027t, which is the only reason for this.",
+      "parentUuid": "83cdd227_d2b2f4a0",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6f7903d_c148aa50",
         "filename": "deckhand/engine/document_validation.py",
         "patchSetId": 5
@@ -81,6 +153,24 @@
       "writtenOn": "2017-12-19T20:21:28Z",
       "side": 1,
       "message": "I believe external (read as not specified by Deckhand) schemas are only going to validate the `data` section of a document, not the full document.",
+      "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "665f9257_5cb9b7f3",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-27T21:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6f7903d_c148aa50",
       "revId": "584626e274d174af95dda1caa242ee9a59d45f4e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
