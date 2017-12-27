@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "062a6de2_f49c3e9d",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2017-12-27T23:59:12Z",
+      "side": 1,
+      "message": "Pattern from L83 is better, try block is long here",
+      "range": {
+        "startLine": 170,
+        "startChar": 12,
+        "endLine": 170,
+        "endChar": 15
+      },
+      "revId": "ccce1c29fe4cac71412f6b2aa19e9bdca8689e8e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
