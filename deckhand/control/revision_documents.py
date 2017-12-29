@@ -64,7 +64,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
         filters['deleted'] = False  # Never return deleted documents to user.
 
         try:
-            documents = db_api.revision_get_documents(
+            documents = db_api.revision_documents_get(
                 revision_id, **filters)
         except errors.RevisionNotFound as e:
             LOG.exception(six.text_type(e))
@@ -108,10 +108,13 @@ class RenderedDocumentsResource(api_base.BaseResource):
         layering_policy = self._retrieve_layering_policy()
         documents = self._retrieve_documents_for_rendering(revision_id,
                                                            **filters)
-
         # Prevent the layering policy from appearing twice.
-        if layering_policy in documents:
-            documents.remove(layering_policy)
+        # TODO(fmontei): Look into negative filter for this.
+        documents = [
+            d for d in documents
+                if not d['schema'].startswith(types.LAYERING_POLICY_SCHEMA)
+        ]
+
         document_layering = layering.DocumentLayering(layering_policy,
                                                       documents)
         rendered_documents = document_layering.render()
@@ -150,7 +153,7 @@ class RenderedDocumentsResource(api_base.BaseResource):
 
     def _retrieve_documents_for_rendering(self, revision_id, **filters):
         try:
-            documents = db_api.revision_get_documents(
+            documents = db_api.revision_documents_get(
                 revision_id, **filters)
         except errors.RevisionNotFound as e:
             LOG.exception(six.text_type(e))
