@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26397a4f_1bf22630",
+        "filename": "deckhand/engine/schema/base_schema.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-12-29T04:18:18Z",
+      "side": 1,
+      "message": "Probably should be [1-9]\\d* (may be wrong syntax) to avoid a leading zero.",
+      "range": {
+        "startLine": 21,
+        "startChar": 48,
+        "endLine": 21,
+        "endChar": 50
+      },
+      "revId": "522d479fd21f91e722354cbade8bfab3f8a5ff1b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
