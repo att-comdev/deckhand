@@ -52,7 +52,7 @@ class Document(object):
         try:
             return self._inner['metadata']['layeringDefinition']['layer']
         except Exception:
-            return False
+            return None
 
     def get_parent_selector(self):
         """Return the `parentSelector` for the document.
