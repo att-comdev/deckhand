@@ -130,14 +130,11 @@ class TestDocumentLayeringNegative(
         doc_factory = factories.DocumentFactory(3, [1, 1, 1])
         documents = doc_factory.gen_test({}, site_abstract=False)
         layering_policy = self._extract_layering_policy(documents)
+        documents.append(documents[1])  # Copy region layer.
 
-        # 0 is global layer, 1 is region layer.
-        for idx in (0, 1):
-            documents.append(documents[idx])
-            self.assertRaises(errors.IndeterminateDocumentParent,
-                              layering.DocumentLayering, layering_policy,
-                              documents)
-            documents.pop(-1)  # Remove the just-appended duplicate.
+        self.assertRaises(errors.IndeterminateDocumentParent,
+                          layering.DocumentLayering, layering_policy,
+                          documents)
 
     @mock.patch.object(layering, 'LOG', autospec=True)
     def test_layering_document_references_itself(self, mock_log):
