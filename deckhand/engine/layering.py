@@ -75,7 +75,7 @@ class DocumentLayering(object):
 
         def _get_children(doc):
             children = []
-            doc_layer = doc.get_layer()
+            doc_layer = doc.layer
             try:
                 next_layer_idx = self.layer_order.index(doc_layer) + 1
                 children_doc_layer = self.layer_order[next_layer_idx]
@@ -88,16 +88,16 @@ class DocumentLayering(object):
                 # Documents with different schemas are never layered together,
                 # so consider only documents with same schema as candidates.
                 is_potential_child = (
-                    other_doc.get_layer() == children_doc_layer and
-                    other_doc.get_schema() == doc.get_schema()
+                    other_doc.layer == children_doc_layer and
+                    other_doc.schema == doc.schema
                 )
                 if (is_potential_child):
                     # A document can have many labels but should only have one
                     # explicit label for the parentSelector.
-                    parent_sel = other_doc.get_parent_selector()
+                    parent_sel = other_doc.parent_selector
                     parent_sel_key = list(parent_sel.keys())[0]
                     parent_sel_val = list(parent_sel.values())[0]
-                    doc_labels = doc.get_labels()
+                    doc_labels = doc.labels
 
                     if (parent_sel_key in doc_labels and
                         parent_sel_val == doc_labels[parent_sel_key]):
@@ -107,18 +107,18 @@ class DocumentLayering(object):
 
         for layer in self.layer_order:
             docs_by_layer = list(filter(
-                (lambda x: x.get_layer() == layer), layered_docs))
+                (lambda x: x.layer == layer), layered_docs))
 
             for doc in docs_by_layer:
                 children = _get_children(doc)
 
                 if children:
                     all_children.update(children)
-                    doc.to_dict().setdefault('children', children)
+                    doc.setdefault('children', children)
 
         all_children_elements = list(all_children.elements())
         secondary_docs = list(
-            filter(lambda d: d.get_layer() != self.layer_order[0],
+            filter(lambda d: d.layer != self.layer_order[0],
             layered_docs))
         for doc in secondary_docs:
             # Unless the document is the topmost document in the
@@ -127,16 +127,16 @@ class DocumentLayering(object):
             if doc not in all_children_elements:
                 LOG.info('Could not find parent for document with name=%s, '
                          'schema=%s, layer=%s, parentSelector=%s.',
-                         doc.get_name(), doc.get_schema(), doc.get_layer(),
-                         doc.get_parent_selector())
+                         doc.name, doc.schema, doc.layer,
+                         doc.parent_selector)
             # If the document is a child document of more than 1 parent, then
             # the document has too many parents, which is a validation error.
-            elif all_children[doc] != 1:
+            elif all_children[doc] > 1:
                 LOG.info('%d parent documents were found for child document '
                          'with name=%s, schema=%s, layer=%s, parentSelector=%s'
-                         '. Each document must only have 1 parent.',
-                         all_children[doc], doc.get_name(), doc.get_schema(),
-                         doc.get_layer(), doc.get_parent_selector())
+                         '. Each document must have exactly 1 parent.',
+                         all_children[doc], doc.name, doc.schema,
+                         doc.layer, doc.parent_selector)
                 raise errors.IndeterminateDocumentParent(document=doc)
 
         return layered_docs
@@ -150,8 +150,8 @@ class DocumentLayering(object):
             in accordance with the ``layerOrder`` defined by the
             LayeringPolicy document.
         """
-        self.layering_policy = document.Document(layering_policy)
-        self.documents = [document.Document(d) for d in documents]
+        self.layering_policy = document.DocumentWrapper(layering_policy)
+        self.documents = [document.DocumentWrapper(d) for d in documents]
         self.layer_order = list(self.layering_policy['data']['layerOrder'])
         self.layered_docs = self._calc_document_children()
 
@@ -230,9 +230,10 @@ class DocumentLayering(object):
 
         return overall_data
 
-    def _apply_substitutions(self, data):
+    def _apply_substitutions(self, document):
         try:
-            secrets_substitution = secrets_manager.SecretsSubstitution(data)
+            secrets_substitution = secrets_manager.SecretsSubstitution(
+                document)
             return secrets_substitution.substitute_all()
         except errors.DocumentNotFound as e:
             LOG.error('Failed to render the documents because a secret '
@@ -260,37 +261,37 @@ class DocumentLayering(object):
         # the system. It should probably be impossible for more than 1
         # top-level doc to exist, but handle multiple for now.
         global_docs = [doc for doc in self.layered_docs
-                       if doc.get_layer() == self.layer_order[0]]
+                       if doc.layer == self.layer_order[0]]
 
         for doc in global_docs:
-            layer_idx = self.layer_order.index(doc.get_layer())
-            if doc.get_substitutions():
-                substituted_data = self._apply_substitutions(doc.to_dict())
-                rendered_data_by_layer[layer_idx] = substituted_data[0]
+            layer_idx = self.layer_order.index(doc.layer)
+            if doc.substitutions:
+                doc_with_substitutions = self._apply_substitutions(doc)[0]
+                rendered_data_by_layer[layer_idx] = doc_with_substitutions
             else:
-                rendered_data_by_layer[layer_idx] = doc.to_dict()
+                rendered_data_by_layer[layer_idx] = doc
 
             # Keep iterating as long as a child exists.
-            for child in doc.get_children(nested=True):
+            for child in doc.children:
                 # Retrieve the most up-to-date rendered_data (by
                 # referencing the child's parent's data).
-                child_layer_idx = self.layer_order.index(child.get_layer())
+                child_layer_idx = self.layer_order.index(child.layer)
                 rendered_data = rendered_data_by_layer[child_layer_idx - 1]
 
                 # Apply each action to the current document.
-                for action in child.get_actions():
+                for action in child.actions:
                     LOG.debug('Applying action %s to child document with '
                               'name=%s, schema=%s, layer=%s.', action,
-                              child.get_name(), child.get_schema(),
-                              child.get_layer())
+                              child.name, child.schema,
+                              child.layer)
                     rendered_data = self._apply_action(
-                        action, child.to_dict(), rendered_data)
+                        action, child, rendered_data)
 
                 # Update the actual document data if concrete.
-                if not child.is_abstract():
-                    if child.get_substitutions():
+                if not child.is_abstract:
+                    if child.substitutions:
                         rendered_data['metadata'][
-                            'substitutions'] = child.get_substitutions()
+                            'substitutions'] = child.substitutions
                         self._apply_substitutions(rendered_data)
                     self.layered_docs[self.layered_docs.index(child)][
                         'data'] = rendered_data['data']
@@ -303,4 +304,4 @@ class DocumentLayering(object):
             if 'children' in doc:
                 del doc['children']
 
-        return [d.to_dict() for d in self.layered_docs]
+        return self.layered_docs
