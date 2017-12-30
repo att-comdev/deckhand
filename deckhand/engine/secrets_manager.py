@@ -16,7 +16,7 @@ from oslo_log import log as logging
 
 from deckhand.barbican import driver
 from deckhand.db.sqlalchemy import api as db_api
-from deckhand.engine import document as document_wrapper
+from deckhand.engine import document_wrapper
 from deckhand import utils
 
 LOG = logging.getLogger(__name__)
@@ -99,21 +99,19 @@ class SecretsSubstitution(object):
     def __init__(self, documents):
         """SecretSubstitution constructor.
 
-        :param documents: List of documents that are candidates for secret
+        :param documents: Document(s) that are candidates for secret
             substitution. This class will automatically detect documents that
-            require substitution; documents need not be filtered prior to being
-            passed to the constructor.
+            require substitution.
+        :type documents: dict or List[dict]
         """
-        if not isinstance(documents, (list, tuple)):
+        self.documents = []
+        if not isinstance(documents, list):
             documents = [documents]
-
-        self.docs_to_sub = []
-
         for document in documents:
-            if not isinstance(document, document_wrapper.Document):
-                document_obj = document_wrapper.Document(document)
-                if document_obj.get_substitutions():
-                    self.docs_to_sub.append(document_obj)
+            if not isinstance(document, document_wrapper.DocumentWrapper):
+                document = document_wrapper.DocumentWrapper(document)
+            if document.substitutions:
+                self.documents.append(document)
 
     def substitute_all(self):
         """Substitute all documents that have a `metadata.substitutions` field.
@@ -124,16 +122,14 @@ class SecretsSubstitution(object):
         from a document in the site layer.
 
         :returns: List of fully substituted documents.
+        :rtype: List[:class:`DocumentWrapper`]
         """
-        LOG.debug('Substituting secrets for documents: %s',
-                  self.docs_to_sub)
-        substituted_docs = []
 
-        for doc in self.docs_to_sub:
+        for document in self.documents:
             LOG.debug(
                 'Checking for substitutions in schema=%s, metadata.name=%s',
-                doc.get_name(), doc.get_schema())
-            for sub in doc.get_substitutions():
+                document.name, document.schema)
+            for sub in document.substitutions:
                 src_schema = sub['src']['schema']
                 src_name = sub['src']['name']
                 src_path = sub['src']['path']
@@ -154,8 +150,6 @@ class SecretsSubstitution(object):
                           'into dest_path=%s, dest_pattern=%s', src_schema,
                           src_name, src_path, dest_path, dest_pattern)
                 substituted_data = utils.jsonpath_replace(
-                    doc['data'], src_secret, dest_path, dest_pattern)
-                doc['data'].update(substituted_data)
-
-            substituted_docs.append(doc.to_dict())
-        return substituted_docs
+                    document['data'], src_secret, dest_path, dest_pattern)
+                document['data'].update(substituted_data)
+            return self.documents
