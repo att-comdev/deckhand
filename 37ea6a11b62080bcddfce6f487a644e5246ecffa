@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "973b4866_d3fed7d5",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2017-12-30T23:59:49Z",
+      "side": 1,
+      "message": "nit: this feels like a misnomer - since the code will accept a singleton and cast it into a list.",
+      "range": {
+        "startLine": 102,
+        "startChar": 26,
+        "endLine": 102,
+        "endChar": 44
+      },
+      "revId": "37ea6a11b62080bcddfce6f487a644e5246ecffa",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
