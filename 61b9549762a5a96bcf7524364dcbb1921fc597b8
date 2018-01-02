@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32bf0793_aeb16fc3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-02T19:43:01Z",
+      "side": 1,
+      "message": "I feel like referencing a known-changing link in the commit message isn\u0027t ideal.  Maybe even just a relative path to the doc source here is good, since developers could check this commit out to read them?\n\nOr even just omit the link/footnote?",
+      "revId": "61b9549762a5a96bcf7524364dcbb1921fc597b8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "effcd9f3_d6df185d",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-02T19:43:01Z",
+      "side": 1,
+      "message": "Why exclude this document specifically?",
+      "range": {
+        "startLine": 94,
+        "startChar": 35,
+        "endLine": 95,
+        "endChar": 15
+      },
+      "revId": "61b9549762a5a96bcf7524364dcbb1921fc597b8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
