@@ -33,6 +33,24 @@
       "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cd417e5_b5eebf3d",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-02T20:45:56Z",
+      "side": 1,
+      "message": "Not sure I follow. You mean use any type of document as a source for secret substitution?\n\nAlso, don\u0027t know what you mean by \"int\" is likely useless. Care to expound?",
+      "parentUuid": "a0100eb0_53f9d343",
+      "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
