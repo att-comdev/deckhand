@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "468462ec_d585c7dc",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-02T18:36:02Z",
+      "side": 1,
+      "message": "It\u0027s a workaround to compensate for a DB limitation that I\u0027ll fix in another PS.",
+      "parentUuid": "9ccbe743_6c6a6989",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f38df0ea_85e936cf",
         "filename": "deckhand/engine/schema/v1_0/certificate_authority_key_schema.py",
         "patchSetId": 5
@@ -47,6 +65,24 @@
       "writtenOn": "2018-01-02T16:38:11Z",
       "side": 1,
       "message": "These should probably be in separate YAML files to make them more portable (such as including the schemas in the set of the YAML files for a site).",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "beaece13_474c8d8c",
+        "filename": "deckhand/engine/schema/v1_0/certificate_authority_key_schema.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-02T18:36:02Z",
+      "side": 1,
+      "message": "I\u0027ll have to do that in a follow-up. This is a greater issue that goes beyond the scope of this PS.",
+      "parentUuid": "f38df0ea_85e936cf",
       "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
