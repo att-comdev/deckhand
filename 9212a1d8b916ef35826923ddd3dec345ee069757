@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "795c1c69_299d6acb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-02T15:25:01Z",
+      "side": 1,
+      "message": "This isn\u0027t really a Promenade requirement.  It\u0027s required for the overall system.",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
