@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "723675bd_5d4ebf21",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-02T22:00:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e06a0ed_ddb13f10",
+      "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0100eb0_53f9d343",
         "filename": "deckhand/engine/secrets_manager.py",
         "patchSetId": 2
