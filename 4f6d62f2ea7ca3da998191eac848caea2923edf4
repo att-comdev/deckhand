@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e06a0ed_ddb13f10",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-02T20:33:09Z",
+      "side": 1,
+      "message": "I would be more comfortable using this: http://docs.sqlalchemy.org/en/latest/dialects/postgresql.html#sqlalchemy.dialects.postgresql.JSONB",
+      "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0100eb0_53f9d343",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-02T20:33:09Z",
+      "side": 1,
+      "message": "We should probably try and support secrets of any type of document.  I guess \"int\" is likely useless, but it seems harder to implement these special cases than to solve it generally.",
+      "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
