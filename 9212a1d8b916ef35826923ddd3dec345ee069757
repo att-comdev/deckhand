@@ -16,6 +16,91 @@
       "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9ccbe743_6c6a6989",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-02T16:38:11Z",
+      "side": 1,
+      "message": "Why is this not simply driven by `metadata.storagePolicy`? Why would Deckhand manipulate the `data` section?",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f38df0ea_85e936cf",
+        "filename": "deckhand/engine/schema/v1_0/certificate_authority_key_schema.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-02T16:38:11Z",
+      "side": 1,
+      "message": "These should probably be in separate YAML files to make them more portable (such as including the schemas in the set of the YAML files for a site).",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "603ed1ed_a2fafce4",
+        "filename": "deckhand/engine/schema/v1_0/certificate_authority_schema.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-02T16:38:11Z",
+      "side": 1,
+      "message": "Again, should be an external file.",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddcc22dc_2c22c303",
+        "filename": "deckhand/engine/schema/v1_0/private_key_schema.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-02T16:38:11Z",
+      "side": 1,
+      "message": "Again, should be an external file.",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a45c275d_ee8732f6",
+        "filename": "deckhand/engine/schema/v1_0/public_key_schema.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-02T16:38:11Z",
+      "side": 1,
+      "message": "Again, should be an external file.",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
