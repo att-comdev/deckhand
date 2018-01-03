@@ -114,7 +114,10 @@ class RenderedDocumentsResource(api_base.BaseResource):
             documents.remove(layering_policy)
         document_layering = layering.DocumentLayering(layering_policy,
                                                       documents)
-        rendered_documents = document_layering.render()
+        try:
+            rendered_documents = document_layering.render()
+        except errors.SubstitutionFailure as e:
+            raise falcon.HTTPInternalServerError(description=six.text_type(e))
 
         # Filters to be applied post-rendering, because many documents are
         # involved in rendering. User filters can only be applied once all

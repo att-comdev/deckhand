@@ -209,6 +209,7 @@ class MissingDocumentParent(DeckhandException):
 class MissingDocumentKey(DeckhandException):
     msg_fmt = ("Missing document key %(key)s from either parent or child. "
                "Parent: %(parent)s. Child: %(child)s.")
+    code = 400
 
 
 class UnsupportedActionMethod(DeckhandException):
@@ -243,6 +244,12 @@ class RevisionTagBadFormat(DeckhandException):
     msg_fmt = ("The requested tag data %(data)s must either be null or "
                "dictionary.")
     code = 400
+
+
+class SubstitutionFailure(DeckhandException):
+    msg_fmt = ('Unexpected exception occurred while attempting '
+               'secret substitution. Details: %(details)s')
+    code = 500
 
 
 class BarbicanException(DeckhandException):
