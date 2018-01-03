@@ -155,6 +155,46 @@
       "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c80b3cf7_d1e1d024",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-owned-documents.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1012987
+      },
+      "writtenOn": "2018-01-03T20:56:22Z",
+      "side": 1,
+      "message": "Just to verify for security purposes, this is merely a junk/example cert?",
+      "range": {
+        "startLine": 35,
+        "startChar": 10,
+        "endLine": 35,
+        "endChar": 15
+      },
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1aa6fc5_9a04e675",
+        "filename": "deckhand/tests/functional/gabbits/resources/deckhand-owned-sample.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1012987
+      },
+      "writtenOn": "2018-01-03T20:56:22Z",
+      "side": 1,
+      "message": "Again, junk/example certs and keys?",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
