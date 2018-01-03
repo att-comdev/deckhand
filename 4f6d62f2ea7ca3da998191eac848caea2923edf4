@@ -69,6 +69,24 @@
       "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3f2008a_75e9df54",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-03T17:16:14Z",
+      "side": 1,
+      "message": "By secret, I mean a document with `storagePolicy: encrypted`.  Substitution is a generic feature and I expect non-secret documents to be substitution sources for certain kinds of data.\n\nBy \"int\" being useless, I mean it seems unlikely that anyone will want a document that just contains a single int, but who knows :)",
+      "parentUuid": "3cd417e5_b5eebf3d",
+      "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
