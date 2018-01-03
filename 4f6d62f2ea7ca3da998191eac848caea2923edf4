@@ -87,6 +87,24 @@
       "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "589bc247_787e3dad",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-03T18:30:27Z",
+      "side": 1,
+      "message": "Just so others see, I\u0027ll have to submit a separate bug fix to drop is_secret\u003dTrue from L144 such that generic documents can be used as substitution sources.\n\nI think making Deckhand more open-ended for stuff like data: 1000 is fine even if we can\u0027t think of an immediate use case.",
+      "parentUuid": "f3f2008a_75e9df54",
+      "revId": "4f6d62f2ea7ca3da998191eac848caea2923edf4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
