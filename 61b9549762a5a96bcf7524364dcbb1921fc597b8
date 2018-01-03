@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "55d01668_e73547f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-03T02:57:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32bf0793_aeb16fc3",
+      "revId": "61b9549762a5a96bcf7524364dcbb1921fc597b8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "effcd9f3_d6df185d",
         "filename": "doc/source/api_ref.rst",
         "patchSetId": 6
@@ -30,6 +48,30 @@
       "writtenOn": "2018-01-02T19:43:01Z",
       "side": 1,
       "message": "Why exclude this document specifically?",
+      "range": {
+        "startLine": 94,
+        "startChar": 35,
+        "endLine": 95,
+        "endChar": 15
+      },
+      "revId": "61b9549762a5a96bcf7524364dcbb1921fc597b8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63da04bf_600e9474",
+        "filename": "doc/source/api_ref.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-03T02:57:07Z",
+      "side": 1,
+      "message": "Wasn\u0027t included in validation for original tests, so I thought it was meant to be excluded. In any case, fixed in next patch.",
+      "parentUuid": "effcd9f3_d6df185d",
       "range": {
         "startLine": 94,
         "startChar": 35,
