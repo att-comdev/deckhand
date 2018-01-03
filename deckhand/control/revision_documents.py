@@ -117,6 +117,9 @@ class RenderedDocumentsResource(api_base.BaseResource):
             raise falcon.HTTPBadRequest(description=e.format_message())
         except errors.LayeringPolicyNotFound as e:
             raise falcon.HTTPConflict(description=e.format_message())
+        except errors.SubstitutionFailure as e:
+            raise falcon.HTTPInternalServerError(
+                description=e.format_message())
 
         # Filters to be applied post-rendering, because many documents are
         # involved in rendering. User filters can only be applied once all
