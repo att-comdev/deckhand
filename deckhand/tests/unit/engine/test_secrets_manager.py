@@ -282,3 +282,45 @@ class TestSecretsSubstitution(test_base.TestDbBase):
         self._test_secret_substitution(
             document_mapping, [certificate, certificate_key, passphrase],
             expected_data)
+
+    def test_secret_substitution_with_generic_document_as_source(self):
+        src_secret = 'secret-from-generic-document'
+
+        # Create DataSchema document to register generic source document.
+        dataschema_factory = factories.DataSchemaFactory()
+        dataschema = dataschema_factory.gen_test(
+            'unusual/DictWithSecret/v1', {})
+        # Create the generic source document from which secret will be
+        # extracted.
+        generic_document_mapping = {
+            "_GLOBAL_DATA_1_": {
+                'data': {'public': 'random', 'secret': src_secret}
+            }
+        }
+        payload = self.document_factory.gen_test(generic_document_mapping,
+                                                 global_abstract=False)
+        payload[-1]['schema'] = "unusual/DictWithSecret/v1"
+        payload[-1]['metadata']['name'] = 'dict-with-secret'
+
+        # Store both documents to be created by helper.
+        dependent_documents = [payload[-1], dataschema]
+
+        # Mapping for destination document.
+        document_mapping = {
+            "_GLOBAL_DATA_1_": {
+                'data': {}
+            },
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": "."
+                },
+                "src": {
+                    "schema": "unusual/DictWithSecret/v1",
+                    "name": "dict-with-secret",
+                    "path": ".secret"
+                }
+
+            }]
+        }
+        self._test_secret_substitution(
+            document_mapping, dependent_documents, expected_data=src_secret)
