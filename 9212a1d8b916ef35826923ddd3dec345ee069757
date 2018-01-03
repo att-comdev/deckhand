@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6868f6d7_2e7e2f0f",
+        "filename": "deckhand/control/views/document.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-03T20:09:02Z",
+      "side": 1,
+      "message": "I believe improvements in this area are now in a couple of places:\n\nhttps://review.gerrithub.io/#/c/392810/\nhttps://review.gerrithub.io/#/c/393544/",
+      "parentUuid": "468462ec_d585c7dc",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f38df0ea_85e936cf",
         "filename": "deckhand/engine/schema/v1_0/certificate_authority_key_schema.py",
         "patchSetId": 5
