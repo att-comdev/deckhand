@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3c80d53_5f786fb5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-03T18:11:28Z",
+      "side": 1,
+      "message": "I think you mean JSONB.\n\nDH was never intended to support databases besides Postgres, so I\u0027m not sure why it\u0027s noteworthy here.",
+      "revId": "485f5e5021918c96bd112099fbb5589c1d80c651",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c92f1861_2791034d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-03T18:11:28Z",
+      "side": 1,
+      "message": "No longer using pickle.",
+      "revId": "485f5e5021918c96bd112099fbb5589c1d80c651",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
