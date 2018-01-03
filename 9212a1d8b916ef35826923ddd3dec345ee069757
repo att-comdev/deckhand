@@ -181,6 +181,30 @@
     },
     {
       "key": {
+        "uuid": "4f570651_719f2462",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-owned-documents.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-03T21:35:39Z",
+      "side": 1,
+      "message": "It\u0027s \"realistic\" junk :D",
+      "parentUuid": "c80b3cf7_d1e1d024",
+      "range": {
+        "startLine": 35,
+        "startChar": 10,
+        "endLine": 35,
+        "endChar": 15
+      },
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1aa6fc5_9a04e675",
         "filename": "deckhand/tests/functional/gabbits/resources/deckhand-owned-sample.yaml",
         "patchSetId": 5
@@ -210,6 +234,24 @@
       "side": 1,
       "message": "Looks safe:\n\n        Issuer: O\u003dKubernetes, CN\u003dkubernetes\n        Validity\n            Not Before: Dec 20 21:19:00 2017 GMT\n            Not After : Dec 19 21:19:00 2022 GMT\n        Subject: O\u003dKubernetes, CN\u003dkubernetes",
       "parentUuid": "f1aa6fc5_9a04e675",
+      "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b473d66f_7d645218",
+        "filename": "deckhand/tests/functional/gabbits/resources/deckhand-owned-sample.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-03T21:35:39Z",
+      "side": 1,
+      "message": "Indeed, these are realistic examples of junk from a promenade test run :)",
+      "parentUuid": "be248afe_44290407",
       "revId": "9212a1d8b916ef35826923ddd3dec345ee069757",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
