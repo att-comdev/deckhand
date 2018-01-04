@@ -213,6 +213,21 @@ class TestBucketsControllerNegative(test_base.BaseControllerTest):
             body=yaml.safe_dump_all([payload]))
         self.assertEqual(409, resp.status_code)
 
+    def test_register_dataschema_conflicts_with_builtin_schema(self):
+        rules = {'deckhand:create_cleartext_documents': '@'}
+        self.policy.set_rules(rules)
+
+        schema = 'deckhand/LayeringPolicy/v1'
+        data_schema_factory = factories.DataSchemaFactory()
+        data_schema = data_schema_factory.gen_test(schema, {})
+        payload = [data_schema]
+
+        resp = self.app.simulate_put(
+            '/api/v1.0/buckets/mop/documents',
+            headers={'Content-Type': 'application/x-yaml'},
+            body=yaml.safe_dump_all(payload))
+        self.assertEqual(400, resp.status_code)
+
 
 class TestBucketsControllerNegativeRBAC(test_base.BaseControllerTest):
     """Test suite for validating negative RBAC scenarios for bucket

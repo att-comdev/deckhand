@@ -54,9 +54,13 @@ class BucketsResource(api_base.BaseResource):
         try:
             doc_validator = document_validation.DocumentValidation(documents)
             validations = doc_validator.validate_all()
-        except deckhand_errors.InvalidDocumentFormat as e:
+        except (deckhand_errors.InvalidDocumentFormat,
+                deckhand_errors.DuplicateSchema) as e:
             LOG.exception(e.format_message())
             raise falcon.HTTPBadRequest(description=e.format_message())
+        except RuntimeError as e:
+            LOG.exception(six.text_type(e))
+            raise falcon.HTTPInternalServerError(six.text_type(e))
 
         for document in documents:
             if document['metadata'].get('storagePolicy') == 'encrypted':
