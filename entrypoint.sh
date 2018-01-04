@@ -14,12 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -ex
+
+PORT=${PORT:-9000}
+DECKHAND_API_THREADS=${DECKHAND_API_THREADS:-"2"}
 
 # Start deckhand application
 exec uwsgi \
-    --http :9000 \
+    --http :${PORT}
     -w deckhand.cmd \
     --callable deckhand_callable \
     --enable-threads \
     -L \
-    --pyargv "--config-file /etc/deckhand/deckhand.conf"
+    --pyargv "--config-file /etc/deckhand/deckhand.conf" \
+    --threads $DECKHAND_API_THREADS
