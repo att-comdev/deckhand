@@ -120,23 +120,124 @@ Validation Schemas
 
 Below are the schemas Deckhand uses to validate documents.
 
-.. automodule:: deckhand.engine.schema.base_schema
-  :members: schema
+.. py:data:: deckhand.engine.schema.base_schema.schema
 
-.. automodule:: deckhand.engine.schema.v1_0.certificate_key_schema
-  :members: schema
+  Base JSON schema against which all Deckhand documents are validated.
 
-.. automodule:: deckhand.engine.schema.v1_0.certificate_schema
-  :members: schema
+  .. literalinclude:: ../../deckhand/engine/schema/base_schema.yaml
+    :lines: 19-
 
-.. automodule:: deckhand.engine.schema.v1_0.data_schema_schema
-  :members: schema
+  This schema is used to sanity-check all documents that are passed to
+  Deckhand. Failure to pass this schema results in a critical error.
 
-.. automodule:: deckhand.engine.schema.v1_0.layering_policy_schema
-  :members: schema
+.. py:data:: deckhand.engine.schema.certificate_key_schema.schema
 
-.. automodule:: deckhand.engine.schema.v1_0.passphrase_schema
-  :members: schema
+  JSON schema against which all documents with ``deckhand/CertificateKey/v1``
+  schema are validated.
 
-.. automodule:: deckhand.engine.schema.v1_0.validation_policy_schema
-  :members: schema
+  .. literalinclude:: ../../deckhand/engine/schema/certificate_key_schema.yaml
+    :lines: 19-
+
+  This schema is used to sanity-check all CertificateKey documents that are
+  passed to Deckhand. This schema is only enforced after validation for
+  :data:`deckhand.engine.schema.base_schema.schema` has passed. Failure to pass
+  this schema will result in an error entry being created for the validation
+  with name ``deckhand-schema-validation`` corresponding to the created
+  revision.
+
+.. py:data:: deckhand.engine.schema.certificate_schema.schema
+
+  JSON schema against which all documents with ``deckhand/Certificate/v1``
+  schema are validated.
+
+  .. literalinclude:: ../../deckhand/engine/schema/certificate_schema.yaml
+    :lines: 19-
+
+  This schema is used to sanity-check all Certificate documents that are
+  passed to Deckhand. This schema is only enforced after validation for
+  :data:`deckhand.engine.schema.base_schema.schema` has passed. Failure to pass
+  this schema will result in an error entry being created for the validation
+  with name ``deckhand-schema-validation`` corresponding to the created
+  revision.
+
+.. py:data:: deckhand.engine.schema.dataschema_schema.schema
+
+  JSON schema against which all documents with ``deckhand/DataSchema/v1``
+  schema are validated.
+
+  .. literalinclude:: ../../deckhand/engine/schema/dataschema_schema.yaml
+    :lines: 19-
+
+  This schema is used to sanity-check all DataSchema documents that are
+  passed to Deckhand. This schema is only enforced after validation for
+  :data:`deckhand.engine.schema.base_schema.schema` has passed. Failure to pass
+  this schema will result in an error entry being created for the validation
+  with name ``deckhand-schema-validation`` corresponding to the created
+  revision.
+
+.. py:data:: deckhand.engine.schema.document_schema.schema
+
+  JSON schema against which all ``DataSchema``-registered documents are
+  validated.
+
+  .. literalinclude:: ../../deckhand/engine/schema/document_schema.yaml
+    :lines: 19-
+
+  This schema is used to sanity-check all *generic* documents that are
+  passed to Deckhand. It is used for validating documents registered
+  by ``DataSchema`` documents. Even though ``DataSchema`` documents validate
+  the ``data`` section of a generic document, the other sections like
+  ``metadata.substitutions`` and ``schema`` still need to be validated by
+  this more generalized schema.
+
+  This schema is only enforced after validation for
+  :data:`deckhand.engine.schema.base_schema.schema` has passed. Failure to pass
+  this schema will result in an error entry being created for the validation
+  with name ``deckhand-schema-validation`` corresponding to the created
+  revision.
+
+.. py:data:: deckhand.engine.schema.layering_policy_schema.schema
+
+  JSON schema against which all documents with ``deckhand/LayeringPolicy/v1``
+  schema are validated.
+
+  .. literalinclude:: ../../deckhand/engine/schema/layering_policy_schema.yaml
+    :lines: 19-
+
+  This schema is used to sanity-check all LayeringPolicy documents that are
+  passed to Deckhand. This schema is only enforced after validation for
+  :data:`deckhand.engine.schema.base_schema.schema` has passed. Failure to pass
+  this schema will result in an error entry being created for the validation
+  with name ``deckhand-schema-validation`` corresponding to the created
+  revision.
+
+.. py:data:: deckhand.engine.schema.passphrase_schema.schema
+
+  JSON schema against which all documents with ``deckhand/Passphrase/v1``
+  schema are validated.
+
+  .. literalinclude:: ../../deckhand/engine/schema/passphrase_schema.yaml
+    :lines: 19-
+
+  This schema is used to sanity-check all Passphrase documents that are
+  passed to Deckhand. This schema is only enforced after validation for
+  :data:`deckhand.engine.schema.base_schema.schema` has passed. Failure to pass
+  this schema will result in an error entry being created for the validation
+  with name ``deckhand-schema-validation`` corresponding to the created
+  revision.
+
+.. py:data:: deckhand.engine.schema.validation_policy_schema.schema
+
+  JSON schema against which all documents with ``deckhand/ValidationPolicy/v1``
+  schema are validated.
+
+  .. literalinclude::
+    ../../deckhand/engine/schema/validation_policy_schema.yaml
+    :lines: 19-
+
+  This schema is used to sanity-check all ValidationPolicy documents that are
+  passed to Deckhand. This schema is only enforced after validation for
+  :data:`deckhand.engine.schema.base_schema.schema` has passed. Failure to pass
+  this schema will result in an error entry being created for the validation
+  with name ``deckhand-schema-validation`` corresponding to the created
+  revision.
