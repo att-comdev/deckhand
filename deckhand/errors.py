@@ -176,6 +176,11 @@ class InvalidDocumentFormat(DeckhandException):
     code = 400
 
 
+class DuplicateSchema(DeckhandException):
+    msg_fmt = ("Duplicate schema specified for: %(schema)s.")
+    code = 400
+
+
 class DocumentExists(DeckhandException):
     msg_fmt = ("Document with schema %(schema)s and metadata.name "
                "%(name)s already exists in bucket %(bucket)s.")
