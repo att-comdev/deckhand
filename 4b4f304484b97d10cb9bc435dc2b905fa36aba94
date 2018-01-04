@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4dd88de0_f88afc8b",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-04T03:25:10Z",
+      "side": 1,
+      "message": "Compute this for each document inside validate() by using the document version as the first key and then hardcode document_schema as the second key.",
+      "range": {
+        "startLine": 142,
+        "startChar": 16,
+        "endLine": 142,
+        "endChar": 75
+      },
+      "revId": "4b4f304484b97d10cb9bc435dc2b905fa36aba94",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
