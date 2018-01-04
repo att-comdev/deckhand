@@ -13,7 +13,10 @@
 # limitations under the License.
 
 import abc
+import os
+import pkg_resources
 import re
+import yaml
 
 import jsonschema
 from oslo_log import log as logging
@@ -21,7 +24,6 @@ import six
 
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine.schema import base_schema
-from deckhand.engine.schema import v1_0
 from deckhand import errors
 from deckhand import types
 from deckhand import utils
@@ -101,19 +103,39 @@ class GenericValidator(BaseValidator):
 class SchemaValidator(BaseValidator):
     """Validator for validating built-in document kinds."""
 
-    _schema_map = {
-        'v1': {
-            'deckhand/CertificateKey': v1_0.certificate_key_schema,
-            'deckhand/Certificate': v1_0.certificate_schema,
-            'deckhand/DataSchema': v1_0.data_schema_schema,
-            'deckhand/LayeringPolicy': v1_0.layering_policy_schema,
-            'deckhand/Passphrase': v1_0.passphrase_schema,
-            'deckhand/ValidationPolicy': v1_0.validation_policy_schema,
-        }
-    }
+    def __init__(self, *args, **kwargs):
+        super(SchemaValidator, self).__init__(*args, **kwargs)
+        SchemaValidator._build_schema_map()
 
-    # Represents a generic document schema.
-    _fallback_schema = v1_0.document_schema
+    @staticmethod
+    def _get_schema_dir():
+        return pkg_resources.resource_filename('deckhand.engine', 'schema')
+
+    @classmethod
+    def _get_fallback_schema(cls, schema_version):
+        return cls._schema_map.get(schema_version, {}).get('deckhand/Document')
+
+    @classmethod
+    def _build_schema_map(cls):
+        cls._schema_map = {k: {} for k in cls._supported_versions}
+        root_schema_dir = SchemaValidator._get_schema_dir()
+
+        for file_or_dir in os.listdir(root_schema_dir):
+            if file_or_dir[:-2] in cls._supported_versions:
+                version = file_or_dir[:-2]  # Remove _0 suffix in e.g. v1_0.
+                cls._schema_map.setdefault(version, {})
+                schema_dir = os.path.join(root_schema_dir, file_or_dir)
+                for schema_file in [
+                    f for f in os.listdir(schema_dir) if f.endswith('yaml')
+                ]:
+                    with open(os.path.join(schema_dir, schema_file)) as f:
+                        for schema in yaml.safe_load_all(f):
+                            name = schema['id']
+                            if schema_file in cls._schema_map[version]:
+                                raise RuntimeError(
+                                    'Duplicate schema specified for: %s.'
+                                    % name)
+                            cls._schema_map[version].setdefault(name, schema)
 
     def _get_schemas(self, document):
         """Retrieve the relevant schemas based on the document's
@@ -164,10 +186,12 @@ class SchemaValidator(BaseValidator):
         if not schemas_to_use and use_fallback_schema:
             LOG.debug('Document schema %s not recognized. Using "fallback" '
                       'schema.', document['schema'])
-            schemas_to_use = [SchemaValidator._fallback_schema]
+            _, schema_version = get_schema_parts(document)
+            fallback_schema = self._get_fallback_schema(schema_version)
+            if fallback_schema:
+                schemas_to_use = [fallback_schema]
 
-        for schema_to_use in schemas_to_use:
-            schema = schema_to_use.schema
+        for schema in schemas_to_use:
             if validate_section:
                 to_validate = document.get(validate_section, None)
                 root_path = '.' + validate_section + '.'
@@ -216,10 +240,8 @@ class DataSchemaValidator(SchemaValidator):
             schema_prefix, schema_version = get_schema_parts(data_schema,
                                                              'metadata.name')
 
-            class Schema(object):
-                schema = data_schema['data']
-
-            schema_map[schema_version].setdefault(schema_prefix, Schema())
+            schema_map[schema_version].setdefault(schema_prefix,
+                                                  data_schema['data'])
 
         return schema_map
 

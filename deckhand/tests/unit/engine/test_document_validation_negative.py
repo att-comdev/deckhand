@@ -16,7 +16,6 @@ import mock
 
 from deckhand.engine import document_validation
 from deckhand import errors
-from deckhand import factories
 from deckhand.tests.unit.engine import base as test_base
 from deckhand import types
 
@@ -40,16 +39,25 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
 
     def _do_validations(self, document_validator, expected, expected_err):
         validations = document_validator.validate_all()
-        self.assertEqual(2, len(validations))
-        # The DataSchema document itself should've validated
-        # successfully.
-        self.assertEqual('success', validations[0]['status'])
+
+        expected_error_count = 1
+        if not any([expected['schema'].startswith(x)
+                    for x in types.DOCUMENT_SCHEMA_TYPES]):
+            expected_error_count = 2
+
+        self.assertEqual(1, len(validations))
         self.assertEqual('failure', validations[-1]['status'])
         self.assertEqual({'version': '1.0', 'name': 'deckhand'},
                          validations[-1]['validator'])
         self.assertEqual(types.DECKHAND_SCHEMA_VALIDATION,
                          validations[-1]['name'])
-        self.assertEqual(1, len(validations[-1]['errors']))
+        self.assertEqual(expected_error_count, len(validations[-1]['errors']))
+
+        if expected_error_count == 2:
+            self.assertRegex(validations[0]['errors'][0]['message'],
+                             'The provided document schema %s is invalid.*'
+                             % expected['schema'])
+
         self.assertEqual(expected['metadata']['name'],
                          validations[-1]['errors'][-1]['name'])
         self.assertEqual(expected['schema'],
@@ -65,11 +73,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
             exception_raised = self.exception_map.get(property_to_remove, None)
             expected_err_msg = "'%s' is a required property" % missing_prop
 
-            dataschema_factory = factories.DataSchemaFactory()
-            dataschema = dataschema_factory.gen_test(
-                invalid_data.get('schema', ''), {})
-            payload = [dataschema, invalid_data]
-
+            payload = [invalid_data]
             doc_validator = document_validation.DocumentValidation(payload)
             if exception_raised:
                 self.assertRaises(
@@ -162,11 +166,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
             'invalid', op='replace')
         expected_err = "'invalid' is not one of ['replace', 'delete', 'merge']"
 
-        # Ensure that a dataschema document exists for the random document
-        # schema via mocking.
-        dataschema_factory = factories.DataSchemaFactory()
-        dataschema = dataschema_factory.gen_test(document['schema'], {})
-        payload = [dataschema, missing_data]
+        payload = [missing_data]
         doc_validator = document_validation.DocumentValidation(payload)
         self._do_validations(doc_validator, document, expected_err)
 
@@ -225,9 +225,11 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
 
         # Validate that broken built-in schema for ``SchemaValidator`` raises
         # RuntimeError.
-        with mock.patch.object(document_validation.SchemaValidator,
-                               '_schema_map', new_callable=mock.PropertyMock(
-                                   return_value=fake_schema_map)):
+        def _mock_fake_schema_map():
+            document_validation.SchemaValidator._schema_map = fake_schema_map
+        with mock.patch.object(document_validation.SchemaValidator,  # noqa
+                               '_build_schema_map',
+                               side_effect=_mock_fake_schema_map):
             doc_validator = document_validation.DocumentValidation(document)
             with self.assertRaisesRegexp(RuntimeError, 'Unknown error'):
                 doc_validator.validate_all()
