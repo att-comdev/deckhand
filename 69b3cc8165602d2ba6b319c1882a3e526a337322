@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b33956d4_0f06fad0",
+        "filename": "charts/deckhand/templates/deployment.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-05T14:10:53Z",
+      "side": 1,
+      "message": "The default is 4 elsewhere for this, is there a reason for this inconsistency?",
+      "range": {
+        "startLine": 49,
+        "startChar": 61,
+        "endLine": 49,
+        "endChar": 62
+      },
+      "revId": "69b3cc8165602d2ba6b319c1882a3e526a337322",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
