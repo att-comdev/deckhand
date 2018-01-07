@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f758839_39a85387",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-01-07T06:52:53Z",
+      "side": 1,
+      "message": "is it possible for schemas_to_use \u003d\u003d None at this point?  say the fallback_schema evaluate to false on Line 197?",
+      "range": {
+        "startLine": 200,
+        "startChar": 22,
+        "endLine": 200,
+        "endChar": 36
+      },
+      "revId": "26b3171c8cf97d6aa9f8c9dda089b75bffe70184",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
