@@ -22,6 +22,30 @@
       "revId": "26b3171c8cf97d6aa9f8c9dda089b75bffe70184",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "849da53c_35692a25",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-07T15:40:22Z",
+      "side": 1,
+      "message": "Yes, but only if you modify or delete one of the schema files: https://review.gerrithub.io/#/c/393587/8/deckhand/engine/schemas/document_schema.yaml\n\nL17 in that file uses a hardcoded ID which _get_fallback_schema relies on.\n\nBut otherwise it\u0027s impossible from a runtime POV.",
+      "parentUuid": "8f758839_39a85387",
+      "range": {
+        "startLine": 200,
+        "startChar": 22,
+        "endLine": 200,
+        "endChar": 36
+      },
+      "revId": "26b3171c8cf97d6aa9f8c9dda089b75bffe70184",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
