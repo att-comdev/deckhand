@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ec3dc54_5c24c497",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-08T19:31:59Z",
+      "side": 1,
+      "message": "For future discussion: I think we should consider if this should be a special case. I\u0027m unclear what use case this is working towards by pulling in a layering policy that isn\u0027t in the revision.",
+      "revId": "8b428743ee0fcd60a96f0f06baa2046738ac836c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c876ba7_576f40c6",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-08T19:31:59Z",
+      "side": 1,
+      "message": "This is going to be very expensive as the set of documents grows. An alternative algorithm not requiring a copy would be preferred. Maybe something like \n\n  return (\n    document.Document(doc),\n    [document.Document(d) for d in documents if d is not doc]\n  )",
+      "revId": "8b428743ee0fcd60a96f0f06baa2046738ac836c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
