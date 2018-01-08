@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f77b0e23_c5eaa47a",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-08T17:42:00Z",
+      "side": 1,
+      "message": "I don\u0027t think DataSchema documents require a separate validation code path.  It should be possible to simply specify the json-schema metaschema as the body to a DataSchema document:\n\nhttp://json-schema.org/draft-07/schema\n\nWhile I don\u0027t think this is \"-1\" worthy, I do think it\u0027s a valuable simplification.",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da61210b_86dd2e14",
+        "filename": "deckhand/engine/schema/base_schema.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-08T17:42:00Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem necessary to reject \"v0\" as an invalid version.",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "feeece64_619e9772",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-08T17:42:00Z",
+      "side": 1,
+      "message": "I don\u0027t quite see why this changed, can you clarify?",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
