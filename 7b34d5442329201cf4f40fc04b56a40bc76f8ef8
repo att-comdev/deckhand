@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8d21d1f_6ca44a8d",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-01-08T23:20:56Z",
+      "side": 1,
+      "message": "This exception handler doesn\u0027t handle the case of not finding the source of the substitution, but rather system issues getting the source of the secret? If this is raised for the case of a reference pointing to nowhere, I question the use of a 500 in the ultimate response to the user instead of a 4xx error.",
+      "revId": "7b34d5442329201cf4f40fc04b56a40bc76f8ef8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0443e58_1baea7fa",
+        "filename": "deckhand/tests/unit/engine/test_secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-01-08T23:20:56Z",
+      "side": 1,
+      "message": "It\u0027s just naming, and it would not invalidate the test case... but does referring to \"secrets\" here give the wrong impression of why you\u0027d use substitution (e.g. shared value for DNS server, or a organization wide label to be applied to nodes)?",
+      "revId": "7b34d5442329201cf4f40fc04b56a40bc76f8ef8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
