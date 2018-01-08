@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "284b2c95_aacc182b",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-08T23:41:27Z",
+      "side": 1,
+      "message": "Agree, I can do 409 I guess.",
+      "parentUuid": "c8d21d1f_6ca44a8d",
+      "revId": "7b34d5442329201cf4f40fc04b56a40bc76f8ef8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0443e58_1baea7fa",
         "filename": "deckhand/tests/unit/engine/test_secrets_manager.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-01-08T23:20:56Z",
       "side": 1,
       "message": "It\u0027s just naming, and it would not invalidate the test case... but does referring to \"secrets\" here give the wrong impression of why you\u0027d use substitution (e.g. shared value for DNS server, or a organization wide label to be applied to nodes)?",
+      "revId": "7b34d5442329201cf4f40fc04b56a40bc76f8ef8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0825eaec_55b68d89",
+        "filename": "deckhand/tests/unit/engine/test_secrets_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-08T23:41:27Z",
+      "side": 1,
+      "message": "Yeah I can change it to be something generic, not just \"secret\". But that stuff also needs to be reflected in docs to indicate it\u0027s also a generic operation (if it\u0027s already not clear on that).",
+      "parentUuid": "f0443e58_1baea7fa",
       "revId": "7b34d5442329201cf4f40fc04b56a40bc76f8ef8",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
