@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df8c3ad3_94e4ead6",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2018-01-08T16:57:59Z",
+      "side": 1,
+      "message": "Consider removing TODOs.",
+      "range": {
+        "startLine": 110,
+        "startChar": 10,
+        "endLine": 110,
+        "endChar": 14
+      },
+      "revId": "5b11ed049c3810cbdc8fc4dc83a9c222179be19a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
