@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b33edf17_7bc68676",
+        "filename": "deckhand/engine/document.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2018-01-08T17:43:18Z",
+      "side": 1,
+      "message": "Why catch a generic Exception instead of specific exception types?  (Same for line 54 below)",
+      "range": {
+        "startLine": 42,
+        "startChar": 15,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "25d12b9e9310fd3b49d9551d9522ec6de63cfcff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
