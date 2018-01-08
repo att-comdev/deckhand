@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d0187564_6d5be2cc",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-08T23:35:33Z",
+      "side": 1,
+      "message": "So, not sure I follow so let me explain what my understanding is. Do you mean that `$schema` property in the `data` section of a DataSchema document can be used to self-validate itself?\n\nFor example:\n\n    ---\n    data:\n        $schema: \u003curl here\u003e\n\nIf that\u0027s what you\u0027re saying, that\u0027s not what the purpose of this class is. This class is using each registered DataSchema to validate the data section of other documents against the schema contained in its `data` section -- so this class isn\u0027t doing reflexive (or self-referential) validation at all (the exception is L210-215, but that\u0027s doing bare minimum validation on the document as a whole so that it can be registered to validate yet other documents... not going to go into details about why that\u0027s there.)",
+      "parentUuid": "f77b0e23_c5eaa47a",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da61210b_86dd2e14",
         "filename": "deckhand/engine/schema/base_schema.py",
         "patchSetId": 19
