@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "772957dc_92f91374",
+        "filename": "deckhand/engine/document.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2018-01-08T17:15:31Z",
+      "side": 1,
+      "message": "Is there a reason to the generic Exception catch instead of KeyError or something else more specific?",
+      "range": {
+        "startLine": 54,
+        "startChar": 8,
+        "endLine": 54,
+        "endChar": 24
+      },
+      "revId": "60d752309dc9bb5c2d774c3faf465dbd89680f37",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
