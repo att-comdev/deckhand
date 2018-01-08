@@ -22,6 +22,30 @@
       "revId": "25d12b9e9310fd3b49d9551d9522ec6de63cfcff",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "296cdc58_55eed78f",
+        "filename": "deckhand/engine/document.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-08T21:30:34Z",
+      "side": 1,
+      "message": "It\u0027s because \u0027layeringDefinition\u0027 might not be a dict in which case it\u0027ll return another error if __getitem__ is called on say a string. Anyway this is going to go away with: https://review.gerrithub.io/#/c/393311/",
+      "parentUuid": "b33edf17_7bc68676",
+      "range": {
+        "startLine": 42,
+        "startChar": 15,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "25d12b9e9310fd3b49d9551d9522ec6de63cfcff",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
