@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2301e54c_e2a7a891",
+        "filename": "deckhand/tests/unit/base.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-08T21:58:52Z",
+      "side": 1,
+      "message": "I think this default (sqlite) won\u0027t work, but it appears to be overridden in all cases, so it isn\u0027t used.",
+      "revId": "2bfb16e44df5f8f899f0df06d203e62027b87948",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
