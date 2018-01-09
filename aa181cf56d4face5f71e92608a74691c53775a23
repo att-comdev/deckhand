@@ -16,6 +16,24 @@
       "revId": "aa181cf56d4face5f71e92608a74691c53775a23",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "467da450_23db3b57",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-09T16:23:08Z",
+      "side": 1,
+      "message": "I mean, how many single-core CPUs are still out there? This should at least be 4 nowadays. nproc --all will \"print the number of installed processors\" on the system so this should always be at least 4. And in cases where only 1 is available, then hardcoding it to 2 might do bad things?",
+      "parentUuid": "f96b2352_30a9c459",
+      "revId": "aa181cf56d4face5f71e92608a74691c53775a23",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
