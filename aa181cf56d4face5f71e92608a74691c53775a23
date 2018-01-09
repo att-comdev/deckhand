@@ -34,6 +34,24 @@
       "revId": "aa181cf56d4face5f71e92608a74691c53775a23",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0253571d_89a623e6",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1011947
+      },
+      "writtenOn": "2018-01-09T16:30:56Z",
+      "side": 1,
+      "message": "It seems that this will return the value of 8 for default settings in the ATL lab. Do we want to halve this value?\n\n\ndeckhand@deckhand-7cfb9bcf4c-2lx68:~$ nproc --all\n8\ndeckhand@deckhand-7cfb9bcf4c-2lx68:~$",
+      "parentUuid": "467da450_23db3b57",
+      "revId": "aa181cf56d4face5f71e92608a74691c53775a23",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
