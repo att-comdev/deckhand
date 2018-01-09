@@ -70,6 +70,24 @@
       "revId": "aa181cf56d4face5f71e92608a74691c53775a23",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc5d6f2b_b04da1e4",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1011947
+      },
+      "writtenOn": "2018-01-09T16:59:09Z",
+      "side": 1,
+      "message": "Ok. I think it only doubles in value if hyper-thread is enabled. It should be alright in this case then.",
+      "parentUuid": "9985558a_7e35a6a2",
+      "revId": "aa181cf56d4face5f71e92608a74691c53775a23",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
