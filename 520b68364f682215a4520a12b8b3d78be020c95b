@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b182f6b_62958827",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-09T02:19:22Z",
+      "side": 1,
+      "message": "SubstitutionDependencyNotFound",
+      "range": {
+        "startLine": 120,
+        "startChar": 22,
+        "endLine": 120,
+        "endChar": 41
+      },
+      "revId": "520b68364f682215a4520a12b8b3d78be020c95b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
