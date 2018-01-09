@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ae717524_ac4c71ed",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-09T03:41:48Z",
+      "side": 1,
+      "message": "It\u0027s a system-wide resource, though, so unless it\u0027s been deleted, it should apply across all revisions, no?",
+      "parentUuid": "2ec3dc54_5c24c497",
+      "revId": "8b428743ee0fcd60a96f0f06baa2046738ac836c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c876ba7_576f40c6",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-01-08T19:31:59Z",
       "side": 1,
       "message": "This is going to be very expensive as the set of documents grows. An alternative algorithm not requiring a copy would be preferred. Maybe something like \n\n  return (\n    document.Document(doc),\n    [document.Document(d) for d in documents if d is not doc]\n  )",
+      "revId": "8b428743ee0fcd60a96f0f06baa2046738ac836c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6cc8e923_fd18b4f2",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-09T03:41:48Z",
+      "side": 1,
+      "message": "Thanks, I\u0027ll look at places where I can remove copy.deepcopy(). I\u0027ll make those change in a follow-up.",
+      "parentUuid": "6c876ba7_576f40c6",
       "revId": "8b428743ee0fcd60a96f0f06baa2046738ac836c",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
