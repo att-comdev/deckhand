@@ -16,6 +16,7 @@ from deckhand.engine import layering
 from deckhand import errors
 from deckhand import factories
 from deckhand.tests.unit import base as test_base
+from deckhand import types
 
 
 class TestDocumentLayering(test_base.DeckhandTestCase):

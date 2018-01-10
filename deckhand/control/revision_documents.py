@@ -61,7 +61,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
         filters['deleted'] = False  # Never return deleted documents to user.
 
         try:
-            documents = db_api.revision_get_documents(
+            documents = db_api.revision_documents_get(
                 revision_id, **filters)
         except errors.RevisionNotFound as e:
             LOG.exception(six.text_type(e))
@@ -105,7 +105,6 @@ class RenderedDocumentsResource(api_base.BaseResource):
 
         documents = self._retrieve_documents_for_rendering(revision_id,
                                                            **filters)
-
         try:
             document_layering = layering.DocumentLayering(documents)
             rendered_documents = document_layering.render()
@@ -121,7 +120,6 @@ class RenderedDocumentsResource(api_base.BaseResource):
         # documents have been rendered.
         order_by = sanitized_params.pop('order', None)
         sort_by = sanitized_params.pop('sort', None)
-
         user_filters = sanitized_params.copy()
         user_filters['metadata.layeringDefinition.abstract'] = False
 
@@ -129,12 +127,13 @@ class RenderedDocumentsResource(api_base.BaseResource):
             d for d in rendered_documents if utils.deepfilter(
                 d, **user_filters)]
 
-        sorted_documents = utils.multisort(
-            rendered_documents, sort_by, order_by)
+        if sort_by:
+            rendered_documents = utils.multisort(
+                rendered_documents, sort_by, order_by)
 
         resp.status = falcon.HTTP_200
-        resp.body = self.view_builder.list(sorted_documents)
-        self._post_validate(sorted_documents)
+        resp.body = self.view_builder.list(rendered_documents)
+        self._post_validate(rendered_documents)
 
     def _retrieve_documents_for_rendering(self, revision_id, **filters):
         """Retrieve all necessary documents needed for rendering. If a layering
@@ -142,7 +141,7 @@ class RenderedDocumentsResource(api_base.BaseResource):
         call and add it to the list of documents.
         """
         try:
-            documents = db_api.revision_get_documents(revision_id, **filters)
+            documents = db_api.revision_documents_get(revision_id, **filters)
         except errors.RevisionNotFound as e:
             LOG.exception(six.text_type(e))
             raise falcon.HTTPNotFound(description=e.format_message())
