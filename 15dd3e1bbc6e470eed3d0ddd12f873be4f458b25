@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "87ddff50_87770143",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-10T15:23:17Z",
+      "side": 1,
+      "message": "Consider not calling sort when the query parameters aren\u0027t specified. Most cases the ordering of documents is inconsequential, so you pay the performance price for sorting without benefit.",
+      "revId": "15dd3e1bbc6e470eed3d0ddd12f873be4f458b25",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
