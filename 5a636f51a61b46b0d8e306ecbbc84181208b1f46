@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "e4540bf4_516edf05",
+        "filename": "deckhand/tests/functional/gabbits/resources/design-doc-substitution-generic-sample.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-11T03:37:38Z",
+      "side": 1,
+      "message": "Could also use more \"generic\" language here but that\u0027s a nit.",
+      "range": {
+        "startLine": 37,
+        "startChar": 2,
+        "endLine": 37,
+        "endChar": 38
+      },
+      "revId": "5a636f51a61b46b0d8e306ecbbc84181208b1f46",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c50c4a1_4bb66d53",
         "filename": "doc/source/substitution.rst",
         "patchSetId": 5
