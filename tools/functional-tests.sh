@@ -72,7 +72,7 @@ function gen_config {
 # Create a logging config file to dump everything to stdout/stderr.
 cat <<EOCONF > $CONF_DIR/logging.conf
 [loggers]
-keys = root, deckhand
+keys = root, deckhand, error
 
 [handlers]
 keys = null, stderr, stdout
@@ -84,6 +84,10 @@ keys = simple, context
 level = DEBUG
 handlers = stdout
 qualname = deckhand
+
+[logger_error]
+level = ERROR
+handlers = stderr
 
 [logger_root]
 level = WARNING
