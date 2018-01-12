@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "cd6fed7c_84b58937",
+        "filename": "deckhand/engine/schema/base_schema.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-12T03:12:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da61210b_86dd2e14",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "feeece64_619e9772",
         "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
         "patchSetId": 19
@@ -65,6 +83,24 @@
       "writtenOn": "2018-01-08T17:42:00Z",
       "side": 1,
       "message": "I don\u0027t quite see why this changed, can you clarify?",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4d1b715_1c3c0c31",
+        "filename": "deckhand/tests/functional/gabbits/document-crud-success-single-bucket.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-12T03:12:19Z",
+      "side": 1,
+      "message": "Was an unintended change; it\u0027s been corrected.",
+      "parentUuid": "feeece64_619e9772",
       "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
