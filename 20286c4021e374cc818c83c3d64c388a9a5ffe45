@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbb2b19c_8f4e1af3",
+        "filename": "doc/source/overview.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-01-14T22:07:31Z",
+      "side": 1,
+      "message": "information",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 20
+      },
+      "revId": "20286c4021e374cc818c83c3d64c388a9a5ffe45",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
