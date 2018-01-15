@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+!/usr/bin/env bash
 
-# Script for setting up temporary PostgreSQL database for testing unit tests
-# against. Requires Docker CE (at least) to be executed. Fallback in case
-# `pifpaf` fails.
+Script for setting up temporary PostgreSQL database for testing unit tests
+against. Requires Docker CE (at least) to be executed. Fallback in case
+`pifpaf` fails.
 
 function cleanup {
     sudo docker stop $POSTGRES_ID
