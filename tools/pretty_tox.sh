@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-set -o pipefail
+function cleanup {
+    pifpaf_stop
+}
+
+trap cleanup EXIT
+
+set -ex
+eval `pifpaf run postgresql`
+env | grep PIFPAF
+set +ex
+
+set -eo pipefail
 
 TESTRARGS=$1
 
@@ -10,7 +21,7 @@ TESTRARGS=$1
 #
 # this work around exists until that is addressed
 if [[ "$TESTARGS" =~ "until-failure" ]]; then
-    python setup.py testr --slowest --testr-args="$TESTRARGS"
+    python setup.py testr --slowest --testr-args="--concurrency=1 $TESTRARGS"
 else
-    python setup.py testr --slowest --testr-args="--subunit $TESTRARGS" | subunit-trace -f
+    python setup.py testr --slowest --testr-args="--subunit --concurrency=1 $TESTRARGS" | subunit-trace -f
 fi
