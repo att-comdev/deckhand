@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4ce9f01c_73ae3138",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-16T02:51:16Z",
+      "side": 1,
+      "message": "Further: a DataSchema document itself is being validated by the SchemaValidator class above. DataSchemaValidator will only ever validate things like armada/Chart/v1 as can be seen in the `matches` method on L226 which checks whether \"armada/Chart\" (in this example case) is contained in self._schema_map[\"v1\"] -- and self._schema_map is initialized on L207+ ... you can see on L220 that the \"data\" section of the DataSchema is registered as a new schema, against which \"armada/Chart/v1\" will eventually be validated.\n\nAs an aside: I do agree that Deckhand schemas currently lack $schema which is something I\u0027m already addressing in a follow-up with: https://review.gerrithub.io/#/c/393587/",
+      "parentUuid": "d0187564_6d5be2cc",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da61210b_86dd2e14",
         "filename": "deckhand/engine/schema/base_schema.py",
         "patchSetId": 19
