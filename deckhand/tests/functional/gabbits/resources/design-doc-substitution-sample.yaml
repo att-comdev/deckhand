@@ -42,7 +42,7 @@ metadata:
   name: example-chart-01
   schema: metadata/Document/v1
   layeringDefinition:
-    layer: region
+    layer: site
   substitutions:
     - dest:
         path: .chart.values.tls.certificate
