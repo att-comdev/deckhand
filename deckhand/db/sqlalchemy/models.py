@@ -110,7 +110,6 @@ class Revision(BASE, DeckhandBase):
 
 
 class RevisionTag(BASE, DeckhandBase):
-    UNIQUE_CONSTRAINTS = ('tag', 'revision_id')
     __tablename__ = 'revision_tags'
 
     tag = Column(String(64), primary_key=True, nullable=False)
@@ -118,8 +117,6 @@ class RevisionTag(BASE, DeckhandBase):
     revision_id = Column(
         Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
         nullable=False)
-
-    UniqueConstraint(*UNIQUE_CONSTRAINTS)
 
 
 class Document(BASE, DeckhandBase):
