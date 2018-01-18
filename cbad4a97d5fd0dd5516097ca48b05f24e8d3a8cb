@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8e9770e_eab510d5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-18T22:35:40Z",
+      "side": 1,
+      "message": "I\u0027ll fix this typo only if there\u0027s a need to respin this patch",
+      "range": {
+        "startLine": 7,
+        "startChar": 26,
+        "endLine": 7,
+        "endChar": 38
+      },
+      "revId": "cbad4a97d5fd0dd5516097ca48b05f24e8d3a8cb",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
