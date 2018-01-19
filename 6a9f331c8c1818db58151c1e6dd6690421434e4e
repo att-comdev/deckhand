@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "3ad83aad_a5b2862d",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 19
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-01-19T16:57:32Z",
+      "side": 1,
+      "message": "So the $schema property is not really required.\n\nWhat I\u0027m trying to say is that it should be possible to fully validate the data section of a DataSchema document using the meta schema provided by the json-schema project.  This would lead to a document with schema: deckhand/DataSchema/v1 + metadata.name: deckhand/DataSchema/v1 that is actually able to be used to validate itself.\n\nSounds tricky, but the work of building the self-validating schema is already done by the j-s project.\n\nDoes that make sense?\n\nAlso I assume we will have data schemas defined for the other control documents, not sure DataSchema.",
+      "parentUuid": "4ce9f01c_73ae3138",
+      "revId": "6a9f331c8c1818db58151c1e6dd6690421434e4e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da61210b_86dd2e14",
         "filename": "deckhand/engine/schema/base_schema.py",
         "patchSetId": 19
