@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ab0f850_6909a799",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-19T17:14:05Z",
+      "side": 1,
+      "message": "to validate the",
+      "range": {
+        "startLine": 257,
+        "startChar": 33,
+        "endLine": 257,
+        "endChar": 36
+      },
+      "revId": "67d46531f6a8bd92473d4ae48675e42c529a4894",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
