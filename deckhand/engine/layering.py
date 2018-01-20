@@ -19,7 +19,7 @@ from oslo_log import log as logging
 
 from deckhand.engine import document_wrapper
 from deckhand.engine import secrets_manager
-from deckhand.engine import utils
+from deckhand.engine import utils as engine_utils
 from deckhand import errors
 from deckhand import types
 
@@ -109,9 +109,16 @@ class DocumentLayering(object):
 
             return children
 
-        for layer in self._layer_order:
+        for layer in self._layer_order[:]:
             docs_by_layer = list(filter(
                 (lambda x: x.layer == layer), layered_docs))
+
+            if not docs_by_layer:
+                LOG.info('%s is an empty layer with no documents. It will be '
+                         'discarded from the layerOrder during the layering '
+                         'process.', layer)
+                self._layer_order.remove(layer)
+                continue
 
             for doc in docs_by_layer:
                 children = _get_children(doc)
@@ -124,7 +131,8 @@ class DocumentLayering(object):
         all_children_elements = list(all_children.elements())
         secondary_docs = list(
             filter(lambda d: d.layer != self._layer_order[0],
-            layered_docs))
+            layered_docs)
+        ) if self._layer_order else []
         for doc in secondary_docs:
             # Unless the document is the topmost document in the
             # `layerOrder` of the LayeringPolicy, it should be a child document
@@ -234,7 +242,7 @@ class DocumentLayering(object):
                 # do a simple merge.
                 if (isinstance(rendered_data[last_key], dict)
                     and isinstance(child_data[last_key], dict)):
-                    utils.deep_merge(
+                    engine_utils.deep_merge(
                         rendered_data[last_key], child_data[last_key])
                 else:
                     rendered_data.setdefault(last_key, child_data[last_key])
