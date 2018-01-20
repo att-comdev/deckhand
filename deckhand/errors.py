@@ -175,8 +175,8 @@ class InvalidDocumentFormat(DeckhandException):
 
     **Troubleshoot:**
     """
-    msg_fmt = ("The provided document failed schema validation. Details: "
-               "%(details)s")
+    msg_fmt = ("The provided document [%(document_schema)s] %(document_name)s "
+               "failed schema validation. Errors: %(errors)s")
     code = 400
 
 
@@ -184,6 +184,7 @@ class InvalidDocumentLayer(DeckhandException):
     """The document layer is invalid.
 
     **Troubleshoot:**
+
     * Check that the document layer is contained in the layerOrder in the
       registered LayeringPolicy in the system.
     """
@@ -198,12 +199,22 @@ class InvalidDocumentParent(DeckhandException):
     """The document parent is invalid.
 
     **Troubleshoot:**
+
     * Check that the document `schema` and parent `schema` match.
     * Check that the document layer is lower-order than the parent layer.
     """
     msg_fmt = ("The document parent [%(parent_schema)s] %(parent_name)s is "
                "invalid for document [%(document_schema)s] %(document_name)s. "
                "Reason: %(reason)s")
+
+
+class DuplicateDataSchema(DeckhandException):
+    """Duplicate DataSchema registered.
+
+    **Troubleshoot:**
+    """
+    msg_fmt = ("Document [%(document_schema)s] %(document_name)s attempted "
+               "to register duplicate DataSchema '%(document_name)s'.")
     code = 400
 
 
@@ -220,6 +231,7 @@ class SubstitutionDependencyCycle(DeckhandException):
     """An illegal substitution depdencency cycle was detected.
 
     **Troubleshoot:**
+
     * Check that there is no two-way substitution dependency between documents.
     """
     msg_fmt = ('Cannot determine substitution order as a dependency '
