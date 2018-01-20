@@ -51,7 +51,11 @@ class DataSchemaFactory(DeckhandFactory):
         "metadata": {
             "schema": "metadata/Control/v1",
             "name": "",
-            "labels": {}
+            "labels": {},
+            "layeringDefinition": {
+                "abstract": True,
+                "layer": "site"
+            }
         },
         "schema": "deckhand/DataSchema/v1"
     }
@@ -96,7 +100,11 @@ class DocumentFactory(DeckhandFactory):
         },
         "metadata": {
             "name": "placeholder",
-            "schema": "metadata/Control/v%s" % DeckhandFactory.API_VERSION
+            "schema": "metadata/Control/v%s" % DeckhandFactory.API_VERSION,
+            "layeringDefinition": {
+                "abstract": False,
+                "layer": "site"
+            }
         },
         "schema": "deckhand/LayeringPolicy/v%s" % DeckhandFactory.API_VERSION
     }
