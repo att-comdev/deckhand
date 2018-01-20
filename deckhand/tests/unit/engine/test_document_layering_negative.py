@@ -69,6 +69,7 @@ class TestDocumentLayeringNegative(
     def test_layering_with_empty_layer(self, mock_log):
         doc_factory = factories.DocumentFactory(1, [1])
         documents = doc_factory.gen_test({}, global_abstract=False)
+        del documents[0]['metadata']['layeringDefinition']
 
         # Only pass in the LayeringPolicy.
         self._test_layering([documents[0]], global_expected=None)
