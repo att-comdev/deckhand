@@ -249,7 +249,7 @@ class DocumentLayering(object):
         LOG.debug('%s performing document pre-validation.',
                   self.__class__.__name__)
         validator = document_validation.DocumentValidation(
-            documents, pre_validate=True)
+            documents, pre_validate=False)
         results = validator.validate_all()
         val_errors = []
         for result in results:
@@ -262,8 +262,9 @@ class DocumentLayering(object):
                     'Document [%s] %s failed with pre-validation error: %s.',
                     *error)
             raise errors.InvalidDocumentFormat(
-                details='The following pre-validation errors occurred '
-                        '(schema, name, error): %s.' % val_errors)
+                document_schema=', '.join(v[0] for v in val_errors),
+                document_name=', '.join(v[1] for v in val_errors),
+                errors=', '.join(v[2] for v in val_errors))
 
     def __init__(self, documents, substitution_sources=None, validate=True):
         """Contructor for ``DocumentLayering``.
@@ -278,7 +279,8 @@ class DocumentLayering(object):
             sources for substitution. Should only include concrete documents.
         :type substitution_sources: List[dict]
         :param validate: Whether to pre-validate documents using built-in
-            schema validation. Default is True.
+            schema validation. Skips over externally registered ``DataSchema``
+            documents to avoid false positives. Default is True.
         :type validate: bool
 
         :raises LayeringPolicyNotFound: If no LayeringPolicy was found among
@@ -295,6 +297,7 @@ class DocumentLayering(object):
         self._documents_by_labels = {}
         self._layering_policy = None
 
+        # TODO(fmontei): Add a hook for post-validation too.
         if validate:
             self._validate_documents(documents)
 
