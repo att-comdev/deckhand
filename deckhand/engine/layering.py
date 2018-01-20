@@ -262,8 +262,10 @@ class DocumentLayering(object):
                     'Document [%s] %s failed with pre-validation error: %s.',
                     *error)
             raise errors.InvalidDocumentFormat(
-                details='The following pre-validation errors occurred '
-                        '(schema, name, error): %s.' % val_errors)
+                document_schema=', '.join(v[0] for v in val_errors),
+                document_name=', '.join(v[1] for v in val_errors),
+                details='The following pre-validation errors occurred %s: ' %
+                        ', '.join(v[2] for v in val_errors))
 
     def __init__(self, documents, substitution_sources=None, validate=True):
         """Contructor for ``DocumentLayering``.

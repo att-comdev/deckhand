@@ -30,10 +30,18 @@ DataSchema
 ^^^^^^^^^^
 
 ``DataSchema`` documents are used by various services to register new schemas
+<<<<<<< 43c4424efe1f9a849788b00a6985b78e16e65794
 that Deckhand can use for validation. No ``DataSchema`` documents with names
 beginning with ``deckhand/`` or ``metadata/`` are allowed.  The ``metadata.name``
 field of each ``DataSchema`` document specifies the top level ``schema`` that it
 is used to validate.
+=======
+that Deckhand can use for validation. `DataSchema`` documents with names
+beginning with ``deckhand/`` or ``metadata/`` are reserved namespaces and
+should not be used by other services.  The ``metadata.name`` field of each
+``DataSchema`` document specifies the top level ``schema`` that it is used to
+validate.
+>>>>>>> Deckhand schemas as YAML files
 
 The contents of its ``data`` key are expected to be the json schema definition
 for the target document type from the target's top level ``data`` key down.
