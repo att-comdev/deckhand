@@ -31,7 +31,7 @@ DataSchema
 
 ``DataSchema`` documents are used by various services to register new schemas
 that Deckhand can use for validation. No ``DataSchema`` documents with names
-beginning with ``deckhand/`` or ``metadata/`` are allowed.  Tme ``metadata.name``
+beginning with ``deckhand/`` or ``metadata/`` are allowed.  The ``metadata.name``
 field of each ``DataSchema`` document specifies the top level ``schema`` that it
 is used to validate.
 

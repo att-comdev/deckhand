@@ -13,20 +13,55 @@
 # limitations under the License.
 
 import abc
+import copy
+import os
+import pkg_resources
 import re
+import yaml
 
 import jsonschema
 from oslo_log import log as logging
 import six
 
 from deckhand.engine import document_wrapper
-from deckhand.engine.schema import base_schema
-from deckhand.engine.schema import v1_0
 from deckhand import errors
 from deckhand import types
 from deckhand import utils
 
 LOG = logging.getLogger(__name__)
+
+_DEFAULT_SCHEMAS = {}
+_SUPPORTED_SCHEMA_VERSIONS = ('v1',)
+
+
+def _get_schema_dir():
+    return pkg_resources.resource_filename('deckhand.engine', 'schemas')
+
+
+def _get_fallback_schema(schema_version):
+    return _DEFAULT_SCHEMAS.get(schema_version, {}).get('deckhand/Document')
+
+
+def _build_schema_map():
+    """Populates ``_DEFAULT_SCHEMAS`` with built-in Deckhand schemas."""
+    global _DEFAULT_SCHEMAS
+    _DEFAULT_SCHEMAS = {k: {} for k in _SUPPORTED_SCHEMA_VERSIONS}
+    schema_dir = _get_schema_dir()
+    for schema_file in os.listdir(schema_dir):
+        if not schema_file.endswith('.yaml'):
+            continue
+        with open(os.path.join(schema_dir, schema_file)) as f:
+            for schema in yaml.safe_load_all(f):
+                schema_name = schema['id']
+                version = schema_name.split('/')[-1]
+                _DEFAULT_SCHEMAS.setdefault(version, {})
+                if schema_file in _DEFAULT_SCHEMAS[version]:
+                    raise errors.DuplicateSchema(schema=schema_name)
+                _DEFAULT_SCHEMAS[version].setdefault(
+                    '/'.join(schema_name.split('/')[:2]), schema)
+
+
+_build_schema_map()
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -39,6 +74,10 @@ class BaseValidator(object):
 
     _supported_versions = ('v1',)
     _schema_re = re.compile(r'^[a-zA-Z]+\/[a-zA-Z]+\/v\d+(.0)?$')
+
+    def __init__(self):
+        global _DEFAULT_SCHEMAS
+        self._schema_map = _DEFAULT_SCHEMAS
 
     @abc.abstractmethod
     def matches(self, document):
@@ -57,6 +96,10 @@ class GenericValidator(BaseValidator):
     """Validator used for validating all documents, regardless whether concrete
     or abstract, or what version its schema is.
     """
+
+    def __init__(self):
+        super(GenericValidator, self).__init__()
+        self.base_schema = self._schema_map['v*']['deckhand/Base']
 
     def matches(self, document):
         # Applies to all schemas, so unconditionally returns True.
@@ -81,8 +124,8 @@ class GenericValidator(BaseValidator):
 
         """
         try:
-            jsonschema.Draft4Validator.check_schema(base_schema.schema)
-            schema_validator = jsonschema.Draft4Validator(base_schema.schema)
+            jsonschema.Draft4Validator.check_schema(self.base_schema)
+            schema_validator = jsonschema.Draft4Validator(self.base_schema)
             error_messages = [
                 e.message for e in schema_validator.iter_errors(document)]
         except Exception as e:
@@ -101,25 +144,6 @@ class GenericValidator(BaseValidator):
 class SchemaValidator(BaseValidator):
     """Validator for validating built-in document kinds."""
 
-    _schema_map = {
-        'v1': {
-            'deckhand/CertificateAuthorityKey':
-                    v1_0.certificate_authority_key_schema,
-            'deckhand/CertificateAuthority': v1_0.certificate_authority_schema,
-            'deckhand/CertificateKey': v1_0.certificate_key_schema,
-            'deckhand/Certificate': v1_0.certificate_schema,
-            'deckhand/DataSchema': v1_0.data_schema_schema,
-            'deckhand/LayeringPolicy': v1_0.layering_policy_schema,
-            'deckhand/Passphrase': v1_0.passphrase_schema,
-            'deckhand/PrivateKey': v1_0.private_key_schema,
-            'deckhand/PublicKey': v1_0.public_key_schema,
-            'deckhand/ValidationPolicy': v1_0.validation_policy_schema,
-        }
-    }
-
-    # Represents a generic document schema.
-    _fallback_schema = v1_0.document_schema
-
     def _get_schemas(self, document):
         """Retrieve the relevant schemas based on the document's
         ``schema``.
@@ -134,8 +158,8 @@ class SchemaValidator(BaseValidator):
         schema_prefix, schema_version = get_schema_parts(document)
         matching_schemas = []
         relevant_schemas = self._schema_map.get(schema_version, {})
-        for candidae_schema_prefix, schema in relevant_schemas.items():
-            if candidae_schema_prefix == schema_prefix:
+        for candidate_schema_prefix, schema in relevant_schemas.items():
+            if candidate_schema_prefix == schema_prefix:
                 if schema not in matching_schemas:
                     matching_schemas.append(schema)
         return matching_schemas
@@ -169,10 +193,12 @@ class SchemaValidator(BaseValidator):
         if not schemas_to_use and use_fallback_schema:
             LOG.debug('Document schema %s not recognized. Using "fallback" '
                       'schema.', document.schema)
-            schemas_to_use = [SchemaValidator._fallback_schema]
+            _, schema_version = get_schema_parts(document)
+            fallback_schema = _get_fallback_schema(schema_version)
+            if fallback_schema:
+                schemas_to_use = [fallback_schema]
 
-        for schema_to_use in schemas_to_use:
-            schema = schema_to_use.schema
+        for schema in schemas_to_use:
             if validate_section:
                 to_validate = document.get(validate_section, None)
                 root_path = '.' + validate_section + '.'
@@ -207,6 +233,7 @@ class DataSchemaValidator(SchemaValidator):
         self._schema_map = self._build_schema_map(data_schemas)
 
     def _build_schema_map(self, data_schemas):
+        global _DEFAULT_SCHEMAS
         schema_map = {k: {} for k in self._supported_versions}
 
         for data_schema in data_schemas:
@@ -221,10 +248,15 @@ class DataSchemaValidator(SchemaValidator):
             schema_prefix, schema_version = get_schema_parts(data_schema,
                                                              'metadata.name')
 
-            class Schema(object):
-                schema = data_schema.data
-
-            schema_map[schema_version].setdefault(schema_prefix, Schema())
+            # Also checks whether the DataSchema isn't registering a schema
+            # that is a built-in Deckhand schema.
+            if (schema_prefix in schema_map[schema_version] or
+                schema_prefix in _DEFAULT_SCHEMAS[schema_version]):
+                LOG.warning(
+                    'Registering duplicate DataSchema with schema: %s.',
+                    data_schema.schema)
+            schema_map[schema_version].setdefault(schema_prefix,
+                                                  data_schema.data)
 
         return schema_map
 
@@ -292,8 +324,8 @@ class DocumentValidation(object):
         schema_list = []
         for validator in self._validators[1:]:
             for schema_version, schema_map in validator._schema_map.items():
-                for schema_prefix in schema_map:
-                    schema_list.append(schema_prefix + '/' + schema_version)
+                for schema_name in schema_map:
+                    schema_list.append(schema_name + '/' + schema_version)
         return schema_list
 
     def _format_validation_results(self, results):
