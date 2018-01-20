@@ -176,6 +176,11 @@ class InvalidDocumentFormat(DeckhandException):
     code = 400
 
 
+class DuplicateSchema(DeckhandException):
+    msg_fmt = ("Duplicate schema specified for: %(schema)s.")
+    code = 400
+
+
 class IndeterminateDocumentParent(DeckhandException):
     msg_fmt = ("Too many parent documents found for document %(document)s.")
     code = 400
