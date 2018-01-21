@@ -247,8 +247,8 @@ class LayeringPolicyNotFound(DeckhandException):
 
 
 class SubstitutionDependencyNotFound(DeckhandException):
-    msg_fmt = ('Failed to find a dependent source document required for '
-               'substitution. Details: %(details)s')
+    msg_fmt = ('Failed to find a dependent source document [%(schema)s] '
+               '%(name)s required for substitution.')
     code = 409
 
 

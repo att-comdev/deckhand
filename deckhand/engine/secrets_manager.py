@@ -157,7 +157,8 @@ class SecretsSubstitution(object):
                     src_doc = next(
                         iter(filter(is_match, self._substitution_sources)))
                 except StopIteration:
-                    src_doc = {}
+                    raise errors.SubstitutionDependencyNotFound(
+                        schema=src_schema, name=src_name)
 
                 # If the data is a dictionary, retrieve the nested secret
                 # via jsonpath_parse, else the secret is the primitive/string
