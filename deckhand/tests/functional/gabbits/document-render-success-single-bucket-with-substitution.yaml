@@ -1,13 +1,24 @@
-# Tests success path for basic substitutions.
+# Tests success paths for basic substitutions including the following
+# edge cases:
+#  * Substitution works with top layer empty
+#  * Substitution works with multiple top layers empty
+#  * Substitution works with intermediate layer empty
 #
 # 1. Purges existing data to ensure test isolation
 # 2. Adds initial documents from substitution sample of design doc
 # 3. Verifies fully substituted document data
-# 4. Purges existing data to ensure test isolation
-# 5. Adds initial documents from substitution sample of design doc using just
-#    a single layer in order to verify that substitution is carried out for
-#    this edge case
-# 6. Verifies fully substituted document data (again)
+# 4. Adds initial documents from substitution sample of design doc using just
+#    "site" layer such that the top layer ("region") is empty
+# 5. Verifies fully substituted document data
+# 6. Recreate LayeringPolicy with 3 layers: global, region and site
+# 7. Adds initial documents from substitution sample of design doc using just
+#    "site" layer such that the top 2 layers are empty
+# 8. Verifies fully substituted document data
+# 9. Recreate LayeringPolicy with 4 layers: global, region, sub-region and site
+# 10. Adds initial documents from substitution sample of design doc using just
+#    "site" layer such that an intermediate layer is also empty in addition
+#    to the top one: such that global and sub-region are empty
+# 11. Verifies fully substituted document data
 
 defaults:
   request_headers:
@@ -16,61 +27,124 @@ defaults:
     content-type: application/x-yaml
 
 tests:
-  - name: purge
-    desc: Begin testing from known state.
-    DELETE: /api/v1.0/revisions
-    status: 204
-    response_headers: null
-
-  - name: initialize
-    desc: Create initial documents
-    PUT: /api/v1.0/buckets/mop/documents
-    status: 200
-    data: <@resources/design-doc-substitution-sample.yaml
-
-  - name: verify_substitutions
-    desc: Check for expected substitutions
-    GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/rendered-documents
-    query_parameters:
-      schema: armada/Chart/v1
-    status: 200
-    response_multidoc_jsonpaths:
-      $.`len`: 1
-      $.[*].metadata.name: example-chart-01
-      $.[*].data:
-        chart:
-          details:
-            data: here
-          values:
-            tls:
-              certificate: |
-                CERTIFICATE DATA
-              key: |
-                KEY DATA
-            some_url: http://admin:my-secret-password@service-name:8080/v1
-
   - name: purge_again
     desc: Begin testing from known state.
     DELETE: /api/v1.0/revisions
     status: 204
     response_headers: null
 
-  - name: initialize_single_layer
-    desc: Create initial documents
+  - name: initialize_multiple_empty_top_layers
+    desc: |
+      Create all documents with layer="site" such that the top region and
+      global layers are empty
     PUT: /api/v1.0/buckets/mop/documents
     status: 200
-    data: <@resources/design-doc-substitution-sample-single-layer.yaml
+    data: |
+      ---
+      schema: deckhand/LayeringPolicy/v1
+      metadata:
+        schema: metadata/Control/v1
+        name: layering-policy
+      data:
+        layerOrder:
+          - region
+          - site
+      ---
+      schema: deckhand/Certificate/v1
+      metadata:
+        name: example-cert
+        schema: metadata/Document/v1
+        layeringDefinition:
+          layer: site
+        storagePolicy: cleartext
+      data: |
+        CERTIFICATE DATA
+      ---
+      schema: deckhand/CertificateKey/v1
+      metadata:
+        name: example-key
+        schema: metadata/Document/v1
+        layeringDefinition:
+          layer: site
+        storagePolicy: cleartext
+      data: |
+        KEY DATA
+      ---
+      schema: deckhand/Passphrase/v1
+      metadata:
+        name: example-password
+        schema: metadata/Document/v1
+        layeringDefinition:
+          layer: site
+        storagePolicy: cleartext
+      data: my-secret-password
+      ---
+      schema: example/Kind/v1
+      metadata:
+        schema: metadata/Document/v1
+        name: region-1234
+        labels:
+          key1: value1
+        layeringDefinition:
+          abstract: true
+          layer: region
+      data:
+        a:
+          z: 3
+      ---
+      schema: example/Kind/v1
+      metadata:
+        schema: metadata/Document/v1
+        name: site-1234
+        labels:
+          foo: bar
+          baz: qux
+        layeringDefinition:
+          layer: site
+          parentSelector:
+            key1: value1
+          actions:
+            - method: merge
+              path: .
+        substitutions:
+          - dest:
+              path: .chart.values.tls.certificate
+            src:
+              schema: deckhand/Certificate/v1
+              name: example-cert
+              path: .
+          - dest:
+              path: .chart.values.tls.key
+            src:
+              schema: deckhand/CertificateKey/v1
+              name: example-key
+              path: .
+          - dest:
+              path: .chart.values.some_url
+              pattern: INSERT_[A-Z]+_HERE
+            src:
+              schema: deckhand/Passphrase/v1
+              name: example-password
+              path: .
+      data:
+        chart:
+          details:
+            data: here
+          values:
+            some_url: http://admin:INSERT_PASSWORD_HERE@service-name:8080/v1
+        b: 4
+      ...
 
-  - name: verify_substitutions_single_layer
+  - name: verify_substitutions_multiple_empty_top_layers
     desc: Check for expected substitutions
     GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/rendered-documents
     query_parameters:
-      schema: armada/Chart/v1
+      metadata.name: site-1234
     status: 200
     response_multidoc_jsonpaths:
       $.`len`: 1
-      $.[*].metadata.name: example-chart-01
-      $.[*].data:
+      $.[0].metadata.name: site-1234
+      $.[0].data:
         chart:
           details:
             data: here
@@ -81,3 +155,6 @@ tests:
               key: |
                 KEY DATA
             some_url: http://admin:my-secret-password@service-name:8080/v1
+        a:
+          z: 3
+        b: 4
