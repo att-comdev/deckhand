@@ -83,6 +83,18 @@ class TestDocumentLayeringNegative(
             mock_log.info.reset_mock()
 
     @mock.patch.object(layering, 'LOG', autospec=True)
+    def test_layering_with_invalid_layer(self, mock_log):
+        doc_factory = factories.DocumentFactory(1, [1])
+        documents = doc_factory.gen_test({}, site_abstract=False)
+        documents[-1]['metadata']['layeringDefinition']['layer'] = 'invalid'
+
+        self._test_layering(documents, global_expected={})
+        mock_log.info.assert_called_once_with(
+            'Could not find parent for document with name=%s, schema=%s, '
+            'layer=%s, parentSelector=%s.', documents[-1]['metadata']['name'],
+            documents[-1]['schema'], 'invalid', {})
+
+    @mock.patch.object(layering, 'LOG', autospec=True)
     def test_layering_child_with_invalid_parent_selector(self, mock_log):
         doc_factory = factories.DocumentFactory(2, [1, 1])
         documents = doc_factory.gen_test({}, site_abstract=False)
@@ -172,3 +184,25 @@ class TestDocumentLayeringNegative(
         documents = doc_factory.gen_test({}, site_abstract=False)[1:]
         self.assertRaises(errors.LayeringPolicyNotFound,
                           layering.DocumentLayering, documents)
+
+    @mock.patch.object(layering, 'LOG', autospec=True)
+    def test_layering_child_parentselector_not_subset(self, mock_log):
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_DATA_1_": {"data": {"b": 4}},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]}
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+
+        # Test case where the same number of labels are found in parent
+        # labels and child's parentSelector.
+        labels = [{'foo': 'bar'}, {'baz': 'qux'}]
+        alt_labels = [{'foo': 'bar'}, {'invalid': 'invalid'}]
+        documents[1]['metadata']['labels'] = labels
+        documents[-1]['metadata']['layeringDefinition']['parentSelector'] = (
+            alt_labels)
+        self._test_layering(documents, site_expected={})
+        self.assertRegexpMatches(mock_log.info.mock_calls[0][1][0],
+                                 'Could not find parent for document .*')
