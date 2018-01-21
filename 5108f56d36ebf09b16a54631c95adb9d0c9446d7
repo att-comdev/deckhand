@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "892967bc_8947d8e4",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-21T16:24:01Z",
+      "side": 1,
+      "message": "This is out-of-bounds on this PS, but I don\u0027t believe this to be true. Document selection should function just like Kubernetes node selection - an intersection of all selector k:v pairs. Forcing each child to select parents via a single k:v pair curtails a lot of labeling flexibility.",
+      "revId": "5108f56d36ebf09b16a54631c95adb9d0c9446d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "42028eb6_f9fc82f8",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-21T16:24:01Z",
+      "side": 1,
+      "message": "This is a bit out-of-bounds for this PS, but consider using .items() instead. I see no guarantees in the documentation of .keys() and .values() that they will return items in symmetric order. So no guarantee keys()[0]:values()[0] is actually in the dictionary unless I missed something.",
+      "revId": "5108f56d36ebf09b16a54631c95adb9d0c9446d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bcae00e_9b78f236",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-21T16:24:01Z",
+      "side": 1,
+      "message": "Is this needed? Doesn\u0027t it just select all indexes?",
+      "range": {
+        "startLine": 151,
+        "startChar": 32,
+        "endLine": 151,
+        "endChar": 35
+      },
+      "revId": "5108f56d36ebf09b16a54631c95adb9d0c9446d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fcc1af1_c8ad722c",
+        "filename": "deckhand/tests/unit/engine/test_document_layering_and_substitution.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-21T16:24:01Z",
+      "side": 1,
+      "message": "Does it make sense that these various document relation tests be implemented in the Gabbit functional suite?",
+      "revId": "5108f56d36ebf09b16a54631c95adb9d0c9446d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
