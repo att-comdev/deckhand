@@ -156,7 +156,7 @@ class RenderedDocumentsResource(api_base.BaseResource):
             try:
                 layering_policy_filters = {
                     'deleted': False,
-                    'schema': types.LAYERING_POLICY_SCHEMA
+                    'schema': types.LAYERING_POLICY_SCHEMA + '/v1'
                 }
                 layering_policy = db_api.document_get(
                     **layering_policy_filters)

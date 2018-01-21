@@ -172,7 +172,7 @@ class DocumentLayering(object):
             documents)
         if self._layering_policy is None:
             error_msg = (
-                'No layering policy found in the system so could not reder '
+                'No layering policy found in the system so could not render '
                 'documents.')
             LOG.error(error_msg)
             raise errors.LayeringPolicyNotFound()

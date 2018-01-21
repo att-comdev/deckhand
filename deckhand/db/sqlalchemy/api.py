@@ -106,6 +106,52 @@ def raw_query(query, **kwargs):
     return get_engine().execute(stmt)
 
 
+def _construct_query_filters(db_model, **filters):
+    from sqlalchemy.dialects.postgresql import JSONB
+    from sqlalchemy.sql.expression import cast
+
+    filter_expressions = []
+    for filter_key, value in filters.items():
+        filter_parts = filter_key.split('.')
+
+        # Handle special filtering for schema.
+        if filter_key in ['schema', 'metadata.schema']:
+            value = utils._add_microversion(value)
+            # actual_val = utils._add_microversion(value)
+            # parts = actual_val.split('/')[:2]
+            # if len(parts) == 2:
+            #     actual_namespace, actual_kind = parts
+            # elif len(parts) == 1:
+            #     actual_namespace = parts[0]
+            #     actual_kind = ''
+            # else:
+            #     actual_namespace = actual_kind = ''
+            # actual_minus_version = actual_namespace + '/' + actual_kind
+            
+            operand = getattr(db_model, filter_key)
+            filter_expressions.append(operand == value)
+
+            
+            # if not (filter_val == actual_val or
+            #         actual_minus_version == filter_val or
+            #         actual_namespace == filter_val):
+
+        elif filter_parts[0] == 'metadata':
+            filter_parts[0] = '_metadata'
+
+        elif len(filter_parts) == 1:
+            operand = getattr(db_model, filter_key)
+            filter_expressions.append(operand == value)
+
+        else:
+            operand = getattr(db_model, filter_parts[0])
+            for part in filter_parts[1:]:
+                operand = operand[part]
+            filter_expression = operand == cast(value, JSONB)
+            filter_expressions.append(filter_expression)
+    return filter_expressions
+
+
 def require_unique_document_schema(schema=None):
     """Decorator to enforce only one singleton document exists in the system.
 
@@ -195,23 +241,23 @@ def documents_create(bucket_name, documents, validations=None,
         LOG.debug('Deleting documents: %s.', documents_to_delete)
         deleted_documents = []
 
-        for d in documents_to_delete:
+        for d in documents_to_delete:            
             doc = models.Document()
-            with session.begin():
-                # Store bare minimum information about the document.
-                doc['schema'] = d[0]
-                doc['name'] = d[1]
-                doc['data'] = {}
-                doc['_metadata'] = {}
-                doc['data_hash'] = _make_hash({})
-                doc['metadata_hash'] = _make_hash({})
-                doc['bucket_id'] = bucket['id']
-                doc['revision_id'] = revision['id']
+            # Store bare minimum information about the document.
+            doc['schema'] = d[0]
+            doc['name'] = d[1]
+            doc['data'] = {}
+            doc['_metadata'] = {}
+            doc['data_hash'] = _make_hash({})
+            doc['metadata_hash'] = _make_hash({})
+            doc['bucket_id'] = bucket['id']
+            doc['revision_id'] = revision['id']
 
-                # Save and mark the document as `deleted` in the database.
-                doc.save(session=session)
-                doc.safe_delete(session=session)
-                deleted_documents.append(doc)
+            # Save and mark the document as `deleted` in the database.
+            with session.begin():
+                doc.save()
+            doc.safe_delete(session=session)
+            deleted_documents.append(doc)
             resp.append(doc.to_dict())
 
     if documents_to_create:
@@ -329,38 +375,12 @@ def document_get(session=None, raw_dict=False, revision_id=None, **filters):
     :raises: DocumentNotFound if the document wasn't found.
     """
     session = session or get_session()
-
-    if revision_id == 'latest':
-        revision = session.query(models.Revision)\
-            .order_by(models.Revision.created_at.desc())\
-            .first()
-        if revision:
-            filters['revision_id'] = revision.id
-    elif revision_id:
-        filters['revision_id'] = revision_id
-
-    # TODO(fmontei): Currently Deckhand doesn't support filtering by nested
-    # JSON fields via sqlalchemy. For now, filter the documents using all
-    # "regular" filters via sqlalchemy and all nested filters via Python.
-    nested_filters = {}
-    for f in filters.copy():
-        if any([x in f for x in ('.', 'schema')]):
-            nested_filters.setdefault(f, filters.pop(f))
-
     # Documents with the the same metadata.name and schema can exist across
     # different revisions, so it is necessary to order documents by creation
     # date, then return the first document that matches all desired filters.
-    documents = session.query(models.Document)\
-        .filter_by(**filters)\
-        .order_by(models.Document.created_at.desc())\
-        .all()
-
-    for doc in documents:
-        d = doc.to_dict(raw_dict=raw_dict)
-        if utils.deepfilter(d, **nested_filters):
-            return d
-
-    filters.update(nested_filters)
+    documents = document_get_all(session, raw_dict, revision_id, **filters)
+    if documents:
+        return documents[0]
     raise errors.DocumentNotFound(document=filters)
 
 
@@ -388,29 +408,19 @@ def document_get_all(session=None, raw_dict=False, revision_id=None,
     elif revision_id:
         filters['revision_id'] = revision_id
 
-    # TODO(fmontei): Currently Deckhand doesn't support filtering by nested
-    # JSON fields via sqlalchemy. For now, filter the documents using all
-    # "regular" filters via sqlalchemy and all nested filters via Python.
-    nested_filters = {}
-    for f in filters.copy():
-        if any([x in f for x in ('.', 'schema')]):
-            nested_filters.setdefault(f, filters.pop(f))
+    filter_expressions = _construct_query_filters(
+        models.Document, **filters)
 
     # Retrieve the most recently created documents for the revision, because
     # documents with the same metadata.name and schema can exist across
     # different revisions.
-    documents = session.query(models.Document)\
-        .filter_by(**filters)\
-        .order_by(models.Document.created_at.desc())\
-        .all()
+    query = session.query(models.Document)\
+        .order_by(models.Document.created_at.desc())
+    for filter_expression in filter_expressions:
+        query = query.filter(filter_expression)
 
-    final_documents = []
-    for doc in documents:
-        d = doc.to_dict(raw_dict=raw_dict)
-        if utils.deepfilter(d, **nested_filters):
-            final_documents.append(d)
-
-    return final_documents
+    documents = query.all()
+    return [d.to_dict(raw_dict=raw_dict) for d in documents]
 
 
 ####################

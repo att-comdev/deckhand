@@ -129,7 +129,7 @@ class Document(BASE, DeckhandBase):
     schema = Column(String(64), nullable=False)
     # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
     # must be used to store document metadata information in the DB.
-    _metadata = Column(oslo_types.JsonEncodedDict(), nullable=False)
+    _metadata = Column(JSONB, nullable=False)
     data = Column(JSONB, nullable=True)
     data_hash = Column(String, nullable=False)
     metadata_hash = Column(String, nullable=False)
