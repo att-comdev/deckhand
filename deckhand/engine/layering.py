@@ -144,14 +144,13 @@ class DocumentLayering(object):
         return layered_docs
 
     def _extract_layering_policy(self, documents):
-        documents = copy.deepcopy(documents)
         for doc in documents:
             if doc['schema'].startswith(types.LAYERING_POLICY_SCHEMA):
                 layering_policy = doc
-                documents.remove(doc)
                 return (
                     document.Document(layering_policy),
-                    [document.Document(d) for d in documents]
+                    [document.Document(d) for d in documents
+                     if d is not layering_policy]
                 )
         return None, [document.Document(d) for d in documents]
 
