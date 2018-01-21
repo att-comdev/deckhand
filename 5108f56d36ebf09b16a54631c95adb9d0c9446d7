@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "f8d9628c_92824dee",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-21T16:34:34Z",
+      "side": 1,
+      "message": "You\u0027re right; this all presupposes that the labelSelector was always just 1 label so this will only ever work for that case.\n\nThis of course won\u0027t work for a multi-label parent selector.",
+      "parentUuid": "42028eb6_f9fc82f8",
+      "revId": "5108f56d36ebf09b16a54631c95adb9d0c9446d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bcae00e_9b78f236",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 2
@@ -47,6 +65,30 @@
       "writtenOn": "2018-01-21T16:24:01Z",
       "side": 1,
       "message": "Is this needed? Doesn\u0027t it just select all indexes?",
+      "range": {
+        "startLine": 151,
+        "startChar": 32,
+        "endLine": 151,
+        "endChar": 35
+      },
+      "revId": "5108f56d36ebf09b16a54631c95adb9d0c9446d7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6ed49af_03e9fbb6",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-21T16:34:34Z",
+      "side": 1,
+      "message": "So this does shallow copying (see this: https://stackoverflow.com/questions/4081561/what-is-the-difference-between-list-and-list-in-python/4081583) and the only reason why it\u0027s here is because I believe with Python3 you cannot iterate over a collection while simultaneously altering entries in that collection via the same reference; hence a second (shallow-copied) reference is needed.\n\nIt\u0027s just a fancy way of avoiding the need to import copy.",
+      "parentUuid": "9bcae00e_9b78f236",
       "range": {
         "startLine": 151,
         "startChar": 32,
