@@ -163,8 +163,8 @@ class DocumentLayering(object):
             if doc['schema'].startswith(types.LAYERING_POLICY_SCHEMA):
                 layering_policy = doc
                 return (
-                    document_wrapper.DocumentDict(layering_policy),
-                    [document_wrapper.DocumentDict(d) for d in documents
+                    document.Document(layering_policy),
+                    [document.Document(d) for d in documents
                      if d is not layering_policy]
                 )
         return None, [document_wrapper.DocumentDict(d) for d in documents]
