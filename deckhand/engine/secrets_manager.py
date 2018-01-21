@@ -17,7 +17,6 @@ import six
 
 from deckhand.barbican import driver
 from deckhand.engine import document_wrapper
-from deckhand import errors
 from deckhand import utils
 
 LOG = logging.getLogger(__name__)
@@ -211,8 +210,6 @@ class SecretsSubstitution(object):
                 except Exception as e:
                     LOG.error('Unexpected exception occurred while attempting '
                               'secret substitution. %s', six.text_type(e))
-                    raise errors.SubstitutionDependencyNotFound(
-                        details=six.text_type(e))
 
                 substituted_docs.append(document)
             return substituted_docs

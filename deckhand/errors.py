@@ -246,12 +246,6 @@ class LayeringPolicyNotFound(DeckhandException):
     code = 409
 
 
-class SubstitutionDependencyNotFound(DeckhandException):
-    msg_fmt = ('Failed to find a dependent source document required for '
-               'substitution. Details: %(details)s')
-    code = 409
-
-
 class BarbicanException(DeckhandException):
 
     def __init__(self, message, code):
