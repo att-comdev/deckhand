@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe114304_5c5e575f",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-single-bucket-with-layering-and-substitution.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-22T21:55:56Z",
+      "side": 1,
+      "message": "layering + substitution, same for everywhere else",
+      "range": {
+        "startLine": 112,
+        "startChar": 29,
+        "endLine": 112,
+        "endChar": 42
+      },
+      "revId": "5ed2f64e35340eb100b7c17262fed49eb8c71c30",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
