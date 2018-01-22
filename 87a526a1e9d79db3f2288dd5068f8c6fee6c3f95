@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "857ea1ae_af4d21eb",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-22T18:12:36Z",
+      "side": 1,
+      "message": "While it might seem like this isn\u0027t necessary -- why not just set deleted\u003dTrue for all documents in the DB older than the one you\u0027re deleting -- but that won\u0027t work without changing how revision diffing works by pulling data from DB. So this will have to stay here until later.\n\nBut this should reduce complexity to O(N*logN) down from O(N^2)",
+      "range": {
+        "startLine": 579,
+        "startChar": 0,
+        "endLine": 595,
+        "endChar": 64
+      },
+      "revId": "87a526a1e9d79db3f2288dd5068f8c6fee6c3f95",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
