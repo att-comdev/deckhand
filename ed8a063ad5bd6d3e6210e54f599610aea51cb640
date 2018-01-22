@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6d007e22_43b1828c",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-22T22:50:07Z",
+      "side": 1,
+      "message": "nit: Just returning nothing",
+      "range": {
+        "startLine": 71,
+        "startChar": 65,
+        "endLine": 72,
+        "endChar": 25
+      },
+      "revId": "ed8a063ad5bd6d3e6210e54f599610aea51cb640",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
