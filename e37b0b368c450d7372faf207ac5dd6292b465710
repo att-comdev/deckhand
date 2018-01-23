@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34f47ee4_caaa3a88",
+        "filename": "deckhand/engine/schemas/certificate_authority_key_schema.yaml",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-01-23T15:28:19Z",
+      "side": 1,
+      "message": "I believe typically we are writing schemas to simply validate the `data` section of the document.\n\nThis applies across the PS, but I won\u0027t echo the comment.",
+      "revId": "e37b0b368c450d7372faf207ac5dd6292b465710",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
