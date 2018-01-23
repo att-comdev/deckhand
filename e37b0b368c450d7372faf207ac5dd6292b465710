@@ -16,6 +16,24 @@
       "revId": "e37b0b368c450d7372faf207ac5dd6292b465710",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ebc853b_9fc3f86e",
+        "filename": "deckhand/engine/schemas/certificate_authority_key_schema.yaml",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-23T16:07:03Z",
+      "side": 1,
+      "message": "These schemas are here to realize built-in deckhand schema validation. Other services only specify dataschemas for deckhand to enforce via validation.\n\nWhy shouldn\u0027t the service that stores and manipulates documents not sanity check them?",
+      "parentUuid": "34f47ee4_caaa3a88",
+      "revId": "e37b0b368c450d7372faf207ac5dd6292b465710",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
