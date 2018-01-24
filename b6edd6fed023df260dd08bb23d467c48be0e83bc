@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b1237fe_df09201e",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2018-01-24T21:13:40Z",
+      "side": 1,
+      "message": "Why set is_potential_child instead of just doing the check int he if statement?",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 30
+      },
+      "revId": "b6edd6fed023df260dd08bb23d467c48be0e83bc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
