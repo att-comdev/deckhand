@@ -44,6 +44,11 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
         self.assertEqual(types.DECKHAND_SCHEMA_VALIDATION,
                          validations[-1]['name'])
         self.assertEqual(1, len(validations[-1]['errors']))
+
+        for key in ('name', 'schema', 'path', 'error_section',
+                    'validation_schema', 'schema_path', 'message'):
+            self.assertIn(key, validations[-1]['errors'][-1])
+
         self.assertEqual(expected['metadata']['name'],
                          validations[-1]['errors'][-1]['name'])
         self.assertEqual(expected['schema'],
@@ -136,7 +141,8 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
                       errors[0]['message'])
 
         # Sort the errors to match the order in ``properties_to_remove``.
-        errors = sorted(errors[1:], key=lambda x: (x['path'], x['message']))
+        errors = sorted(errors[1:],
+                        key=lambda x: (x['path'], x['message']))
 
         # Validate that an error was generated for each missing property in
         # ``properties_to_remove`` that was removed from ``document``.

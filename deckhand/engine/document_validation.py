@@ -194,9 +194,8 @@ class SchemaValidator(BaseValidator):
                         'Failed schema validation for document [%s] %s. '
                         'Details: %s.', document.schema, document.name,
                         error.message)
-                    parent_path = root_path + '.'.join(
-                        [six.text_type(x) for x in error.path])
-                    yield error.message, parent_path
+                    yield _generate_validation_error_output(
+                        schema_to_use, document, error, root_path)
 
 
 class DataSchemaValidator(SchemaValidator):
@@ -344,15 +343,10 @@ class DocumentValidation(object):
 
         for validator in self._validators:
             if validator.matches(document):
-                error_messages = validator.validate(document)
-                if error_messages:
-                    for error_msg, error_path in error_messages:
-                        result['errors'].append({
-                            'schema': document.schema,
-                            'name': document.name,
-                            'message': error_msg,
-                            'path': error_path
-                        })
+                error_outputs = validator.validate(document)
+                if error_outputs:
+                    for error_output in error_outputs:
+                        result['errors'].append(error_output)
 
         if result['errors']:
             result.setdefault('status', 'failure')
@@ -427,3 +421,48 @@ def get_schema_parts(document, schema_key='schema'):
     if schema_version.endswith('.0'):
         schema_version = schema_version[:-2]
     return schema_prefix, schema_version
+
+
+def _generate_validation_error_output(schema, document, error, root_path):
+    """Returns a formatted output with necessary details for debugging why
+    a validation failed.
+
+    The response is a dictionary with the following keys:
+
+    * validation_schema: The schema body that was used to validate the
+        document.
+    * schema_path: The JSON path in the schema where the failure originated.
+    * name: The document name.
+    * schema: The document schema.
+    * path: The JSON path in the document where the failure originated.
+    * error_section: The "section" in the document above which the error
+        originated (i.e. the dict in which ``path`` is found).
+    * message: The error message returned by the ``jsonschema`` validator.
+
+    :returns: Dictionary in the above format.
+    """
+    path_to_error_in_document = root_path + '.'.join(
+        [str(x) for x in error.path])
+    path_to_error_in_schema = '.' + '.'.join(
+        [str(x) for x in error.schema_path])
+
+    parent_path_to_error_in_document = '.'.join(
+        path_to_error_in_document.split('.')[:-1]) or '.'
+    try:
+        document_error_section = utils.jsonpath_parse(
+            document, parent_path_to_error_in_document)
+    except Exception:
+        document_error_section = (
+            'Failed to find parent section above where error occurred.')
+
+    error_output = {
+        'validation_schema': schema.schema,
+        'schema_path': path_to_error_in_schema,
+        'name': document.name,
+        'schema': document.schema,
+        'path': path_to_error_in_document,
+        'error_section': document_error_section,
+        'message': error.message
+    }
+
+    return error_output
