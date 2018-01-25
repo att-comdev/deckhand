@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b0ca813_0f4715cd",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1011946
+      },
+      "writtenOn": "2018-01-25T13:46:34Z",
+      "side": 1,
+      "message": "Very thoughtful, thanks.",
+      "revId": "846fbfd27d52b11fcb0da67c4bf27502c9c3ad3f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
