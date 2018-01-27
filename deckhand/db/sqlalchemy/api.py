@@ -82,10 +82,9 @@ def drop_db():
     models.unregister_models(get_engine())
 
 
-def setup_db():
+def setup_db(connection_string):
     # Ensure the DB doesn't exist before creation.
-    drop_db()
-    models.register_models(get_engine())
+    models.register_models(get_engine(), connection_string)
 
 
 def raw_query(query, **kwargs):
