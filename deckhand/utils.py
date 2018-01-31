@@ -75,6 +75,54 @@ def jsonpath_parse(data, jsonpath, match_all=False):
         return result if match_all else result[0]
 
 
+def _populate_data_with_attributes(jsonpath, data):
+    # Populates ``data`` with any path specified in ``jsonpath``. For example,
+    # if jsonpath is ".foo[0].bar.baz" then for each subpath -- foo[0], bar,
+    # and baz -- that key will be added to ``data`` if missing.
+    array_re = re.compile(r'.*[\d].*')
+
+    d = data
+    for path in jsonpath.split('.')[1:]:
+        # Handle case where an array needs to be created.
+        if array_re.match(path):
+            try:
+                path_pieces = path.split('[')
+                path_piece = path_pieces[0]
+                path_index = int(path_pieces[1][:-1])
+
+                d.setdefault(path_piece, [])
+                if path_index >= len(d[path_piece]):
+                    d[path_piece].append({})
+
+                # NOTE(fmontei): This is used to avoid creation of spurious
+                # data. That is, if foo[3] is included along a JSON path,
+                # without foo[0-2] existing, then only foo[0] should be
+                # created along that path, or else entries 0-2 will be spurious
+                # entries. If foo[3] is passed in, not only will only 1 entry
+                # be created in this case, but the JSON path itself will be
+                # updated to look for data at foo[0] rather than foo[3].
+                #
+                # TODO(fmontei): This will not work for cases like
+                # foo[3].foo[2] because the `replace` below will update the
+                # indices for both pieces, potentially causing issues.
+                jsonpath = jsonpath.replace(
+                    '%s[%d]' % (path_piece, path_index),
+                    '%s[%d]' % (path_piece, len(d[path_piece]) - 1))
+
+                d = d[path_piece][-1]
+
+                continue
+            except (IndexError, ValueError):
+                pass
+        # Handle case where an object needs to be created.
+        elif path not in d:
+            d.setdefault(path, {})
+        d = d.get(path)
+
+    # Return the updated JSON path to be used by `jsonpath_replace` below.
+    return jsonpath
+
+
 def jsonpath_replace(data, value, jsonpath, pattern=None):
     """Update value in ``data`` at the path specified by ``jsonpath``.
 
@@ -145,12 +193,7 @@ def jsonpath_replace(data, value, jsonpath, pattern=None):
 
     # However, Deckhand should be smart enough to create the nested keys in the
     # data if they don't exist and a pattern isn't required.
-    d = data
-    for path in jsonpath.split('.')[1:]:
-        if path not in d:
-            d.setdefault(path, {})
-        d = d.get(path)
-
+    jsonpath = _populate_data_with_attributes(jsonpath, data)
     return _do_replace()
 
 
