@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af1fadaa_339bdb06",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-31T20:39:00Z",
+      "side": 1,
+      "message": "This doesn\u0027t handle case of foo.bar.baz[0][0].quux \u003c-- double array that is (and so on)",
+      "revId": "9b8ca13f7257ba88bd1950c71b1af184acc50f13",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
