@@ -228,5 +228,7 @@ class SecretsSubstitution(object):
         """
         safe_message = 'Sanitized to avoid exposing secret.'
         for sub in document.substitutions:
-            utils.jsonpath_replace(document['data'], safe_message,
-                                   sub['dest']['path'])
+            replaced_data = utils.jsonpath_replace(
+                document['data'], safe_message, sub['dest']['path'])
+            if replaced_data:
+                document['data'] = replaced_data
