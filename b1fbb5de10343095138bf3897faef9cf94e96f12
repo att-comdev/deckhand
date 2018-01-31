@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5875bea_60310ea1",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-01-31T17:43:55Z",
+      "side": 1,
+      "message": "Need to add one that shows secrets being omitted for security reasons.",
+      "revId": "b1fbb5de10343095138bf3897faef9cf94e96f12",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
