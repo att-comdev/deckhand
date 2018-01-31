@@ -96,8 +96,7 @@ class TestSecretsSubstitution(test_base.TestDbBase):
 
         secret_substitution = secrets_manager.SecretsSubstitution(
             substitution_sources)
-        substituted_docs = secret_substitution.substitute_all(documents)
-
+        substituted_docs = list(secret_substitution.substitute_all(documents))
         self.assertIn(expected_document, substituted_docs)
 
     def test_secret_substitution_single_cleartext(self):
@@ -126,6 +125,238 @@ class TestSecretsSubstitution(test_base.TestDbBase):
                     }
                 }
             }
+        }
+        self._test_secret_substitution(
+            document_mapping, [certificate], expected_data)
+
+    def test_create_destination_path_with_array(self):
+        # Validate that the destination data will be populated with an array
+        # where the data will be contained in array[0].
+        certificate = self.secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='CERTIFICATE DATA')
+        certificate['metadata']['name'] = 'example-cert'
+
+        document_mapping = {
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".chart[0].values.tls.certificate"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "example-cert",
+                    "path": "."
+                }
+
+            }]
+        }
+        expected_data = {
+            'chart': [{
+                'values': {
+                    'tls': {
+                        'certificate': 'CERTIFICATE DATA'
+                    }
+                }
+            }]
+        }
+        self._test_secret_substitution(
+            document_mapping, [certificate], expected_data)
+
+    def test_create_destination_path_with_array_sequential_indices(self):
+        # Validate that the destination data will be populated with an array
+        # with multiple sequential indices successfully populated.
+        certificate = self.secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='CERTIFICATE DATA')
+        certificate['metadata']['name'] = 'example-cert'
+
+        document_mapping = {
+            "_GLOBAL_SUBSTITUTIONS_1_": [
+                {
+                    "dest": {
+                        "path": ".chart[0].values.tls.certificate"
+                    },
+                    "src": {
+                        "schema": "deckhand/Certificate/v1",
+                        "name": "example-cert",
+                        "path": "."
+                    }
+                },
+                {
+                    "dest": {
+                        "path": ".chart[1].values.tls.same_certificate"
+                    },
+                    "src": {
+                        "schema": "deckhand/Certificate/v1",
+                        "name": "example-cert",
+                        "path": "."
+                    }
+                }
+            ]
+        }
+        expected_data = {
+            'chart': [
+                {
+                    'values': {
+                        'tls': {
+                            'certificate': 'CERTIFICATE DATA',
+                        }
+                    }
+                },
+                {
+                    'values': {
+                        'tls': {
+                            'same_certificate': 'CERTIFICATE DATA',
+                        }
+                    }
+                }
+            ]
+        }
+        self._test_secret_substitution(
+            document_mapping, [certificate], expected_data)
+
+    def test_create_destination_path_with_array_multiple_subs(self):
+        # Validate that the destination data will be populated with an array
+        # with multiple succesful substitutions.
+        certificate = self.secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='CERTIFICATE DATA')
+        certificate['metadata']['name'] = 'example-cert'
+
+        document_mapping = {
+            "_GLOBAL_SUBSTITUTIONS_1_": [
+                {
+                    "dest": {
+                        "path": ".chart[0].values.tls.certificate"
+                    },
+                    "src": {
+                        "schema": "deckhand/Certificate/v1",
+                        "name": "example-cert",
+                        "path": "."
+                    }
+                },
+                {
+                    "dest": {
+                        "path": ".chart[0].values.tls.same_certificate"
+                    },
+                    "src": {
+                        "schema": "deckhand/Certificate/v1",
+                        "name": "example-cert",
+                        "path": "."
+                    }
+                }
+            ]
+        }
+        expected_data = {
+            'chart': [{
+                'values': {
+                    'tls': {
+                        'certificate': 'CERTIFICATE DATA',
+                        'same_certificate': 'CERTIFICATE DATA',
+                    }
+                }
+            }]
+        }
+        self._test_secret_substitution(
+            document_mapping, [certificate], expected_data)
+
+    def test_create_destination_path_with_array_excise_gaps(self):
+        # Validate that the destination data will be populated with an array
+        # with gaps, meaning that [3] is specified rather than [0], result in
+        # gaps at indices 0, 1, and 2, with actual data at index 3.
+        certificate = self.secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='CERTIFICATE DATA')
+        certificate['metadata']['name'] = 'example-cert'
+        document_mapping = {
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".chart[3].values.tls.certificate"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "example-cert",
+                    "path": "."
+                }
+
+            }]
+        }
+        expected_data = {
+            'chart': [
+                {
+                    'values': {
+                        'tls': {
+                            'certificate': 'CERTIFICATE DATA'
+                        }
+                    }
+                }
+            ]
+        }
+        self._test_secret_substitution(
+            document_mapping, [certificate], expected_data)
+
+    def test_create_destination_path_with_nested_arrays(self):
+        # Validate that the destination data will be populated with an array
+        # that contains yet another array.
+        certificate = self.secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='CERTIFICATE DATA')
+        certificate['metadata']['name'] = 'example-cert'
+        document_mapping = {
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".chart[0].values[0].tls.certificate"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "example-cert",
+                    "path": "."
+                }
+
+            }]
+        }
+        expected_data = {
+            'chart': [
+                {
+                    'values': [
+                        {
+                            'tls': {
+                                'certificate': 'CERTIFICATE DATA'
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+        self._test_secret_substitution(
+            document_mapping, [certificate], expected_data)
+
+    def test_create_destination_path_with_nested_arrays_excise_gaps(self):
+        # Validate that the destination data will be populated with an array
+        # that contains yet another array.
+        certificate = self.secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='CERTIFICATE DATA')
+        certificate['metadata']['name'] = 'example-cert'
+        document_mapping = {
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".chart[3].values[2].tls.certificate"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "example-cert",
+                    "path": "."
+                }
+
+            }]
+        }
+        expected_data = {
+            'chart': [
+                {
+                    'values': [
+                        {
+                            'tls': {
+                                'certificate': 'CERTIFICATE DATA'
+                            }
+                        }
+                    ]
+                }
+            ]
         }
         self._test_secret_substitution(
             document_mapping, [certificate], expected_data)
