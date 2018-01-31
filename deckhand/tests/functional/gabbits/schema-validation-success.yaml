@@ -115,5 +115,36 @@ tests:
     response_multidoc_jsonpaths:
       $.`len`: 1
       $.[0].count: 1
-      $.[0].results[*].name: deckhand-schema-validation
-      $.[0].results[*].status: failure
+      $.[0].results[0].name: deckhand-schema-validation
+      $.[0].results[0].status: failure
+
+  - name: verify_document_validation_failure_details
+    desc: Check document validation failure shows in list view
+    GET: /api/v1.0/revisions/$HISTORY['add_invalid_document'].$RESPONSE['$.[0].status.revision']/validations/deckhand-schema-validation/entries/0
+    status: 200
+    response_multidoc_jsonpaths:
+      $.`len`: 1
+      $.[0].status: failure
+      $.[0].errors:
+        - name: bad
+          schema: example/Doc/v1
+          path: .data.b
+          schema_path: .properties.b.maximum
+          error_section:
+            a: this-one-is-required-and-can-be-different
+            b: 177
+          message: 177 is greater than the maximum of 100
+          validation_schema:
+            $schema: http://json-schema.org/schema#
+            additionalProperties: False
+            properties:
+              a:
+                type: string
+              b:
+                maximum: 100
+                minimum: 0
+                type: integer
+            required:
+              - a
+              - b
+            type: object
