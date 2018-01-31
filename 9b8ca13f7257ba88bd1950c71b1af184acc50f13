@@ -16,6 +16,23 @@
       "revId": "9b8ca13f7257ba88bd1950c71b1af184acc50f13",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e65d4007_cf35cf22",
+        "filename": "deckhand/utils.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1011946
+      },
+      "writtenOn": "2018-01-31T21:46:19Z",
+      "side": 1,
+      "message": "Currently this is generating spurious `- {}` members to the lists.",
+      "revId": "9b8ca13f7257ba88bd1950c71b1af184acc50f13",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
