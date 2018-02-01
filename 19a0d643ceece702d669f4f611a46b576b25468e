@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b83cbf3_05616fe2",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-01T20:35:12Z",
+      "side": 1,
+      "message": "This was incorrect and honestly I have no idea why it was working. I added 2 labels to a functional test resource to to confirm the new way is working (alongside all unit tests too).",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 13
+      },
+      "revId": "19a0d643ceece702d669f4f611a46b576b25468e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
