@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3a56b39_92f3f655",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-02T16:17:12Z",
+      "side": 1,
+      "message": "Actually need to make sure this doesn\u0027t impact the document returned back to the user.",
+      "range": {
+        "startLine": 458,
+        "startChar": 55,
+        "endLine": 458,
+        "endChar": 63
+      },
+      "revId": "a7bc8477e7f4d5afe7cee1c074c5d2b69ec45523",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
