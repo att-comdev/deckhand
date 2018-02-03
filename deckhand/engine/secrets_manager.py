@@ -212,7 +212,7 @@ class SecretsSubstitution(object):
                     raise errors.SubstitutionDependencyNotFound(
                         details=six.text_type(e))
 
-                yield document
+            yield document
 
     @staticmethod
     def sanitize_potential_secrets(document):

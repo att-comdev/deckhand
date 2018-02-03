@@ -34,7 +34,6 @@ class TestDocumentLayeringWithSubstitution(
                     "name": "global-cert",
                     "path": "."
                 }
-
             }],
             "_SITE_DATA_1_": {"data": {"b": 4}},
             "_SITE_ACTIONS_1_": {
@@ -72,7 +71,6 @@ class TestDocumentLayeringWithSubstitution(
                     "name": "global-cert",
                     "path": "."
                 }
-
             }],
             "_SITE_DATA_1_": {"data": {"b": 4}},
             "_SITE_ACTIONS_1_": {
@@ -114,7 +112,6 @@ class TestDocumentLayeringWithSubstitution(
                     "name": "site-cert",
                     "path": "."
                 }
-
             }],
             # No layering should be applied as the document has no parent.
             "_SITE_ACTIONS_1_": {
@@ -138,9 +135,9 @@ class TestDocumentLayeringWithSubstitution(
                             global_expected=global_expected,
                             substitution_sources=[certificate])
 
-    def test_parent_and_child_undergo_layering_and_substitution(self):
+    def test_parent_and_child_layering_and_substitution_different_paths(self):
         """Validate that parent and child documents both undergo layering and
-        substitution.
+        substitution where the substitution occurs at different paths.
 
         global -> requires substitution
           |
@@ -158,7 +155,6 @@ class TestDocumentLayeringWithSubstitution(
                     "name": "global-cert",
                     "path": "."
                 }
-
             }],
             "_SITE_DATA_1_": {"data": {"c": "need-site-secret"}},
             "_SITE_ACTIONS_1_": {
@@ -172,7 +168,6 @@ class TestDocumentLayeringWithSubstitution(
                     "name": "site-cert",
                     "path": "."
                 }
-
             }],
         }
         doc_factory = factories.DocumentFactory(2, [1, 1])
@@ -194,6 +189,312 @@ class TestDocumentLayeringWithSubstitution(
             documents, site_expected=site_expected,
             global_expected=global_expected,
             substitution_sources=[certificate, certificate_key])
+
+    def test_parent_and_child_layering_and_substitution_same_paths(self):
+        """Validate that parent and child documents both undergo layering and
+        substitution where the substitution occurs at the same path.
+
+        global -> requires substitution
+          |
+          v
+        site -> requires substitution
+        """
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".b"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "global-cert",
+                    "path": "."
+                }
+            }],
+            "_SITE_DATA_1_": {"data": "placeholder"},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".b"
+                },
+                "src": {
+                    "schema": "deckhand/CertificateKey/v1",
+                    "name": "site-cert",
+                    "path": "."
+                }
+            }],
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+        secrets_factory = factories.DocumentSecretFactory()
+
+        global_expected = {'a': {'x': 1, 'y': 2}, 'b': 'global-secret'}
+        site_expected = {'a': {'x': 1, 'y': 2}, 'b': 'site-secret'}
+
+        certificate = secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='global-secret',
+            name='global-cert')
+        certificate_key = secrets_factory.gen_test(
+            'CertificateKey', 'cleartext', data='site-secret',
+            name='site-cert')
+
+        self._test_layering(
+            documents, site_expected=site_expected,
+            global_expected=global_expected,
+            substitution_sources=[certificate, certificate_key])
+
+    def test_parent_with_multi_child_layering_and_sub_different_paths(self):
+        """Validate that parent and children documents both undergo layering
+        and substitution where the substitution occurs at different paths.
+
+        global -> requires substitution
+          |
+          v
+        site1 -> requires substitution
+        site2 -> requires substitution
+        """
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".b"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "global-cert",
+                    "path": "."
+                }
+            }],
+            "_SITE_DATA_1_": {"data": "placeholder"},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".c"
+                },
+                "src": {
+                    "schema": "deckhand/CertificateKey/v1",
+                    "name": "site-1-cert",
+                    "path": "."
+                }
+            }],
+            "_SITE_DATA_2_": {"data": "placeholder"},
+            "_SITE_ACTIONS_2_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_2_": [{
+                "dest": {
+                    "path": ".d"
+                },
+                "src": {
+                    "schema": "deckhand/CertificateKey/v1",
+                    "name": "site-2-cert",
+                    "path": "."
+                }
+            }],
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 2])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+        secrets_factory = factories.DocumentSecretFactory()
+
+        global_expected = {'a': {'x': 1, 'y': 2}, 'b': 'global-secret'}
+        site_expected = [
+            {'a': {'x': 1, 'y': 2}, 'b': 'global-secret', 'c': 'site-1-sec'},
+            {'a': {'x': 1, 'y': 2}, 'b': 'global-secret', 'd': 'site-2-sec'}]
+
+        certificate = secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='global-secret',
+            name='global-cert')
+        certificate_keys = [
+            secrets_factory.gen_test(
+                'CertificateKey', 'cleartext', data='site-%d-sec' % idx,
+                name='site-%d-cert' % idx)
+            for idx in range(1, 3)
+        ]
+
+        self._test_layering(
+            documents, site_expected=site_expected,
+            global_expected=global_expected,
+            substitution_sources=[certificate] + certificate_keys)
+
+    def test_parent_with_multi_child_layering_and_sub_same_path(self):
+        """Validate that parent and children documents both undergo layering
+        and substitution where the substitution occurs at the same path.
+
+        global -> requires substitution
+          |
+          v
+        site1 -> requires substitution
+        site2 -> requires substitution
+        """
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".b"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "global-cert",
+                    "path": "."
+                }
+            }],
+            "_SITE_DATA_1_": {"data": "placeholder"},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".b"
+                },
+                "src": {
+                    "schema": "deckhand/CertificateKey/v1",
+                    "name": "site-1-cert",
+                    "path": "."
+                }
+            }],
+            "_SITE_DATA_2_": {"data": "placeholder"},
+            "_SITE_ACTIONS_2_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_2_": [{
+                "dest": {
+                    "path": ".b"
+                },
+                "src": {
+                    "schema": "deckhand/CertificateKey/v1",
+                    "name": "site-2-cert",
+                    "path": "."
+                }
+            }],
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 2])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+        secrets_factory = factories.DocumentSecretFactory()
+
+        global_expected = {'a': {'x': 1, 'y': 2}, 'b': 'global-secret'}
+        site_expected = [
+            {'a': {'x': 1, 'y': 2}, 'b': 'site-1-sec'},
+            {'a': {'x': 1, 'y': 2}, 'b': 'site-2-sec'}]
+
+        certificate = secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='global-secret',
+            name='global-cert')
+        certificate_keys = [
+            secrets_factory.gen_test(
+                'CertificateKey', 'cleartext', data='site-%d-sec' % idx,
+                name='site-%d-cert' % idx)
+            for idx in range(1, 3)
+        ]
+
+        self._test_layering(
+            documents, site_expected=site_expected,
+            global_expected=global_expected,
+            substitution_sources=[certificate] + certificate_keys)
+
+    def test_parent_with_multi_child_layering_and_multi_substitutions(self):
+        """Validate that parent and children documents both undergo layering
+        and multiple substitutions.
+
+        global -> requires substitution
+          |
+          v
+        site1 -> requires multiple substitutions
+        site2 -> requires multiple substitutions
+        """
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".b"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "global-cert",
+                    "path": "."
+                }
+            }],
+            "_SITE_DATA_1_": {"data": "placeholder"},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_1_": [
+                {
+                    "dest": {
+                        "path": ".c"
+                    },
+                    "src": {
+                        "schema": "deckhand/CertificateKey/v1",
+                        "name": "site-1-cert-key",
+                        "path": "."
+                    },
+                },
+                {
+                    "dest": {
+                        "path": ".d"
+                    },
+                    "src": {
+                        "schema": "deckhand/Certificate/v1",
+                        "name": "site-1-cert",
+                        "path": "."
+                    }
+                }
+            ],
+            "_SITE_DATA_2_": {"data": "placeholder"},
+            "_SITE_ACTIONS_2_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_2_": [
+                {
+                    "dest": {
+                        "path": ".e"
+                    },
+                    "src": {
+                        "schema": "deckhand/CertificateKey/v1",
+                        "name": "site-2-cert-key",
+                        "path": "."
+                    },
+                },
+                {
+                    "dest": {
+                        "path": ".f"
+                    },
+                    "src": {
+                        "schema": "deckhand/Certificate/v1",
+                        "name": "site-2-cert",
+                        "path": "."
+                    }
+                }
+            ]
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 2])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+        secrets_factory = factories.DocumentSecretFactory()
+
+        global_expected = {'a': {'x': 1, 'y': 2}, 'b': 'global-secret'}
+        site_expected = [
+            {'a': {'x': 1, 'y': 2}, 'b': 'global-secret',
+             'c': 'site-1-sec-key', 'd': 'site-1-sec'},
+            {'a': {'x': 1, 'y': 2}, 'b': 'global-secret',
+             'e': 'site-2-sec-key', 'f': 'site-2-sec'}]
+
+        certificate = secrets_factory.gen_test(
+            'Certificate', 'cleartext', data='global-secret',
+            name='global-cert')
+        certificate_keys = [
+            secrets_factory.gen_test(
+                'CertificateKey', 'cleartext', data='site-%d-sec-key' % idx,
+                name='site-%d-cert-key' % idx)
+            for idx in range(1, 3)
+        ]
+        certificates = [
+            secrets_factory.gen_test(
+                'Certificate', 'cleartext', data='site-%d-sec' % idx,
+                name='site-%d-cert' % idx)
+            for idx in range(1, 3)
+        ]
+
+        self._test_layering(
+            documents, site_expected=site_expected,
+            global_expected=global_expected,
+            substitution_sources=[certificate] + certificate_keys +
+                                 certificates)
 
     @mock.patch('deckhand.engine.layering.LOG', autospec=True)
     def test_parent_and_child_undergo_layering_and_substitution_empty_layers(
@@ -228,7 +529,6 @@ class TestDocumentLayeringWithSubstitution(
                     "name": "global-cert",
                     "path": "."
                 }
-
             }],
             "_SITE_DATA_1_": {"data": {"c": "need-site-secret"}},
             "_SITE_ACTIONS_1_": {
