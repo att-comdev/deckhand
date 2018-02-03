@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e93d3aa_30b62af1",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-03T04:18:01Z",
+      "side": 1,
+      "message": "This was previously indented one level too much but these new tests don\u0027t fail based off changing this indent but even still it should be fixed.",
+      "range": {
+        "startLine": 215,
+        "startChar": 12,
+        "endLine": 215,
+        "endChar": 26
+      },
+      "revId": "6a62b94462a554596cd15ec417fdc2198e2aebd5",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
