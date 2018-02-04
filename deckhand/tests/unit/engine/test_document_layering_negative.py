@@ -115,9 +115,10 @@ class TestDocumentLayeringNegative(
     def test_layering_duplicate_parent_selector_2_layer(self):
         # Validate that documents belonging to the same layer cannot have the
         # same unique parent identifier referenced by `parentSelector`.
-        doc_factory = factories.DocumentFactory(2, [1, 1])
+        doc_factory = factories.DocumentFactory(2, [2, 1])
         documents = doc_factory.gen_test({}, site_abstract=False)
-        documents.append(documents[1])  # Copy global layer.
+        # Make both global documents have the same exact labels.
+        documents[2]['metadata']['labels'] = documents[1]['metadata']['labels']
 
         self.assertRaises(errors.IndeterminateDocumentParent,
                           layering.DocumentLayering, documents)
@@ -125,9 +126,10 @@ class TestDocumentLayeringNegative(
     def test_layering_duplicate_parent_selector_3_layer(self):
         # Validate that documents belonging to the same layer cannot have the
         # same unique parent identifier referenced by `parentSelector`.
-        doc_factory = factories.DocumentFactory(3, [1, 1, 1])
+        doc_factory = factories.DocumentFactory(3, [1, 2, 1])
         documents = doc_factory.gen_test({}, site_abstract=False)
-        documents.append(documents[2])  # Copy region layer.
+        # Make both region documents have the same exact labels.
+        documents[3]['metadata']['labels'] = documents[2]['metadata']['labels']
 
         self.assertRaises(errors.IndeterminateDocumentParent,
                           layering.DocumentLayering, documents)
