@@ -177,7 +177,13 @@ class InvalidDocumentFormat(DeckhandException):
 
 
 class IndeterminateDocumentParent(DeckhandException):
-    msg_fmt = ("Too many parent documents found for document %(document)s.")
+    msg_fmt = "Too many parent documents found for document %(document)s."
+    code = 400
+
+
+class SubstitutionDependencyCycle(DeckhandException):
+    msg_fmt = ('Cannot determine substitution order as a dependency '
+               'cycle exists for the following documents: %(cycle)s.')
     code = 400
 
 
