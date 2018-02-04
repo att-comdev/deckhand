@@ -15,6 +15,9 @@
 import collections
 import copy
 
+import networkx
+from networkx.algorithms.cycles import find_cycle
+from networkx.algorithms.dag import topological_sort
 from oslo_log import log as logging
 
 from deckhand.engine import document_wrapper
@@ -154,6 +157,40 @@ class DocumentLayering(object):
                      'will be performed.')
         return layer_order
 
+    def _topologically_sort_documents(self, documents):
+        """Topologically sorts the DAG formed from the documents' substitution
+        dependency chain.
+        """
+        documents_by_name = {}
+        result = []
+
+        g = networkx.DiGraph()
+        for document in documents:
+            document = document_wrapper.DocumentDict(document)
+            documents_by_name.setdefault((document.schema, document.name),
+                                         document)
+            for sub in document.substitutions:
+                g.add_edge((document.schema, document.name),
+                           (sub['src']['schema'], sub['src']['name']))
+
+        try:
+            cycle = find_cycle(g)
+        except networkx.exception.NetworkXNoCycle:
+            pass
+        else:
+            LOG.error('Cannot determine substitution order as a dependency '
+                      'cycle exists for the following documents: %s.', cycle)
+            raise errors.SubstitutionDependencyCycle(cycle=cycle)
+
+        sorted_documents = reversed(list(topological_sort(g)))
+        for document in sorted_documents:
+            if document in documents_by_name:
+                result.append(documents_by_name.pop(document))
+        for document in documents_by_name.values():
+            result.append(document)
+
+        return result
+
     def __init__(self, documents, substitution_sources=None):
         """Contructor for ``DocumentLayering``.
 
@@ -172,7 +209,9 @@ class DocumentLayering(object):
         self._documents_by_labels = {}
         self._layering_policy = None
 
-        for document in documents:
+        sorted_documents = self._topologically_sort_documents(documents)
+
+        for document in sorted_documents:
             document = document_wrapper.DocumentDict(document)
             if document.schema.startswith(types.LAYERING_POLICY_SCHEMA):
                 if self._layering_policy:
@@ -353,12 +392,12 @@ class DocumentLayering(object):
 
                 # Update the actual document data if concrete.
                 if not child.is_abstract:
+                    child_index = self._documents_to_layer.index(child)
                     child.data = rendered_data.data
                     substituted_data = list(
                         self.secrets_substitution.substitute_all(child))
                     if substituted_data:
                         rendered_data = substituted_data[0]
-                    child_index = self._documents_to_layer.index(child)
                     self._documents_to_layer[child_index].data = (
                         rendered_data.data)
 
