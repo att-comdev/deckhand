@@ -202,10 +202,16 @@ class SecretsSubstitution(object):
                 try:
                     substituted_data = utils.jsonpath_replace(
                         document['data'], src_secret, dest_path, dest_pattern)
+                    sub_source = self._substitution_sources.get(
+                        (document.schema, document.name))
                     if isinstance(substituted_data, dict):
                         document['data'].update(substituted_data)
+                        if sub_source:
+                            sub_source['data'].update(substituted_data)
                     else:
                         document['data'] = substituted_data
+                        if sub_source:
+                            sub_source['data'] = substituted_data
                 except Exception as e:
                     LOG.error('Unexpected exception occurred while attempting '
                               'secret substitution. %s', six.text_type(e))
