@@ -39,6 +39,7 @@ User's Guide
    :maxdepth: 2
 
    overview
+   exceptions
    documents
    document_types
    validation
