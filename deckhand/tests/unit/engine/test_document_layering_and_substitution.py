@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import yaml
+
 import mock
 
 from deckhand import factories
@@ -54,6 +57,15 @@ class TestDocumentLayeringWithSubstitution(
         self._test_layering(documents, site_expected=site_expected,
                             global_expected=global_expected,
                             substitution_sources=[certificate])
+
+    def test_layering_and_substitution_two_global(self):
+        lab_yaml_path = os.path.join(os.getcwd(), 'deckhand', 'tests', 'unit',
+                                     'resources', 'lab.yaml')
+        with open(lab_yaml_path, 'r') as f:
+            documents = list(yaml.safe_load_all(f.read()))
+
+        self._test_layering(documents, global_expected={},
+                            substitution_sources=documents)
 
     def test_layering_and_substitution_no_children(self):
         """Validate that a document with no children undergoes substitution.

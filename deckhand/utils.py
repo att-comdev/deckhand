@@ -18,9 +18,12 @@ import re
 import string
 
 import jsonpath_ng
+from oslo_log import log as logging
 import six
 
 from deckhand import errors
+
+LOG = logging.getLogger(__name__)
 
 
 def to_camel_case(s):
@@ -138,6 +141,7 @@ def jsonpath_replace(data, value, jsonpath, pattern=None):
         doc['data'].update(replaced_data)
     """
     data = copy.copy(data)
+    value = copy.copy(value)
 
     if jsonpath == '.':
         jsonpath = '$'
@@ -155,9 +159,11 @@ def jsonpath_replace(data, value, jsonpath, pattern=None):
                 # `value` represents the value to inject into `to_replace` that
                 # matches the `pattern`.
                 try:
-                    _value = re.sub(pattern, value, to_replace)
-                except TypeError:
-                    _value = None
+                    _value = re.sub(pattern, str(value), to_replace)
+                except TypeError as e:
+                    LOG.error('Failed to substitute the value %s into %s '
+                              'using pattern %s. Details: %s', value,
+                              to_replace, pattern, six.text_type(e))
             return p.update(data, _value)
 
     result = _do_replace()
