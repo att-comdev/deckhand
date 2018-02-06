@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77e65d93_fa1abff9",
+        "filename": "deckhand/tests/unit/control/test_validations_controller.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-06T21:34:12Z",
+      "side": 1,
+      "message": "Need a case where more validations POSTed to server that aren\u0027t enumerated in ValidationPolicy (if a ValidationPolicy exists) results in having no impact on the overall validation status for the revision.\n\nThinking the entry should be set to \u0027ignored\u0027 and has no weight on the overall validation status. That way, the validation information still shows up but wouldn\u0027t conflict with the ValidationPolicy itself.",
+      "revId": "f8cd0bdfffb833277b174e73d8263adf52fec6b8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
