@@ -44,8 +44,7 @@ schema = {
                         'type': 'object',
                         'properties': {
                             'name': {
-                                'type': 'string',
-                                'pattern': '^.*-(validation|verification)$'
+                                'type': 'string'
                             },
                             # 'expiresAfter' is optional.
                             'expiresAfter': {'type': 'string'}

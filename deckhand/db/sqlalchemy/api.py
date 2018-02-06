@@ -1036,6 +1036,7 @@ def validation_get_all(revision_id, session=None):
     # has its own validation but for this query we want to return the result
     # of the overall validation for the revision. If just 1 document failed
     # validation, we regard the validation for the whole revision as 'failure'.
+    session = session or get_session()
 
     query = raw_query("""
         SELECT DISTINCT name, status FROM validations as v1
@@ -1050,6 +1051,28 @@ def validation_get_all(revision_id, session=None):
     """, revision_id=revision_id)
 
     result = query.fetchall()
+    actual_validations = [v[0] for v in result]
+
+    try:
+        # Check if a ValidationPolicy for the revision exists.
+        validation_policy = document_get(
+            session, revision_id=revision_id, deleted=False,
+            schema=types.VALIDATION_POLICY_SCHEMA)
+    except errors.DocumentNotFound:
+        # Otherwise return early.
+        LOG.info('Failed to find a ValidationPolicy for revision ID %s.'
+                 'Only the "%s" results will be included in the response.',
+                 revision_id, types.DECKHAND_SCHEMA_VALIDATION)
+        return result
+
+    # If an entry in the ValidationPolicy was never POSTed, default its status
+    # to failure.
+    expected_validations = validation_policy['data'].get('validations', [])
+    for expected_validation in expected_validations:
+        expected_name = expected_validation['name']
+        if expected_name not in actual_validations:
+            result.append((expected_name, 'failure'))
+
     return result
 
 
@@ -1061,15 +1084,49 @@ def validation_get_all_entries(revision_id, val_name, session=None):
         .filter_by(**{'revision_id': revision_id, 'name': val_name})\
         .order_by(models.Validation.created_at.asc())\
         .all()
+    actual_validations = [e.to_dict() for e in entries]
 
-    return [e.to_dict() for e in entries]
+    try:
+        # Check if a ValidationPolicy for the revision exists.
+        validation_policy = document_get(
+            session, revision_id=revision_id, deleted=False,
+            schema=types.VALIDATION_POLICY_SCHEMA)
+    except errors.DocumentNotFound:
+        # Otherwise return early.
+        LOG.info('Failed to find a ValidationPolicy for revision ID %s.'
+                 'Only the "%s" results will be included in the response.',
+                 revision_id, types.DECKHAND_SCHEMA_VALIDATION)
+        return actual_validations
+
+    # If an entry in the ValidationPolicy was never POSTed, default its status
+    # to failure.
+    expected_validations = validation_policy['data'].get('validations', [])
+    for expected_validation in expected_validations:
+        expected_name = expected_validation['name']
+        if (expected_name not in actual_validations
+                and expected_name == val_name):
+            actual_validations.append({
+                'id': len(actual_validations),
+                'name': val_name,
+                'status': 'failure',
+                'errors': [{
+                    'message': 'The result for this validation was never '
+                               'externally registered so its status defaulted '
+                               'to "failure".'
+                }]
+            })
+            break
+
+    return actual_validations
 
 
 @require_revision_exists
 def validation_get_entry(revision_id, val_name, entry_id, session=None):
     session = session or get_session()
+
     entries = validation_get_all_entries(
         revision_id, val_name, session=session)
+
     try:
         return entries[entry_id]
     except IndexError:
