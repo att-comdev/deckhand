@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1d49c08_38a7d95f",
+        "filename": "deckhand/tests/unit/engine/test_secrets_manager.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-02-06T13:41:04Z",
+      "side": 1,
+      "message": "it doesn\u0027t matter for testing, but twigleg has been renamed to pegleg \u0027officially\u0027",
+      "revId": "36f752bb930499e8d1c70e0545284f87df59a9f9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
