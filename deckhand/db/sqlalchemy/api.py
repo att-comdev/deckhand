@@ -1034,6 +1034,7 @@ def validation_get_all(revision_id, session=None):
     # has its own validation but for this query we want to return the result
     # of the overall validation for the revision. If just 1 document failed
     # validation, we regard the validation for the whole revision as 'failure'.
+    session = session or get_session()
 
     query = raw_query("""
         SELECT DISTINCT name, status FROM validations as v1
@@ -1048,6 +1049,24 @@ def validation_get_all(revision_id, session=None):
     """, revision_id=revision_id)
 
     result = query.fetchall()
+    actual_validations = [v[0] for v in result]
+
+    try:
+        validation_policy = document_get(
+            session, revision_id=revision_id, deleted=False,
+            schema=types.VALIDATION_POLICY_SCHEMA)
+    except errors.DocumentNotFound:
+        LOG.info('Failed to find a ValidationPolicy for revision ID %s.'
+                 'Only the "%s" result will be included in the response.',
+                 revision_id, types.DECKHAND_SCHEMA_VALIDATION)
+        return result
+
+    expected_validations = validation_policy['data'].get('validations', [])
+    for expected_validation in expected_validations:
+        expected_name = expected_validation['name']
+        if expected_name not in actual_validations:
+            result.append((expected_name, 'failure'))
+
     return result
 
 
