@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3101d2a9_429cf902",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:25:50Z",
+      "side": 1,
+      "message": "Fancy way to do this looks to be:\n\n    keystone_auth \u003d ka_loading.load_auth_from_conf_options(CONF, \u0027keystone_auth\u0027)\n\nhttps://github.com/openstack/zun/blob/51df54a2a7dce5cd1ce0640582b0b5d1abddbaa2/zun/common/keystone.py#L70",
+      "revId": "71920d3d141d65a486998b92119c19c78735b4ae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "162a1b51_966eca54",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:25:50Z",
+      "side": 1,
+      "message": "Options are these:\n\nauth_plugin \u003d password\nauth_url \u003d http://internal.keystone.uri:35357/\nusername \u003d service\npassword \u003d service_pass\nuser_domain_name \u003d service_domain\nproject_name \u003d project\nproject_domain_name \u003d service_domain\n\nSo should be user_domain_id (or user_domain_name)",
+      "range": {
+        "startLine": 57,
+        "startChar": 46,
+        "endLine": 57,
+        "endChar": 55
+      },
+      "revId": "71920d3d141d65a486998b92119c19c78735b4ae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fe37fd8_2ecae6cb",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:25:50Z",
+      "side": 1,
+      "message": "project_domain_id (or project_domain_name)",
+      "range": {
+        "startLine": 58,
+        "startChar": 49,
+        "endLine": 58,
+        "endChar": 58
+      },
+      "revId": "71920d3d141d65a486998b92119c19c78735b4ae",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
