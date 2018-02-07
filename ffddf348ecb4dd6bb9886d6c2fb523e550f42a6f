@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4267ca1_d7cf4f8d",
+        "filename": "doc/source/exceptions.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T21:32:16Z",
+      "side": 1,
+      "message": "I put these comments in https://review.gerrithub.io/#/c/398844/ too but the more efficient way of doing this from a maintenance POV is to tie all this to the in-code docstrings (which probably are missing) because by no means are all these exceptions stable (meaning they will definitely be updated or removed or new exceptions will be added), meaning that every time that happens this documentation will be updated too.\n\nSo one way to increase automation here is to use sphinx\u0027s automodule and autoclass directives which means that the docstrings themselves can be used to implement the documentation itself. However, this means that this would have to use sphinx table constructs as well so that the table is formatted correctly when using dynamically built documentation.\n\nThe end goal would be that this table would always be generated automatically every time the in-code docstrings are updated.\n\nThis might look something like this:\n\n.. list-table:: **ApiException**\n   :widths: 10 25\n   :header-rows: 1\n\n   *  ApiException\n   * - .. autoexception:: armada.exceptions.api_exceptions.ApiException\n          :members:\n          :show-inheritance:\n   * - ClientError\n   * - .. autoexception:: armada.exceptions.api_exceptions.ClientError\n          :members:\n\n   ...\n\nNote that I haven\u0027t tested this so I\u0027m not sure how it would end up looking like.\n\nReferences\n\nhttps://docs.openstack.org/doc-contrib-guide/rst-conv/tables.html\nhttp://www.sphinx-doc.org/en/stable/ext/autodoc.html",
+      "revId": "ffddf348ecb4dd6bb9886d6c2fb523e550f42a6f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3fcb129_914c480b",
+        "filename": "doc/source/exceptions.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T21:32:16Z",
+      "side": 1,
+      "message": "s/then/than\ns/as/was",
+      "range": {
+        "startLine": 49,
+        "startChar": 40,
+        "endLine": 49,
+        "endChar": 44
+      },
+      "revId": "ffddf348ecb4dd6bb9886d6c2fb523e550f42a6f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
