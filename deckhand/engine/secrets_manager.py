@@ -73,7 +73,7 @@ class SecretsManager(object):
             }
             resp = self.barbican_driver.create_secret(**kwargs)
 
-            secret_ref = resp['secret_href']
+            secret_ref = resp['secret_ref']
             created_secret = secret_ref
         elif encryption_type == CLEARTEXT:
             created_secret = secret_doc['data']
