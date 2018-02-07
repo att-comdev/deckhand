@@ -49,7 +49,14 @@ class BarbicanClientWrapper(object):
         barbican_url = CONF.barbican.api_endpoint
 
         keystone_auth = dict(CONF.keystone_authtoken)
-        auth = v3.Password(**keystone_auth)
+        auth = v3.Password(
+            username=keystone_auth['username'],
+            password=keystone_auth['password'],
+            project_name=keystone_auth['project_name'],
+            auth_url=keystone_auth['auth_url'],
+            user_domain_id=keystone_auth.get('domain_id', "default"),
+            project_domain_id=keystone_auth.get('domain_id', "default"),
+        )
         sess = session.Session(auth=auth)
 
         try:
