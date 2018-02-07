@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "de6370c7_341ff5b5",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:29:21Z",
+      "side": 1,
+      "message": "set",
+      "range": {
+        "startLine": 1075,
+        "startChar": 60,
+        "endLine": 1075,
+        "endChar": 67
+      },
+      "revId": "361b1447ad86c95b0645060b1591fc416b2079fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "526de327_7903d313",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1081,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:29:21Z",
+      "side": 1,
+      "message": "Maybe this instead:\n\n    \"ignored [{original_status}]\"",
+      "range": {
+        "startLine": 1081,
+        "startChar": 35,
+        "endLine": 1081,
+        "endChar": 60
+      },
+      "revId": "361b1447ad86c95b0645060b1591fc416b2079fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1379bc23_7c387e5d",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1123,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:29:21Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 1123,
+        "startChar": 60,
+        "endLine": 1123,
+        "endChar": 67
+      },
+      "revId": "361b1447ad86c95b0645060b1591fc416b2079fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bba0213e_fcdf52d8",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1140,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:29:21Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 1140,
+        "startChar": 35,
+        "endLine": 1140,
+        "endChar": 60
+      },
+      "revId": "361b1447ad86c95b0645060b1591fc416b2079fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d5c6fd29_e5fe8212",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-07T02:29:21Z",
+      "side": 1,
+      "message": "Maybe include name and schema of ValidationPolicy",
+      "range": {
+        "startLine": 1150,
+        "startChar": 57,
+        "endLine": 1150,
+        "endChar": 73
+      },
+      "revId": "361b1447ad86c95b0645060b1591fc416b2079fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4aca73bf_edb1e735",
         "filename": "deckhand/tests/unit/control/test_validations_controller.py",
         "patchSetId": 5
