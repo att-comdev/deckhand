@@ -80,25 +80,24 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
     def test_certificate_key_missing_required_sections(self):
         document = self._read_data('sample_certificate_key')
         properties_to_remove = tuple(self.exception_map.keys()) + (
-            'data', 'metadata.storagePolicy',)
+            'metadata.storagePolicy',)
         self._test_missing_required_sections(document, properties_to_remove)
 
     def test_certificate_missing_required_sections(self):
         document = self._read_data('sample_certificate')
         properties_to_remove = tuple(self.exception_map.keys()) + (
-            'data', 'metadata.storagePolicy',)
+            'metadata.storagePolicy',)
         self._test_missing_required_sections(document, properties_to_remove)
 
     def test_data_schema_missing_required_sections(self):
         document = self._read_data('sample_data_schema')
         properties_to_remove = tuple(self.exception_map.keys()) + (
-            'data', 'data.$schema',)
+            'data.$schema',)
         self._test_missing_required_sections(document, properties_to_remove)
 
     def test_document_missing_required_sections(self):
         document = self._read_data('sample_document')
         properties_to_remove = tuple(self.exception_map.keys()) + (
-            'data',
             'metadata.layeringDefinition',
             'metadata.layeringDefinition.layer',
             'metadata.layeringDefinition.actions.0.method',
@@ -172,19 +171,19 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
     def test_layering_policy_missing_required_sections(self):
         document = self._read_data('sample_layering_policy')
         properties_to_remove = tuple(self.exception_map.keys()) + (
-            'data', 'data.layerOrder',)
+            'data.layerOrder',)
         self._test_missing_required_sections(document, properties_to_remove)
 
     def test_passphrase_missing_required_sections(self):
         document = self._read_data('sample_passphrase')
         properties_to_remove = tuple(self.exception_map.keys()) + (
-            'data', 'metadata.storagePolicy',)
+            'metadata.storagePolicy',)
         self._test_missing_required_sections(document, properties_to_remove)
 
     def test_validation_policy_missing_required_sections(self):
         document = self._read_data('sample_validation_policy')
         properties_to_remove = tuple(self.exception_map.keys()) + (
-            'data', 'data.validations', 'data.validations.0.name')
+            'data.validations', 'data.validations.0.name')
         self._test_missing_required_sections(document, properties_to_remove)
 
     @mock.patch.object(document_validation, 'LOG', autospec=True)

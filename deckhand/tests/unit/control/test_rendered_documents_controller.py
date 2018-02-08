@@ -136,6 +136,7 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
             documents_factory = factories.DocumentFactory(2, [1, 1])
             payload = documents_factory.gen_test({}, global_abstract=False,
                                                  site_abstract=False)
+
             # Fix up the labels so that each document has a unique parent to
             # avoid layering errors.
             payload[-2]['metadata']['labels'] = {
@@ -301,6 +302,7 @@ class TestRenderedDocumentsControllerSorting(test_base.BaseControllerTest):
         documents_factory = factories.DocumentFactory(2, [1, 1])
         documents = documents_factory.gen_test({}, global_abstract=False,
             region_abstract=False, site_abstract=False)
+
         expected_names = ['bar', 'baz', 'foo']
         for idx in range(len(documents)):
             documents[idx]['metadata']['name'] = expected_names[idx]
