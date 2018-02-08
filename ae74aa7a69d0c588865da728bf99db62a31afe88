@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b51d4190_5d292bc5",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-08T23:56:17Z",
+      "side": 1,
+      "message": "properties that may only exist",
+      "range": {
+        "startLine": 263,
+        "startChar": 25,
+        "endLine": 263,
+        "endChar": 56
+      },
+      "revId": "ae74aa7a69d0c588865da728bf99db62a31afe88",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99ba0b02_831f96d3",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-08T23:56:17Z",
+      "side": 1,
+      "message": "Put a comment here saying that since we\u0027re doing post-validation the documents have been pulled from DB so contain extra properties that are DB-specific that will fail the schema validation if left in",
+      "range": {
+        "startLine": 278,
+        "startChar": 12,
+        "endLine": 278,
+        "endChar": 29
+      },
+      "revId": "ae74aa7a69d0c588865da728bf99db62a31afe88",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4581a0f9_766fd08d",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-08T23:56:17Z",
+      "side": 1,
+      "message": "This change leads to a lot of test failures and honestly I don\u0027t know if this should be a critical failure so for now just make it LOG something instead of create an error",
+      "range": {
+        "startLine": 348,
+        "startChar": 12,
+        "endLine": 348,
+        "endChar": 29
+      },
+      "revId": "ae74aa7a69d0c588865da728bf99db62a31afe88",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f1df212_d284ba22",
+        "filename": "deckhand/tests/functional/gabbits/schema-validation-success.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-08T23:56:17Z",
+      "side": 1,
+      "message": "Should document changes up here too",
+      "revId": "ae74aa7a69d0c588865da728bf99db62a31afe88",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "67a7e20f_715ebd7f",
+        "filename": "deckhand/tests/unit/control/test_rendered_documents_controller.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-08T23:56:17Z",
+      "side": 1,
+      "message": "Can undo these newlines, accident",
+      "revId": "ae74aa7a69d0c588865da728bf99db62a31afe88",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

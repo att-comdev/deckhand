@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faac7daa_9c0b629e",
+        "filename": "deckhand/tests/unit/engine/test_document_validation_negative.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-08T23:56:17Z",
+      "side": 0,
+      "message": "See if this can be re-included",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 17
+      },
+      "revId": "0fae4bec58b1738792d90a05b1fd3618313518b2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
