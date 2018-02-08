@@ -18,6 +18,7 @@ import mock
 
 from deckhand.control import buckets
 from deckhand.control import revision_documents
+from deckhand.engine import document_validation
 from deckhand import errors
 from deckhand import factories
 from deckhand.tests.unit.control import base as test_base
@@ -26,7 +27,12 @@ from deckhand import types
 
 class TestRenderedDocumentsController(test_base.BaseControllerTest):
 
-    def test_list_rendered_documents_exclude_abstract_documents(self):
+    @mock.patch.object(document_validation.DocumentValidation,
+                       '_get_supported_schema_list',
+                       return_value=[factories.DOCUMENT_TEST_SCHEMA,
+                                     'deckhand/LayeringPolicy/v1'],
+                       autospec=True)
+    def test_list_rendered_documents_exclude_abstract_documents(self, _):
         rules = {'deckhand:list_cleartext_documents': '@',
                  'deckhand:list_encrypted_documents': '@',
                  'deckhand:create_cleartext_documents': '@'}
@@ -69,7 +75,12 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
             else:
                 self.assertEqual(value, rendered_documents[-1][key])
 
-    def test_list_rendered_documents_exclude_deleted_documents(self):
+    @mock.patch.object(document_validation.DocumentValidation,
+                       '_get_supported_schema_list',
+                       return_value=[factories.DOCUMENT_TEST_SCHEMA,
+                                     'deckhand/LayeringPolicy/v1'],
+                       autospec=True)
+    def test_list_rendered_documents_exclude_deleted_documents(self, _):
         """Verifies that documents from previous revisions that have been
         deleted are excluded from the current revision.
 
@@ -118,7 +129,12 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
         self.assertEqual(new_name, rendered_documents[0]['metadata']['name'])
         self.assertEqual(2, rendered_documents[0]['status']['revision'])
 
-    def test_list_rendered_documents_multiple_buckets(self):
+    @mock.patch.object(document_validation.DocumentValidation,
+                       '_get_supported_schema_list',
+                       return_value=[factories.DOCUMENT_TEST_SCHEMA,
+                                     'deckhand/LayeringPolicy/v1'],
+                       autospec=True)
+    def test_list_rendered_documents_multiple_buckets(self, _):
         """Validates that only the documents from the most recent revision
         for each bucket in the DB are used for layering.
         """
@@ -136,6 +152,7 @@ class TestRenderedDocumentsController(test_base.BaseControllerTest):
             documents_factory = factories.DocumentFactory(2, [1, 1])
             payload = documents_factory.gen_test({}, global_abstract=False,
                                                  site_abstract=False)
+
             # Fix up the labels so that each document has a unique parent to
             # avoid layering errors.
             payload[-2]['metadata']['labels'] = {
@@ -301,6 +318,10 @@ class TestRenderedDocumentsControllerSorting(test_base.BaseControllerTest):
         documents_factory = factories.DocumentFactory(2, [1, 1])
         documents = documents_factory.gen_test({}, global_abstract=False,
             region_abstract=False, site_abstract=False)
+        dataschema_factory = factories.DataSchemaFactory()
+        dataschema = dataschema_factory.gen_test(
+            documents[1]['schema'], data={})
+
         expected_names = ['bar', 'baz', 'foo']
         for idx in range(len(documents)):
             documents[idx]['metadata']['name'] = expected_names[idx]
@@ -308,7 +329,7 @@ class TestRenderedDocumentsControllerSorting(test_base.BaseControllerTest):
         resp = self.app.simulate_put(
             '/api/v1.0/buckets/mop/documents',
             headers={'Content-Type': 'application/x-yaml'},
-            body=yaml.safe_dump_all(documents))
+            body=yaml.safe_dump_all(documents + [dataschema]))
         self.assertEqual(200, resp.status_code)
         revision_id = list(yaml.safe_load_all(resp.text))[0]['status'][
             'revision']
@@ -319,9 +340,11 @@ class TestRenderedDocumentsControllerSorting(test_base.BaseControllerTest):
             params={'sort': 'metadata.name'}, params_csv=False,
             headers={'Content-Type': 'application/x-yaml'})
         self.assertEqual(200, resp.status_code)
-        retrieved_documents = list(yaml.safe_load_all(resp.text))
+        all_retrieved_documents = list(yaml.safe_load_all(resp.text))
 
-        self.assertEqual(3, len(retrieved_documents))
+        self.assertEqual(4, len(all_retrieved_documents))
+        retrieved_documents = [d for d in all_retrieved_documents
+                               if d['schema'] != dataschema['schema']]
         self.assertEqual(expected_names,
                          [d['metadata']['name'] for d in retrieved_documents])
 
@@ -331,8 +354,10 @@ class TestRenderedDocumentsControllerSorting(test_base.BaseControllerTest):
             params={'sort': 'metadata.name', 'order': 'desc'},
             params_csv=False, headers={'Content-Type': 'application/x-yaml'})
         self.assertEqual(200, resp.status_code)
-        retrieved_documents = list(yaml.safe_load_all(resp.text))
+        all_retrieved_documents = list(yaml.safe_load_all(resp.text))
 
-        self.assertEqual(3, len(retrieved_documents))
+        self.assertEqual(4, len(all_retrieved_documents))
+        retrieved_documents = [d for d in all_retrieved_documents
+                               if d['schema'] != dataschema['schema']]
         self.assertEqual(list(reversed(expected_names)),
                          [d['metadata']['name'] for d in retrieved_documents])
