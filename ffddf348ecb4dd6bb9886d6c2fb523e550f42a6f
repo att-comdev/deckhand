@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "33c77f23_b7247676",
+        "filename": "doc/source/exceptions.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1012247
+      },
+      "writtenOn": "2018-02-08T15:07:13Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "f4267ca1_d7cf4f8d",
+      "revId": "ffddf348ecb4dd6bb9886d6c2fb523e550f42a6f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3fcb129_914c480b",
         "filename": "doc/source/exceptions.rst",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2018-02-07T21:32:16Z",
       "side": 1,
       "message": "s/then/than\ns/as/was",
+      "range": {
+        "startLine": 49,
+        "startChar": 40,
+        "endLine": 49,
+        "endChar": 44
+      },
+      "revId": "ffddf348ecb4dd6bb9886d6c2fb523e550f42a6f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53678243_041e38fa",
+        "filename": "doc/source/exceptions.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1012247
+      },
+      "writtenOn": "2018-02-08T15:07:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3fcb129_914c480b",
       "range": {
         "startLine": 49,
         "startChar": 40,
