@@ -342,12 +342,12 @@ class DocumentValidation(object):
                 'path': '.'
             })
 
-        for validator in self._validators:
-            if validator.matches(document):
-                error_outputs = validator.validate(document)
-                if error_outputs:
-                    for error_output in error_outputs:
-                        result['errors'].append(error_output)
+        #for validator in self._validators:
+        #    if validator.matches(document):
+        #        error_outputs = validator.validate(document)
+        #        if error_outputs:
+        #            for error_output in error_outputs:
+        #                result['errors'].append(error_output)
 
         if result['errors']:
             result.setdefault('status', 'failure')
