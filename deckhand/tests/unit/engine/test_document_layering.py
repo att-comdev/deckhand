@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import yaml
+
 from deckhand.engine import layering
 from deckhand import errors
 from deckhand import factories
@@ -756,6 +758,126 @@ class TestDocumentLayering3LayersScenario(TestDocumentLayering):
 
         site_expected = {'b': 4}
         self._test_layering(documents, site_expected)
+
+    def test_layering_using_grandparent_as_parent(self):
+        """Test that layering works when a child document has layer N and its
+        parent document has layer N+2. In other words, given layerOrder of
+        'global', 'region' and 'site', check that a document with 'layer' site
+        can be layered with a parent with layer 'global'.
+        """
+        test_yaml = """
+---
+metadata:
+  labels: {name: kubernetes-etcd-global}
+  layeringDefinition: {abstract: true, layer: global}
+  name: kubernetes-etcd-global
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+schema: armada/Chart/v1
+data:
+  chart_name: etcd
+---
+# This document is included so that this middle layer isn't stripped away.
+metadata:
+  layeringDefinition:
+    abstract: false
+    actions:
+    - {method: merge, path: .}
+    layer: region
+  name: kubernetes-etcd-region
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+schema: armada/Chart/v1
+data: {}
+---
+metadata:
+  layeringDefinition:
+    abstract: false
+    actions:
+    - {method: merge, path: .}
+    layer: site
+    parentSelector: {name: kubernetes-etcd-global}
+  name: kubernetes-etcd
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+schema: armada/Chart/v1
+data: {}
+---
+schema: deckhand/LayeringPolicy/v1
+metadata:
+  schema: metadata/Control/v1
+  name: layering-policy
+data:
+  layerOrder:
+    - global
+    - region
+    - site
+...
+"""
+        documents = list(yaml.safe_load_all(test_yaml))
+        self._test_layering(documents, site_expected={'chart_name': 'etcd'})
+
+    def test_layering_using_first_parent_as_actual_parent(self):
+        """Test that layering works when a child document has layer N and has
+        a parent in layer N+1 and another parent in layer N+2 but selects
+        "younger" parent in layer N+1.
+        """
+        test_yaml = """
+---
+metadata:
+  labels: {name: kubernetes-etcd}
+  layeringDefinition:
+    abstract: true
+    layer: global
+  name: kubernetes-etcd-global
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+schema: armada/Chart/v1
+data:
+  chart_name: global-etcd
+---
+metadata:
+  labels: {name: kubernetes-etcd}
+  layeringDefinition:
+    abstract: false
+    actions:
+    - {method: merge, path: .}
+    layer: region
+    parentSelector: {name: kubernetes-etcd}
+  name: kubernetes-etcd-region
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+schema: armada/Chart/v1
+data:
+  chart_name: region-etcd
+---
+metadata:
+  layeringDefinition:
+    abstract: false
+    actions:
+    - {method: merge, path: .}
+    layer: site
+    parentSelector: {name: kubernetes-etcd}
+  name: kubernetes-etcd
+  schema: metadata/Document/v1
+  storagePolicy: cleartext
+schema: armada/Chart/v1
+data: {}
+---
+schema: deckhand/LayeringPolicy/v1
+metadata:
+  schema: metadata/Control/v1
+  name: layering-policy
+data:
+  layerOrder:
+    - global
+    - region
+    - site
+...
+"""
+        documents = list(yaml.safe_load_all(test_yaml))
+        self._test_layering(
+            documents, site_expected={'chart_name': 'region-etcd'})
 
 
 class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
