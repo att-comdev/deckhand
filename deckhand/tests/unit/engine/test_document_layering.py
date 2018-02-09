@@ -56,27 +56,33 @@ class TestDocumentLayering(test_base.DeckhandTestCase):
             if layer == 'global':
                 global_docs.append(doc)
 
-        if site_expected:
+        if site_expected is not None:
             if not isinstance(site_expected, list):
                 site_expected = [site_expected]
 
             for idx, expected in enumerate(site_expected):
                 self.assertEqual(expected, site_docs[idx].get('data'),
                                  'Actual site data does not match expected.')
-        if region_expected:
+        else:
+            self.assertEmpty(site_docs)
+        if region_expected is not None:
             if not isinstance(region_expected, list):
                 region_expected = [region_expected]
 
             for idx, expected in enumerate(region_expected):
                 self.assertEqual(expected, region_docs[idx].get('data'),
                                  'Actual region data does not match expected.')
-        if global_expected:
+        else:
+            self.assertEmpty(region_docs)
+        if global_expected is not None:
             if not isinstance(global_expected, list):
                 global_expected = [global_expected]
 
             for idx, expected in enumerate(global_expected):
                 self.assertEqual(expected, global_docs[idx].get('data'),
                                  'Actual global data does not match expected.')
+        else:
+            self.assertEmpty(global_docs)
 
 
 class TestDocumentLayering2Layers(TestDocumentLayering):
@@ -161,7 +167,7 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         documents[1]['schema'] = 'deckhand/Document/v1'
         documents[2]['schema'] = 'deckhand/Document/v2'
 
-        global_expected = {"a": {"x": 1, "y": 2}}
+        global_expected = None
         site_expected = {'b': 4}
         self._test_layering(documents, site_expected=site_expected,
                             global_expected=global_expected)
@@ -201,8 +207,8 @@ class TestDocumentLayering2LayersAbstractConcrete(TestDocumentLayering):
         documents = doc_factory.gen_test(mapping, site_abstract=True,
                                          global_abstract=True)
 
-        site_expected = {"a": {"x": 7, "z": 3}, "b": 4}
-        global_expected = {'a': {'x': 1, 'y': 2}, 'c': 9}
+        site_expected = None
+        global_expected = None
         self._test_layering(documents, site_expected,
                             global_expected=global_expected)
 
@@ -335,7 +341,7 @@ class TestDocumentLayering3Layers(TestDocumentLayering):
         documents = doc_factory.gen_test(mapping, site_abstract=False)
 
         site_expected = {'a': {'z': 3}, 'b': 4}
-        region_expected = {"a": {"z": 3}}  # Region is abstract.
+        region_expected = None  # Region is abstract.
         self._test_layering(documents, site_expected, region_expected)
 
     def test_layering_delete_everything(self):
@@ -498,11 +504,11 @@ class TestDocumentLayering3LayersAbstractConcrete(TestDocumentLayering):
                 "actions": [{"method": "replace", "path": ".b"}]}
         }
         doc_factory = factories.DocumentFactory(3, [1, 1, 1])
-        documents = doc_factory.gen_test(mapping, site_abstract=False,
-                                    region_abstract=True)
+        documents = doc_factory.gen_test(
+            mapping, site_abstract=False, region_abstract=True)
 
         site_expected = {"a": {"x": 1, "y": 2, "z": 3}, "b": 4}
-        region_expected = {"a": {"z": 3}, "b": 5, "c": 11}
+        region_expected = None
         self._test_layering(documents, site_expected, region_expected)
 
     def test_layering_site_region_and_global_concrete(self):
@@ -724,8 +730,8 @@ class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
 
         site_expected = [{"a": 1, "b": 2, "c": 3, "d": 4, "g": 7, "h": 8},
                          {"a": 1, "b": 2, "e": 5, "f": 6, "i": 9, "j": 10}]
-        region_expected = [{"c": 3, "d": 4}, {"e": 5, "f": 6}]
-        global_expected = {"a": 1, "b": 2}
+        region_expected = None
+        global_expected = None
         self._test_layering(documents, site_expected, region_expected,
                             global_expected)
 
@@ -763,6 +769,6 @@ class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
                          {"a": 1, "b": 2, "e": 5, "f": 6, "i": 9, "j": 10}]
         region_expected = [{"a": 1, "b": 2, "c": 3, "d": 4},
                            {"a": 1, "b": 2, "e": 5, "f": 6}]
-        global_expected = {"a": 1, "b": 2}
+        global_expected = None
         self._test_layering(documents, site_expected, region_expected,
                             global_expected)
