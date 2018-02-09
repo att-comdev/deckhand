@@ -148,7 +148,8 @@ def jsonpath_replace(data, value, jsonpath, pattern=None):
         jsonpath = '$'
     elif jsonpath.startswith('.'):
         jsonpath = '$' + jsonpath
-    else:
+
+    if not jsonpath == '$' and not jsonpath.startswith('$.'):
         LOG.error('The provided jsonpath %s does not begin with "."', jsonpath)
         raise ValueError('The provided jsonpath %s does not begin with "."',
                          jsonpath)
