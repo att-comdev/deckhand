@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "335cc0b1_cd01e4e4",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1012247
+      },
+      "writtenOn": "2018-02-09T19:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2860964d_7154312f",
+      "range": {
+        "startLine": 176,
+        "startChar": 4,
+        "endLine": 177,
+        "endChar": 15
+      },
+      "revId": "929ef171f925f4685f0606047bb4b9728d3ee972",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb047428_425bee23",
         "filename": "doc/source/exceptions.rst",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-09T15:46:16Z",
       "side": 1,
       "message": "You also need to put:\n\n     :members:\n     :undoc-members:\n\nIf you want undocumented members to show up (note that the message argument has no docstring above it so it is considered undocumented).\n\nFrom sphinx documentation:\n\nThis can be combined with undoc-members to document all available members of the class or module.\n\nIn addition, you can even show inherited members (if you want, though it does lead to some bloat):\n\n     :members:\n     :inherited-members:\n     :undoc-members:\n\nRef: http://www.sphinx-doc.org/en/stable/ext/autodoc.html\n\nThis applies pretty much everywhere below.",
+      "range": {
+        "startLine": 29,
+        "startChar": 9,
+        "endLine": 29,
+        "endChar": 18
+      },
+      "revId": "929ef171f925f4685f0606047bb4b9728d3ee972",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "225bb410_b0938405",
+        "filename": "doc/source/exceptions.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1012247
+      },
+      "writtenOn": "2018-02-09T19:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb047428_425bee23",
       "range": {
         "startLine": 29,
         "startChar": 9,
