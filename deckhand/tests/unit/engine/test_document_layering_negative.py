@@ -65,22 +65,6 @@ class TestDocumentLayeringNegative(
         self.assertRaises(errors.MissingDocumentKey, self._test_layering,
                           documents)
 
-    @mock.patch.object(layering, 'LOG', autospec=True)
-    def test_layering_with_empty_layer(self, mock_log):
-        doc_factory = factories.DocumentFactory(1, [1])
-        documents = doc_factory.gen_test({}, site_abstract=False)
-
-        self._test_layering([documents[0]], global_expected={})
-        mock_log.info.assert_has_calls([
-            mock.call(
-                '%s is an empty layer with no documents. It will be discarded '
-                'from the layerOrder during the layering process.', 'global'),
-            mock.call('Either the layerOrder in the LayeringPolicy was empty '
-                      'to begin with or no document layers were found in the '
-                      'layerOrder, causing it to become empty. No layering '
-                      'will be performed.')
-        ])
-
     def test_layering_document_with_invalid_layer_raises_exc(self):
         doc_factory = factories.DocumentFactory(1, [1])
         documents = doc_factory.gen_test({}, site_abstract=False)
@@ -161,11 +145,11 @@ class TestDocumentLayeringNegative(
     @mock.patch.object(layering, 'LOG', autospec=True)
     def test_multiple_layering_policy_logs_warning(self, mock_log):
         doc_factory = factories.DocumentFactory(1, [1])
-        documents = doc_factory.gen_test({}, site_abstract=False)
+        documents = doc_factory.gen_test({}, global_abstract=False)
         # Copy the same layering policy so that 2 are passed in, causing a
         # warning to be raised.
         documents.append(documents[0])
-        self._test_layering(documents, site_expected={})
+        self._test_layering(documents, global_expected={})
         mock_log.warning.assert_called_once_with(
             'More than one layering policy document was passed in. Using the '
             'first one found: [%s] %s.', documents[0]['schema'],
