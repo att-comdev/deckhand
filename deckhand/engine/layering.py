@@ -317,8 +317,7 @@ class DocumentLayering(object):
         the child, and its ``metadata.labels`` must much the child's
         ``metadata.layeringDefinition.parentSelector``.
 
-        :returns: The list of rendered documents (does not include layering
-            policy document).
+        :returns: The list of concrete rendered documents.
         :rtype: List[dict]
         """
         # ``rendered_data_by_layer`` tracks the set of changes across all
@@ -385,4 +384,6 @@ class DocumentLayering(object):
                 if substituted_data:
                     doc = substituted_data[0]
 
-        return self._documents_to_layer + [self._layering_policy]
+        # Return only concrete documents.
+        all_documents = self._documents_to_layer + [self._layering_policy]
+        return [d for d in all_documents if d.is_abstract is False]
