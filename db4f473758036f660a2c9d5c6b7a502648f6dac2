@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c897f0f_9e9db9bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-02-09T20:32:44Z",
+      "side": 1,
+      "message": "I don\u0027t think this is true?  I thought Pegleg invoked the Deckhand core (engine?) directly?  Maybe I\u0027ve got it wrong.",
+      "range": {
+        "startLine": 9,
+        "startChar": 7,
+        "endLine": 9,
+        "endChar": 25
+      },
+      "revId": "db4f473758036f660a2c9d5c6b7a502648f6dac2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
