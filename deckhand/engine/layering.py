@@ -44,12 +44,30 @@ class DocumentLayering(object):
 
     SUPPORTED_METHODS = ('merge', 'replace', 'delete')
 
-    def _is_actual_child_document(self, document, potential_child,
-                                  target_layer):
+    def _replace_current_parent_with_younger_parent(
+            self, child, parent, current_parent, all_children):
+        # If the parent document has a layer that is lower than the current
+        # child's parent, then replace.
+        if (self._layer_order.index(parent.layer) >
+            self._layer_order.index(current_parent.layer)):
+            self._parents[(child.name, child.schema)] = parent
+            self._children[
+                (current_parent.name, current_parent.schema)].remove(child)
+            all_children[child] -= 1
+
+    def _is_actual_child_document(self, document, potential_child):
+        try:
+            document_layer_idx = self._layer_order.index(document.layer)
+            child_layer_idx = self._layer_order.index(potential_child.layer)
+        except ValueError:
+            return False
+
         # Documents with different schemas are never layered together,
         # so consider only documents with same schema as candidates.
         is_potential_child = (
-            potential_child.layer == target_layer and
+            # The highest order is 0, so the parent should be lower than the
+            # child.
+            document_layer_idx < child_layer_idx and
             potential_child.schema == document.schema
         )
         if is_potential_child:
@@ -61,13 +79,6 @@ class DocumentLayering(object):
         return False
 
     def _calc_document_children(self, document):
-        try:
-            document_layer_idx = self._layer_order.index(document.layer)
-            child_layer = self._layer_order[document_layer_idx + 1]
-        except IndexError:
-            # The lowest layer has been reached, so no children.
-            return
-
         potential_children = set()
         for label_key, label_val in document.labels.items():
             _potential_children = self._documents_by_labels.get(
@@ -75,8 +86,7 @@ class DocumentLayering(object):
             potential_children |= set(_potential_children)
 
         for potential_child in potential_children:
-            if self._is_actual_child_document(document, potential_child,
-                                              child_layer):
+            if self._is_actual_child_document(document, potential_child):
                 yield potential_child
 
     def _calc_all_document_children(self):
@@ -106,16 +116,26 @@ class DocumentLayering(object):
         # Mapping of (doc.name, doc.metadata.name) => children, where children
         # are the documents whose `parentSelector` references the doc.
         self._children = {}
+        self._parents = {}
         self._parentless_documents = []
 
         for layer in self._layer_order:
             documents_in_layer = self._documents_by_layer.get(layer, [])
             for document in documents_in_layer:
                 children = list(self._calc_document_children(document))
+
                 if children:
                     all_children.update(children)
-                    self._children.setdefault(
-                        (document.name, document.schema), children)
+
+                for child in children:
+                    self._children[(document.name, document.schema)] = children
+                    current_parent = self._parents.get(
+                        (child.name, child.schema))
+                    if current_parent:
+                        self._replace_current_parent_with_younger_parent(
+                            child, document, current_parent, all_children)
+                    else:
+                        self._parents[(child.name, child.schema)] = document
 
         all_children_elements = list(all_children.elements())
         secondary_documents = []
@@ -345,10 +365,12 @@ class DocumentLayering(object):
 
             # Keep iterating as long as a child exists.
             for child in self._get_children(doc):
-                # Retrieve the most up-to-date rendered_data (by
-                # referencing the child's parent's data).
+                # Retrieve the most up-to-date rendered_data (by referencing
+                # the child's parent's data).
                 child_layer_idx = self._layer_order.index(child.layer)
-                rendered_data = rendered_data_by_layer[child_layer_idx - 1]
+                parent = self._parents[child.name, child.schema]
+                parent_layer_idx = self._layer_order.index(parent.layer)
+                rendered_data = rendered_data_by_layer[parent_layer_idx]
 
                 # Apply each action to the current document.
                 for action in child.actions:
