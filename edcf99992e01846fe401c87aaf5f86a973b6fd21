@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f4f16af_899c8f6a",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-02-14T13:04:59Z",
+      "side": 1,
+      "message": "May be missing something, but it seems like this method isn\u0027t going to sanitize the actual document w/ \u0027storagePolicy: encrypted\u0027.",
+      "revId": "edcf99992e01846fe401c87aaf5f86a973b6fd21",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
