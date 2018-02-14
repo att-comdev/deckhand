@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7f35392_f53375ea",
+        "filename": "deckhand/tests/unit/control/test_validations_controller.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-14T02:11:00Z",
+      "side": 1,
+      "message": "externally",
+      "range": {
+        "startLine": 1038,
+        "startChar": 23,
+        "endLine": 1038,
+        "endChar": 32
+      },
+      "revId": "03c41303d8df48d275bdfe7aaf7f3a26af9291f3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c38aef9d_d3b23de0",
+        "filename": "deckhand/tests/unit/control/test_validations_controller.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-14T02:11:00Z",
+      "side": 1,
+      "message": "ignored [original status]",
+      "range": {
+        "startLine": 1075,
+        "startChar": 38,
+        "endLine": 1075,
+        "endChar": 63
+      },
+      "revId": "03c41303d8df48d275bdfe7aaf7f3a26af9291f3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61cb4497_0e841b0b",
+        "filename": "deckhand/tests/unit/control/test_validations_controller.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 1103,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-14T02:11:00Z",
+      "side": 1,
+      "message": "Update comment",
+      "range": {
+        "startLine": 1102,
+        "startChar": 0,
+        "endLine": 1103,
+        "endChar": 73
+      },
+      "revId": "03c41303d8df48d275bdfe7aaf7f3a26af9291f3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
