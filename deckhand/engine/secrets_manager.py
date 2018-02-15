@@ -139,6 +139,10 @@ class SecretsSubstitution(object):
         :type documents: dict or List[dict]
         :returns: List of fully substituted documents.
         :rtype: Generator[:class:`DocumentDict`]
+        :raises SubstitutionMetadataFormatError: If any of the document
+            ``metadata.substitutions`` are malformed.
+        :raises UnknownSubstitutionError: If an unknown error occurred during
+            substitution.
         """
 
         documents_to_substitute = []
@@ -164,28 +168,36 @@ class SecretsSubstitution(object):
                 src_name = sub['src']['name']
                 src_path = sub['src']['path']
 
+                # TODO(fmontei): Use Deckhand internal validation here in case
+                # this module is called directly by Promenade, for example.
                 if not src_schema:
-                    LOG.warning('Source document schema "%s" is unspecified '
-                                'under substitutions for document [%s] %s.',
-                                src_schema, document.schema, document.name)
+                    reason = ('Source document schema "%s" is unspecified '
+                              'under substitutions for document [%s] %s.',
+                              src_schema, document.schema, document.name)
+                    LOG.error(reason)
+                    raise errors.SubstitutionMetadataFormatError(reason=reason)
                 if not src_name:
-                    LOG.warning('Source document name "%s" is unspecified'
-                                ' under substitutions for document [%s] %s.',
-                                src_name, document.schema, document.name)
+                    reason = ('Source document name "%s" is unspecified'
+                              ' under substitutions for document [%s] %s.',
+                              src_name, document.schema, document.name)
+                    LOG.error(reason)
+                    raise errors.SubstitutionMetadataFormatError(reason=reason)
                 if not src_path:
-                    LOG.warning('Source document path "%s" is unspecified '
-                                'under substitutions for document [%s] %s.',
-                                src_path, document.schema, document.name)
+                    reason = ('Source document path "%s" is unspecified '
+                              'under substitutions for document [%s] %s.',
+                              src_path, document.schema, document.name)
+                    LOG.error(reason)
+                    raise errors.SubstitutionMetadataFormatError(reason=reason)
 
                 if (src_schema, src_name) in self._substitution_sources:
                     src_doc = self._substitution_sources[
                         (src_schema, src_name)]
                 else:
-                    src_doc = {}
-                    LOG.warning('Could not find substitution source document '
-                                '[%s] %s among the provided '
-                                '`substitution_sources`.', src_schema,
-                                                           src_name)
+                    reason = ('Could not find substitution source document '
+                              '[%s] %s among the provided '
+                              '`substitution_sources`.', src_schema, src_name)
+                    LOG.error(reason)
+                    raise errors.SubstitutionMetadataFormatError(reason=reason)
 
                 # If the data is a dictionary, retrieve the nested secret
                 # via jsonpath_parse, else the secret is the primitive/string
@@ -200,9 +212,11 @@ class SecretsSubstitution(object):
                 dest_pattern = sub['dest'].get('pattern', None)
 
                 if not dest_path:
-                    LOG.warning('Destination document path "%s" is unspecified'
-                                ' under substitutions for document [%s] %s.',
-                                dest_path, document.schema, document.name)
+                    reason = ('Destination document path "%s" is unspecified'
+                              ' under substitutions for document [%s] %s.',
+                              dest_path, document.schema, document.name)
+                    LOG.error(reason)
+                    raise errors.SubstitutionMetadataFormatError(reason=reason)
 
                 LOG.debug('Substituting from schema=%s name=%s src_path=%s '
                           'into dest_path=%s, dest_pattern=%s', src_schema,
@@ -222,15 +236,18 @@ class SecretsSubstitution(object):
                         if sub_source:
                             sub_source['data'] = substituted_data
                     else:
-                        LOG.warning(
+                        message = (
                             'Failed to create JSON path "%s" in the '
                             'destination document [%s] %s. No data was '
                             'substituted.', dest_path, document.schema,
                             document.name)
+                        LOG.error(message)
+                        raise errors.UnknownSubstitutionError(details=message)
                 except Exception as e:
                     LOG.error('Unexpected exception occurred while attempting '
                               'secret substitution. %s', six.text_type(e))
-                    raise errors.SubstitutionFailure(details=six.text_type(e))
+                    raise errors.UnknownSubstitutionError(
+                        details=six.text_type(e))
 
         yield document
 
