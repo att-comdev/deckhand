@@ -55,6 +55,7 @@ Developer's Guide
 .. toctree::
    :maxdepth: 2
 
+   getting-started
    HACKING
    policy-enforcement
    testing
