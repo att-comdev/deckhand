@@ -184,6 +184,7 @@ class InvalidDocumentLayer(DeckhandException):
     """The document layer is invalid.
 
     **Troubleshoot:**
+
     * Check that the document layer is contained in the layerOrder in the
       registered LayeringPolicy in the system.
     """
@@ -198,6 +199,7 @@ class InvalidDocumentParent(DeckhandException):
     """The document parent is invalid.
 
     **Troubleshoot:**
+
     * Check that the document `schema` and parent `schema` match.
     * Check that the document layer is lower-order than the parent layer.
     """
@@ -220,10 +222,24 @@ class SubstitutionDependencyCycle(DeckhandException):
     """An illegal substitution depdencency cycle was detected.
 
     **Troubleshoot:**
+
     * Check that there is no two-way substitution dependency between documents.
     """
     msg_fmt = ('Cannot determine substitution order as a dependency '
                'cycle exists for the following documents: %(cycle)s.')
+    code = 400
+
+
+class SubstitutionMetadataFormatError(DeckhandException):
+    """Document metadata substitution is malformed.
+
+    **Troubleshoot:**
+
+    * Check that the ``metadata.substitutions`` for the document are correctly
+      formatted according to the built-in document schema.
+    """
+    msg_fmt = ('The document substitution metadata is incorrectly formatted. '
+               'Reason: %(reason)s')
     code = 400
 
 
@@ -338,16 +354,6 @@ class LayeringPolicyNotFound(DeckhandException):
     code = 409
 
 
-class SubstitutionFailure(DeckhandException):
-    """An unknown error occurred during substitution.
-
-    **Troubleshoot:**
-    """
-    msg_fmt = ('An unknown exception occurred while trying to perform '
-               'substitution. Details: %(detail)s')
-    code = 400
-
-
 class BarbicanException(DeckhandException):
     """An error occurred with Barbican.
 
@@ -365,3 +371,13 @@ class PolicyNotAuthorized(DeckhandException):
     """
     msg_fmt = "Policy doesn't allow %(action)s to be performed."
     code = 403
+
+
+class UnknownSubstitutionError(DeckhandException):
+    """An unknown error occurred during substitution.
+
+    **Troubleshoot:**
+    """
+    msg_fmt = ('An unknown exception occurred while trying to perform '
+               'substitution. Details: %(detail)s')
+    code = 500
