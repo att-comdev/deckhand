@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e5f391e3_2844c04a",
+        "filename": "deckhand/conf/config.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-02-15T17:53:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55f286bb_c2941a8a",
+      "revId": "4d835fff09d6e7a104d720cc20566a1c81086d9a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ae60d0b1_456fada1",
         "filename": "deckhand/service.py",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2018-02-15T17:40:34Z",
       "side": 1,
       "message": "Could also issue a LOG.warning() here that this is enabled to obnoxiously alert that anyone who tries this in production. In dev it would make no difference if a warning were issued here, as it should be deliberate to toggle on the feature.",
+      "revId": "4d835fff09d6e7a104d720cc20566a1c81086d9a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b05694f_c8855b37",
+        "filename": "deckhand/service.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-02-15T17:53:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae60d0b1_456fada1",
       "revId": "4d835fff09d6e7a104d720cc20566a1c81086d9a",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
