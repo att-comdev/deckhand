@@ -113,3 +113,28 @@ class TestDocumentLayeringWithSubstitutionNegative(
         self.assertRaises(
             errors.SubstitutionDependencyCycle, self._test_layering, documents,
             substitution_sources=documents)
+
+    def test_layering_with_missing_substitution_source_raises_exc(self):
+        """Validate that a missing substitution source document fails."""
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
+            "_SITE_NAME_1_": "site-1",
+            "_SITE_DATA_1_": {"data": {"c": "placeholder"}},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": "."}]},
+            "_SITE_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".c"
+                },
+                "src": {
+                    "schema": "example/Kind/v1",
+                    "name": "nowhere-to-be-found",
+                    "path": "."
+                }
+            }]
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+
+        self.assertRaises(
+            errors.SubstitutionSourceNotFound, self._test_layering, documents)
