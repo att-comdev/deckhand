@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "b6a48a72_9177b9b5",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-16T14:42:47Z",
+      "side": 1,
+      "message": "I should make this True by default and just override it to False internally so this automatically affects all other services consuming this directly as we should always validate documents being provided by those services.",
+      "range": {
+        "startLine": 268,
+        "startChar": 70,
+        "endLine": 268,
+        "endChar": 75
+      },
+      "revId": "99cf48dd3285c9b132cbe3efb86e8e3f4518f355",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6fc69870_98489eab",
         "filename": "deckhand/tests/unit/engine/test_document_layering_and_substitution_negative.py",
         "patchSetId": 4
