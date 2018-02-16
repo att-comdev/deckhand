@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f932e8fb_50fc6641",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-16T04:53:34Z",
+      "side": 1,
+      "message": "DH",
+      "range": {
+        "startLine": 16,
+        "startChar": 39,
+        "endLine": 16,
+        "endChar": 47
+      },
+      "revId": "99cf48dd3285c9b132cbe3efb86e8e3f4518f355",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6fc69870_98489eab",
         "filename": "deckhand/tests/unit/engine/test_document_layering_and_substitution_negative.py",
         "patchSetId": 4
