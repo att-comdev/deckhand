@@ -15,6 +15,8 @@
 import copy
 import yaml
 
+import mock
+
 from deckhand.db.sqlalchemy import api as db_api
 from deckhand.engine import secrets_manager
 from deckhand import factories
@@ -123,6 +125,42 @@ class TestSecretsSubstitution(test_base.TestDbBase):
                 'values': {
                     'tls': {
                         'certificate': 'CERTIFICATE DATA'
+                    }
+                }
+            }
+        }
+        self._test_doc_substitution(
+            document_mapping, [certificate], expected_data)
+
+    @mock.patch.object(secrets_manager.SecretsSubstitution, '_secrets_manager',
+                       autospec=True)
+    def test_doc_substitution_single_encrypted(self, mock_secrets_manager):
+        mock_secrets_manager.get.return_value = 'test-certificate'
+
+        secret_ref = ("http://127.0.0.1/key-manager/v1/secrets/%s"
+                      % test_utils.rand_uuid_hex())
+        certificate = self.secrets_factory.gen_test(
+            'Certificate', 'encrypted', data=secret_ref)
+        certificate['metadata']['name'] = 'example-cert'
+
+        document_mapping = {
+            "_GLOBAL_SUBSTITUTIONS_1_": [{
+                "dest": {
+                    "path": ".chart.values.tls.certificate"
+                },
+                "src": {
+                    "schema": "deckhand/Certificate/v1",
+                    "name": "example-cert",
+                    "path": "."
+                }
+
+            }]
+        }
+        expected_data = {
+            'chart': {
+                'values': {
+                    'tls': {
+                        'certificate': 'test-certificate'
                     }
                 }
             }
