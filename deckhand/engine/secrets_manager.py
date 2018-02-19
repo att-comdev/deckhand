@@ -80,6 +80,11 @@ class SecretsManager(object):
 
         return created_secret
 
+    def get(self, secret_ref):
+        secret = self.barbican_driver.get_secret(secret_ref=secret_ref)
+        payload = secret.payload
+        return payload
+
     def _get_secret_type(self, schema):
         """Get the Barbican secret type based on the following mapping:
 
@@ -105,6 +110,8 @@ class SecretsManager(object):
 class SecretsSubstitution(object):
     """Class for document substitution logic for YAML files."""
 
+    _secrets_manager = SecretsManager()
+
     def __init__(self, substitution_sources=None):
         """SecretSubstitution constructor.
 
@@ -125,6 +132,11 @@ class SecretsSubstitution(object):
             if document.schema and document.name:
                 self._substitution_sources.setdefault(
                     (document.schema, document.name), document)
+
+    def _is_barbican_ref(self, src_secret):
+        # TODO(fmontei): Make this more robust.
+        return (isinstance(src_secret, six.string_types) and
+                'key-manager/v1/secrets' in src_secret)
 
     def substitute_all(self, documents):
         """Substitute all documents that have a `metadata.substitutions` field.
@@ -196,6 +208,12 @@ class SecretsSubstitution(object):
                 else:
                     src_secret = src_doc.get('data')
 
+                # Check if src_secret is Barbican secret reference.
+                if self._is_barbican_ref(src_secret):
+                    LOG.debug('Resolving Barbican reference for %s.',
+                              src_secret)
+                    src_secret = self._secrets_manager.get(src_secret)
+
                 dest_path = sub['dest']['path']
                 dest_pattern = sub['dest'].get('pattern', None)
 
@@ -227,6 +245,9 @@ class SecretsSubstitution(object):
                             'destination document [%s] %s. No data was '
                             'substituted.', dest_path, document.schema,
                             document.name)
+                except errors.BarbicanException as e:
+                    LOG.error('Failed to resolve a Barbican reference.')
+                    raise errors.SubstitutionFailure(details=six.text_type(e))
                 except Exception as e:
                     LOG.error('Unexpected exception occurred while attempting '
                               'secret substitution. %s', six.text_type(e))
