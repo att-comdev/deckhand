@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f834c8c_9b48fddb",
+        "filename": "doc/source/document_types.rst",
+        "patchSetId": 21
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-02-20T20:29:37Z",
+      "side": 1,
+      "message": "looks like a merge conflict got committed here",
+      "revId": "e3216deec1fe0357b3b20707ea604c59ab6914b4",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
