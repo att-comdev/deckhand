@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e74a64b_10cf210f",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-20T04:23:39Z",
+      "side": 1,
+      "message": "This can be e.format_message() instead.",
+      "range": {
+        "startLine": 250,
+        "startChar": 61,
+        "endLine": 250,
+        "endChar": 77
+      },
+      "revId": "11e4af8e696573620e052634c78db35dd8d06bef",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d554b3e2_e1532a3e",
+        "filename": "deckhand/tests/unit/engine/test_secrets_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-20T04:23:39Z",
+      "side": 1,
+      "message": "Can also do:\n\n    ref \u003d test_utils.rand_uuid_hex()\n    ...    \n    mock_secrets_manager.get.assert_called_once_with(\n        secret_ref\u003dref)",
+      "revId": "11e4af8e696573620e052634c78db35dd8d06bef",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
