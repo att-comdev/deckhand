@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f43de47_ebfe06b0",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-21T04:51:27Z",
+      "side": 1,
+      "message": "externally registered",
+      "range": {
+        "startLine": 299,
+        "startChar": 45,
+        "endLine": 299,
+        "endChar": 53
+      },
+      "revId": "d3ba6c1e298dbf0de59d348018ea3de984e5e70b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21dba370_c77de522",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-21T04:51:27Z",
+      "side": 1,
+      "message": "``pre_validate``",
+      "range": {
+        "startLine": 342,
+        "startChar": 11,
+        "endLine": 342,
+        "endChar": 23
+      },
+      "revId": "d3ba6c1e298dbf0de59d348018ea3de984e5e70b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0cc7c2dc_576a46d8",
+        "filename": "deckhand/engine/document_validation.py",
+        "patchSetId": 22
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-21T04:51:27Z",
+      "side": 1,
+      "message": "Ditto",
+      "range": {
+        "startLine": 350,
+        "startChar": 17,
+        "endLine": 350,
+        "endChar": 29
+      },
+      "revId": "d3ba6c1e298dbf0de59d348018ea3de984e5e70b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
