@@ -39,19 +39,17 @@ Move the sample configuration file into a desired directory
 
 Set the database string in the configuration file to ``sqlite://``
 
-::
+.. code-block:: ini
 
-  .. code-block:: ini
+    [database]
 
-      [database]
+    #
+    # From oslo.db
+    #
 
-      #
-      # From oslo.db
-      #
-
-      # The SQLAlchemy connection string to use to connect to the database.
-      # (string value)
-      connection = sqlite://
+    # The SQLAlchemy connection string to use to connect to the database.
+    # (string value)
+    connection = sqlite://
 
 Finally, run Deckhand via Docker::
 
@@ -87,8 +85,6 @@ ephemeral PostgreSQL DB run::
 Substitute the connection information (which can be retrieved by running
 ``export | grep PIFPAF_POSTGRESQL_URL``) into the config file inside
 ``etc/deckhand/deckhand.conf.sample``::
-
-.. code-block:: ini
 
     [database]
 
@@ -157,8 +153,6 @@ Retrieve the environment variable which contains connection information::
 
 Substitute the connection information into the config file in
 ``${OS_DECKHAND_CONFIG_DIR}``::
-
-.. code-block:: ini
 
     [database]
 
