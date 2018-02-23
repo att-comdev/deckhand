@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eecbe81b_29bd12a0",
+        "filename": "doc/source/api_client.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-02-23T04:46:55Z",
+      "side": 1,
+      "message": "do these need to be updated as well?",
+      "range": {
+        "startLine": 115,
+        "startChar": 37,
+        "endLine": 115,
+        "endChar": 41
+      },
+      "revId": "8fa542ae742cb678ef51689a9b0a0bf404f27494",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bbd60406_34a999c4",
+        "filename": "doc/source/api_client.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-02-23T04:46:55Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 141,
+        "startChar": 38,
+        "endLine": 141,
+        "endChar": 42
+      },
+      "revId": "8fa542ae742cb678ef51689a9b0a0bf404f27494",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
