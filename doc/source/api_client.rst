@@ -89,9 +89,9 @@ the client managers' functionality:
     # Generate a sample document.
     payload = """
     ---
-    schema: deckhand/Certificate/v1.0
+    schema: deckhand/Certificate/v1
     metadata:
-      schema: metadata/Document/v1.0
+      schema: metadata/Document/v1
       name: application-api
       storagePolicy: cleartext
     data: |-
