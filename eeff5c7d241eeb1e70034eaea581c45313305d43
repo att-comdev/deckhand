@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bdd3d0a3_73dba328",
+        "filename": "AUTHORS",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-02-24T02:24:32Z",
+      "side": 1,
+      "message": "at some point, I propose we remove this and .gitignore this file all together.  will submit a patch later for RFC.",
+      "revId": "eeff5c7d241eeb1e70034eaea581c45313305d43",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
