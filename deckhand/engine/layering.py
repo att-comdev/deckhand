@@ -53,16 +53,16 @@ class DocumentLayering(object):
         # If child has layer N, parent N+1, and current_parent N+2, then swap
         # parent with current_parent. In other words, if parent's layer is
         # closer to child's layer than current_parent's layer, then use parent.
-        current_parent = self._parents.get((child.name, child.schema))
+        current_parent = self._parents.get((child.schema, child.name))
         if current_parent:
             if (self._layer_order.index(parent.layer) >
                 self._layer_order.index(current_parent.layer)):
-                self._parents[(child.name, child.schema)] = parent
+                self._parents[(child.schema, child.name)] = parent
                 self._children[
                     (current_parent.name, current_parent.schema)].remove(child)
                 all_children[child] -= 1
         else:
-            self._parents.setdefault((child.name, child.schema), parent)
+            self._parents.setdefault((child.schema, child.name), parent)
 
     def _is_actual_child_document(self, document, potential_child):
         if document == potential_child:
@@ -217,14 +217,27 @@ class DocumentLayering(object):
         documents_by_name = {}
         result = []
 
+        def _add_implicit_parent_dependencies(doc_schema, doc_name, src_schema,
+                                              src_name):
+            parent = self._parents.get((src_schema, src_name), None)
+            while parent is not None:
+                g.add_edge((document.schema, document.name),
+                           (parent.schema, parent.name))
+                parent = self._parents.get((parent.schema, parent.name), None)
+
         g = networkx.DiGraph()
         for document in documents:
             document = document_wrapper.DocumentDict(document)
             documents_by_name.setdefault((document.schema, document.name),
                                          document)
+
             for sub in document.substitutions:
+                src_schema = sub['src']['schema']
+                src_name = sub['src']['name']
+                _add_implicit_parent_dependencies(
+                    document.schema, document.name, src_schema, src_name)
                 g.add_edge((document.schema, document.name),
-                           (sub['src']['schema'], sub['src']['name']))
+                           (src_schema, src_name))
 
         try:
             cycle = find_cycle(g)
@@ -298,6 +311,7 @@ class DocumentLayering(object):
         self._documents_by_layer = {}
         self._documents_by_labels = {}
         self._layering_policy = None
+        self._parents = {}
 
         if validate:
             self._validate_documents(documents)
@@ -321,6 +335,7 @@ class DocumentLayering(object):
             LOG.error(error_msg)
             raise errors.LayeringPolicyNotFound()
 
+        # NEED TO ONLY SORT ONCE.
         sorted_documents = self._topologically_sort_documents(documents)
 
         for document in sorted_documents:
@@ -355,6 +370,10 @@ class DocumentLayering(object):
         self.secrets_substitution = secrets_manager.SecretsSubstitution(
             self._substitution_sources,
             fail_on_missing_sub_src=fail_on_missing_sub_src)
+
+        # NEED TO ONLY SORT ONCE.
+        self._documents_to_layer = self._topologically_sort_documents(
+            self._documents_to_layer)
 
         del self._documents_by_layer
         del self._documents_by_labels
@@ -500,7 +519,7 @@ class DocumentLayering(object):
                 # Retrieve the most up-to-date rendered_data (by referencing
                 # the child's parent's data).
                 child_layer_idx = self._layer_order.index(child.layer)
-                parent = self._parents[child.name, child.schema]
+                parent = self._parents[child.schema, child.name]
                 parent_layer_idx = self._layer_order.index(parent.layer)
                 rendered_data = rendered_data_by_layer[parent_layer_idx]
 
