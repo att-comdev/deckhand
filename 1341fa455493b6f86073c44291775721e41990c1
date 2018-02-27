@@ -22,6 +22,30 @@
       "revId": "1341fa455493b6f86073c44291775721e41990c1",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3abd033c_0ffffd0e",
+        "filename": "deckhand/tests/unit/resources/sample_certificate_authority_key.yaml",
+        "patchSetId": 28
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-27T14:50:05Z",
+      "side": 1,
+      "message": "Sorry for the confusion. The PS I believe you\u0027re referencing is this: https://review.gerrithub.io/#/c/401085/ which is a child patch.\n\nIn other words, https://review.gerrithub.io/#/c/401085/ will overwrite this to v1 as soon as this merges and the it  merges. This is kept as v1.0 here as https://review.gerrithub.io/#/c/401085/ is aimed at generalizing the fix across everything.",
+      "parentUuid": "1965ee36_95061ad2",
+      "range": {
+        "startLine": 2,
+        "startChar": 43,
+        "endLine": 2,
+        "endChar": 45
+      },
+      "revId": "1341fa455493b6f86073c44291775721e41990c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
