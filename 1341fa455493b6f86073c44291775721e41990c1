@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1965ee36_95061ad2",
+        "filename": "deckhand/tests/unit/resources/sample_certificate_authority_key.yaml",
+        "patchSetId": 28
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-02-27T14:46:09Z",
+      "side": 1,
+      "message": "Am I missing the point?  Didn\u0027t this all just change to v1 instead of v1.0.  Are these for negative tests or ?  Same for many of the other docs.",
+      "range": {
+        "startLine": 2,
+        "startChar": 43,
+        "endLine": 2,
+        "endChar": 45
+      },
+      "revId": "1341fa455493b6f86073c44291775721e41990c1",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
