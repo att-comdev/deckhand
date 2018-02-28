@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8d25f68_d030bc86",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-28T10:16:38Z",
+      "side": 0,
+      "message": "Thanks for removing this, this is really old.",
+      "range": {
+        "startLine": 483,
+        "startChar": 8,
+        "endLine": 485,
+        "endChar": 62
+      },
+      "revId": "7aca9a1a98b68628c6d14c97c1b9608310a158da",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
