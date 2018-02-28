@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0182802_a5bb8b3b",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-28T10:16:38Z",
+      "side": 1,
+      "message": "nit: This shouldn\u0027t be here, because we only update document data if document is concrete.",
+      "range": {
+        "startLine": 483,
+        "startChar": 20,
+        "endLine": 483,
+        "endChar": 49
+      },
+      "revId": "a64c1539b9b25a8b9689e580686e3cfda6e2ae06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
