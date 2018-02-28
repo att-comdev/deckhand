@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "dfb12894_962c7dd5",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-02-28T09:54:34Z",
+      "side": 1,
+      "message": "In that case set() can be used instead, i.e.:\n\n    unique_potential_children \u003d set(potential_children)",
+      "parentUuid": "c1351342_b57296ca",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 69
+      },
+      "revId": "d9ea7bf5167dc64c31673c8e88994f3b79f2bb06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf0935b1_098c5512",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 1
