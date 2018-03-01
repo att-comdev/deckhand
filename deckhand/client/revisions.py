@@ -32,7 +32,7 @@ class RevisionManager(base.Manager):
     """Manage :class:`Revision` resources."""
     resource_class = Revision
 
-    def list(self, **filters):
+    def list(self, filters):
         """Get a list of revisions."""
         url = '/api/v1.0/revisions'
         # Call `_get` instead of `_list` because the response from the server
@@ -55,7 +55,7 @@ class RevisionManager(base.Manager):
         url = '/api/v1.0/rollback/%s' % revision_id
         return self._post(url)
 
-    def documents(self, revision_id, rendered=True, **filters):
+    def documents(self, revision_id, rendered=True, filters=None):
         """Get a list of revision documents or rendered documents.
 
         :param int revision_id: Revision ID.
