@@ -305,6 +305,31 @@ class TestDocumentLayering2Layers(TestDocumentLayering):
         site_expected = {'a': {'x': 1, 'y': 2}, 'b': 4}
         self._test_layering(documents, site_expected)
 
+    def test_layering_default_scenario_with_numeric_in_path(self):
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": [{"x": 1, "y": 2}]}},
+            "_SITE_DATA_1_": {"data": None},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": ".data.a[0]"}]}
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+
+        site_expected = {'a': [{'x': 1, 'y': 2}]}
+        self._test_layering(documents, site_expected)
+
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": [{}, {"x": 1, "y": 2}]}},
+            "_SITE_DATA_1_": {"data": {"a": [{"another": "thing"}]}},
+            "_SITE_ACTIONS_1_": {
+                "actions": [{"method": "merge", "path": ".data.a[1]"}]}
+        }
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen_test(mapping, site_abstract=False)
+
+        site_expected = {'a': [{"another": "thing"}, {'x': 1, 'y': 2}]}
+        self._test_layering(documents, site_expected)
+
     def test_layering_default_scenario_multi_parentselector(self):
         mapping = {
             "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}}},
