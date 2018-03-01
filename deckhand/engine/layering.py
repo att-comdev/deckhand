@@ -26,6 +26,7 @@ from deckhand.engine import secrets_manager
 from deckhand.engine import utils as engine_utils
 from deckhand import errors
 from deckhand import types
+from deckhand import utils
 
 LOG = logging.getLogger(__name__)
 
@@ -369,16 +370,16 @@ class DocumentLayering(object):
 
         Supported actions include:
 
-            * `merge` - a "deep" merge that layers new and modified data onto
+            * ``merge`` - a "deep" merge that layers new and modified data onto
               existing data
-            * `replace` - overwrite data at the specified path and replace it
+            * ``replace`` - overwrite data at the specified path and replace it
               with the data given in this document
-            * `delete` - remove the data at the specified path
+            * ``delete`` - remove the data at the specified path
 
         :raises UnsupportedActionMethod: If the layering action isn't found
             among ``self.SUPPORTED_METHODS``.
         :raises MissingDocumentKey: If a layering action path isn't found
-            in both the parent and child documents being layered together.
+            in the child document.
         """
         method = action['method']
         if method not in self.SUPPORTED_METHODS:
@@ -388,59 +389,60 @@ class DocumentLayering(object):
         # Use copy to prevent these data from being updated referentially.
         overall_data = copy.deepcopy(overall_data)
         child_data = copy.deepcopy(child_data)
-        rendered_data = overall_data
 
-        # Remove empty string paths and ensure that "data" is always present.
-        path = action['path'].split('.')
-        path = [p for p in path if p != '']
-        path.insert(0, 'data')
-        last_key = 'data' if not path[-1] else path[-1]
-
-        for attr in path:
-            if attr == path[-1]:
-                break
-            rendered_data = rendered_data.get(attr)
-            child_data = child_data.get(attr)
+        action_path = action['path']
+        if action_path.startswith('.data'):
+            action_path = action_path[5:]
 
         if method == 'delete':
-            # If the entire document is passed (i.e. the dict including
-            # metadata, data, schema, etc.) then reset data to an empty dict.
-            if last_key == 'data':
-                rendered_data['data'] = {}
-            elif last_key in rendered_data:
-                del rendered_data[last_key]
-            elif last_key not in rendered_data:
-                # If the key does not exist in `rendered_data`, this is a
-                # validation error.
-                raise errors.MissingDocumentKey(
-                    child=child_data, parent=rendered_data, key=last_key)
-        elif method == 'merge':
-            if last_key in rendered_data and last_key in child_data:
-                # If both entries are dictionaries, do a deep merge. Otherwise
-                # do a simple merge.
-                if (isinstance(rendered_data[last_key], dict)
-                    and isinstance(child_data[last_key], dict)):
-                    engine_utils.deep_merge(
-                        rendered_data[last_key], child_data[last_key])
-                else:
-                    rendered_data.setdefault(last_key, child_data[last_key])
-            elif last_key in child_data:
-                rendered_data.setdefault(last_key, child_data[last_key])
+            if action_path == '.':
+                overall_data.data = {}
             else:
-                # If the key does not exist in the child document, this is a
-                # validation error.
+                from_child = utils.jsonpath_parse(overall_data.data,
+                                                  action_path)
+                if from_child is None:
+                    raise errors.MissingDocumentKey(
+                        child=child_data.data,
+                        parent=overall_data.data,
+                        key=action_path)
+                for k, v in overall_data.data.items():
+                    if isinstance(v, list) and from_child in v:
+                        v.remove(from_child)
+                        break
+                    elif v == from_child:
+                        overall_data.data.pop(k)
+                        break
+        elif method == 'merge':
+            from_parent = utils.jsonpath_parse(overall_data.data, action_path)
+            from_child = utils.jsonpath_parse(child_data.data, action_path)
+
+            if from_child is None:
                 raise errors.MissingDocumentKey(
-                    child=child_data, parent=rendered_data, key=last_key)
+                    child=child_data.data,
+                    parent=overall_data.data,
+                    key=action_path)
+
+            if (isinstance(from_parent, dict)
+                    and isinstance(from_child, dict)):
+                engine_utils.deep_merge(from_parent, from_child)
+
+            if from_parent is not None:
+                overall_data.data = utils.jsonpath_replace(
+                    overall_data.data, from_parent, action_path)
+            else:
+                overall_data.data = utils.jsonpath_replace(
+                    overall_data.data, from_child, action_path)
         elif method == 'replace':
-            if last_key in rendered_data and last_key in child_data:
-                rendered_data[last_key] = child_data[last_key]
-            elif last_key in child_data:
-                rendered_data.setdefault(last_key, child_data[last_key])
-            elif last_key not in child_data:
-                # If the key does not exist in the child document, this is a
-                # validation error.
+            from_child = utils.jsonpath_parse(child_data.data, action_path)
+
+            if from_child is None:
                 raise errors.MissingDocumentKey(
-                    child=child_data, parent=rendered_data, key=last_key)
+                    child=child_data.data,
+                    parent=overall_data.data,
+                    key=action_path)
+
+            overall_data.data = utils.jsonpath_replace(
+                overall_data.data, from_child, action_path)
 
         return overall_data
 
