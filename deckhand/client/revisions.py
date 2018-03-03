@@ -18,14 +18,23 @@ from deckhand.client import base
 
 class Revision(base.Resource):
     def __repr__(self):
+        # List revisions.
         if hasattr(self, 'results'):
             return ', '.join(
-                ["<Revision ID: %s>" % r['id'] for r in self.results])
+                ["<Revision ID: %s>" % x['id'] for x in self.results])
+        # Show revision.
+        elif hasattr(self, 'id'):
+            return "<Revision ID: %s>" % base.getid(self)
+        # List revision documents.
+        elif self and hasattr(self[0], 'metadata'):
+            return ', '.join([
+                "<Document [%s]: %s>" % (x['schema'], x['metadata']['name'])
+                for x in self
+            ])
+        # All options expired. Revision diff.
         else:
-            try:
-                return ("<Revision ID: %s>" % base.getid(self))
-            except Exception:
-                return ("<Revision Diff>")
+            return "<Revision Diff: %s>" % ', '.join(
+                x for x in self.to_dict())
 
 
 class RevisionManager(base.Manager):
