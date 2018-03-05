@@ -287,6 +287,23 @@ data:
             documents, site_expected, region_expected, global_expected,
             substitution_sources=[documents[1]])
 
+    def test_layering_document_with_parent_but_no_actions_skips_layering(self):
+        """Verify that a document that has a parent but no layering actions
+        skips over layering.
+        """
+        doc_factory = factories.DocumentFactory(2, [1, 1])
+        documents = doc_factory.gen_test(
+            {'_SITE_DATA_1_': {'data': 'should not change'}},
+            site_abstract=False)
+        documents[-1]['metadata']['layeringDefinition']['actions'] = []
+
+        self.assertEqual(
+            documents[1]['metadata']['labels'],
+            documents[2]['metadata']['layeringDefinition']['parentSelector'])
+
+        site_expected = 'should not change'
+        self._test_layering(documents, site_expected, global_expected=None)
+
 
 class TestDocumentLayering2Layers(TestDocumentLayering):
 
