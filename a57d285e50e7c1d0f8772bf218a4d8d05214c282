@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d9ad3a1_d64153d3",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1013049
+      },
+      "writtenOn": "2018-03-05T20:04:32Z",
+      "side": 1,
+      "message": "Consider moving \u0027delete\u0027, \u0027merge\u0027, and \u0027replace\u0027 to variables (something like delete_method \u003d \u0027delete\u0027, etc), then populating SUPPORTED_METHODS with the three new variables.  Then in these if checks compare with the variable, it will prevent a typo from ever causing a path to be missed.",
+      "range": {
+        "startLine": 397,
+        "startChar": 8,
+        "endLine": 397,
+        "endChar": 30
+      },
+      "revId": "a57d285e50e7c1d0f8772bf218a4d8d05214c282",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
