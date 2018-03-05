@@ -602,7 +602,6 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
                 'data': {'a': 'fail'},
                 'metadata': {'labels': {'global': 'global1'},
                              'layeringDefinition': {'abstract': False,
-                                                    'actions': [],
                                                     'layer': 'global'},
                              'name': doc_to_test['metadata']['name'],
                              'schema': doc_to_test['metadata']['schema']},

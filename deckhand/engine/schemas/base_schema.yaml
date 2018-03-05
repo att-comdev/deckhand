@@ -62,6 +62,27 @@ data:
                   - method
                   - path
           additionalProperties: false
+          allOf:
+            - $ref: "#/properties/metadata/properties/layeringDefinition/definitions/parent_selector_requires_actions"
+            - $ref: "#/properties/metadata/properties/layeringDefinition/definitions/actions_requires_parent_selector"
+          definitions:
+            parent_selector_requires_actions:
+              dependencies:
+                # Requires that if parentSelector is provided, then actions is
+                # required and must contain at least 1 item.
+                parentSelector:
+                  properties:
+                    actions:
+                      minItems: 1
+                  required:
+                    - actions
+            actions_requires_parent_selector:
+              dependencies:
+                # Requires that if actions are provided, then so too must
+                # parentSelector.
+                actions:
+                  required:
+                    - parentSelector
         substitutions:
           type: array
           items:
