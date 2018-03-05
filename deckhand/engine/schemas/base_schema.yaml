@@ -61,6 +61,20 @@ data:
                 required:
                   - method
                   - path
+          dependencies:
+            # Requires that if parentSelector is provided, then actions is
+            # required and must contain at least 1 item.
+            parentSelector:
+              properties:
+                actions:
+                  minItems: 1
+              required:
+                - actions
+            # Requires that if actions are provided, then so too must
+            # parentSelector.
+            actions:
+              required:
+                - parentSelector
           additionalProperties: false
         substitutions:
           type: array
