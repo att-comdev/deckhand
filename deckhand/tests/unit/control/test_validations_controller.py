@@ -28,7 +28,7 @@ from deckhand import types
 CONF = cfg.CONF
 
 
-VALIDATION_RESULT = """
+FAILED_VALIDATION_RESULT = """
 ---
 status: failure
 errors:
@@ -43,7 +43,7 @@ validator:
   version: 1.1.2
 """
 
-VALIDATION_RESULT_ALT = """
+SUCCEEDED_VALIDATION_RESULT = """
 ---
 status: success
 errors: []
@@ -114,7 +114,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
         revision_id = self._create_revision()
         validation_name = test_utils.rand_name('validation')
         resp = self._create_validation(revision_id, validation_name,
-                                       VALIDATION_RESULT)
+                                       FAILED_VALIDATION_RESULT)
 
         self.assertEqual(201, resp.status_code)
         expected_body = {
@@ -161,7 +161,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
         # service, it is listed as well.
         validation_name = test_utils.rand_name('validation')
         resp = self._create_validation(revision_id, validation_name,
-                                       VALIDATION_RESULT)
+                                       FAILED_VALIDATION_RESULT)
 
         resp = self.app.simulate_get(
             '/api/v1.0/revisions/%s/validations' % revision_id,
@@ -211,7 +211,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
         # Add the result of a validation to a revision.
         validation_name = test_utils.rand_name('validation')
         resp = self._create_validation(revision_id, validation_name,
-                                       VALIDATION_RESULT)
+                                       FAILED_VALIDATION_RESULT)
 
         # Validate that the entry is present.
         resp = self.app.simulate_get(
@@ -238,7 +238,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
         # Add the result of a validation to a revision.
         validation_name = test_utils.rand_name('validation')
         resp = self._create_validation(revision_id, validation_name,
-                                       VALIDATION_RESULT)
+                                       FAILED_VALIDATION_RESULT)
 
         # Validate that the entry is present.
         resp = self.app.simulate_get(
@@ -256,7 +256,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
 
         # Add the result of another validation to the same revision.
         resp = self._create_validation(revision_id, validation_name,
-                                       VALIDATION_RESULT_ALT)
+                                       SUCCEEDED_VALIDATION_RESULT)
 
         # Validate that 2 entries now exist.
         resp = self.app.simulate_get(
@@ -282,9 +282,9 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
         revision_id = self._create_revision()
         validation_name = test_utils.rand_name('validation')
         self._create_validation(revision_id, validation_name,
-                                VALIDATION_RESULT)
+                                FAILED_VALIDATION_RESULT)
         self._create_validation(revision_id, validation_name,
-                                VALIDATION_RESULT_ALT)
+                                SUCCEEDED_VALIDATION_RESULT)
 
         resp = self.app.simulate_get(
             '/api/v1.0/revisions/%s/validations/%s' % (revision_id,
@@ -310,7 +310,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
         revision_id = self._create_revision()
         validation_name = test_utils.rand_name('validation')
         resp = self._create_validation(revision_id, validation_name,
-                                       VALIDATION_RESULT)
+                                       FAILED_VALIDATION_RESULT)
 
         resp = self.app.simulate_get(
             '/api/v1.0/revisions/%s/validations/%s/entries/0' % (revision_id,
@@ -351,7 +351,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
         revision_id = self._create_revision()
         validation_name = test_utils.rand_name('validation')
         resp = self._create_validation(revision_id, validation_name,
-                                       VALIDATION_RESULT)
+                                       FAILED_VALIDATION_RESULT)
         self.assertEqual(201, resp.status_code)
         expected_error = ('The requested validation entry 5 was not found for '
                           'validation name %s and revision ID %d.' % (
@@ -593,7 +593,6 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
                 'data': {'a': 'fail'},
                 'metadata': {'labels': {'global': 'global1'},
                              'layeringDefinition': {'abstract': False,
-                                                    'actions': [],
                                                     'layer': 'global'},
                              'name': doc_to_test['metadata']['name'],
                              'schema': doc_to_test['metadata']['schema']},
