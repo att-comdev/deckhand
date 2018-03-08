@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "4de22970_a363a501",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-03-08T14:21:19Z",
+      "side": 1,
+      "message": "Can we add here that deep merging doesn\u0027t mean merging of lists (the whole list will be replaced), since lists are ordered, and there is not enough info to know append, prepend, or interleave.",
+      "revId": "a57d285e50e7c1d0f8772bf218a4d8d05214c282",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d9ad3a1_d64153d3",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 7
