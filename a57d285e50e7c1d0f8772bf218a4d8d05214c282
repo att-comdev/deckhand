@@ -22,6 +22,30 @@
       "revId": "a57d285e50e7c1d0f8772bf218a4d8d05214c282",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7c6be66_d550a59f",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-08T11:30:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d9ad3a1_d64153d3",
+      "range": {
+        "startLine": 397,
+        "startChar": 8,
+        "endLine": 397,
+        "endChar": 30
+      },
+      "revId": "a57d285e50e7c1d0f8772bf218a4d8d05214c282",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
