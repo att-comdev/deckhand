@@ -16,6 +16,24 @@
       "revId": "7da12defa6b80bf60e2370c41ab9ad18d105d9be",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c8cffc7d_0f9b43b7",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-10T18:00:09Z",
+      "side": 1,
+      "message": "I really wish it were dead code, but in theory it\u0027s possible to pass in validate\u003dFalse to this and then run into this issue. Though in practice this will probably very very rarely be hit. It would be nice to just require validation, but that won\u0027t work in our use case, I think, given how Promenade interacts with Deckhand.",
+      "parentUuid": "b46a23e5_20bbcafb",
+      "revId": "7da12defa6b80bf60e2370c41ab9ad18d105d9be",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
