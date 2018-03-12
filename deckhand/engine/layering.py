@@ -19,6 +19,7 @@ import networkx
 from networkx.algorithms.cycles import find_cycle
 from networkx.algorithms.dag import topological_sort
 from oslo_log import log as logging
+from oslo_utils import excutils
 
 from deckhand.engine import document_validation
 from deckhand.engine import document_wrapper
@@ -368,6 +369,20 @@ class DocumentLayering(object):
         del self._documents_by_layer
         del self._documents_by_labels
 
+    def _log_data_for_debugging(self, child, parent, action):
+        child_data = copy.deepcopy(child.data)
+        parent_data = copy.deepcopy(parent.data)
+
+        engine_utils.deep_scrub(child_data, None)
+        engine_utils.deep_scrub(parent_data, None)
+
+        LOG.debug('An exception occurred while attempting to layer child '
+                  'document [%s] %s with parent document [%s] %s using '
+                  'layering action: %s.\nScrubbed child document data: %s.\n'
+                  'Scrubbed parent document data: %s.', child.schema,
+                  child.name, parent.schema, parent.name, action, child_data,
+                  parent_data)
+
     def _apply_action(self, action, child_data, overall_data):
         """Apply actions to each layer that is rendered.
 
@@ -481,8 +496,17 @@ class DocumentLayering(object):
                         LOG.debug('Applying action %s to document with '
                                   'name=%s, schema=%s, layer=%s.', action,
                                   doc.name, doc.schema, doc.layer)
-                        rendered_data = self._apply_action(
-                            action, doc, rendered_data)
+                        try:
+                            rendered_data = self._apply_action(
+                                action, doc, rendered_data)
+                        except Exception:
+                            with excutils.save_and_reraise_exception():
+                                try:
+                                    self._log_data_for_debugging(
+                                        doc, parent, action)
+                                except Exception:  # nosec
+                                    pass
+
                     if not doc.is_abstract:
                         doc.data = rendered_data.data
                     self.secrets_substitution.update_substitution_sources(
