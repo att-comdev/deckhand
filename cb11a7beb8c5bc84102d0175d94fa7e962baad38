@@ -16,6 +16,24 @@
       "revId": "cb11a7beb8c5bc84102d0175d94fa7e962baad38",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5fb11e3e_5e00fed8",
+        "filename": "charts/deckhand/templates/deployment.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1011947
+      },
+      "writtenOn": "2018-03-13T15:30:29Z",
+      "side": 1,
+      "message": "Agree, will add it in. In any case, I think when \"scheme\" is not defined, the \"HTTP\" scheme will be used. That seems to be the behavior based on what I am seeing in https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+      "parentUuid": "15727448_98a0174e",
+      "revId": "cb11a7beb8c5bc84102d0175d94fa7e962baad38",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
