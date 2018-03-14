@@ -28,6 +28,15 @@ class DocumentDict(dict):
 
     """
 
+    def __init__(self, *args, **kwargs):
+        super(DocumentDict, self).__init__(*args, **kwargs)
+        self._replacement_for = None
+        self._replaced_by = None
+
+    @property
+    def meta(self):
+        return (self.schema, self.name, self.layer)
+
     @property
     def is_abstract(self):
         return utils.jsonpath_parse(
@@ -95,6 +104,30 @@ class DocumentDict(dict):
     @property
     def is_encrypted(self):
         return self.storage_policy == 'encrypted'
+
+    @property
+    def is_replacement(self):
+        return utils.jsonpath_parse(self, 'metadata.replacement') is True
+
+    @property
+    def has_replacement(self):
+        return isinstance(self._replaced_by, DocumentDict)
+
+    @property
+    def replacement_for(self):
+        return self._replacement_for
+
+    @replacement_for.setter
+    def replacement_for(self, other):
+        self._replacement_for = other
+
+    @property
+    def replaced_by(self):
+        return self._replaced_by
+
+    @replaced_by.setter
+    def replaced_by(self, other):
+        self._replaced_by = other
 
     def __hash__(self):
         return hash(json.dumps(self, sort_keys=True))

@@ -259,6 +259,19 @@ class MissingDocumentPattern(DeckhandException):
     code = 400
 
 
+class InvalidDocumentReplacement(DeckhandException):
+    """The document replacement is invalid.
+
+    **Troubleshoot:**
+
+    * Check that the document with replacement: true has a lower layer than
+      the document it replaces.
+    """
+    msg_fmt = ("Replacement document [%(schema)s, %(layer)s] %(name)s is "
+               "missing a parent document to replace.")
+    code = 400
+
+
 class UnsupportedActionMethod(DeckhandException):
     """The action is not in the list of supported methods.
 

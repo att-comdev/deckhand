@@ -1293,3 +1293,73 @@ class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
         global_expected = None
         self._test_layering(documents, site_expected, region_expected,
                             global_expected)
+
+
+class TestDocumentLayeringWithReplacement(TestDocumentLayering):
+
+    def test_replacement_with_substitution_from_replacer(self):
+        documents = list(yaml.safe_load_all("""
+---
+schema: aic/Versions/v1
+metadata:
+  name: a
+  labels:
+    selector: foo
+  layeringDefinition:
+    abstract: False
+    layer: global
+data:
+  conf:
+    foo: default
+---
+schema: aic/Versions/v1
+metadata:
+  name: a
+  labels:
+    selector: baz
+  replacement: true
+  layeringDefinition:
+    abstract: False
+    layer: site
+    parentSelector:
+      selector: foo
+    actions:
+      - method: merge
+        path: .
+data:
+  conf:
+    bar: override
+---
+schema: armada/Chart/v1
+metadata:
+  name: c
+  layeringDefinition:
+    abstract: False
+    layer: global
+  substitutions:
+    - src:
+        schema: aic/Versions/v1
+        name: a
+        path: .conf
+      dest:
+        path: .application.conf
+data:
+  application:
+    conf: {}
+---
+schema: deckhand/LayeringPolicy/v1
+metadata:
+  schema: metadata/Control/v1
+  name: layering-policy
+data:
+  layerOrder:
+    - global
+    - site
+...
+"""))
+        site_expected = [{"conf": {"foo": "default", "bar": "override"}}]
+        global_expected = [
+            {"application": {"conf": {"foo": "default", "bar": "override"}}}]
+        self._test_layering(documents, site_expected,
+                            global_expected=global_expected,
+                            substitution_sources=documents[:2])
