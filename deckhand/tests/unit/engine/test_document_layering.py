@@ -1318,3 +1318,95 @@ class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
         global_expected = None
         self._test_layering(documents, site_expected, region_expected,
                             global_expected)
+
+
+class TestDocumentLayeringWithReplacement(TestDocumentLayering):
+
+    def setUp(self):
+        super(TestDocumentLayeringWithReplacement, self).setUp()
+        self.documents = list(yaml.safe_load_all("""
+---
+schema: aic/Versions/v1
+metadata:
+  name: a
+  labels:
+    selector: foo
+  layeringDefinition:
+    abstract: False
+    layer: global
+data:
+  conf:
+    foo: default
+---
+schema: aic/Versions/v1
+metadata:
+  name: a
+  labels:
+    selector: baz
+  replacement: true
+  layeringDefinition:
+    abstract: False
+    layer: site
+    parentSelector:
+      selector: foo
+    actions:
+      - method: merge
+        path: .
+data:
+  conf:
+    bar: override
+---
+schema: armada/Chart/v1
+metadata:
+  name: c
+  layeringDefinition:
+    abstract: False
+    layer: global
+  substitutions:
+    - src:
+        schema: aic/Versions/v1
+        name: a
+        path: .conf
+      dest:
+        path: .application.conf
+data:
+  application:
+    conf: {}
+---
+schema: deckhand/LayeringPolicy/v1
+metadata:
+  schema: metadata/Control/v1
+  name: layering-policy
+data:
+  layerOrder:
+    - global
+    - site
+...
+"""))
+
+    def test_replacement_with_substitution_from_replacer(self):
+        site_expected = [{"conf": {"foo": "default", "bar": "override"}}]
+        global_expected = [
+            {"application": {"conf": {"foo": "default", "bar": "override"}}}]
+        # Pass in the replacee and replacer as substitution sources. The
+        # replacer should be used as the source.
+        self._test_layering(self.documents, site_expected,
+                            global_expected=global_expected,
+                            substitution_sources=self.documents[:2])
+        # Attempt the same scenario but reverse the order of the substitution
+        # sources, which verifies that the replacer always takes priority.
+        self._test_layering(
+            self.documents, site_expected, global_expected=global_expected,
+            substitution_sources=list(reversed(self.documents[:2])))
+
+        # Pass in the replacee as the only substitution source. The replacer
+        # should replace it and be used as the source.
+        self._test_layering(self.documents, site_expected,
+                            global_expected=global_expected,
+                            substitution_sources=[self.documents[0]])
+
+        # Pass in the replacer as the only substitution source, which should be
+        # used as the source.
+        self._test_layering(self.documents, site_expected,
+                            global_expected=global_expected,
+                            substitution_sources=[self.documents[1]])
