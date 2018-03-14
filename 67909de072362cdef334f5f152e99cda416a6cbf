@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d42d33cb_e9e80083",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-14T01:06:56Z",
+      "side": 1,
+      "message": "which contains a",
+      "range": {
+        "startLine": 96,
+        "startChar": 30,
+        "endLine": 96,
+        "endChar": 35
+      },
+      "revId": "67909de072362cdef334f5f152e99cda416a6cbf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "394c349f_96945daf",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-14T01:06:56Z",
+      "side": 1,
+      "message": "query Deckhand\u0027s Validations API which in turn checks",
+      "range": {
+        "startLine": 116,
+        "startChar": 4,
+        "endLine": 116,
+        "endChar": 9
+      },
+      "revId": "67909de072362cdef334f5f152e99cda416a6cbf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd644fab_b1c8714b",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-14T01:06:56Z",
+      "side": 1,
+      "message": "in its workflow",
+      "revId": "67909de072362cdef334f5f152e99cda416a6cbf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8d2fd39_083c3d98",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-14T01:06:56Z",
+      "side": 1,
+      "message": "reporting",
+      "range": {
+        "startLine": 124,
+        "startChar": 39,
+        "endLine": 124,
+        "endChar": 44
+      },
+      "revId": "67909de072362cdef334f5f152e99cda416a6cbf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
