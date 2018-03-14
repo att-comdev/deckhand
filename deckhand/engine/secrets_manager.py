@@ -166,8 +166,9 @@ class SecretsSubstitution(object):
         the constructor.
 
         :param substitution_sources: List of documents that are potential
-            sources for substitution. Should only include concrete documents.
-        :type substitution_sources: List[dict]
+            sources for substitution. Or dict of documents keyed on tuple of
+            (schema, metadata.name). Should only include concrete documents.
+        :type substitution_sources: List[dict] or dict
         :param bool fail_on_missing_sub_src: Whether to fail on a missing
             substitution source. Default is True.
         """
@@ -177,12 +178,16 @@ class SecretsSubstitution(object):
         self._substitution_sources = {}
         self._fail_on_missing_sub_src = fail_on_missing_sub_src
 
-        for document in substitution_sources:
-            if not isinstance(document, document_wrapper.DocumentDict):
-                document = document_wrapper.DocumentDict(document)
-            if document.schema and document.name:
-                self._substitution_sources.setdefault(
-                    (document.schema, document.name), document)
+        if isinstance(substitution_sources, dict):
+            self._substitution_sources = substitution_sources
+        else:
+            self._substitution_sources = dict()
+            for document in substitution_sources:
+                if not isinstance(document, document_wrapper.DocumentDict):
+                    document = document_wrapper.DocumentDict(document)
+                if document.schema and document.name:
+                    self._substitution_sources.setdefault(
+                        (document.schema, document.name), document)
 
     def _is_barbican_ref(self, src_secret):
         return (isinstance(src_secret, six.string_types) and
