@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2fda31d8_4e619198",
+        "filename": "doc/source/validation.rst",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-14T04:31:28Z",
+      "side": 0,
+      "message": "Should re-include this",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 54
+      },
+      "revId": "a29741e3a7998ab4ccb1bc1cf22ece772529e619",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
