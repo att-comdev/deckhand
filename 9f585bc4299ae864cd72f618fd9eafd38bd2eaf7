@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2510d36_c9cea8b0",
+        "filename": "deckhand/engine/document_wrapper.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-15T18:15:27Z",
+      "side": 1,
+      "message": "Remove",
+      "range": {
+        "startLine": 33,
+        "startChar": 8,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "9f585bc4299ae864cd72f618fd9eafd38bd2eaf7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
