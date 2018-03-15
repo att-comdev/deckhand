@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f62c2d7_e754d346",
+        "filename": "docs/source/validation.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-15T21:04:10Z",
+      "side": 1,
+      "message": "can query",
+      "revId": "3f9d13309b7b907ad0b4535c69ecfc89d0d08752",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
