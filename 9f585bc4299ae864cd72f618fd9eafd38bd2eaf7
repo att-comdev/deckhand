@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "19b3ba76_1319cc2a",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-16T14:04:13Z",
+      "side": 1,
+      "message": "[parent_meta]",
+      "range": {
+        "startLine": 67,
+        "startChar": 53,
+        "endLine": 67,
+        "endChar": 58
+      },
+      "revId": "9f585bc4299ae864cd72f618fd9eafd38bd2eaf7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cda2292a_5e447899",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-16T14:04:13Z",
+      "side": 1,
+      "message": "src_ref.meta[:-1]",
+      "range": {
+        "startLine": 88,
+        "startChar": 36,
+        "endLine": 88,
+        "endChar": 66
+      },
+      "revId": "9f585bc4299ae864cd72f618fd9eafd38bd2eaf7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2f06b70_00734d15",
         "filename": "deckhand/errors.py",
         "patchSetId": 2
