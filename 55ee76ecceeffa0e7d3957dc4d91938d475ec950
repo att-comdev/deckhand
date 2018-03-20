@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2110c0eb_af94c2ba",
+        "filename": "alembic/versions/cc0056c7d405_create_base_database_tables.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-20T18:55:36Z",
+      "side": 1,
+      "message": "models",
+      "range": {
+        "startLine": 22,
+        "startChar": 50,
+        "endLine": 22,
+        "endChar": 56
+      },
+      "revId": "55ee76ecceeffa0e7d3957dc4d91938d475ec950",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
