@@ -842,6 +842,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -881,6 +882,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -931,6 +933,7 @@ metadata:
   name: vp-1
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -941,6 +944,7 @@ metadata:
   name: vp-2
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: promenade-schema-validation
@@ -990,6 +994,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -1070,6 +1075,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation

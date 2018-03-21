@@ -42,7 +42,6 @@ class TestDocuments(base.TestDbBase):
 
         for idx in range(len(documents)):
             retrieved_document = self.show_document(id=documents[idx]['id'])
-            self.assertIsNone(retrieved_document.pop('orig_revision_id'))
             self.assertEqual(documents[idx], retrieved_document)
 
     def test_create_and_get_multiple_document(self):
@@ -61,7 +60,6 @@ class TestDocuments(base.TestDbBase):
         documents = self.create_documents(bucket_name, payload)
 
         revision = self.show_revision(documents[0]['revision_id'])
-        self.assertIsNone(revision['documents'][0].pop('orig_revision_id'))
         self.assertEqual(3, len(revision['documents']))
         self.assertEqual(documents[0], revision['documents'][0])
 
@@ -97,7 +95,6 @@ class TestDocuments(base.TestDbBase):
             document['revision_id'], **filters)
 
         self.assertEqual(1, len(documents))
-        self.assertIsNone(documents[0].pop('orig_revision_id'))
         self.assertEqual(document, documents[0])
 
     def test_create_multiple_documents_and_get_revision(self):
@@ -115,7 +112,6 @@ class TestDocuments(base.TestDbBase):
 
         # Validate that the revision is valid.
         for document in created_documents:
-            document['orig_revision_id'] = None
             revision = self.show_revision(document['revision_id'])
             self.assertEqual(3, len(revision['documents']))
             self.assertIn(document, revision['documents'])
@@ -140,7 +136,6 @@ class TestDocuments(base.TestDbBase):
                 document['revision_id'], **filters)
 
             self.assertEqual(1, len(filtered_documents))
-            self.assertIsNone(filtered_documents[0].pop('orig_revision_id'))
             self.assertEqual(document, filtered_documents[0])
 
     def test_create_certificate(self):
@@ -285,3 +280,26 @@ class TestDocuments(base.TestDbBase):
                              payload[idx]['metadata']['name'])
             self.assertEmpty(documents[idx]['metadata'])
             self.assertEmpty(documents[idx]['data'])
+
+    def test_create_duplicate_bucket(self):
+        """Validates that creating a bucket with the exact same documents
+        references the last revision via orig_revision_id, as in reality
+        the bucket is merely a revision history placeholder for the first
+        bucket, since nothing was changed.
+
+        Note that this is different from creating a duplicate document or
+        creating a duplicate document in a separate bucket.
+
+        """
+        bucket_name = test_utils.rand_name('bucket')
+        payload = base.DocumentFixture.get_minimal_fixture()
+
+        orig_documents = self.create_documents(bucket_name, [payload])
+        duplicate_documents = self.create_documents(bucket_name, [payload])
+
+        self.assertEqual(orig_documents[0]['revision_id'],
+                         duplicate_documents[0]['orig_revision_id'])
+        self.assertDictItemsAlmostEqual(
+            sorted(orig_documents, key=lambda d: d['created_at']),
+            sorted(duplicate_documents, key=lambda d: d['created_at']),
+            ignore=['created_at', 'updated_at', 'revision_id', 'id'])

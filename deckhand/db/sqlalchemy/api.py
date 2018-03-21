@@ -173,12 +173,18 @@ def documents_create(bucket_name, documents, validations=None,
     # The documents to be deleted are computed by comparing the documents for
     # the previous revision (if it exists) that belong to `bucket_name` with
     # `documents`: the difference between the former and the latter.
-    document_history = [(d['schema'], d['name'])
-                        for d in revision_documents_get(
-                            bucket_name=bucket_name)]
+    document_history = [
+        (d['schema'], d['name'], d['layer']) for d in revision_documents_get(
+            bucket_name=bucket_name)
+    ]
     documents_to_delete = [
         h for h in document_history if h not in
-        [(d['schema'], d['metadata']['name']) for d in documents]]
+        [(
+            d['schema'],
+            d['metadata']['name'],
+            d['metadata'].get('layeringDefinition', {}).get('layer')
+        ) for d in documents]
+    ]
 
     # Only create a revision if any docs have been created, changed or deleted.
     if any([documents_to_create, documents_to_delete]):
@@ -199,8 +205,9 @@ def documents_create(bucket_name, documents, validations=None,
                 # Store bare minimum information about the document.
                 doc['schema'] = d[0]
                 doc['name'] = d[1]
+                doc['layer'] = d[2]
                 doc['data'] = {}
-                doc['_metadata'] = {}
+                doc['meta'] = {}
                 doc['data_hash'] = _make_hash({})
                 doc['metadata_hash'] = _make_hash({})
                 doc['bucket_id'] = bucket['id']
@@ -224,6 +231,8 @@ def documents_create(bucket_name, documents, validations=None,
             with session.begin():
                 doc['bucket_id'] = bucket['id']
                 doc['revision_id'] = revision['id']
+                if not doc.get('orig_revision_id'):
+                    doc['orig_revision_id'] = doc['revision_id']
 
                 try:
                     doc.save(session=session)
@@ -244,7 +253,7 @@ def documents_create(bucket_name, documents, validations=None,
 def _documents_create(bucket_name, values_list, session=None):
     values_list = copy.deepcopy(values_list)
     session = session or get_session()
-    filters = ('name', 'schema')
+    filters = ('name', 'schema', 'layer')
     changed_documents = []
 
     def _document_create(values):
@@ -260,7 +269,7 @@ def _documents_create(bucket_name, values_list, session=None):
         # Hash the document's metadata and data to later  efficiently check
         # whether those data have changed.
         values['data_hash'] = _make_hash(values['data'])
-        values['metadata_hash'] = _make_hash(values['_metadata'])
+        values['metadata_hash'] = _make_hash(values['meta'])
 
         try:
             existing_document = document_get(
@@ -273,18 +282,15 @@ def _documents_create(bucket_name, values_list, session=None):
 
         if existing_document:
             # If the document already exists in another bucket, raise an error.
-            # Ignore redundant validation policies as they are allowed to exist
-            # in multiple buckets.
-            if (existing_document['bucket_name'] != bucket_name and
-                not existing_document['schema'].startswith(
-                    types.VALIDATION_POLICY_SCHEMA)):
+            if existing_document['bucket_name'] != bucket_name:
                 raise errors.DuplicateDocumentExists(
                     schema=existing_document['schema'],
                     name=existing_document['name'],
                     bucket=existing_document['bucket_name'])
 
             if (existing_document['data_hash'] == values['data_hash'] and
-                existing_document['metadata_hash'] == values['metadata_hash']):
+                existing_document['metadata_hash'] == values['metadata_hash']
+                and existing_document['layer'] == values['layer']):
                 # Since the document has not changed, reference the original
                 # revision in which it was created. This is necessary so that
                 # the correct revision history is maintained.
@@ -305,17 +311,17 @@ def _documents_create(bucket_name, values_list, session=None):
 
 
 def _fill_in_metadata_defaults(values):
-    values['_metadata'] = values.pop('metadata')
-    values['name'] = values['_metadata']['name']
+    values['meta'] = values.pop('metadata')
+    values['name'] = values['meta']['name']
 
-    if not values['_metadata'].get('storagePolicy', None):
-        values['_metadata']['storagePolicy'] = 'cleartext'
+    if not values['meta'].get('storagePolicy', None):
+        values['meta']['storagePolicy'] = 'cleartext'
 
-    if 'layeringDefinition' not in values['_metadata']:
-        values['_metadata'].setdefault('layeringDefinition', {})
+    values['meta'].setdefault('layeringDefinition', {})
+    values['layer'] = values['meta']['layeringDefinition'].get('layer')
 
-    if 'abstract' not in values['_metadata']['layeringDefinition']:
-        values['_metadata']['layeringDefinition']['abstract'] = False
+    if 'abstract' not in values['meta']['layeringDefinition']:
+        values['meta']['layeringDefinition']['abstract'] = False
 
     return values
 
@@ -616,7 +622,7 @@ def _filter_revision_documents(documents, unique_only, **filters):
     """
     # TODO(fmontei): Implement this as an sqlalchemy query.
     filtered_documents = {}
-    unique_filters = ('schema', 'name')
+    unique_filters = ('schema', 'name', 'layer')
     exclude_deleted = filters.pop('deleted', None) is False
 
     if exclude_deleted:
@@ -991,11 +997,11 @@ def revision_rollback(revision_id, latest_revision, session=None):
     # Create the documents for the revision.
     for orig_document in orig_revision['documents']:
         orig_document['revision_id'] = new_revision['id']
-        orig_document['_metadata'] = orig_document.pop('metadata')
+        orig_document['meta'] = orig_document.pop('metadata')
 
         new_document = models.Document()
         new_document.update({x: orig_document[x] for x in (
-            'name', '_metadata', 'data', 'data_hash', 'metadata_hash',
+            'name', 'meta', 'layer', 'data', 'data_hash', 'metadata_hash',
             'schema', 'bucket_id')})
         new_document['revision_id'] = new_revision['id']
 
