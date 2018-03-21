@@ -842,6 +842,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -881,6 +882,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -931,6 +933,7 @@ metadata:
   name: vp-1
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -941,6 +944,7 @@ metadata:
   name: vp-2
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: promenade-schema-validation
@@ -990,6 +994,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -1070,6 +1075,7 @@ metadata:
   name: site-deploy-ready
   layeringDefinition:
     abstract: true
+    layer: site
 data:
   validations:
     - name: deckhand-schema-validation
@@ -1125,10 +1131,13 @@ data:
 
         expected_msg = ('The result for this validation was externally '
                         'registered but has been ignored because it is not '
-                        'found in the validations for ValidationPolicy [%s] '
-                        '%s: %s.' % (validation_policy['schema'],
-                                     validation_policy['metadata']['name'],
-                                     types.DECKHAND_SCHEMA_VALIDATION))
+                        'found in the validations for ValidationPolicy '
+                        '[%s, %s] %s: %s.' % (
+                            validation_policy['schema'],
+                            validation_policy['metadata'][
+                                'layeringDefinition']['layer'],
+                            validation_policy['metadata']['name'],
+                            types.DECKHAND_SCHEMA_VALIDATION))
         expected_errors = yaml.safe_load(VALIDATION_FAILURE_RESULT)['errors']
         expected_errors.append({'message': expected_msg})
 

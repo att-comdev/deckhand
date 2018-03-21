@@ -20,9 +20,9 @@ from oslo_log import log as logging
 import six
 
 from deckhand.barbican import driver
-from deckhand.engine import document_wrapper
+from deckhand.common import document as document_wrapper
+from deckhand.common import utils
 from deckhand import errors
-from deckhand import utils
 
 CONF = cfg.CONF
 LOG = logging.getLogger(__name__)

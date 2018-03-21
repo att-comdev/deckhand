@@ -20,13 +20,13 @@ from networkx.algorithms.cycles import find_cycle
 from networkx.algorithms.dag import topological_sort
 from oslo_log import log as logging
 
+from deckhand.common import document as document_wrapper
+from deckhand.common import utils
 from deckhand.engine import document_validation
-from deckhand.engine import document_wrapper
 from deckhand.engine import secrets_manager
 from deckhand.engine import utils as engine_utils
 from deckhand import errors
 from deckhand import types
-from deckhand import utils
 
 LOG = logging.getLogger(__name__)
 

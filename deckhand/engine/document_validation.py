@@ -23,11 +23,11 @@ import jsonschema
 from oslo_log import log as logging
 import six
 
-from deckhand.engine import document_wrapper
+from deckhand.common import document as document_wrapper
+from deckhand.common import utils
 from deckhand.engine.secrets_manager import SecretsSubstitution
 from deckhand import errors
 from deckhand import types
-from deckhand import utils
 
 LOG = logging.getLogger(__name__)
 
