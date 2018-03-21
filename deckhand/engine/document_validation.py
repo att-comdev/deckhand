@@ -23,11 +23,11 @@ import jsonschema
 from oslo_log import log as logging
 import six
 
-from deckhand.engine import document_wrapper
+from deckhand.common import document as document_wrapper
+from deckhand.common import utils
 from deckhand.engine.secrets_manager import SecretsSubstitution
 from deckhand import errors
 from deckhand import types
-from deckhand import utils
 
 LOG = logging.getLogger(__name__)
 
@@ -145,13 +145,12 @@ class GenericValidator(BaseValidator):
         else:
             if error_messages:
                 LOG.error(
-                    'Failed sanity-check validation for document [%s] %s. '
-                    'Details: %s', document.get('schema', 'N/A'),
-                    document.metadata.get('name'), error_messages)
+                    'Failed sanity-check validation for document [%s, %s] %s. '
+                    'Details: %s', document.schema, document.layer,
+                    document.name, error_messages)
                 raise errors.InvalidDocumentFormat(
-                    document_schema=document.schema,
-                    document_name=document.name,
-                    errors=', '.join(error_messages))
+                    schema=document.schema, name=document.name,
+                    layer=document.layer, errors=', '.join(error_messages))
 
 
 class DataSchemaValidator(GenericValidator):
@@ -244,6 +243,7 @@ class DataSchemaValidator(GenericValidator):
             'schema_path': path_to_error_in_schema,
             'name': document.name,
             'schema': document.schema,
+            'layer': document.layer,
             'path': path_to_error_in_document,
             'error_section': parent_error_section,
             'message': error.message

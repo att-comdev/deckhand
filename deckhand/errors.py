@@ -175,8 +175,8 @@ class InvalidDocumentFormat(DeckhandException):
 
     **Troubleshoot:**
     """
-    msg_fmt = ("The provided document [%(document_schema)s] %(document_name)s "
-               "failed schema validation. Errors: %(errors)s")
+    msg_fmt = ("The provided document(s) schema=%(schema)s, layer=%(layer)s, "
+               "name=%(name)s failed schema validation. Errors: %(errors)s")
     code = 400
 
 
@@ -334,9 +334,9 @@ class SingletonDocumentConflict(DeckhandException):
     **Troubleshoot:**
     """
 
-    msg_fmt = ("A singleton document by the name %(document)s already "
-               "exists in the system. The new document %(conflict)s cannot be "
-               "created. To create a document with a new name, delete the "
+    msg_fmt = ("A singleton document [%(schema)s, %(layer)s] %(name)s already "
+               "exists in the system. The new document(s) %(conflict)s cannot "
+               "be created. To create a document with a new name, delete the "
                "current one first.")
     code = 409
 
