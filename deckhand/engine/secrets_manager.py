@@ -21,9 +21,9 @@ from oslo_utils import uuidutils
 import six
 
 from deckhand.barbican import driver
-from deckhand.engine import document_wrapper
+from deckhand.common import document as document_wrapper
+from deckhand.common import utils
 from deckhand import errors
-from deckhand import utils
 
 CONF = cfg.CONF
 LOG = logging.getLogger(__name__)
@@ -69,6 +69,10 @@ class SecretsManager(object):
         :returns: Dictionary representation of
             ``deckhand.db.sqlalchemy.models.DocumentSecret``.
         """
+        # TODO(fmontei): Look into POSTing Deckhand metadata into Barbican's
+        # Secrets Metadata API to make it easier to track stale secrets from
+        # prior revisions that need to be deleted.
+
         encryption_type = secret_doc['metadata']['storagePolicy']
         secret_type = cls._get_secret_type(secret_doc['schema'])
 
@@ -216,6 +220,8 @@ class SecretsSubstitution(object):
             substitution source. Default is True.
         """
 
+        # NOTE(fmontei): This must may (schema, name) to a document as a
+        # substitution only ever specifies the (schema, name), without layer.
         self._substitution_sources = {}
         self._fail_on_missing_sub_src = fail_on_missing_sub_src
 
@@ -257,12 +263,12 @@ class SecretsSubstitution(object):
                 documents_to_substitute.append(document)
 
         LOG.debug('Performing substitution on following documents: %s',
-                  ', '.join(['[%s] %s' % (d.schema, d.name)
-                            for d in documents_to_substitute]))
+                  ', '.join(['[%s, %s] %s' % d.meta
+                             for d in documents_to_substitute]))
 
         for document in documents_to_substitute:
-            LOG.debug('Checking for substitutions for document [%s] %s.',
-                      document.schema, document.name)
+            LOG.debug('Checking for substitutions for document [%s, %s] %s.',
+                      *document.meta)
             for sub in document.substitutions:
                 src_schema = sub['src']['schema']
                 src_name = sub['src']['name']
@@ -273,8 +279,8 @@ class SecretsSubstitution(object):
                         (src_schema, src_name)]
                 else:
                     message = ('Could not find substitution source document '
-                              '[%s] %s among the provided '
-                              '`substitution_sources`.', src_schema, src_name)
+                               '[%s] %s among the provided substitution '
+                               'sources.', src_schema, src_name)
                     if self._fail_on_missing_sub_src:
                         LOG.error(message)
                         raise errors.SubstitutionSourceNotFound(
@@ -330,19 +336,26 @@ class SecretsSubstitution(object):
                     else:
                         exc_message = (
                             'Failed to create JSON path "%s" in the '
-                            'destination document [%s] %s. No data was '
+                            'destination document [%s, %s] %s. No data was '
                             'substituted.', dest_path, document.schema,
-                            document.name)
-                        LOG.error(exc_message)
+                            document.layer, document.name)
+                except errors.BarbicanException as e:
+                    exc_message = (
+                        'Failed to resolve a Barbican reference for '
+                        'substitution source document [%s] %s referenced in '
+                        'document [%s, %s] %s. Details: %s',
+                            src_schema, src_name, document.schema,
+                            document.layer, document.name, e.format_message())
                 except Exception as e:
                     LOG.error('Unexpected exception occurred while attempting '
-                              'substitution using source document [%s] %s '
+                              'substitution using source document [%s, %s] %s '
                               'referenced in [%s] %s. Details: %s', src_schema,
                               src_name, document.schema, document.name,
                               six.text_type(e))
                     exc_message = six.text_type(e)
                 finally:
                     if exc_message:
+                        LOG.error(exc_message)
                         raise errors.UnknownSubstitutionError(
                             src_schema=src_schema, src_name=src_name,
                             document_name=document.name,
