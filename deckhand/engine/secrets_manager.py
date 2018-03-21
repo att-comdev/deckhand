@@ -20,9 +20,9 @@ from oslo_log import log as logging
 import six
 
 from deckhand.barbican import driver
-from deckhand.engine import document_wrapper
+from deckhand.common import document as document_wrapper
+from deckhand.common import utils
 from deckhand import errors
-from deckhand import utils
 
 CONF = cfg.CONF
 LOG = logging.getLogger(__name__)
@@ -65,6 +65,10 @@ class SecretsManager(object):
         :returns: Dictionary representation of
             ``deckhand.db.sqlalchemy.models.DocumentSecret``.
         """
+        # TODO(fmontei): Look into POSTing Deckhand metadata into Barbican's
+        # Secrets Metadata API to make it easier to track stale secrets from
+        # prior revisions that need to be deleted.
+
         encryption_type = secret_doc['metadata']['storagePolicy']
         secret_type = cls._get_secret_type(secret_doc['schema'])
 
