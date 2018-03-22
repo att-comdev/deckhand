@@ -17,6 +17,7 @@ import re
 
 from oslo_config import cfg
 from oslo_log import log as logging
+from oslo_utils import uuidutils
 import six
 
 from deckhand.barbican import driver
@@ -86,6 +87,26 @@ class SecretsManager(object):
 
     @classmethod
     def get(cls, secret_ref):
+        """Return a secret payload given a secret reference returned from
+        Barbican.
+
+        Extracts {secret_uuid} from a secret reference and queries Barbican's
+        Secrets API with it.
+
+        :param str secret_ref: String formatted like:
+            "https://{barbican_host}/v1/secrets/{secret_uuid}"
+        :returns: Secret payload from Barbican.
+        """
+        if not uuidutils.is_uuid_like(secret_ref):
+            try:
+                secret_ref = secret_ref.split('/')[-1]
+            except Exception:
+                secret_ref = None
+            if not uuidutils.is_uuid_like(secret_ref):
+                raise errors.DeckhandException(
+                    'Failed to extract the Barbican UUID from Barbican secret '
+                    'reference: %s.' % secret_ref)
+
         secret = cls.barbican_driver.get_secret(secret_ref=secret_ref)
         payload = secret.payload
         return payload
