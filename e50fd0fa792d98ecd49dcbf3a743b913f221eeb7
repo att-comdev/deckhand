@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b909429_dac3c4c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-03-22T02:22:02Z",
+      "side": 1,
+      "message": "I\u0027m not sure we even need document replacement in a layering context. Document replacement is mainly needed for name-based document references which layering doesn\u0027t utilize.",
+      "revId": "e50fd0fa792d98ecd49dcbf3a743b913f221eeb7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
