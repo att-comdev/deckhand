@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1a76914_322f8ba8",
+        "filename": "deckhand/common/document.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-22T22:08:39Z",
+      "side": 1,
+      "message": "Should probably have one called from_list the other one called from_dict",
+      "revId": "3a49e0b12e8a14c41675ccce46d452582a71fd96",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
