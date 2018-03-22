@@ -91,6 +91,30 @@
       "revId": "9f585bc4299ae864cd72f618fd9eafd38bd2eaf7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e33e9154_c30fdad8",
+        "filename": "deckhand/errors.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-22T14:51:12Z",
+      "side": 1,
+      "message": "\u003e Replacement document [%(schema)s] %(name)s with layer %(layer)s is\n \u003e incompatible with parent. Reason: %(reason)s.\n \u003e \n \u003e Example reason: Replacement document doesn\u0027t have the same schema,\n \u003e name as its parent [%(parent_schema)s] %(parent_name)s.\n \u003e \n \u003e Example reason: Replacement document must have a lower layer\n \u003e %(layer)s than its parent %(parent_layer)s.",
+      "parentUuid": "b2f06b70_00734d15",
+      "range": {
+        "startLine": 270,
+        "startChar": 15,
+        "endLine": 271,
+        "endChar": 55
+      },
+      "revId": "9f585bc4299ae864cd72f618fd9eafd38bd2eaf7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
