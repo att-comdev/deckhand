@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaf7d869_72800650",
+        "filename": "deckhand/common/document.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-22T20:05:50Z",
+      "side": 1,
+      "message": "Handle list/single instance versions separately.",
+      "revId": "0d50283f9d4f0bbe1c285ecc3f8581516e570d0a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
