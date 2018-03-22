@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "616864a8_3e2b784d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-22T18:52:53Z",
+      "side": 1,
+      "message": "This is also true in Ocata: https://docs.openstack.org/barbican/ocata/api/reference/secrets.html#get-v1-secrets-uuid",
+      "revId": "7b3a4fcf6d315f93885b5e8b87a12d7fb733468b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
