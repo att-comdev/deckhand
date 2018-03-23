@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7d15a76_4f3c212e",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-23T16:47:16Z",
+      "side": 1,
+      "message": "This isn\u0027t defined... have to change this",
+      "range": {
+        "startLine": 351,
+        "startChar": 50,
+        "endLine": 351,
+        "endChar": 51
+      },
+      "revId": "08db7c3c5ef1b89eaabd289f6f7aa3b2d4d22886",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
