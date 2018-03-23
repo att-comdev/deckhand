@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50b28a5b_728bf774",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-23T14:21:42Z",
+      "side": 1,
+      "message": "Can just remove this given below comment",
+      "range": {
+        "startLine": 298,
+        "startChar": 16,
+        "endLine": 298,
+        "endChar": 35
+      },
+      "revId": "6820cdb2702209e297399c82b78ba34c8674be38",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1620d714_0d043731",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-23T14:21:42Z",
+      "side": 1,
+      "message": "Is cleaner to put this on L135",
+      "range": {
+        "startLine": 304,
+        "startChar": 24,
+        "endLine": 306,
+        "endChar": 57
+      },
+      "revId": "6820cdb2702209e297399c82b78ba34c8674be38",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
