@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebea4bef_83520cfe",
+        "filename": "deckhand/conf/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-03-25T01:11:58Z",
+      "side": 0,
+      "message": "will this be needed once the #todo to lookup the endpoint through keystone is done?",
+      "range": {
+        "startLine": 30,
+        "startChar": 8,
+        "endLine": 30,
+        "endChar": 23
+      },
+      "revId": "97d39d2949a8c44af6c3901e00dee445ad1c7eac",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}

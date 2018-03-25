@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8ad3983_b5a9f7ee",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-03-25T01:11:58Z",
+      "side": 1,
+      "message": "is it possible to pass in a literal string, say:\n\n   https://barbican-host/v1/secrets/5dad30f5928f4c368feb1f5c35453d9a\n\nand not have the code do a (secret) substitution?",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 24
+      },
+      "revId": "f38f74d6b272be5fecbb21dd911c7c436cc14782",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "772bbafb_34de65c5",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-03-25T01:11:58Z",
+      "side": 1,
+      "message": "is this message needed? or can this be just exc_message as it is assigned in L337",
+      "range": {
+        "startLine": 331,
+        "startChar": 24,
+        "endLine": 331,
+        "endChar": 31
+      },
+      "revId": "f38f74d6b272be5fecbb21dd911c7c436cc14782",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
