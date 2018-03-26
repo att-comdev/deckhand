@@ -22,6 +22,30 @@
       "revId": "97d39d2949a8c44af6c3901e00dee445ad1c7eac",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6adf39f6_5c9adc5d",
+        "filename": "deckhand/conf/config.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-26T20:12:56Z",
+      "side": 0,
+      "message": "No, I don\u0027t think so.",
+      "parentUuid": "ebea4bef_83520cfe",
+      "range": {
+        "startLine": 30,
+        "startChar": 8,
+        "endLine": 30,
+        "endChar": 23
+      },
+      "revId": "97d39d2949a8c44af6c3901e00dee445ad1c7eac",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

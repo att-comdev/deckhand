@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8e966fea_cab95ff7",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-26T20:12:56Z",
+      "side": 1,
+      "message": "L130-131 do just that.",
+      "parentUuid": "b8ad3983_b5a9f7ee",
+      "range": {
+        "startLine": 92,
+        "startChar": 8,
+        "endLine": 92,
+        "endChar": 24
+      },
+      "revId": "f38f74d6b272be5fecbb21dd911c7c436cc14782",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "772bbafb_34de65c5",
         "filename": "deckhand/engine/secrets_manager.py",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-25T01:11:58Z",
       "side": 1,
       "message": "is this message needed? or can this be just exc_message as it is assigned in L337",
+      "range": {
+        "startLine": 331,
+        "startChar": 24,
+        "endLine": 331,
+        "endChar": 31
+      },
+      "revId": "f38f74d6b272be5fecbb21dd911c7c436cc14782",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "508b59ac_7460ee76",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-26T20:12:56Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right",
+      "parentUuid": "772bbafb_34de65c5",
       "range": {
         "startLine": 331,
         "startChar": 24,
