@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import sys
 
+from oslo_concurrency import lockutils
 from oslo_db.sqlalchemy import models
 from oslo_db.sqlalchemy import types as oslo_types
 from oslo_log import log as logging
@@ -38,12 +40,13 @@ LOG = logging.getLogger(__name__)
 # relative to that base.
 BASE = None
 
+_LOCKNAME = '.deckhand_db'
+
 
 class DeckhandBase(models.ModelBase, models.TimestampMixin):
     """Base class for Deckhand Models."""
 
     __table_args__ = {'mysql_engine': 'Postgre', 'mysql_charset': 'utf8'}
-    __table_initialized__ = False
     __protected_attributes__ = set([
         "created_at", "updated_at", "deleted_at", "deleted"])
 
@@ -210,30 +213,36 @@ def __build_tables(blob_type_obj, blob_type_list):
 
 
 def register_models(engine, connection_string):
-    blob_types = ((JSONB, JSONB) if 'postgresql' in connection_string
-                  else (PickleType, oslo_types.JsonEncodedList()))
+    """Create database tables for all models with the given engine.
 
-    LOG.debug('Instantiating DB tables using %s, %s as the column type for '
-              'dictionaries, lists.', *blob_types)
+    This initialization needs to be synchronized across multiple uwsgi workers
+    so an external lock file is used to ensure that DB initialization is only
+    performed once across all workers, to avoid exceptions getting raised.
+    """
+    global BASE
 
-    """Create database tables for all models with the given engine."""
-    __build_tables(*blob_types)
+    abspath = os.path.abspath(_LOCKNAME)
+    with lockutils.lock(_LOCKNAME + ".lock", external=True, lock_path=abspath):
+        blob_types = ((JSONB, JSONB) if 'postgresql' in connection_string
+                      else (PickleType, oslo_types.JsonEncodedList()))
 
-    this_module = sys.modules[__name__]
-    models = ['Bucket', 'Document', 'RevisionTag', 'Revision', 'Validation']
+        LOG.debug('Instantiating DB tables using %s, %s as the column type '
+                  'for dictionaries, lists.', *blob_types)
 
-    for model_name in models:
-        if hasattr(this_module, model_name):
-            model = getattr(this_module, model_name)
-            model.metadata.create_all(engine)
+        __build_tables(*blob_types)
+
+        if not any(engine.dialect.has_table(engine, t)
+                   for t in BASE.metadata.tables):
+            BASE.metadata.create_all(engine)
 
 
 def unregister_models(engine):
     """Drop database tables for all models with the given engine."""
-    this_module = sys.modules[__name__]
-    models = ['Bucket', 'Document', 'RevisionTag', 'Revision', 'Validation']
+    global BASE
 
-    for model_name in models:
-        if hasattr(this_module, model_name):
-            model = getattr(this_module, model_name)
-            model.metadata.drop_all(engine)
+    BASE.metadata.drop_all(engine)
+
+    abspath = os.path.abspath(_LOCKNAME)
+    if os.path.exists(abspath + ".lock"):
+        lockutils.remove_external_lock_file(_LOCKNAME + ".lock",
+                                            lock_path=os.path.dirname(abspath))
