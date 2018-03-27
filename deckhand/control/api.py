@@ -33,7 +33,7 @@ CONFIG_FILES = ['deckhand.conf', 'deckhand-paste.ini']
 def _get_config_files(env=None):
     if env is None:
         env = os.environ
-    dirname = env.get('OS_DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
+    dirname = env.get('DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
     return [os.path.join(dirname, config_file) for config_file in CONFIG_FILES]
 
 
@@ -63,7 +63,6 @@ def init_application():
     LOG.debug('Starting WSGI application using %s configuration file.',
               paste_file)
 
-    db_api.drop_db()
     db_api.setup_db(CONF.database.connection)
 
     app = deploy.loadapp('config:%s' % paste_file, name='deckhand_api')
