@@ -45,6 +45,76 @@
       "revId": "ca4f191d0a5f7c0d0ce4d51878788160e36b4756",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e73e5d2_714c5ba3",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-27T23:47:46Z",
+      "side": 1,
+      "message": "Need better explanation here. This maps a 2-tuple of (schema, name) to a document from which the document.meta can be extracted which is a 3-tuple of (schema, layer, name). This is necessary since the substitution format in the document itself only provides a 2-tuple of (schema, name).",
+      "parentUuid": "328da64e_0f409ea9",
+      "range": {
+        "startLine": 223,
+        "startChar": 35,
+        "endLine": 223,
+        "endChar": 38
+      },
+      "revId": "ca4f191d0a5f7c0d0ce4d51878788160e36b4756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d7f36ccf_e5ee3693",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-27T23:47:46Z",
+      "side": 1,
+      "message": "If there isn\u0027t a unit test for this need to also do it so I don\u0027t have to worry about missing 1 out of 6-7 different args.",
+      "range": {
+        "startLine": 343,
+        "startChar": 0,
+        "endLine": 348,
+        "endChar": 78
+      },
+      "revId": "ca4f191d0a5f7c0d0ce4d51878788160e36b4756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab238bac_34968c19",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-27T23:47:46Z",
+      "side": 1,
+      "message": "This needs to be fixed, requires 6 args, only provided 5, plus forgot to add document.layer, so actually need 7 args. Will add a unit test to avoid the regression.",
+      "range": {
+        "startLine": 350,
+        "startChar": 30,
+        "endLine": 353,
+        "endChar": 71
+      },
+      "revId": "ca4f191d0a5f7c0d0ce4d51878788160e36b4756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
