@@ -27,12 +27,16 @@ DECKHAND_API_THREADS=${DECKHAND_API_THREADS:-"1"}
 
 # Start deckhand application
 exec uwsgi \
-    --http :${PORT} \
-    -w deckhand.cmd \
+    -b 32768 \
     --callable deckhand_callable \
-    --http-timeout $DECKHAND_API_TIMEOUT \
+    --die-on-term \
     --enable-threads \
+    --http :${PORT} \
+    --http-timeout $DECKHAND_API_TIMEOUT \
     -L \
+    --lazy-apps \
+    --master \
     --pyargv "--config-file /etc/deckhand/deckhand.conf" \
     --threads $DECKHAND_API_THREADS \
-    --workers $DECKHAND_API_WORKERS
+    --workers $DECKHAND_API_WORKERS \
+    -w deckhand.cmd
