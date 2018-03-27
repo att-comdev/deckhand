@@ -211,7 +211,6 @@ if [ -z "$DECKHAND_IMAGE" ]; then
     export DECKHAND_API_THREADS=4
     source $ROOTDIR/../entrypoint.sh &
     sleep 5
-else
     log_section "Running Deckhand via Docker"
     sudo docker run \
         --rm \
