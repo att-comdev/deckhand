@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b62433a5_4c245aa1",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-27T21:13:12Z",
+      "side": 1,
+      "message": "This is a superfluous check as the metadata hash contains the layer itself.\n\nAlso need to look into making metadata an immutable column in DB.",
+      "range": {
+        "startLine": 297,
+        "startChar": 16,
+        "endLine": 297,
+        "endChar": 67
+      },
+      "revId": "ca4f191d0a5f7c0d0ce4d51878788160e36b4756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "328da64e_0f409ea9",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-27T21:13:12Z",
+      "side": 1,
+      "message": "map",
+      "range": {
+        "startLine": 223,
+        "startChar": 35,
+        "endLine": 223,
+        "endChar": 38
+      },
+      "revId": "ca4f191d0a5f7c0d0ce4d51878788160e36b4756",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
