@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f890cad5_87104f7e",
+        "filename": "deckhand/tests/functional/gabbits/document-render-success-single-bucket-with-replacement.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-27T21:16:01Z",
+      "side": 1,
+      "message": "Don\u0027t need to sort by this on this test but should be able to sort by this most likely now.",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 43
+      },
+      "revId": "26d53c6d31ef04636206b2eff15348d8f389698f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
