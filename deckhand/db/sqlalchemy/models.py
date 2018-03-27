@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
-
+from oslo_db import exception as db_exception
 from oslo_db.sqlalchemy import models
 from oslo_db.sqlalchemy import types as oslo_types
 from oslo_log import log as logging
@@ -21,7 +20,6 @@ from oslo_utils import timeutils
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import DateTime
-from sqlalchemy.dialects.postgresql import JSONB
 
 from sqlalchemy.ext import declarative
 from sqlalchemy.ext.hybrid import hybrid_property
@@ -36,14 +34,13 @@ LOG = logging.getLogger(__name__)
 
 # Declarative base class which maintains a catalog of classes and tables
 # relative to that base.
-BASE = None
+BASE = declarative.declarative_base()
 
 
 class DeckhandBase(models.ModelBase, models.TimestampMixin):
     """Base class for Deckhand Models."""
 
     __table_args__ = {'mysql_engine': 'Postgre', 'mysql_charset': 'utf8'}
-    __table_initialized__ = False
     __protected_attributes__ = set([
         "created_at", "updated_at", "deleted_at", "deleted"])
 
@@ -89,151 +86,129 @@ class DeckhandBase(models.ModelBase, models.TimestampMixin):
         return d
 
 
-def __build_tables(blob_type_obj, blob_type_list):
-    global BASE
+class Bucket(BASE, DeckhandBase):
+    __tablename__ = 'buckets'
 
-    if BASE:
-        return
+    id = Column(Integer, primary_key=True)
+    name = Column(String(36), unique=True)
+    documents = relationship("Document", backref="bucket")
 
-    BASE = declarative.declarative_base()
 
-    class Bucket(BASE, DeckhandBase):
-        __tablename__ = 'buckets'
+class RevisionTag(BASE, DeckhandBase):
+    __tablename__ = 'revision_tags'
 
-        id = Column(Integer, primary_key=True)
-        name = Column(String(36), unique=True)
-        documents = relationship("Document", backref="bucket")
+    id = Column(Integer, primary_key=True)
+    tag = Column(String(64), nullable=False)
+    data = Column(PickleType, nullable=True, default={})
+    revision_id = Column(
+        Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
+        nullable=False)
 
-    class RevisionTag(BASE, DeckhandBase):
-        __tablename__ = 'revision_tags'
 
-        id = Column(Integer, primary_key=True)
-        tag = Column(String(64), nullable=False)
-        data = Column(blob_type_obj, nullable=True, default={})
-        revision_id = Column(
-            Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
-            nullable=False)
+class Revision(BASE, DeckhandBase):
+    __tablename__ = 'revisions'
 
-    class Revision(BASE, DeckhandBase):
-        __tablename__ = 'revisions'
+    id = Column(Integer, primary_key=True)
+    # `primaryjoin` used below for sqlalchemy to distinguish between
+    # `Document.revision_id` and `Document.orig_revision_id`.
+    documents = relationship(
+        "Document", primaryjoin="Revision.id==Document.revision_id")
+    tags = relationship("RevisionTag")
+    validations = relationship("Validation")
 
-        id = Column(Integer, primary_key=True)
-        # `primaryjoin` used below for sqlalchemy to distinguish between
-        # `Document.revision_id` and `Document.orig_revision_id`.
-        documents = relationship(
-            "Document", primaryjoin="Revision.id==Document.revision_id")
-        tags = relationship("RevisionTag")
-        validations = relationship("Validation")
+    def to_dict(self):
+        d = super(Revision, self).to_dict()
+        d['documents'] = [doc.to_dict() for doc in self.documents]
+        d['tags'] = [tag.to_dict() for tag in self.tags]
+        return d
 
-        def to_dict(self):
-            d = super(Revision, self).to_dict()
-            d['documents'] = [doc.to_dict() for doc in self.documents]
-            d['tags'] = [tag.to_dict() for tag in self.tags]
-            return d
 
-    class Document(BASE, DeckhandBase):
-        UNIQUE_CONSTRAINTS = ('schema', 'name', 'revision_id')
+class Document(BASE, DeckhandBase):
+    UNIQUE_CONSTRAINTS = ('schema', 'name', 'revision_id')
 
-        __tablename__ = 'documents'
+    __tablename__ = 'documents'
 
-        __table_args__ = (
-            UniqueConstraint(*UNIQUE_CONSTRAINTS,
-                             name='duplicate_document_constraint'),
-        )
+    __table_args__ = (
+        UniqueConstraint(*UNIQUE_CONSTRAINTS,
+                         name='duplicate_document_constraint'),
+    )
 
-        id = Column(Integer, primary_key=True)
-        name = Column(String(64), nullable=False)
-        schema = Column(String(64), nullable=False)
-        # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
-        # must be used to store document metadata information in the DB.
-        _metadata = Column(blob_type_obj, nullable=False)
-        data = Column(blob_type_obj, nullable=True)
-        data_hash = Column(String, nullable=False)
-        metadata_hash = Column(String, nullable=False)
-        bucket_id = Column(Integer, ForeignKey('buckets.id',
-                                               ondelete='CASCADE'),
-                           nullable=False)
-        revision_id = Column(
-            Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
-                                nullable=False)
-        # Used for documents that haven't changed across revisions but still
-        # have been carried over into newer revisions. This is necessary in
-        # order to roll back to previous revisions or to generate a revision
-        # diff. Without recording all the documents that were PUT in a
-        # revision, this is rather difficult. By using `orig_revision_id` it is
-        # therefore possible to maintain the correct revision history -- that
-        # is, remembering the exact revision a document was created in -- while
-        # still being able to roll back to all the documents that exist in a
-        # specific revision or generate an accurate revision diff report.
-        orig_revision_id = Column(
-            Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
-                                nullable=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64), nullable=False)
+    schema = Column(String(64), nullable=False)
+    # NOTE(fmontei): ``metadata`` is reserved by the DB, so ``_metadata``
+    # must be used to store document metadata information in the DB.
+    _metadata = Column(PickleType, nullable=False)
+    data = Column(PickleType, nullable=True)
+    data_hash = Column(String, nullable=False)
+    metadata_hash = Column(String, nullable=False)
+    bucket_id = Column(Integer, ForeignKey('buckets.id',
+                                           ondelete='CASCADE'),
+                       nullable=False)
+    revision_id = Column(
+        Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
+                            nullable=False)
+    # Used for documents that haven't changed across revisions but still
+    # have been carried over into newer revisions. This is necessary in
+    # order to roll back to previous revisions or to generate a revision
+    # diff. Without recording all the documents that were PUT in a
+    # revision, this is rather difficult. By using `orig_revision_id` it is
+    # therefore possible to maintain the correct revision history -- that
+    # is, remembering the exact revision a document was created in -- while
+    # still being able to roll back to all the documents that exist in a
+    # specific revision or generate an accurate revision diff report.
+    orig_revision_id = Column(
+        Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
+                            nullable=True)
 
-        @hybrid_property
-        def bucket_name(self):
-            if hasattr(self, 'bucket') and self.bucket:
-                return self.bucket.name
-            return None
+    @hybrid_property
+    def bucket_name(self):
+        if hasattr(self, 'bucket') and self.bucket:
+            return self.bucket.name
+        return None
 
-        def to_dict(self, raw_dict=False):
-            """Convert the object into dictionary format.
+    def to_dict(self, raw_dict=False):
+        """Convert the object into dictionary format.
 
-            :param raw_dict: Renames the key "_metadata" to "metadata".
-            """
-            d = super(Document, self).to_dict()
-            d['bucket_name'] = self.bucket_name
+        :param raw_dict: Renames the key "_metadata" to "metadata".
+        """
+        d = super(Document, self).to_dict()
+        d['bucket_name'] = self.bucket_name
 
-            if not raw_dict:
-                d['metadata'] = d.pop('_metadata')
+        if not raw_dict:
+            d['metadata'] = d.pop('_metadata')
 
-            if 'bucket' in d:
-                d.pop('bucket')
+        if 'bucket' in d:
+            d.pop('bucket')
 
-            return d
+        return d
 
-    class Validation(BASE, DeckhandBase):
-        __tablename__ = 'validations'
 
-        id = Column(Integer, primary_key=True)
-        name = Column(String(64), nullable=False)
-        status = Column(String(8), nullable=False)
-        validator = Column(blob_type_obj, nullable=False)
-        errors = Column(blob_type_list, nullable=False, default=[])
-        revision_id = Column(
-            Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
-                                nullable=False)
+class Validation(BASE, DeckhandBase):
+    __tablename__ = 'validations'
 
-    this_module = sys.modules[__name__]
-    tables = [Bucket, Document, Revision, RevisionTag, Validation]
-    for table in tables:
-        setattr(this_module, table.__name__, table)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64), nullable=False)
+    status = Column(String(8), nullable=False)
+    validator = Column(PickleType, nullable=False)
+    errors = Column(oslo_types.JsonEncodedList(), nullable=False, default=[])
+    revision_id = Column(
+        Integer, ForeignKey('revisions.id', ondelete='CASCADE'),
+                            nullable=False)
 
 
 def register_models(engine, connection_string):
-    blob_types = ((JSONB, JSONB) if 'postgresql' in connection_string
-                  else (PickleType, oslo_types.JsonEncodedList()))
-
-    LOG.debug('Instantiating DB tables using %s, %s as the column type for '
-              'dictionaries, lists.', *blob_types)
-
     """Create database tables for all models with the given engine."""
-    __build_tables(*blob_types)
-
-    this_module = sys.modules[__name__]
-    models = ['Bucket', 'Document', 'RevisionTag', 'Revision', 'Validation']
-
-    for model_name in models:
-        if hasattr(this_module, model_name):
-            model = getattr(this_module, model_name)
-            model.metadata.create_all(engine)
+    try:
+        BASE.metadata.create_all(engine)
+    except (db_exception.DBDuplicateEntry, db_exception.DBError):
+        # NOTE(fmontei): Squash any exceptions related to duplicate tables
+        # existing due to the behavior of uwsgi's --lazy-apps flag which causes
+        # data race conditions around database initialization across multiple
+        # workers.
+        pass
 
 
 def unregister_models(engine):
     """Drop database tables for all models with the given engine."""
-    this_module = sys.modules[__name__]
-    models = ['Bucket', 'Document', 'RevisionTag', 'Revision', 'Validation']
-
-    for model_name in models:
-        if hasattr(this_module, model_name):
-            model = getattr(this_module, model_name)
-            model.metadata.drop_all(engine)
+    BASE.metadata.drop_all(engine)
