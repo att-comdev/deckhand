@@ -28,7 +28,8 @@ class TestDocumentLayering(test_base.DeckhandTestCase):
 
     def _test_layering(self, documents, site_expected=None,
                        region_expected=None, global_expected=None,
-                       validate=False, **kwargs):
+                       validate=False, strict=True, **kwargs):
+        # TODO(fmontei): Refactor all tests to work with strict=True.
         document_layering = layering.DocumentLayering(
             documents, validate=validate, **kwargs)
 
@@ -55,6 +56,9 @@ class TestDocumentLayering(test_base.DeckhandTestCase):
             if not isinstance(site_expected, list):
                 site_expected = [site_expected]
 
+            if strict:
+                self.assertEqual(len(site_expected), len(site_docs))
+
             for expected in site_expected:
                 self.assertIn(expected, site_docs)
                 idx = site_docs.index(expected)
@@ -68,6 +72,9 @@ class TestDocumentLayering(test_base.DeckhandTestCase):
             if not isinstance(region_expected, list):
                 region_expected = [region_expected]
 
+            if strict:
+                self.assertEqual(len(region_expected), len(region_docs))
+
             for expected in region_expected:
                 self.assertIn(expected, region_docs)
                 idx = region_docs.index(expected)
@@ -80,6 +87,9 @@ class TestDocumentLayering(test_base.DeckhandTestCase):
         if global_expected is not None:
             if not isinstance(global_expected, list):
                 global_expected = [global_expected]
+
+            if strict:
+                self.assertEqual(len(global_expected), len(global_docs))
 
             for expected in global_expected:
                 self.assertIn(expected, global_docs)
@@ -1313,111 +1323,3 @@ class TestDocumentLayering3Layers2Regions2Sites(TestDocumentLayering):
         global_expected = None
         self._test_layering(documents, site_expected, region_expected,
                             global_expected)
-
-
-class TestDocumentLayeringWithReplacement(TestDocumentLayering):
-
-    def setUp(self):
-        super(TestDocumentLayeringWithReplacement, self).setUp()
-        self.documents = list(yaml.safe_load_all("""
----
-schema: deckhand/LayeringPolicy/v1
-metadata:
-  schema: metadata/Control/v1
-  name: layering-policy
-data:
-  layerOrder:
-    - global
-    - site
----
-schema: aic/Versions/v1
-metadata:
-  schema: metadata/Document/v1
-  name: a
-  labels:
-    selector: foo
-  layeringDefinition:
-    abstract: False
-    layer: global
-data:
-  conf:
-    foo: default
----
-schema: aic/Versions/v1
-metadata:
-  schema: metadata/Document/v1
-  name: a
-  labels:
-    selector: baz
-  replacement: true
-  layeringDefinition:
-    abstract: False
-    layer: site
-    parentSelector:
-      selector: foo
-    actions:
-      - method: merge
-        path: .
-data:
-  conf:
-    bar: override
----
-schema: armada/Chart/v1
-metadata:
-  schema: metadata/Document/v1
-  name: c
-  layeringDefinition:
-    abstract: False
-    layer: global
-  substitutions:
-    - src:
-        schema: aic/Versions/v1
-        name: a
-        path: .conf
-      dest:
-        path: .application.conf
-data:
-  application:
-    conf: {}
-...
-"""))
-
-    def test_basic_replacement(self):
-        """Verify that the replacement document is the only one returned."""
-        site_expected = [{"conf": {"foo": "default", "bar": "override"}}]
-        global_expected = None
-
-        self.documents = self.documents[:-1]
-
-        self._test_layering(self.documents, site_expected,
-                            global_expected=global_expected)
-
-    def test_replacement_with_substitution_from_replacer(self):
-        """Verify that using a replacement document as a substitution source
-        works.
-        """
-        site_expected = [{"conf": {"foo": "default", "bar": "override"}}]
-        global_expected = [
-            {"application": {"conf": {"foo": "default", "bar": "override"}}}]
-        # Pass in the replacee and replacer as substitution sources. The
-        # replacer should be used as the source.
-        self._test_layering(self.documents, site_expected,
-                            global_expected=global_expected,
-                            substitution_sources=self.documents[1:3])
-        # Attempt the same scenario but reverse the order of the substitution
-        # sources, which verifies that the replacer always takes priority.
-        self._test_layering(
-            self.documents, site_expected, global_expected=global_expected,
-            substitution_sources=list(reversed(self.documents[1:3])))
-
-        # Pass in the replacee as the only substitution source. The replacer
-        # should replace it and be used as the source.
-        self._test_layering(self.documents, site_expected,
-                            global_expected=global_expected,
-                            substitution_sources=[self.documents[1]])
-
-        # Pass in the replacer as the only substitution source, which should be
-        # used as the source.
-        self._test_layering(self.documents, site_expected,
-                            global_expected=global_expected,
-                            substitution_sources=[self.documents[2]])
