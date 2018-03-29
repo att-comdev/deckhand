@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e6fdf93_1dac5811",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-03-29T06:50:53Z",
+      "side": 1,
+      "message": "This could just be abspath",
+      "range": {
+        "startLine": 249,
+        "startChar": 54,
+        "endLine": 249,
+        "endChar": 78
+      },
+      "revId": "91954067e0c692cb62e2c827e0cb0a14dbfc5965",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
