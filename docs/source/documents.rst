@@ -53,11 +53,17 @@ and ``data``.
 * ``metadata`` - Defines details that Deckhand will inspect and understand.
   There are multiple schemas for this section as discussed below. All the
   various types of metadata include a `name` field which must be unique for
-  each document `schema`.
+  each document ``schema``.
 * ``data`` - Data to be validated by the schema described by the ``schema``
   field. Deckhand only interacts with content here as instructed to do so by
   the ``metadata`` section. The form of this section is considered to be
   completely owned by the ``namespace`` in the ``schema``.
+
+Furthermore, documents are uniquely identified by the combination of:
+
+#. ``metadata.name``
+#. ``schema``
+#. ``metadata.layeringDefinition.layer``
 
 Below is a fictitious example of a complete document, which illustrates all the
 valid fields in the ``metadata`` section:
@@ -116,11 +122,12 @@ schema: metadata/Document/v1
 
 This type of metadata allows the following metadata hierarchy:
 
-* ``name`` - string, required - Unique within a revision for a given ``schema``.
-* ``storagePolicy`` - string, required - Either ``cleartext`` or ``encrypted``. If
-  ``encyrpted`` is specified, then the ``data`` section of the document will be
-  stored in an secure backend (likely via OpenStack Barbican). ``metadata`` and
-  ``schema`` fields are always stored in cleartext.
+* ``name`` - string, required - Unique within a revision for a given ``schema``
+  and ``metadata.layeringDefinition.layer``.
+* ``storagePolicy`` - string, required - Either ``cleartext`` or ``encrypted``.
+  If ``encyrpted`` is specified, then the ``data`` section of the document will
+  be stored in an secure backend (likely via OpenStack Barbican). ``metadata``
+  and ``schema`` fields are always stored in cleartext.
 * ``layeringDefinition`` - dict, required - Specifies layering details. See the
   Layering section below for details.
 
