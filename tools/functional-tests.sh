@@ -202,9 +202,13 @@ ROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ -z "$DECKHAND_IMAGE" ]; then
     log_section "Running Deckhand via uwsgi"
-
-    export DECKHAND_API_WORKERS=2
-    export DECKHAND_API_THREADS=2
+    # NOTE(fmontei): Deckhand's database is not configured to work with
+    # multiprocessing. Currently there is a data race on acquiring shared
+    # SQLAlchemy engine pooled connection strings when workers > 1. As a
+    # workaround, we use multiple threads but only 1 worker. For more
+    # information, see: https://github.com/att-comdev/deckhand/issues/20
+    export DECKHAND_API_WORKERS=1
+    export DECKHAND_API_THREADS=4
     source $ROOTDIR/../entrypoint.sh &
     sleep 5
 else
