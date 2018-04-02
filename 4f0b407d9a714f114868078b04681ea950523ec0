@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9553ddbe_cd7009d4",
+        "filename": "deckhand/common/utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-02T20:58:53Z",
+      "side": 1,
+      "message": "Would be nice to capitalize this and prefix it with _ but that\u0027s sugar-coating. \n\nI think a NOTE would be nice too as this isn\u0027t immediately understandable... E.g.: NOTE: We have to cache JSON paths because jsonpath_ng computes ASTs from them which is computationally expensive.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 10
+      },
+      "revId": "4f0b407d9a714f114868078b04681ea950523ec0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
