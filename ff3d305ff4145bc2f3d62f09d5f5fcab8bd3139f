@@ -22,6 +22,30 @@
       "revId": "ff3d305ff4145bc2f3d62f09d5f5fcab8bd3139f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d78077f_114286cd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-02T15:22:47Z",
+      "side": 1,
+      "message": "Child B and Child C must be able to select Parent A, or else Parent A isn\u0027t their parent. Child B then needs to have replacement: true. At this point, Child B should replace Parent A when Child C attempts to layer with Parent A. \n\nOtherwise it\u0027s not possible for Child B to replace anything if its parent can\u0027t be found. That being said, I don\u0027t think I have validation that checks whether a parent was found AND you have replacement: true. There are a lot of validations that need to be run dynamically in this case as so many things can be overlooked/wrong in the documents themselves.",
+      "parentUuid": "a6646eab_e62e00a5",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 20
+      },
+      "revId": "ff3d305ff4145bc2f3d62f09d5f5fcab8bd3139f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
