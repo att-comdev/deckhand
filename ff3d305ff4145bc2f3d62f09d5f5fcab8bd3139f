@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6646eab_e62e00a5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-02T13:55:27Z",
+      "side": 1,
+      "message": "if Parent A specifies different labels than Child B, should Child C (specifying the labels to select Parent A) layer off of Child B instead?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 20
+      },
+      "revId": "ff3d305ff4145bc2f3d62f09d5f5fcab8bd3139f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
