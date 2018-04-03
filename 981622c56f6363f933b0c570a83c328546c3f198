@@ -114,6 +114,52 @@
       "revId": "981622c56f6363f933b0c570a83c328546c3f198",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e383e1d8_e957c1f5",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-03T18:58:36Z",
+      "side": 1,
+      "message": "Should note in a comment that these data sections can be arbitrarily large and complex.",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 7
+      },
+      "revId": "981622c56f6363f933b0c570a83c328546c3f198",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "891c25a6_55a7f0fa",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-03T18:58:36Z",
+      "side": 1,
+      "message": "I should move this to L60ish in the examples there.",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 152,
+        "endChar": 13
+      },
+      "revId": "981622c56f6363f933b0c570a83c328546c3f198",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
