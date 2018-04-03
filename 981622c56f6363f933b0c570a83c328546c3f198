@@ -22,6 +22,98 @@
       "revId": "981622c56f6363f933b0c570a83c328546c3f198",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0385cd65_e1b22174",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-03T18:56:12Z",
+      "side": 1,
+      "message": "understanding",
+      "range": {
+        "startLine": 25,
+        "startChar": 33,
+        "endLine": 25,
+        "endChar": 43
+      },
+      "revId": "981622c56f6363f933b0c570a83c328546c3f198",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55d482ca_88b67700",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-03T18:56:12Z",
+      "side": 1,
+      "message": "between the child\u0027s ``metadata.layeringDefinition.parentSelector`` and the parent\u0027s ``metadata.labels``.\n\nI need an entire section elsewhere explaining that compatibility.",
+      "range": {
+        "startLine": 45,
+        "startChar": 2,
+        "endLine": 45,
+        "endChar": 22
+      },
+      "revId": "981622c56f6363f933b0c570a83c328546c3f198",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e62f201_318215e8",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-03T18:56:12Z",
+      "side": 1,
+      "message": "**differ**",
+      "range": {
+        "startLine": 48,
+        "startChar": 7,
+        "endLine": 48,
+        "endChar": 13
+      },
+      "revId": "981622c56f6363f933b0c570a83c328546c3f198",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ac62194b_1fb695e0",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-03T18:56:12Z",
+      "side": 1,
+      "message": "I should provide an example for the document _replacer_ and the parent being replaced. That is, 2 examples.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 77
+      },
+      "revId": "981622c56f6363f933b0c570a83c328546c3f198",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
