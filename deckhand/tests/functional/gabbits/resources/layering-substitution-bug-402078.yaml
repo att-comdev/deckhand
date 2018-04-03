@@ -1,0 +1,52 @@
+---
+schema: deckhand/LayeringPolicy/v1
+metadata:
+  schema: metadata/Control/v1
+  name: layering-policy
+data:
+  layerOrder:
+    - global
+    - site
+---
+schema: example/Source/v1
+metadata:
+  schema: metadata/Document/v1
+  name: base
+  labels:
+    source: enabled
+  layeringDefinition:
+    abstract: false
+    layer: global
+data:
+  foo: bar
+---
+schema: example/Source/v1
+metadata:
+  schema: metadata/Document/v1
+  name: child
+  layeringDefinition:
+    abstract: false
+    layer: site
+    parentSelector:
+      source: enabled
+    actions:
+      - method: merge
+        path: .
+data: {}
+---
+schema: example/Dest/v1
+metadata:
+  schema: metadata/Document/v1
+  name: dest
+  layeringDefinition:
+    abstract: false
+    layer: global
+  substitutions:
+    - src:
+        schema: example/Source/v1
+        name: child
+        path: .foo
+      dest:
+        path: .dest_key
+data: {}
+...
