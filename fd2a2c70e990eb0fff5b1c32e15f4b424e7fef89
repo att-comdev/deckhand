@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a5137ce_77983e22",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-04-04T15:46:26Z",
+      "side": 1,
+      "message": "I don\u0027t believe this is correct. Substitution sources are name-based references and this is one of the main use cases for replacement. The replacement-parent of document A could be a layering-parent for document B, but all substitution sources referring to the metadata.name of the replacement-parent should actually select A.",
+      "range": {
+        "startLine": 42,
+        "startChar": 25,
+        "endLine": 42,
+        "endChar": 69
+      },
+      "revId": "fd2a2c70e990eb0fff5b1c32e15f4b424e7fef89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a639c485_c8eb1104",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-04-04T15:46:26Z",
+      "side": 1,
+      "message": "Does layering support explicit values? I wasn\u0027t aware of this and the schema [0] doesn\u0027t seem to support a \u0027value\u0027 key here. I think the actual data value would git in the data section.\n\n[0] https://github.com/att-comdev/deckhand/blob/45441b66184eda4c8e77f50ea6c811c3689c08a2/deckhand/engine/schemas/base_schema.yaml#L73",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 21
+      },
+      "revId": "fd2a2c70e990eb0fff5b1c32e15f4b424e7fef89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
