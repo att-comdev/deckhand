@@ -22,6 +22,29 @@
       "revId": "7f01597536498a896a83338089d3728fa88663df",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6c030ca_7a360278",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-04T01:17:54Z",
+      "side": 1,
+      "message": "Not sure if this is the best way of putting it, need to reword this better and explain why it actually is, not just what it tries to accomplish.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 36
+      },
+      "revId": "7f01597536498a896a83338089d3728fa88663df",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
