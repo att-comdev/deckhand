@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "97ebeb90_ebc2cd69",
+        "filename": "docs/source/replacement.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-04T17:25:52Z",
+      "side": 1,
+      "message": "I\u0027ll have to rephrase this. I meant that you could use the parent as a template and consume it directly in one site without replacement or override specific values in another site with replacement.",
+      "parentUuid": "8a5137ce_77983e22",
+      "range": {
+        "startLine": 42,
+        "startChar": 25,
+        "endLine": 42,
+        "endChar": 69
+      },
+      "revId": "fd2a2c70e990eb0fff5b1c32e15f4b424e7fef89",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a639c485_c8eb1104",
         "filename": "docs/source/replacement.rst",
         "patchSetId": 8
