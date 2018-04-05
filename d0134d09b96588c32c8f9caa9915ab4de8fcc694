@@ -22,6 +22,30 @@
       "revId": "d0134d09b96588c32c8f9caa9915ab4de8fcc694",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0d35767_373d65f6",
+        "filename": "entrypoint.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-05T21:42:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac35bd6c_fff8cbd6",
+      "range": {
+        "startLine": 57,
+        "startChar": 30,
+        "endLine": 57,
+        "endChar": 37
+      },
+      "revId": "d0134d09b96588c32c8f9caa9915ab4de8fcc694",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
