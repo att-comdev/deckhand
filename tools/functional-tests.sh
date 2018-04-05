@@ -216,6 +216,12 @@ else
     sudo docker run \
         --rm \
         --net=host \
+        --entrypoint="/usr/local/bin/alembic" \
+        -v $CONF_DIR:/etc/deckhand \
+        $DECKHAND_IMAGE upgrade head &> $STDOUT
+    sudo docker run \
+        --rm \
+        --net=host \
         -p 9000:9000 \
         -v $CONF_DIR:/etc/deckhand \
         $DECKHAND_IMAGE &> $STDOUT &
