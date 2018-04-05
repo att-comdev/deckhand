@@ -216,6 +216,11 @@ else
     sudo docker run \
         --rm \
         --net=host \
+        -v $CONF_DIR:/etc/deckhand \
+        $DECKHAND_IMAGE alembic upgrade head &> $STDOUT
+    sudo docker run \
+        --rm \
+        --net=host \
         -p 9000:9000 \
         -v $CONF_DIR:/etc/deckhand \
         $DECKHAND_IMAGE &> $STDOUT &
