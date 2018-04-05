@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ceb9dcf_8e2f208e",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T19:34:40Z",
+      "side": 1,
+      "message": "This is breaking in alembic/env.py because it\u0027s calling register_models(engine, connection_string, create_tables\u003dTrue) and create_tables isn\u0027t on L213. This works:\n\ndef register_models(engine, connection_string, create_tables\u003dFalse):\n    \"\"\"Register the sqlalchemy tables itno the BASE.metadata\n\n    Sets up the database model objects. Does not create the tables in\n    the associated configured database. (see create_tables)\n    \"\"\"\n    global BASE\n\n    blob_types \u003d ((JSONB, JSONB) if \u0027postgresql\u0027 in connection_string\n                  else (PickleType, oslo_types.JsonEncodedList()))\n\n    LOG.debug(\u0027Initializing DB tables using %s, %s as the column type \u0027\n              \u0027for dictionaries, lists.\u0027, *blob_types)\n\n    __build_tables(*blob_types)\n\n    if create_tables:\n        _create_tables(engine)\n\n\ndef _create_tables(engine):\n    \"\"\"Creates database tables for all models with the given engine.\n\n    This will be done only by tests that do not have their tables\n    set up by Alembic running during the associated helm chart db_sync job.\n    \"\"\"\n    LOG.debug(\u0027Creating DB tables\u0027)\n\n    BASE.metadata.create_all(engine)",
+      "range": {
+        "startLine": 213,
+        "startChar": 0,
+        "endLine": 238,
+        "endChar": 36
+      },
+      "revId": "670eff38e96b7938e5e28bc5cd17ef4d0161b080",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bdd48e61_8f26b7b3",
+        "filename": "entrypoint.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T19:34:40Z",
+      "side": 1,
+      "message": "This blows up if you run this as just ./entrypoint.sh.\n\nAdditionally for uwsgi case (I already added that to my code snippet in tools/functional.sh this needs to be called now as ./entrypoint.sh server).",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 14
+      },
+      "revId": "670eff38e96b7938e5e28bc5cd17ef4d0161b080",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa097574_696ad49e",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T19:34:40Z",
+      "side": 1,
+      "message": "Two comments:\n\n1) Need to manually call alembic upgrade head for uwsgi case.\n2) For Docker case isn\u0027t the alembic upgrade command already executed as part of the Helm deployment? This works for me when running:\n\n# uwsgi test run\ntox -e functional\n\n# docker test run\nexport DECKHAND_IMAGE\u003dquay.io/attcomdev/deckhand:latest\ntox -e functional\n\n\nif [ -z \"$DECKHAND_IMAGE\" ]; then\n    log_section \"Running Deckhand via uwsgi\"\n\n    alembic upgrade head\n\n    # NOTE(fmontei): Deckhand\u0027s database is not configured to work with\n    # multiprocessing. Currently there is a data race on acquiring shared\n    # SQLAlchemy engine pooled connection strings when workers \u003e 1. As a\n    # workaround, we use multiple threads but only 1 worker. For more\n    # information, see: https://github.com/att-comdev/deckhand/issues/20\n    export DECKHAND_API_WORKERS\u003d1\n    export DECKHAND_API_THREADS\u003d4\n    source $ROOTDIR/../entrypoint.sh server \u0026\n    sleep 5\nelse\n    log_section \"Running Deckhand via Docker\"\n    sudo docker run \\\n        --rm \\\n        --net\u003dhost \\\n        -p 9000:9000 \\\n        -v $CONF_DIR:/etc/deckhand \\\n        $DECKHAND_IMAGE \u0026\u003e $STDOUT \u0026\nfi",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 36
+      },
+      "revId": "670eff38e96b7938e5e28bc5cd17ef4d0161b080",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
