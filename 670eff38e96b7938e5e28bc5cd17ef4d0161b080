@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fea86acb_1ca693fb",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-05T21:10:04Z",
+      "side": 1,
+      "message": "I\u0027ve removed the parameter from the call in env.py.",
+      "parentUuid": "6ceb9dcf_8e2f208e",
+      "range": {
+        "startLine": 213,
+        "startChar": 0,
+        "endLine": 238,
+        "endChar": 36
+      },
+      "revId": "670eff38e96b7938e5e28bc5cd17ef4d0161b080",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bdd48e61_8f26b7b3",
         "filename": "entrypoint.sh",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "fd6e4da4_168907c4",
+        "filename": "entrypoint.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-05T21:10:04Z",
+      "side": 1,
+      "message": "reworked this and it\u0027s gone now - this is done in some of the other components, as it is a way to call the cli for that component.",
+      "parentUuid": "bdd48e61_8f26b7b3",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 14
+      },
+      "revId": "670eff38e96b7938e5e28bc5cd17ef4d0161b080",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa097574_696ad49e",
         "filename": "tools/functional-tests.sh",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2018-04-05T19:34:40Z",
       "side": 1,
       "message": "Two comments:\n\n1) Need to manually call alembic upgrade head for uwsgi case.\n2) For Docker case isn\u0027t the alembic upgrade command already executed as part of the Helm deployment? This works for me when running:\n\n# uwsgi test run\ntox -e functional\n\n# docker test run\nexport DECKHAND_IMAGE\u003dquay.io/attcomdev/deckhand:latest\ntox -e functional\n\n\nif [ -z \"$DECKHAND_IMAGE\" ]; then\n    log_section \"Running Deckhand via uwsgi\"\n\n    alembic upgrade head\n\n    # NOTE(fmontei): Deckhand\u0027s database is not configured to work with\n    # multiprocessing. Currently there is a data race on acquiring shared\n    # SQLAlchemy engine pooled connection strings when workers \u003e 1. As a\n    # workaround, we use multiple threads but only 1 worker. For more\n    # information, see: https://github.com/att-comdev/deckhand/issues/20\n    export DECKHAND_API_WORKERS\u003d1\n    export DECKHAND_API_THREADS\u003d4\n    source $ROOTDIR/../entrypoint.sh server \u0026\n    sleep 5\nelse\n    log_section \"Running Deckhand via Docker\"\n    sudo docker run \\\n        --rm \\\n        --net\u003dhost \\\n        -p 9000:9000 \\\n        -v $CONF_DIR:/etc/deckhand \\\n        $DECKHAND_IMAGE \u0026\u003e $STDOUT \u0026\nfi",
+      "range": {
+        "startLine": 203,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 36
+      },
+      "revId": "670eff38e96b7938e5e28bc5cd17ef4d0161b080",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9fa932d9_e71fbbca",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-05T21:10:04Z",
+      "side": 1,
+      "message": "thanks, I was focused in on the docker version for now, but added this in a upcoming revision of this change.",
+      "parentUuid": "aa097574_696ad49e",
       "range": {
         "startLine": 203,
         "startChar": 0,
