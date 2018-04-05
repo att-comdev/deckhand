@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcf860a3_665d1913",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:37:12Z",
+      "side": 1,
+      "message": "Should just let Barbican handle this automatically.",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 33
+      },
+      "revId": "b91eda65491d31c08ff025cc1c623021bea4e187",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
