@@ -102,12 +102,11 @@ class TestSecretsManager(test_base.TestDbBase):
     def test_retrieve_barbican_secret(self):
         secret_ref, expected_secret = self._test_create_secret(
             'encrypted', 'Certificate')
-        secret_uuid = secret_ref.split('/')[-1]
         secret_payload = secrets_manager.SecretsManager.get(secret_ref)
 
         self.assertEqual(expected_secret, secret_payload)
         self.mock_barbican_driver.get_secret.assert_called_once_with(
-            secret_ref=secret_uuid)
+            secret_ref=secret_ref)
 
 
 class TestSecretsManagerNegative(test_base.TestDbBase):

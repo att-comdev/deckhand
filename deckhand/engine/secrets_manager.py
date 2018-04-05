@@ -17,7 +17,6 @@ import re
 
 from oslo_config import cfg
 from oslo_log import log as logging
-from oslo_utils import uuidutils
 import six
 
 from deckhand.barbican import driver
@@ -126,16 +125,16 @@ class SecretsManager(object):
             LOG.debug('Resolving Barbican secret using source document '
                       'reference...')
             try:
-                secret_uuid = secret_ref.split('/')[-1]
-            except Exception:
-                secret_uuid = None
-            if not uuidutils.is_uuid_like(secret_uuid):
+                cls.barbican_driver.validate_ref(secret_ref, 'Secret')
+            except ValueError as e:
+                LOG.debug('Caught %s while passing a Secret URI to Barbican '
+                          'client. Details: %s', (e.__class__.__name__, e))
                 return secret_ref
         else:
             return secret_ref
 
         # TODO(fmontei): Need to avoid this call if Keystone is disabled.
-        secret = cls.barbican_driver.get_secret(secret_ref=secret_uuid)
+        secret = cls.barbican_driver.get_secret(secret_ref=secret_ref)
         payload = secret.payload
         LOG.debug('Successfully retrieved Barbican secret using reference.')
         return payload

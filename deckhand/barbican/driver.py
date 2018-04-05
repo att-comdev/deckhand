@@ -58,3 +58,7 @@ class BarbicanDriver(object):
                 ValueError) as e:
             LOG.exception(str(e))
             raise errors.BarbicanException(details=str(e))
+
+    @staticmethod
+    def validate_ref(ref, entity):
+        return barbicanclient.base.validate_ref(ref, entity)
