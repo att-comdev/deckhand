@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c54d142_f6156658",
+        "filename": "alembic.ini",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this all go to console inside container?",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 10
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5a31f96_69b964a6",
+        "filename": "alembic.ini",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this all go to console inside container?",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 10
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7f6cd5e_df87d7f6",
+        "filename": "alembic.ini",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "INFO?",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 14
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5dab92f2_fe31972c",
+        "filename": "alembic/env.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "Probably should clean up junk like this, but that\u0027s a nit",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 41
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4f0d1f92_dcf31204",
+        "filename": "alembic/env.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "As an aside, other services were returning prematurely from this as it wasn\u0027t being supported. I think this should work regardless of whether DH is up and running, no?",
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f09ba363_2e161596",
+        "filename": "alembic/env.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "This kind of pattern might work with multiprocessing too due to pool.NullPool usage.",
+      "range": {
+        "startLine": 82,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 32
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fac247a5_0e245252",
+        "filename": "alembic/versions/918bbfd28185_initial_deckhand_base.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "Should also fix indent here. Don\u0027t see why alembic can\u0027t just indent correctly :/",
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "31ce2486_8cf8791e",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-05T22:08:25Z",
+      "side": 1,
+      "message": "Should move this to L235 instead",
+      "range": {
+        "startLine": 219,
+        "startChar": 4,
+        "endLine": 219,
+        "endChar": 15
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
