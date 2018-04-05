@@ -1,0 +1,173 @@
+"""initial deckhand base
+
+Revision ID: 918bbfd28185
+Revises:
+Create Date: 2018-04-04 17:19:24.222703
+
+"""
+from alembic import op
+import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
+from sqlalchemy.sql import text
+
+# revision identifiers, used by Alembic.
+revision = '918bbfd28185'
+down_revision = None
+branch_labels = None
+depends_on = None
+
+tables_select = text("""
+select tablename from pg_tables where schemaname = 'deckhand'
+and tablename in ('buckets', 'revisions','documents', 'revision_tags',
+'validations')
+""")
+
+check_documents_columns = text("""
+select column_name from information_schema.columns
+where table_name = 'documents' and column_name in ('_metadata', 'layer')
+""")
+
+convert_layer = text("""
+update documents d1 set layer = (
+    select meta->'layeringDefinition'->>'layer' from documents d2
+    where d2.id = d1.id)
+""")
+
+
+def upgrade():
+
+    # Need to check if the tables exist first.
+    # If they do, then we can't create them, and rather need to:
+    #   check if documents has _metadata or meta column
+    #       rename to meta if it does.
+    #   check if documents.layer exists
+    #       if not, add it and populate it from
+    #       metadata.layeringDefinition.layer in the associated document
+    # If the tables don't exist it is a new environment; create tables.
+    #
+    # Note that this is not fool-proof, if we have environments that are
+    # not in a state accounted for in this migration, the migration will fail
+    # This is easist and best if this first migration is starting from an
+    # empty database.
+
+    conn = op.get_bind()
+    rs = conn.execute(tables_select)
+    existing_tables = [row[0] for row in rs]
+
+    if 'buckets' not in existing_tables:
+        op.create_table('buckets',
+            sa.Column('created_at', sa.DateTime(), nullable=False),
+            sa.Column('updated_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted', sa.Boolean(), nullable=False),
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('name', sa.String(length=36), nullable=True),
+            sa.PrimaryKeyConstraint('id'),
+            sa.UniqueConstraint('name'),
+            mysql_charset='utf8',
+            mysql_engine='Postgre'
+        )
+
+    if 'revisions' not in existing_tables:
+        op.create_table('revisions',
+            sa.Column('created_at', sa.DateTime(), nullable=False),
+            sa.Column('updated_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted', sa.Boolean(), nullable=False),
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.PrimaryKeyConstraint('id'),
+            mysql_charset='utf8',
+            mysql_engine='Postgre'
+        )
+
+    if 'documents' not in existing_tables:
+        op.create_table('documents',
+            sa.Column('created_at', sa.DateTime(), nullable=False),
+            sa.Column('updated_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted', sa.Boolean(), nullable=False),
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('name', sa.String(length=64), nullable=False),
+            sa.Column('schema', sa.String(length=64), nullable=False),
+            sa.Column('layer', sa.String(length=64), nullable=True),
+            sa.Column('meta', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
+            sa.Column('data', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+            sa.Column('data_hash', sa.String(), nullable=False),
+            sa.Column('metadata_hash', sa.String(), nullable=False),
+            sa.Column('bucket_id', sa.Integer(), nullable=False),
+            sa.Column('revision_id', sa.Integer(), nullable=False),
+            sa.Column('orig_revision_id', sa.Integer(), nullable=True),
+            sa.ForeignKeyConstraint(['bucket_id'], ['buckets.id'], ondelete='CASCADE'),
+            sa.ForeignKeyConstraint(['orig_revision_id'], ['revisions.id'], ondelete='CASCADE'),
+            sa.ForeignKeyConstraint(['revision_id'], ['revisions.id'], ondelete='CASCADE'),
+            sa.PrimaryKeyConstraint('id'),
+            sa.UniqueConstraint('schema', 'layer', 'name', 'revision_id', name='duplicate_document_constraint')
+        )
+    else:
+        # documents has undergone some changes that need to be accounted for
+        # in this migration to ensure a common base.
+        rs = conn.execute(check_documents_columns)
+        columns = [row[0] for row in rs]
+        if '_metadata' in columns:
+            op.alter_column('documents', '_metadata', nullable=False,
+                            new_column_name='meta')
+        if 'layer' not in columns:
+            # remove the constraint that is being modified
+            op.drop_constraint('duplicate_document_constraint', 'documents')
+            # add the layer column to documents
+            op.add_column('documents',
+                sa.Column('layer', sa.String(length=64), nullable=True)
+            )
+
+            # convert the data from meta to here.
+            conn.execute(convert_layer)
+
+            # add the constraint back in with the wole set of columns
+            op.create_unique_constraint('duplicate_document_constraint',
+                'documents', ['schema', 'layer', 'name', 'revision_id']
+            )
+
+    if 'revision_tags' not in existing_tables:
+        op.create_table('revision_tags',
+            sa.Column('created_at', sa.DateTime(), nullable=False),
+            sa.Column('updated_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted', sa.Boolean(), nullable=False),
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('tag', sa.String(length=64), nullable=False),
+            sa.Column('data', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+            sa.Column('revision_id', sa.Integer(), nullable=False),
+            sa.ForeignKeyConstraint(['revision_id'], ['revisions.id'], ondelete='CASCADE'),
+            sa.PrimaryKeyConstraint('id'),
+            mysql_charset='utf8',
+            mysql_engine='Postgre'
+        )
+
+    if 'validations' not in existing_tables:
+        op.create_table('validations',
+            sa.Column('created_at', sa.DateTime(), nullable=False),
+            sa.Column('updated_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted_at', sa.DateTime(), nullable=True),
+            sa.Column('deleted', sa.Boolean(), nullable=False),
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.Column('name', sa.String(length=64), nullable=False),
+            sa.Column('status', sa.String(length=8), nullable=False),
+            sa.Column('validator', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
+            sa.Column('errors', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
+            sa.Column('revision_id', sa.Integer(), nullable=False),
+            sa.ForeignKeyConstraint(['revision_id'], ['revisions.id'], ondelete='CASCADE'),
+            sa.PrimaryKeyConstraint('id'),
+            mysql_charset='utf8',
+            mysql_engine='Postgre'
+        )
+    # ### end Alembic commands ###
+
+
+def downgrade():
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_table('validations')
+    op.drop_table('revision_tags')
+    op.drop_table('documents')
+    op.drop_table('revisions')
+    op.drop_table('buckets')
+    # ### end Alembic commands ###
