@@ -93,49 +93,38 @@ class SecretsManager(object):
         return created_secret
 
     @classmethod
-    def _is_barbican_ref(cls, secret_ref):
-        return (
-            isinstance(secret_ref, six.string_types) and
-                cls._url_re.match(secret_ref) and 'secrets' in secret_ref
-        )
-
-    @classmethod
-    def get(cls, secret_ref):
-        """Return a secret payload from Barbican if ``secret_ref`` is a
-        Barbican secret reference or else return ``secret_ref``.
-
-        Extracts {secret_uuid} from a secret reference and queries Barbican's
-        Secrets API with it.
-
-        :param str secret_ref:
-
-            * String formatted like:
-              "https://{barbican_host}/v1/secrets/{secret_uuid}"
-              which results in a Barbican query.
-            * Any other string which results in a pass-through.
-
-        :returns: Secret payload from Barbican or ``secret_ref``.
-        """
-
+    def is_barbican_ref(cls, secret_ref):
         # TODO(fmontei): Query Keystone service catalog for Barbican endpoint
         # and cache it if Keystone is enabled. For now, it should be enough
         # to check that ``secret_ref`` is a valid URL, contains 'secrets'
         # substring, ends in a UUID and that the source document from which
         # the reference is extracted is encrypted.
-        if cls._is_barbican_ref(secret_ref):
-            LOG.debug('Resolving Barbican secret using source document '
-                      'reference...')
-            try:
-                secret_uuid = secret_ref.split('/')[-1]
-            except Exception:
-                secret_uuid = None
-            if not uuidutils.is_uuid_like(secret_uuid):
-                return secret_ref
-        else:
-            return secret_ref
+        try:
+            secret_uuid = secret_ref.split('/')[-1]
+        except Exception:
+            secret_uuid = None
+        return (
+            isinstance(secret_ref, six.string_types) and
+                cls._url_re.match(secret_ref) and 'secrets' in secret_ref and
+                uuidutils.is_uuid_like(secret_uuid)
+        )
 
+    @classmethod
+    def get(cls, secret_ref):
+        """Return a secret payload from Barbican.
+
+        Extracts {secret_uuid} from a secret reference and queries Barbican's
+        Secrets API with it.
+
+        :param str secret_ref: A string formatted like:
+            "https://{barbican_host}/v1/secrets/{secret_uuid}"
+        :returns: Secret payload from Barbican.
+
+        """
+        LOG.debug('Resolving Barbican secret using source document '
+                  'reference...')
         # TODO(fmontei): Need to avoid this call if Keystone is disabled.
-        secret = cls.barbican_driver.get_secret(secret_ref=secret_uuid)
+        secret = cls.barbican_driver.get_secret(secret_ref=secret_ref)
         payload = secret.payload
         LOG.debug('Successfully retrieved Barbican secret using reference.')
         return payload
@@ -309,7 +298,8 @@ class SecretsSubstitution(object):
 
                 # If the document has storagePolicy == encrypted then resolve
                 # the Barbican reference into the actual secret.
-                if src_doc.is_encrypted:
+                if src_doc.is_encrypted and SecretsManager.is_barbican_ref(
+                        src_secret):
                     try:
                         src_secret = SecretsManager.get(src_secret)
                     except errors.BarbicanException as e:

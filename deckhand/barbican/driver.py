@@ -58,3 +58,4 @@ class BarbicanDriver(object):
                 ValueError) as e:
             LOG.exception(str(e))
             raise errors.BarbicanException(details=str(e))
+
