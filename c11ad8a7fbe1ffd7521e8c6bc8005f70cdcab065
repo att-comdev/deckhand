@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d92dd00_91b5e4aa",
+        "filename": "entrypoint.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-06T15:18:04Z",
+      "side": 1,
+      "message": "This is other relevant part to look at",
+      "range": {
+        "startLine": 48,
+        "startChar": 50,
+        "endLine": 48,
+        "endChar": 64
+      },
+      "revId": "c11ad8a7fbe1ffd7521e8c6bc8005f70cdcab065",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
