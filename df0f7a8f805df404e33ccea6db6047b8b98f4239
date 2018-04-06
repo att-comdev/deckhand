@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6976c84a_9a4a6bb3",
+        "filename": "docs/source/getting-started.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-06T20:00:22Z",
+      "side": 1,
+      "message": "WS",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 250,
+        "endChar": 2
+      },
+      "revId": "df0f7a8f805df404e33ccea6db6047b8b98f4239",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
