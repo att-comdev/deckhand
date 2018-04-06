@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "90628481_52788449",
+        "filename": "alembic.ini",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c54d142_f6156658",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 10
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5a31f96_69b964a6",
         "filename": "alembic.ini",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2018-04-05T22:08:25Z",
       "side": 1,
       "message": "Shouldn\u0027t this all go to console inside container?",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 10
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0700e9ce_b55b6bab",
+        "filename": "alembic.ini",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5a31f96_69b964a6",
       "range": {
         "startLine": 63,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7feb5cc7_854ff340",
+        "filename": "alembic.ini",
+        "patchSetId": 6
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7f6cd5e_df87d7f6",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 14
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5dab92f2_fe31972c",
         "filename": "alembic/env.py",
         "patchSetId": 6
@@ -82,6 +154,30 @@
       "writtenOn": "2018-04-05T22:08:25Z",
       "side": 1,
       "message": "Probably should clean up junk like this, but that\u0027s a nit",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 41
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a325c22f_da5a64d8",
+        "filename": "alembic/env.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5dab92f2_fe31972c",
       "range": {
         "startLine": 35,
         "startChar": 0,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "2272a7f2_e068cbf6",
+        "filename": "alembic/env.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "this should be fine - not sure what was wrong with transactions that you\u0027re referencing though. I do not expect this to interfere with other things running.",
+      "parentUuid": "4f0d1f92_dcf31204",
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f09ba363_2e161596",
         "filename": "alembic/env.py",
         "patchSetId": 6
@@ -122,6 +236,30 @@
       "writtenOn": "2018-04-05T22:08:25Z",
       "side": 1,
       "message": "This kind of pattern might work with multiprocessing too due to pool.NullPool usage.",
+      "range": {
+        "startLine": 82,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 32
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "225f94a5_5702903b",
+        "filename": "alembic/env.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "not sure - but for alembic, this is just 1 thread of execution and done.",
+      "parentUuid": "f09ba363_2e161596",
       "range": {
         "startLine": 82,
         "startChar": 4,
@@ -151,6 +289,24 @@
     },
     {
       "key": {
+        "uuid": "060ff713_9b70a8e9",
+        "filename": "alembic/versions/918bbfd28185_initial_deckhand_base.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fac247a5_0e245252",
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31ce2486_8cf8791e",
         "filename": "deckhand/db/sqlalchemy/models.py",
         "patchSetId": 6
@@ -162,6 +318,30 @@
       "writtenOn": "2018-04-05T22:08:25Z",
       "side": 1,
       "message": "Should move this to L235 instead",
+      "range": {
+        "startLine": 219,
+        "startChar": 4,
+        "endLine": 219,
+        "endChar": 15
+      },
+      "revId": "a50e4b468c7e464633b5107f5974785c1f59c14a",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "23ac4e73_53ace90e",
+        "filename": "deckhand/db/sqlalchemy/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T01:48:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31ce2486_8cf8791e",
       "range": {
         "startLine": 219,
         "startChar": 4,
