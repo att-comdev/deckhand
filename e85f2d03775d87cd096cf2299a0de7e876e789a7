@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2397ba37_c1a5e113",
+        "filename": "alembic/versions/918bbfd28185_initial_deckhand_base.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T19:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c4e6f029_434b99bf",
+      "range": {
+        "startLine": 66,
+        "startChar": 17,
+        "endLine": 66,
+        "endChar": 23
+      },
+      "revId": "e85f2d03775d87cd096cf2299a0de7e876e789a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad1cf05c_7355adae",
         "filename": "alembic/versions/918bbfd28185_initial_deckhand_base.py",
         "patchSetId": 11
@@ -36,6 +60,24 @@
       "writtenOn": "2018-04-06T19:35:32Z",
       "side": 1,
       "message": "The only thing that\u0027s missing is copying data over from meta-\u003elayeringDefinition-\u003e\u003elayer into layer",
+      "revId": "e85f2d03775d87cd096cf2299a0de7e876e789a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "188f38ce_7af5b781",
+        "filename": "alembic/versions/918bbfd28185_initial_deckhand_base.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T19:43:42Z",
+      "side": 1,
+      "message": "See the next step - it does this.",
+      "parentUuid": "ad1cf05c_7355adae",
       "revId": "e85f2d03775d87cd096cf2299a0de7e876e789a7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "c208ce12_e5d6f5bb",
+        "filename": "docs/source/getting-started.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T19:43:42Z",
+      "side": 1,
+      "message": "Well, Drydock anyway.  Shipyard would have to move to sqlalchemy models.",
+      "parentUuid": "231d5282_56cc0076",
+      "revId": "e85f2d03775d87cd096cf2299a0de7e876e789a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d321673a_c7a4c060",
         "filename": "docs/source/getting-started.rst",
         "patchSetId": 11
@@ -70,6 +130,30 @@
       "writtenOn": "2018-04-06T19:35:32Z",
       "side": 1,
       "message": "Creating",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 12
+      },
+      "revId": "e85f2d03775d87cd096cf2299a0de7e876e789a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cda4c832_abcbe07f",
+        "filename": "docs/source/getting-started.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T19:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d321673a_c7a4c060",
       "range": {
         "startLine": 233,
         "startChar": 0,
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "2f932afb_b53776b9",
+        "filename": "docs/source/getting-started.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T19:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "216a065e_f174101a",
+      "range": {
+        "startLine": 238,
+        "startChar": 70,
+        "endLine": 238,
+        "endChar": 78
+      },
+      "revId": "e85f2d03775d87cd096cf2299a0de7e876e789a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "721933dd_0d9e6be8",
         "filename": "docs/source/getting-started.rst",
         "patchSetId": 11
@@ -116,6 +224,30 @@
       "writtenOn": "2018-04-06T19:35:32Z",
       "side": 1,
       "message": "::\n\nFollowed by newline",
+      "range": {
+        "startLine": 249,
+        "startChar": 63,
+        "endLine": 249,
+        "endChar": 64
+      },
+      "revId": "e85f2d03775d87cd096cf2299a0de7e876e789a7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "420586f0_0df16132",
+        "filename": "docs/source/getting-started.rst",
+        "patchSetId": 11
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-06T19:43:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "721933dd_0d9e6be8",
       "range": {
         "startLine": 249,
         "startChar": 63,
