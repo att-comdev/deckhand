@@ -118,6 +118,17 @@ To kill the ephemeral DB afterward::
 
 .. _Docker: https://docs.docker.com/install/
 
+Development Mode
+^^^^^^^^^^^^^^^^
+
+To disable Keystone and run Deckhand in development mode, execute::
+
+    $ [sudo] docker run --rm \
+        --net=host \
+        -p 9000:9000 \
+        -v $CONF_DIR:/etc/deckhand \
+        quay.io/attcomdev/deckhand:latest server --development-mode
+
 Manual Installation
 -------------------
 
@@ -175,7 +186,7 @@ Substitute the connection information into the config file in
 Finally, run Deckhand::
 
     $ chmod +x entrypoint.sh
-    $ ./entrypoint.sh
+    $ ./entrypoint.sh server
 
 To kill the ephemeral DB afterward::
 
