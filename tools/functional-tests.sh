@@ -3,15 +3,29 @@
 # Script intended for running Deckhand functional tests via gabbi. Requires
 # Docker CE (at least) to run.
 
+ROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Meant for capturing output of Deckhand image. This requires that logging
 # in the image be set up to pipe everything out to stdout/stderr.
 STDOUT=$(mktemp)
+
 # NOTE(fmontei): `DECKHAND_IMAGE` should only be specified if the desire is to
 # run Deckhand functional tests against a specific Deckhand image, which is
 # useful for CICD (as validating the image is vital). However, if the
 # `DECKHAND_IMAGE` is not specified, then this implies that the most current
 # version of the code should be used, which is in the repo itself.
 DECKHAND_IMAGE=${DECKHAND_IMAGE:-}
+
+if [ -z "$DECKHAND_IMAGE" ]; then
+    RUN_WITH_UWSGI=true
+else
+    RUN_WITH_UWSGI=false
+fi
+
+set -ex
+
+CONF_DIR=$(mktemp -d -p $(pwd))
+sudo chmod 777 -R $CONF_DIR
 
 function log_section {
     set +x
@@ -21,16 +35,20 @@ function log_section {
     set -x
 }
 
-set -ex
-
 function cleanup {
     sudo docker stop $POSTGRES_ID
+
     if [ -n "$DECKHAND_ID" ]; then
         sudo docker stop $DECKHAND_ID
     fi
+
+    if [ -n "$DECKHAND_ALEMBIC_ID" ]; then
+        sudo docker stop $DECKHAND_ALEMBIC_ID
+    fi
+
     rm -rf $CONF_DIR
 
-    if [ -z "$DECKHAND_IMAGE" ]; then
+    if $RUN_WITH_UWSGI; then
         # Kill all processes and child processes (for example, if workers > 1)
         # if using uwsgi only.
         PGID=$(ps -o comm -o pgid | grep uwsgi | grep -o [0-9]* | head -n 1)
@@ -59,14 +77,12 @@ POSTGRES_IP=$(
 )
 
 
-CONF_DIR=$(mktemp -d -p $(pwd))
-sudo chmod 777 -R $CONF_DIR
-
 function gen_config {
     log_section Creating config file
 
     export DECKHAND_TEST_URL=http://localhost:9000
     export DATABASE_URL=postgresql+psycopg2://deckhand:password@$POSTGRES_IP:5432/deckhand
+
     # Used by Deckhand's initialization script to search for config files.
     export DECKHAND_CONFIG_DIR=$CONF_DIR
 
@@ -149,28 +165,20 @@ connection = $DATABASE_URL
 # auth_type = password
 EOCONF
 
-# Only set up logging if running Deckhand via uwsgi. The container already has
-# values for logging.
-if [ -z "$DECKHAND_IMAGE" ]; then
-    sed '1 a log_config_append = '"$CONF_DIR"'/logging.conf' $CONF_DIR/deckhand.conf
-fi
-
-# Only set up logging if running Deckhand via uwsgi. The container already has
-# values for logging.
-if [ -z "$DECKHAND_IMAGE" ]; then
-    sed '1 a log_config_append = '"$CONF_DIR"'/logging.conf' $CONF_DIR/deckhand.conf
-fi
-
     echo $CONF_DIR/deckhand.conf 1>&2
     cat $CONF_DIR/deckhand.conf 1>&2
 
     echo $CONF_DIR/logging.conf 1>&2
     cat $CONF_DIR/logging.conf 1>&2
 
-    log_section Starting server
+    # Only set up logging if running Deckhand via uwsgi. The container already has
+    # values for logging.
+    if $RUN_WITH_UWSGI; then
+        sed '1 a log_config_append = '"$CONF_DIR"'/logging.conf' $CONF_DIR/deckhand.conf
+    fi
 }
 
-function gen_paste {
+function gen_paste_config {
     log_section Creating paste config without [filter:authtoken]
     # NOTE(fmontei): Since this script does not currently support Keystone
     # integration, we remove ``filter:authtoken`` from the ``deckhand_api``
@@ -194,16 +202,17 @@ function gen_policy {
     cat $CONF_DIR/'policy.yaml' 1>&2
 }
 
+
 gen_config
-gen_paste
+gen_paste_config
 gen_policy
 
-ROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-if [ -z "$DECKHAND_IMAGE" ]; then
+if $RUN_WITH_UWSGI; then
     log_section "Running Deckhand via uwsgi"
 
+    # NOTE(fmontei): This will fail with any DB other than PostgreSQL.
     alembic upgrade head
+
     # NOTE(fmontei): Deckhand's database is not configured to work with
     # multiprocessing. Currently there is a data race on acquiring shared
     # SQLAlchemy engine pooled connection strings when workers > 1. As a
@@ -211,34 +220,44 @@ if [ -z "$DECKHAND_IMAGE" ]; then
     # information, see: https://github.com/att-comdev/deckhand/issues/20
     export DECKHAND_API_WORKERS=1
     export DECKHAND_API_THREADS=4
+
     source $ROOTDIR/../entrypoint.sh server &
 else
     log_section "Running Deckhand via Docker"
-    sudo docker run \
-        --rm \
-        --net=host \
-        -v $CONF_DIR:/etc/deckhand \
-        $DECKHAND_IMAGE alembic upgrade head &> $STDOUT
-    sudo docker run \
-        --rm \
-        --net=host \
-        -p 9000:9000 \
-        -v $CONF_DIR:/etc/deckhand \
-        $DECKHAND_IMAGE &> $STDOUT &
+
+    # If container is already running, kill it.
+    DECKHAND_ID=$(sudo docker ps --filter ancestor=$DECKHAND_IMAGE --format "{{.ID}}")
+    if [ -n "$DECKHAND_ID" ]; then
+        sudo docker stop $DECKHAND_ID
+    fi
+
+    DECKHAND_ALEMBIC_ID=$(
+        sudo docker run \
+            --rm \
+            --net=host \
+            -v $CONF_DIR:/etc/deckhand \
+            $DECKHAND_IMAGE alembic upgrade head &> $STDOUT &
+    )
+    echo $DECKHAND_ALEMBIC_ID
+
+    DECKHAND_ID=$(
+        sudo docker run \
+            --rm \
+            --net=host \
+            -p 9000:9000 \
+            -v $CONF_DIR:/etc/deckhand \
+            $DECKHAND_IMAGE &> $STDOUT &
+    )
+    echo $DECKHAND_ID
 fi
 
 # Give the server a chance to come up. Better to poll a health check.
 sleep 5
 
-DECKHAND_ID=$(sudo docker ps | grep deckhand | awk '{print $1}')
-echo $DECKHAND_ID
-
 log_section Running tests
 
 # Create folder for saving HTML test results.
-if [ ! -d $ROOTDIR/results ]; then
-    mkdir $ROOTDIR/results
-fi
+mkdir -p $ROOTDIR/results
 
 set +e
 posargs=$@
