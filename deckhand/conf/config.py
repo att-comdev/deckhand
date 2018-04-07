@@ -50,8 +50,11 @@ Possible values:
     * False
 """),
     cfg.BoolOpt('profiler', default=False,
-                help="Enabling profiling of API requests. Do NOT "
-                     "use in production."),
+                help="Enables profiling of API requests. Do NOT use in "
+                     "production."),
+    cfg.BoolOpt('development_mode', default=False,
+                help="Enables development mode on. Do NOT use in "
+                     "production.")
 ]
 
 
