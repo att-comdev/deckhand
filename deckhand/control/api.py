@@ -14,6 +14,7 @@
 
 import logging as py_logging
 import os
+import sys
 
 from oslo_config import cfg
 from oslo_log import log as logging
@@ -28,13 +29,22 @@ logging.register_options(CONF)
 LOG = logging.getLogger(__name__)
 
 CONFIG_FILES = ['deckhand.conf', 'deckhand-paste.ini']
+_NO_AUTH_CONFIG = 'noauth-paste.ini'
 
 
 def _get_config_files(env=None):
+    config_files = CONFIG_FILES[:]
+
     if env is None:
         env = os.environ
+
+    if '--development-mode' in sys.argv:
+        config_files[-1] = _NO_AUTH_CONFIG
+        LOG.warning('Development mode enabled - Keystone authentication '
+                    'disabled.')
+
     dirname = env.get('DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
-    return [os.path.join(dirname, config_file) for config_file in CONFIG_FILES]
+    return [os.path.join(dirname, config_file) for config_file in config_files]
 
 
 def setup_logging(conf):
