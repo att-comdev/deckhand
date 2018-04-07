@@ -50,12 +50,16 @@ class BarbicanClientWrapper(object):
         # endpoint URL automatically.
         barbican_url = CONF.barbican.api_endpoint
 
-        auth = loading.load_auth_from_conf_options(CONF, 'keystone_authtoken')
-        sess = session.Session(auth=auth)
-
         try:
-            cli = barbican.client.Client(endpoint=barbican_url,
-                                         session=sess)
+            if CONF.development_mode:
+                cli = barbican.client.Client(endpoint=barbican_url,
+                                             project_id='noauth')
+            else:
+                auth = loading.load_auth_from_conf_options(
+                    CONF, 'keystone_authtoken')
+                sess = session.Session(auth=auth)
+                cli = barbican.client.Client(endpoint=barbican_url,
+                                             session=sess)
             # Cache the client so we don't have to reconstruct and
             # reauthenticate it every time we need it.
             if retry_on_conflict:
