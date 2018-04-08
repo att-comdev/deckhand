@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ede874f2_5bf26149",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-08T01:54:07Z",
+      "side": 1,
+      "message": "[ -z \"$DECKHAND_IMAGE\" ]; then",
+      "range": {
+        "startLine": 19,
+        "startChar": 3,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "03a92c1701ed1e1e4ebba7f4f75fb091f60833e7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
