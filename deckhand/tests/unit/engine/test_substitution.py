@@ -19,7 +19,7 @@ import mock
 from oslo_utils import uuidutils
 import testtools
 
-from deckhand.engine import secrets_manager
+from deckhand.engine import substitution
 from deckhand import errors
 from deckhand import factories
 from deckhand.tests import test_utils
@@ -31,7 +31,7 @@ class TestSecretsManager(test_base.TestDbBase):
     def setUp(self):
         super(TestSecretsManager, self).setUp()
         self.mock_barbican_driver = self.patchobject(
-            secrets_manager.SecretsManager, 'barbican_driver')
+            substitution.SecretsManager, 'barbican_driver')
         self.secret_ref = "https://barbican_host/v1/secrets/{secret_uuid}"\
             .format(**{'secret_uuid': uuidutils.generate_uuid()})
         self.mock_barbican_driver.create_secret.return_value = (
@@ -46,14 +46,14 @@ class TestSecretsManager(test_base.TestDbBase):
         self.mock_barbican_driver.get_secret.return_value = (
             mock.Mock(payload=payload))
 
-        created_secret = secrets_manager.SecretsManager.create(secret_doc)
+        created_secret = substitution.SecretsManager.create(secret_doc)
 
         if encryption_type == 'cleartext':
             self.assertEqual(secret_data, created_secret)
         elif encryption_type == 'encrypted':
             expected_kwargs = {
                 'name': secret_doc['metadata']['name'],
-                'secret_type': secrets_manager.SecretsManager._get_secret_type(
+                'secret_type': substitution.SecretsManager._get_secret_type(
                     'deckhand/' + secret_type),
                 'payload': payload
             }
@@ -103,7 +103,7 @@ class TestSecretsManager(test_base.TestDbBase):
         secret_ref, expected_secret = self._test_create_secret(
             'encrypted', 'Certificate')
         secret_uuid = secret_ref.split('/')[-1]
-        secret_payload = secrets_manager.SecretsManager.get(secret_ref)
+        secret_payload = substitution.SecretsManager.get(secret_ref)
 
         self.assertEqual(expected_secret, secret_payload)
         self.mock_barbican_driver.get_secret.assert_called_once_with(
@@ -120,13 +120,13 @@ class TestSecretsManagerNegative(test_base.TestDbBase):
                     12345, False, None, {}, [])
         for bad_ref in bad_refs:
             self.assertEqual(
-                bad_ref, secrets_manager.SecretsManager.get(bad_ref))
+                bad_ref, substitution.SecretsManager.get(bad_ref))
 
 
-class TestSecretsSubstitution(test_base.TestDbBase):
+class TestDataSubstitution(test_base.TestDbBase):
 
     def setUp(self):
-        super(TestSecretsSubstitution, self).setUp()
+        super(TestDataSubstitution, self).setUp()
         self.document_factory = factories.DocumentFactory(1, [1])
         self.secrets_factory = factories.DocumentSecretFactory()
 
@@ -141,7 +141,7 @@ class TestSecretsSubstitution(test_base.TestDbBase):
         expected_document = copy.deepcopy(documents[-1])
         expected_document['data'] = expected_data
 
-        secret_substitution = secrets_manager.SecretsSubstitution(
+        secret_substitution = substitution.DataSubstitution(
             substitution_sources)
         substituted_docs = list(secret_substitution.substitute_all(documents))
         self.assertIn(expected_document, substituted_docs)
@@ -176,9 +176,9 @@ class TestSecretsSubstitution(test_base.TestDbBase):
         self._test_doc_substitution(
             document_mapping, [certificate], expected_data)
 
-    @mock.patch.object(secrets_manager, 'SecretsManager', autospec=True)
-    def test_doc_substitution_single_encrypted(self, mock_secrets_manager):
-        mock_secrets_manager.get.return_value = 'test-certificate'
+    @mock.patch.object(substitution, 'SecretsManager', autospec=True)
+    def test_doc_substitution_single_encrypted(self, mock_secrets_mgr):
+        mock_secrets_mgr.get.return_value = 'test-certificate'
         secret_ref = test_utils.rand_uuid_hex()
 
         secret_ref = ("http://127.0.0.1/key-manager/v1/secrets/%s"
@@ -211,7 +211,7 @@ class TestSecretsSubstitution(test_base.TestDbBase):
         }
         self._test_doc_substitution(
             document_mapping, [certificate], expected_data)
-        mock_secrets_manager.get.assert_called_once_with(secret_ref=secret_ref)
+        mock_secrets_mgr.get.assert_called_once_with(secret_ref=secret_ref)
 
     def test_create_destination_path_with_array(self):
         # Validate that the destination data will be populated with an array
@@ -631,7 +631,7 @@ data:
                 'maas_api_url'] = 'http://10.24.31.31:{}/MAAS/api/2.0/'.format(
                     test_value)
 
-            secret_substitution = secrets_manager.SecretsSubstitution(
+            secret_substitution = substitution.DataSubstitution(
                 documents)
             substituted_docs = list(secret_substitution.substitute_all(
                 documents))
@@ -699,15 +699,15 @@ data:
         expected['data']['values']['conf']['drydock']['maasdriver'][
             'maas_api_url'] = 'http://10.24.31.31:30001/MAAS/api/2.0/'
 
-        secret_substitution = secrets_manager.SecretsSubstitution(documents)
+        secret_substitution = substitution.DataSubstitution(documents)
         substituted_docs = list(secret_substitution.substitute_all(documents))
         self.assertEqual(expected, substituted_docs[0])
 
 
-class TestSecretsSubstitutionNegative(test_base.TestDbBase):
+class TestDataSubstitutionNegative(test_base.TestDbBase):
 
     def setUp(self):
-        super(TestSecretsSubstitutionNegative, self).setUp()
+        super(TestDataSubstitutionNegative, self).setUp()
         self.document_factory = factories.DocumentFactory(1, [1])
         self.secrets_factory = factories.DocumentSecretFactory()
 
@@ -737,18 +737,18 @@ class TestSecretsSubstitutionNegative(test_base.TestDbBase):
         documents = self.create_documents(
             bucket_name, [certificate] + [payload[-1]])
 
-        secrets_substitution = secrets_manager.SecretsSubstitution(documents)
+        secrets_substitution = substitution.DataSubstitution(documents)
         with testtools.ExpectedException(expected_exception):
             next(secrets_substitution.substitute_all(documents))
 
-    @mock.patch.object(secrets_manager, 'SecretsManager', autospec=True)
+    @mock.patch.object(substitution, 'SecretsManager', autospec=True)
     def test_barbican_exception_raises_unknown_error(
-            self, mock_secrets_manager):
-        mock_secrets_manager.get.side_effect = errors.BarbicanException
+            self, mock_secrets_mgr):
+        mock_secrets_mgr.get.side_effect = errors.BarbicanException
         self._test_secrets_substitution(
             'encrypted', errors.UnknownSubstitutionError)
 
-    @mock.patch('deckhand.engine.secrets_manager.utils', autospec=True)
+    @mock.patch('deckhand.engine.substitution.utils', autospec=True)
     def test_generic_exception_raises_unknown_error(
             self, mock_utils):
         mock_utils.jsonpath_replace.side_effect = Exception('test')
@@ -782,7 +782,7 @@ class TestSecretsSubstitutionNegative(test_base.TestDbBase):
         documents = self.create_documents(
             bucket_name, [certificate] + [payload[-1]])
 
-        secrets_substitution = secrets_manager.SecretsSubstitution(documents)
+        secrets_substitution = substitution.DataSubstitution(documents)
         with testtools.ExpectedException(
                 errors.SubstitutionSourceDataNotFound):
             next(secrets_substitution.substitute_all(documents))

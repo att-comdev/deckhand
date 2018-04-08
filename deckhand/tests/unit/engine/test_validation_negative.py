@@ -14,13 +14,13 @@
 
 import mock
 
-from deckhand.engine import document_validation
+from deckhand.engine import validation
 from deckhand import errors
 from deckhand.tests.unit.engine import base as test_base
 from deckhand import types
 
 
-class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
+class TestDocumentValidationNegative(test_base.BaseEngineTestCase):
     """Negative testing suite for document validation."""
 
     BASIC_PROPERTIES = (
@@ -76,7 +76,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
             expected_err_msg = "'%s' is a required property" % missing_prop
 
             payload = [invalid_data]
-            doc_validator = document_validation.DocumentValidation(
+            doc_validator = validation.DocumentValidation(
                 payload, pre_validate=False)
             if exception_raised:
                 self.assertRaises(
@@ -141,7 +141,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
         for property_to_remove in properties_to_remove:
             document = self._corrupt_data(document, property_to_remove)
 
-        doc_validator = document_validation.DocumentValidation(document)
+        doc_validator = validation.DocumentValidation(document)
         e = self.assertRaises(errors.InvalidDocumentFormat,
                               doc_validator.validate_all)
 
@@ -161,7 +161,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
             r".+ 'invalid' is not one of \['replace', 'delete', 'merge'\]")
 
         payload = [missing_data]
-        doc_validator = document_validation.DocumentValidation(payload)
+        doc_validator = validation.DocumentValidation(payload)
         self.assertRaisesRegexp(errors.InvalidDocumentFormat, expected_err,
                                 doc_validator.validate_all)
 
@@ -200,24 +200,24 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
             'data.validations', 'data.validations.0.name')
         self._test_missing_required_sections(document, properties_to_remove)
 
-    @mock.patch.object(document_validation, 'LOG', autospec=True)
+    @mock.patch.object(validation, 'LOG', autospec=True)
     def test_invalid_document_schema_generates_error(self, mock_log):
         document = self._read_data('sample_document')
         document['schema'] = 'foo/bar/v1'
 
-        doc_validator = document_validation.DocumentValidation(document)
+        doc_validator = validation.DocumentValidation(document)
         doc_validator.validate_all()
         self.assertRegex(
             mock_log.info.mock_calls[0][1][0],
             'The provided document schema %s is not registered.'
             % document['schema'])
 
-    @mock.patch.object(document_validation, 'LOG', autospec=True)
+    @mock.patch.object(validation, 'LOG', autospec=True)
     def test_invalid_document_schema_version_generates_error(self, mock_log):
         document = self._read_data('sample_passphrase')
         document['schema'] = 'deckhand/Passphrase/v5'
 
-        doc_validator = document_validation.DocumentValidation(document)
+        doc_validator = validation.DocumentValidation(document)
         doc_validator.validate_all()
         self.assertRegex(
             mock_log.info.mock_calls[0][1][0],
@@ -228,7 +228,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
         document = self._read_data('sample_passphrase')
 
         # Validate that broken built-in base schema raises RuntimeError.
-        doc_validator = document_validation.DocumentValidation(document)
+        doc_validator = validation.DocumentValidation(document)
         doc_validator._validators[0].base_schema = 'fake'
         with self.assertRaisesRegexp(RuntimeError, 'Unknown error'):
             doc_validator.validate_all()
@@ -239,7 +239,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
         data_schema = self._read_data('sample_data_schema')
         data_schema['metadata']['name'] = document['schema']
         data_schema['data'] = 'fake'
-        doc_validator = document_validation.DocumentValidation(
+        doc_validator = validation.DocumentValidation(
             [document, data_schema], pre_validate=False)
         with self.assertRaisesRegexp(RuntimeError, 'Unknown error'):
             doc_validator.validate_all()
@@ -252,7 +252,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
             'some': 'label'
         }
         document['metadata']['layeringDefinition'].pop('actions')
-        doc_validator = document_validation.DocumentValidation(
+        doc_validator = validation.DocumentValidation(
             [document], pre_validate=False)
         self.assertRaises(
             errors.InvalidDocumentFormat, doc_validator.validate_all)
@@ -260,7 +260,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
         # Verify that an error is thrown if parentSelector is specified but
         # at least 1 action isn't specified.
         document['metadata']['layeringDefinition']['actions'] = []
-        doc_validator = document_validation.DocumentValidation(
+        doc_validator = validation.DocumentValidation(
             [document], pre_validate=False)
         self.assertRaises(
             errors.InvalidDocumentFormat, doc_validator.validate_all)
@@ -270,7 +270,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
         # parentSelector is missing altogether.
         document = self._read_data('sample_document')
         document['metadata']['layeringDefinition'].pop('parentSelector')
-        doc_validator = document_validation.DocumentValidation(
+        doc_validator = validation.DocumentValidation(
             [document], pre_validate=False)
         self.assertRaises(
             errors.InvalidDocumentFormat, doc_validator.validate_all)
@@ -278,7 +278,7 @@ class TestDocumentValidationNegative(test_base.TestDocumentValidationBase):
         # Verify that an error is thrown if actions are specified but no
         # parentSelector labels are.
         document['metadata']['layeringDefinition']['parentSelector'] = {}
-        doc_validator = document_validation.DocumentValidation(
+        doc_validator = validation.DocumentValidation(
             [document], pre_validate=False)
         self.assertRaises(
             errors.InvalidDocumentFormat, doc_validator.validate_all)

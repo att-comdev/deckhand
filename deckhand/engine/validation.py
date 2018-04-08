@@ -25,7 +25,7 @@ import six
 
 from deckhand.common import document as document_wrapper
 from deckhand.common import utils
-from deckhand.engine.secrets_manager import SecretsSubstitution
+from deckhand.engine.substitution import DataSubstitution
 from deckhand import errors
 from deckhand import types
 
@@ -230,7 +230,7 @@ class DataSchemaValidator(GenericValidator):
             # secrets. While this may make debugging a few validation failures
             # more difficult, it is a necessary evil.
             sanitized_document = (
-                SecretsSubstitution.sanitize_potential_secrets(
+                DataSubstitution.sanitize_potential_secrets(
                     error, document))
             parent_error_section = utils.jsonpath_parse(
                 sanitized_document, parent_path_to_error_in_document)

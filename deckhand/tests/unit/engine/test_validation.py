@@ -15,12 +15,12 @@
 import mock
 
 from deckhand.common import utils
-from deckhand.engine import document_validation
+from deckhand.engine import validation
 from deckhand import factories
-from deckhand.tests.unit.engine import base as engine_test_base
+from deckhand.tests.unit.engine import base as test_base
 
 
-class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
+class TestDocumentValidation(test_base.BaseEngineTestCase):
 
     def setUp(self):
         super(TestDocumentValidation, self).setUp()
@@ -36,7 +36,7 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
 
         for missing_data in optional_missing_data:
             payload = [missing_data, self.dataschema]
-            document_validation.DocumentValidation(payload).validate_all()
+            validation.DocumentValidation(payload).validate_all()
 
     def test_document_missing_optional_sections(self):
         properties_to_remove = (
@@ -47,21 +47,21 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
             missing_data = self._corrupt_data(self.test_document,
                                               property_to_remove)
             payload = [missing_data, self.dataschema]
-            document_validation.DocumentValidation(payload).validate_all()
+            validation.DocumentValidation(payload).validate_all()
 
-    @mock.patch.object(document_validation, 'LOG', autospec=True)
+    @mock.patch.object(validation, 'LOG', autospec=True)
     def test_abstract_document_not_validated(self, mock_log):
         test_document = self._read_data('sample_passphrase')
         # Set the document to abstract.
         abstract_document = utils.jsonpath_replace(
             test_document, True, '.metadata.layeringDefinition.abstract')
-        document_validation.DocumentValidation(
+        validation.DocumentValidation(
             abstract_document, pre_validate=False).validate_all()
         self.assertTrue(mock_log.info.called)
         self.assertIn("Skipping schema validation for abstract document",
                       mock_log.info.mock_calls[0][1][0])
 
-    @mock.patch.object(document_validation, 'jsonschema', autospec=True)
+    @mock.patch.object(validation, 'jsonschema', autospec=True)
     def test_validation_failure_sanitizes_error_section_secrets(
             self, mock_jsonschema):
         m_args = mock.Mock()
@@ -87,7 +87,7 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
         data_schema_factory = factories.DataSchemaFactory()
         data_schema = data_schema_factory.gen_test(test_document['schema'], {})
 
-        validations = document_validation.DocumentValidation(
+        validations = validation.DocumentValidation(
             test_document, existing_data_schemas=[data_schema],
             pre_validate=False).validate_all()
 
@@ -130,7 +130,7 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
         }, global_abstract=False)[-1]
         test_document['metadata']['storagePolicy'] = 'cleartext'
 
-        validations = document_validation.DocumentValidation(
+        validations = validation.DocumentValidation(
             test_document, existing_data_schemas=[data_schema],
             pre_validate=False).validate_all()
 
@@ -147,7 +147,7 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
         }, global_abstract=False)[-1]
         test_document['metadata']['storagePolicy'] = 'encrypted'
 
-        validations = document_validation.DocumentValidation(
+        validations = validation.DocumentValidation(
             test_document, existing_data_schemas=[data_schema],
             pre_validate=False).validate_all()
 
@@ -160,7 +160,7 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
         data_schema_factory = factories.DataSchemaFactory()
         data_schema = data_schema_factory.gen_test(test_document['schema'], {})
 
-        validations = document_validation.DocumentValidation(
+        validations = validation.DocumentValidation(
             test_document, existing_data_schemas=[data_schema],
             pre_validate=False).validate_all()
 
@@ -174,7 +174,7 @@ class TestDocumentValidation(engine_test_base.TestDocumentValidationBase):
         data_schema_factory = factories.DataSchemaFactory()
         data_schema = data_schema_factory.gen_test(test_document['schema'], {})
 
-        validations = document_validation.DocumentValidation(
+        validations = validation.DocumentValidation(
             test_document, existing_data_schemas=[data_schema],
             pre_validate=False).validate_all()
 
