@@ -19,7 +19,7 @@ import mock
 from oslo_config import cfg
 
 from deckhand.control import buckets
-from deckhand.engine import document_validation
+from deckhand.engine import validation
 from deckhand import factories
 from deckhand.tests import test_utils
 from deckhand.tests.unit.control import base as test_base
@@ -80,19 +80,19 @@ class ValidationsControllerBaseTest(test_base.BaseControllerTest):
             headers={'Content-Type': 'application/x-yaml'}, body=policy)
         return resp
 
-    def _monkey_patch_document_validation(self):
+    def _monkey_patch_validation(self):
         """Workaround for testing complex validation scenarios by forcibly
         passing in `pre_validate=False`.
         """
         # TODO(fmontei): Remove this workaround by testing these more complex
         # scenarios against the rendered-documents endpoint instead (which
         # performs post-validation).
-        original_document_validation = document_validation.DocumentValidation
+        original_validation = validation.DocumentValidation
 
         def monkey_patch(*args, **kwargs):
-            return original_document_validation(*args, pre_validate=False)
+            return original_validation(*args, pre_validate=False)
 
-        mock.patch.object(buckets.document_validation, 'DocumentValidation',
+        mock.patch.object(buckets.validation, 'DocumentValidation',
                           side_effect=monkey_patch, autospec=True).start()
         self.addCleanup(mock.patch.stopall)
 
@@ -104,7 +104,7 @@ class TestValidationsControllerPostValidate(ValidationsControllerBaseTest):
 
     def setUp(self):
         super(TestValidationsControllerPostValidate, self).setUp()
-        self._monkey_patch_document_validation()
+        self._monkey_patch_validation()
 
     def test_create_validation(self):
         rules = {'deckhand:create_cleartext_documents': '@',
@@ -821,7 +821,7 @@ class TestValidationsControllerWithValidationPolicy(
 
     def setUp(self):
         super(TestValidationsControllerWithValidationPolicy, self).setUp()
-        self._monkey_patch_document_validation()
+        self._monkey_patch_validation()
 
     def test_validation_with_validation_policy_success(self):
         rules = {'deckhand:create_cleartext_documents': '@',

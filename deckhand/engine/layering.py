@@ -24,9 +24,9 @@ from oslo_utils import excutils
 
 from deckhand.common import document as document_wrapper
 from deckhand.common import utils
-from deckhand.engine import document_validation
-from deckhand.engine import secrets_manager
+from deckhand.engine import substitution
 from deckhand.engine import utils as engine_utils
+from deckhand.engine import validation
 from deckhand import errors
 from deckhand import types
 
@@ -340,7 +340,7 @@ class DocumentLayering(object):
     def _pre_validate_documents(self, documents):
         LOG.debug('%s performing document pre-validation.',
                   self.__class__.__name__)
-        validator = document_validation.DocumentValidation(
+        validator = validation.DocumentValidation(
             documents, pre_validate=True)
         results = validator.validate_all()
         val_errors = []
@@ -465,7 +465,7 @@ class DocumentLayering(object):
         substitution_sources = self._calc_replacements_and_substitutions(
             substitution_sources)
 
-        self.secrets_substitution = secrets_manager.SecretsSubstitution(
+        self.secrets_substitution = substitution.DataSubstitution(
             substitution_sources,
             fail_on_missing_sub_src=fail_on_missing_sub_src)
 

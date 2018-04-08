@@ -179,7 +179,7 @@ For post-rendering validation, 2 types of behavior are possible:
 Validation Module
 -----------------
 
-.. autoclass:: deckhand.engine.document_validation.DocumentValidation
+.. autoclass:: deckhand.engine.validation.DocumentValidation
    :members:
    :private-members:
 

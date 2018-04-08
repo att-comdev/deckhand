@@ -158,7 +158,7 @@ class SecretsManager(object):
         return _schema
 
 
-class SecretsSubstitution(object):
+class DataSubstitution(object):
     """Class for document substitution logic for YAML files."""
 
     __slots__ = ('_fail_on_missing_sub_src', '_substitution_sources')
@@ -188,7 +188,7 @@ class SecretsSubstitution(object):
         # Sanitize any secrets contained in `error.message` referentially.
         if error.message and any(
                 r.match(error.message)
-                for r in SecretsSubstitution._insecure_reg_exps):
+                for r in DataSubstitution._insecure_reg_exps):
             error.message = safe_message
 
         # Sanitize any secrets extracted from the document itself.
@@ -221,7 +221,7 @@ class SecretsSubstitution(object):
 
     def __init__(self, substitution_sources=None,
                  fail_on_missing_sub_src=True):
-        """SecretSubstitution constructor.
+        """DataSubstitution constructor.
 
         This class will automatically detect documents that require
         substitution; documents need not be filtered prior to being passed to

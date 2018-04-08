@@ -20,11 +20,10 @@ from deckhand.engine import layering
 from deckhand import errors
 from deckhand import factories
 from deckhand.tests import test_utils
-from deckhand.tests.unit.engine import test_document_layering
+from deckhand.tests.unit.engine import base as test_base
 
 
-class TestDocumentLayeringNegative(
-        test_document_layering.TestDocumentLayering):
+class TestDocumentLayeringNegative(test_base.BaseEngineTestCase):
 
     def test_layering_method_merge_key_not_in_child(self):
         mapping = {
@@ -219,8 +218,7 @@ class TestDocumentLayeringNegative(
             errors.InvalidDocumentParent, self._test_layering, documents)
 
 
-class TestDocumentLayeringValidationNegative(
-        test_document_layering.TestDocumentLayering):
+class TestDocumentLayeringValidationNegative(test_base.BaseEngineTestCase):
 
     def test_layering_invalid_substitution_format_raises_exc(self):
         doc_factory = factories.DocumentFactory(1, [1])

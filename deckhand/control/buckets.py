@@ -19,8 +19,8 @@ import six
 from deckhand.control import base as api_base
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
-from deckhand.engine import document_validation
-from deckhand.engine import secrets_manager
+from deckhand.engine import substitution
+from deckhand.engine import validation
 from deckhand import errors as deckhand_errors
 from deckhand import policy
 from deckhand import types
@@ -44,7 +44,7 @@ class BucketsResource(api_base.BaseResource):
         data_schemas = db_api.revision_documents_get(
             schema=types.DATA_SCHEMA_SCHEMA, deleted=False)
         try:
-            doc_validator = document_validation.DocumentValidation(
+            doc_validator = validation.DocumentValidation(
                 documents, data_schemas, pre_validate=True)
             validations = doc_validator.validate_all()
         except deckhand_errors.InvalidDocumentFormat as e:
@@ -52,7 +52,7 @@ class BucketsResource(api_base.BaseResource):
             raise falcon.HTTPBadRequest(description=e.format_message())
 
         for document in documents:
-            if secrets_manager.SecretsManager.requires_encryption(document):
+            if substitution.SecretsManager.requires_encryption(document):
                 policy.conditional_authorize(
                     'deckhand:create_encrypted_documents', req.context)
                 break
@@ -74,9 +74,9 @@ class BucketsResource(api_base.BaseResource):
     def _prepare_secret_documents(self, documents):
         # Encrypt data for secret documents, if any.
         for document in documents:
-            if secrets_manager.SecretsManager.requires_encryption(document):
-                secret_ref = secrets_manager.SecretsManager.create(document)
-                document['data'] = secret_ref
+            if substitution.SecretsManager.requires_encryption(document):
+                secret_data = substitution.SecretsManager.create(document)
+                document['data'] = secret_data
         return documents
 
     def _create_revision_documents(self, bucket_name, documents,

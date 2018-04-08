@@ -14,11 +14,10 @@
 
 from deckhand import errors
 from deckhand import factories
-from deckhand.tests.unit.engine import test_document_layering
+from deckhand.tests.unit.engine import base as test_base
 
 
-class TestDocumentLayeringReplacementNegative(
-        test_document_layering.TestDocumentLayering):
+class TestDocumentLayeringReplacementNegative(test_base.BaseEngineTestCase):
 
     def test_replacement_with_incompatible_name_or_schema_raises_exc(self):
         """Validate that attempting to replace a child with its parent when

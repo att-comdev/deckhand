@@ -17,11 +17,10 @@ import itertools
 import mock
 
 from deckhand import factories
-from deckhand.tests.unit.engine import test_document_layering
+from deckhand.tests.unit.engine import base as test_base
 
 
-class TestDocumentLayeringWithSubstitution(
-        test_document_layering.TestDocumentLayering):
+class TestDocumentLayeringWithSubstitution(test_base.BaseEngineTestCase):
 
     def test_layering_and_substitution_default_scenario(self):
         # Validate that layering and substitution work together.
