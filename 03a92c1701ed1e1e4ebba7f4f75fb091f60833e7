@@ -22,6 +22,76 @@
       "revId": "03a92c1701ed1e1e4ebba7f4f75fb091f60833e7",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f4f90a2_0c5e3ae6",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-08T02:45:03Z",
+      "side": 1,
+      "message": "++. would need this to be a valid bash logic test",
+      "parentUuid": "ede874f2_5bf26149",
+      "range": {
+        "startLine": 19,
+        "startChar": 3,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "03a92c1701ed1e1e4ebba7f4f75fb091f60833e7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52a826aa_d496f8f8",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-08T02:45:03Z",
+      "side": 1,
+      "message": "mkdir -p $ROOTDIR/results",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 6
+      },
+      "revId": "03a92c1701ed1e1e4ebba7f4f75fb091f60833e7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4d50d97d_fdd8e0ec",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-08T02:45:03Z",
+      "side": 1,
+      "message": "can we pull this out of the if-statement if it get executed for both the if and else part?",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 14
+      },
+      "revId": "03a92c1701ed1e1e4ebba7f4f75fb091f60833e7",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
