@@ -21,8 +21,8 @@ from deckhand.control import base as api_base
 from deckhand.control import common
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
-from deckhand.engine import document_validation
 from deckhand.engine import layering
+from deckhand.engine import validation
 from deckhand import errors
 from deckhand import policy
 from deckhand import types
@@ -182,7 +182,7 @@ class RenderedDocumentsResource(api_base.BaseResource):
         # and substitution didn't break anything.
         data_schemas = db_api.revision_documents_get(
             schema=types.DATA_SCHEMA_SCHEMA, deleted=False)
-        doc_validator = document_validation.DocumentValidation(
+        doc_validator = validation.DocumentValidation(
             rendered_documents, data_schemas, pre_validate=False)
         try:
             validations = doc_validator.validate_all()

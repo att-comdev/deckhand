@@ -15,11 +15,10 @@
 import itertools
 import yaml
 
-from deckhand.tests.unit.engine import test_document_layering
+from deckhand.tests.unit.engine import base as test_base
 
 
-class TestDocumentLayeringWithReplacement(
-        test_document_layering.TestDocumentLayering):
+class TestDocumentLayeringWithReplacement(test_base.BaseEngineTestCase):
 
     def setUp(self):
         super(TestDocumentLayeringWithReplacement, self).setUp()

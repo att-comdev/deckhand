@@ -17,7 +17,7 @@ import yaml
 import mock
 
 from deckhand.control import revision_documents
-from deckhand.engine import secrets_manager
+from deckhand.engine import substitution
 from deckhand import errors
 from deckhand import factories
 from deckhand.tests.unit.control import base as test_base
@@ -220,7 +220,7 @@ class TestRenderedDocumentsControllerNegative(
             'revision']
 
         with mock.patch.object(
-                revision_documents, 'document_validation',
+                revision_documents, 'validation',
                 autospec=True) as m_doc_validation:
             (m_doc_validation.DocumentValidation.return_value
                 .validate_all.side_effect) = errors.InvalidDocumentFormat
@@ -276,7 +276,7 @@ class TestRenderedDocumentsControllerNegativeRBAC(
                                                       'encrypted')
         payload = [layering_policy, encrypted_document]
 
-        with mock.patch.object(secrets_manager, 'SecretsManager',
+        with mock.patch.object(substitution, 'SecretsManager',
                                autospec=True) as mock_secrets_mgr:
             mock_secrets_mgr.create.return_value = payload[0]['data']
             resp = self.app.simulate_put(

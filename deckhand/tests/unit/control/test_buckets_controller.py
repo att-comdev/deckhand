@@ -17,7 +17,7 @@ import yaml
 import mock
 from oslo_config import cfg
 
-from deckhand.engine import secrets_manager
+from deckhand.engine import substitution
 from deckhand import factories
 from deckhand.tests import test_utils
 from deckhand.tests.unit.control import base as test_base
@@ -100,7 +100,7 @@ class TestBucketsController(test_base.BaseControllerTest):
         secrets_factory = factories.DocumentSecretFactory()
         payload = [secrets_factory.gen_test('Certificate', 'encrypted')]
 
-        with mock.patch.object(secrets_manager, 'SecretsManager',
+        with mock.patch.object(substitution, 'SecretsManager',
                                autospec=True) as mock_secrets_mgr:
             mock_secrets_mgr.create.return_value = payload[0]['data']
             _do_test(payload)
@@ -115,7 +115,7 @@ class TestBucketsController(test_base.BaseControllerTest):
         data_schema_factory = factories.DataSchemaFactory()
         data_schema = data_schema_factory.gen_test(document['schema'], {})
 
-        with mock.patch.object(secrets_manager, 'SecretsManager',
+        with mock.patch.object(substitution, 'SecretsManager',
                                autospec=True) as mock_secrets_mgr:
             mock_secrets_mgr.create.return_value = document['data']
             _do_test([document, data_schema])

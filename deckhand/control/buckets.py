@@ -19,8 +19,8 @@ import six
 from deckhand.control import base as api_base
 from deckhand.control.views import document as document_view
 from deckhand.db.sqlalchemy import api as db_api
-from deckhand.engine import document_validation
-from deckhand.engine import secrets_manager
+from deckhand.engine import substitution
+from deckhand.engine import validation
 from deckhand import errors as deckhand_errors
 from deckhand import policy
 from deckhand import types
@@ -44,7 +44,7 @@ class BucketsResource(api_base.BaseResource):
         data_schemas = db_api.revision_documents_get(
             schema=types.DATA_SCHEMA_SCHEMA, deleted=False)
         try:
-            doc_validator = document_validation.DocumentValidation(
+            doc_validator = validation.DocumentValidation(
                 documents, data_schemas, pre_validate=True)
             validations = doc_validator.validate_all()
         except deckhand_errors.InvalidDocumentFormat as e:
@@ -76,7 +76,7 @@ class BucketsResource(api_base.BaseResource):
         for document in secret_documents:
             # TODO(fmontei): Move all of this to document validation directly.
             if document['metadata'].get('storagePolicy') == 'encrypted':
-                secret_data = secrets_manager.SecretsManager.create(document)
+                secret_data = substitution.SecretsManager.create(document)
                 document['data'] = secret_data
 
     def _create_revision_documents(self, bucket_name, documents,

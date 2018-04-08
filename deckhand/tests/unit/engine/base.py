@@ -16,10 +16,95 @@ import copy
 import os
 import yaml
 
+from deckhand.engine import layering
 from deckhand.tests.unit import base as test_base
+from deckhand import types
 
 
-class TestDocumentValidationBase(test_base.DeckhandTestCase):
+class BaseEngineTestCase(test_base.DeckhandTestCase):
+
+    def _test_layering(self, documents, site_expected=None,
+                       region_expected=None, global_expected=None,
+                       validate=False, strict=True, **kwargs):
+        # TODO(fmontei): Refactor all tests to work with strict=True.
+
+        # Test layering twice: once by passing in the documents in the normal
+        # order and again with the documents in reverse order for good measure,
+        # to verify that the documents are being correctly sorted by their
+        # substitution dependency chain.
+        for documents in (documents, list(reversed(documents))):
+            document_layering = layering.DocumentLayering(
+                documents, validate=validate, **kwargs)
+
+            site_docs = []
+            region_docs = []
+            global_docs = []
+
+            # The layering policy is not returned as it is immutable. So all
+            # docs should have a metadata.layeringDefinitionn.layer section.
+            rendered_documents = document_layering.render()
+            for doc in rendered_documents:
+                # No need to validate the LayeringPolicy: it remains unchanged.
+                if doc['schema'].startswith(types.LAYERING_POLICY_SCHEMA):
+                    continue
+                layer = doc['metadata']['layeringDefinition']['layer']
+                if layer == 'site':
+                    site_docs.append(doc.get('data'))
+                if layer == 'region':
+                    region_docs.append(doc.get('data'))
+                if layer == 'global':
+                    global_docs.append(doc.get('data'))
+
+            if site_expected is not None:
+                if not isinstance(site_expected, list):
+                    site_expected = [site_expected]
+
+                if strict:
+                    self.assertEqual(len(site_expected), len(site_docs))
+
+                for expected in site_expected:
+                    self.assertIn(expected, site_docs)
+                    idx = site_docs.index(expected)
+                    self.assertEqual(
+                        expected, site_docs[idx],
+                        'Actual site data does not match expected.')
+                    site_docs.remove(expected)
+            else:
+                self.assertEmpty(site_docs)
+
+            if region_expected is not None:
+                if not isinstance(region_expected, list):
+                    region_expected = [region_expected]
+
+                if strict:
+                    self.assertEqual(len(region_expected), len(region_docs))
+
+                for expected in region_expected:
+                    self.assertIn(expected, region_docs)
+                    idx = region_docs.index(expected)
+                    self.assertEqual(
+                        expected, region_docs[idx],
+                        'Actual region data does not match expected.')
+                    region_docs.remove(expected)
+            else:
+                self.assertEmpty(region_docs)
+
+            if global_expected is not None:
+                if not isinstance(global_expected, list):
+                    global_expected = [global_expected]
+
+                if strict:
+                    self.assertEqual(len(global_expected), len(global_docs))
+
+                for expected in global_expected:
+                    self.assertIn(expected, global_docs)
+                    idx = global_docs.index(expected)
+                    self.assertEqual(
+                        expected, global_docs[idx],
+                        'Actual global data does not match expected.')
+                    global_docs.remove(expected)
+            else:
+                self.assertEmpty(global_docs)
 
     def _read_data(self, file_name):
         dir_path = os.path.dirname(os.path.realpath(__file__))
