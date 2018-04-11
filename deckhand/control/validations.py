@@ -43,8 +43,8 @@ class ValidationsResource(api_base.BaseResource):
         try:
             resp_body = db_api.validation_create(
                 revision_id, validation_name, validation_data)
-        except errors.RevisionNotFound as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+        except errors.RevisionNotFound:
+            raise
 
         resp.status = falcon.HTTP_201
         resp.append_header('Content-Type', 'application/x-yaml')
@@ -77,8 +77,8 @@ class ValidationsResource(api_base.BaseResource):
         try:
             entry = db_api.validation_get_entry(
                 revision_id, validation_name, entry_id)
-        except (errors.RevisionNotFound, errors.ValidationNotFound) as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+        except (errors.RevisionNotFound, errors.ValidationNotFound):
+            raise
 
         resp_body = self.view_builder.show_entry(entry)
         return resp_body
@@ -89,8 +89,8 @@ class ValidationsResource(api_base.BaseResource):
         try:
             entries = db_api.validation_get_all_entries(revision_id,
                                                         validation_name)
-        except errors.RevisionNotFound as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+        except errors.RevisionNotFound:
+            raise
 
         resp_body = self.view_builder.list_entries(entries)
         return resp_body
@@ -99,8 +99,8 @@ class ValidationsResource(api_base.BaseResource):
     def _list_all_validations(self, req, resp, revision_id):
         try:
             validations = db_api.validation_get_all(revision_id)
-        except errors.RevisionNotFound as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+        except errors.RevisionNotFound:
+            raise
 
         resp_body = self.view_builder.list(validations)
         return resp_body

@@ -34,10 +34,10 @@ class RevisionTagsResource(api_base.BaseResource):
 
         try:
             resp_tag = db_api.revision_tag_create(revision_id, tag, tag_data)
-        except (errors.RevisionNotFound, errors.RevisionTagNotFound) as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
-        except errors.RevisionTagBadFormat as e:
-            raise falcon.HTTPBadRequest(description=e.format_message())
+        except (errors.RevisionNotFound, errors.RevisionTagNotFound):
+            raise
+        except errors.RevisionTagBadFormat:
+            raise
 
         resp_body = revision_tag_view.ViewBuilder().show(resp_tag)
         resp.status = falcon.HTTP_201
@@ -56,8 +56,8 @@ class RevisionTagsResource(api_base.BaseResource):
         try:
             resp_tag = db_api.revision_tag_get(revision_id, tag)
         except (errors.RevisionNotFound,
-                errors.RevisionTagNotFound) as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+                errors.RevisionTagNotFound):
+            raise
 
         resp_body = revision_tag_view.ViewBuilder().show(resp_tag)
         resp.status = falcon.HTTP_200
@@ -68,8 +68,8 @@ class RevisionTagsResource(api_base.BaseResource):
         """List all tags for a revision."""
         try:
             resp_tags = db_api.revision_tag_get_all(revision_id)
-        except errors.RevisionNotFound as e:
-            raise falcon.HTTPNotFound(e.format_message())
+        except errors.RevisionNotFound:
+            raise
 
         resp_body = revision_tag_view.ViewBuilder().list(resp_tags)
         resp.status = falcon.HTTP_200
@@ -88,8 +88,8 @@ class RevisionTagsResource(api_base.BaseResource):
         try:
             db_api.revision_tag_delete(revision_id, tag)
         except (errors.RevisionNotFound,
-                errors.RevisionTagNotFound) as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+                errors.RevisionTagNotFound):
+            raise
 
         resp.status = falcon.HTTP_204
 
@@ -98,7 +98,7 @@ class RevisionTagsResource(api_base.BaseResource):
         """Delete all tags for a revision."""
         try:
             db_api.revision_tag_delete_all(revision_id)
-        except errors.RevisionNotFound as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+        except errors.RevisionNotFound:
+            raise
 
         resp.status = falcon.HTTP_204
