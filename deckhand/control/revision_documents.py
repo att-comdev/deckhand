@@ -14,6 +14,7 @@
 
 import falcon
 from oslo_log import log as logging
+from oslo_utils import excutils
 import six
 
 from deckhand.common import utils
@@ -118,17 +119,14 @@ class RenderedDocumentsResource(api_base.BaseResource):
                 errors.InvalidDocumentParent,
                 errors.InvalidDocumentReplacement,
                 errors.IndeterminateDocumentParent,
+                errors.LayeringPolicyNotFound,
                 errors.MissingDocumentKey,
                 errors.SubstitutionSourceDataNotFound,
+                errors.SubstitutionSourceNotFound,
+                errors.UnknownSubstitutionError,
                 errors.UnsupportedActionMethod) as e:
-            raise falcon.HTTPBadRequest(description=e.format_message())
-        except (errors.LayeringPolicyNotFound,
-                errors.SubstitutionSourceNotFound) as e:
-            raise falcon.HTTPConflict(description=e.format_message())
-        except (errors.DeckhandException,
-                errors.UnknownSubstitutionError) as e:
-            raise falcon.HTTPInternalServerError(
-                description=e.format_message())
+            with excutils.save_and_reraise_exception():
+                LOG.exception(e.format_message())
 
         # Filters to be applied post-rendering, because many documents are
         # involved in rendering. User filters can only be applied once all
@@ -187,12 +185,19 @@ class RenderedDocumentsResource(api_base.BaseResource):
         try:
             validations = doc_validator.validate_all()
         except errors.InvalidDocumentFormat as e:
-            LOG.error('Failed to post-validate rendered documents.')
-            LOG.exception(e.format_message())
-            raise falcon.HTTPInternalServerError(
-                description=e.format_message())
+            with excutils.save_and_reraise_exception():
+                # Post-rendering validation errors likely indicate an internal
+                # rendering bug, so override the default code to 500.
+                e.code = 500
+                LOG.error('Failed to post-validate rendered documents.')
+                LOG.exception(e.format_message())
         else:
             failed_validations = [
                 v for v in validations if v['status'] == 'failure']
             if failed_validations:
+                # NOTE(fmontei): Raise the validation here with the formatting
+                # used by the Validations API for parity.
+                # TODO(fmontei): Should these validation errors be stored in
+                # the Validations API, with ValidationMessage-formatted errors
+                # thrown instead?
                 raise falcon.HTTPBadRequest(description=failed_validations)
