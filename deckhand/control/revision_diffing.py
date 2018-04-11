@@ -33,8 +33,8 @@ class RevisionDiffingResource(api_base.BaseResource):
         try:
             resp_body = db_api.revision_diff(
                 revision_id, comparison_revision_id)
-        except (errors.RevisionNotFound) as e:
-            raise falcon.HTTPNotFound(description=e.format_message())
+        except errors.RevisionNotFound:
+            raise
 
         resp.status = falcon.HTTP_200
         resp.body = resp_body
