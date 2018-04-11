@@ -14,6 +14,7 @@
 
 import falcon
 from oslo_log import log as logging
+from oslo_utils import excutils
 import six
 
 from deckhand.common import utils
@@ -118,17 +119,14 @@ class RenderedDocumentsResource(api_base.BaseResource):
                 errors.InvalidDocumentParent,
                 errors.InvalidDocumentReplacement,
                 errors.IndeterminateDocumentParent,
+                errors.LayeringPolicyNotFound,
                 errors.MissingDocumentKey,
                 errors.SubstitutionSourceDataNotFound,
+                errors.SubstitutionSourceNotFound,
+                errors.UnknownSubstitutionError,
                 errors.UnsupportedActionMethod) as e:
-            raise falcon.HTTPBadRequest(description=e.format_message())
-        except (errors.LayeringPolicyNotFound,
-                errors.SubstitutionSourceNotFound) as e:
-            raise falcon.HTTPConflict(description=e.format_message())
-        except (errors.DeckhandException,
-                errors.UnknownSubstitutionError) as e:
-            raise falcon.HTTPInternalServerError(
-                description=e.format_message())
+            with excutils.save_and_reraise_exception():
+                LOG.exception(e.format_message())
 
         # Filters to be applied post-rendering, because many documents are
         # involved in rendering. User filters can only be applied once all
