@@ -124,10 +124,6 @@ cat <<EOCONF > $CONF_DIR/deckhand.conf
 debug = true
 publish_errors = true
 use_stderr = true
-# NOTE: allow_anonymous_access allows these functional tests to get around
-# Keystone authentication, but the context that is provided has zero privileges
-# so we must also override the policy file for authorization to pass.
-allow_anonymous_access = true
 
 [oslo_policy]
 policy_file = policy.yaml
@@ -170,12 +166,9 @@ fi
     log_section Starting server
 }
 
-function gen_paste {
-    log_section Creating paste config without [filter:authtoken]
-    # NOTE(fmontei): Since this script does not currently support Keystone
-    # integration, we remove ``filter:authtoken`` from the ``deckhand_api``
-    # pipeline to avoid any kind of auth issues.
-    sed 's/authtoken api/api/' etc/deckhand/deckhand-paste.ini &> $CONF_DIR/deckhand-paste.ini
+function use_noauth_paste {
+    log_section Using noauth-paste.ini without [filter:authtoken]
+    cp etc/deckhand/noauth-paste.ini $CONF_DIR/
 }
 
 function gen_policy {
@@ -195,7 +188,7 @@ function gen_policy {
 }
 
 gen_config
-gen_paste
+use_noauth_paste
 gen_policy
 
 ROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -211,20 +204,20 @@ if [ -z "$DECKHAND_IMAGE" ]; then
     # information, see: https://github.com/att-comdev/deckhand/issues/20
     export DECKHAND_API_WORKERS=1
     export DECKHAND_API_THREADS=4
-    source $ROOTDIR/../entrypoint.sh server &
+    source $ROOTDIR/../entrypoint.sh server --development-mode &
 else
     log_section "Running Deckhand via Docker"
     sudo docker run \
         --rm \
         --net=host \
         -v $CONF_DIR:/etc/deckhand \
-        $DECKHAND_IMAGE alembic upgrade head &> $STDOUT
+        $DECKHAND_IMAGE alembic upgrade head &> $STDOUT &
     sudo docker run \
         --rm \
         --net=host \
         -p 9000:9000 \
         -v $CONF_DIR:/etc/deckhand \
-        $DECKHAND_IMAGE &> $STDOUT &
+        $DECKHAND_IMAGE server --development-mode &> $STDOUT &
 fi
 
 # Give the server a chance to come up. Better to poll a health check.
