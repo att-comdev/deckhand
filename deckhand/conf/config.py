@@ -50,8 +50,8 @@ Possible values:
     * False
 """),
     cfg.BoolOpt('profiler', default=False,
-                help="Enabling profiling of API requests. Do NOT "
-                     "use in production."),
+                help="Enables profiling of API requests. Do NOT use in "
+                     "production."),
 ]
 
 
