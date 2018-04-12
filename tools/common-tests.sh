@@ -143,8 +143,6 @@ fi
 
     echo $CONF_DIR/logging.conf 1>&2
     cat $CONF_DIR/logging.conf 1>&2
-
-    log_section Starting server
 }
 
 
@@ -155,7 +153,7 @@ function gen_paste {
 
     if $disable_keystone; then
         log_section Disabling Keystone authentication.
-        sed 's/authtoken api/api/' etc/deckhand/deckhand-paste.ini &> $CONF_DIR/deckhand-paste.ini
+        cp etc/deckhand/noauth-paste.ini $CONF_DIR/noauth-paste.ini
     else
         cp etc/deckhand/deckhand-paste.ini $CONF_DIR/deckhand-paste.ini
     fi

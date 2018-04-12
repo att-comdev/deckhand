@@ -24,17 +24,40 @@ from deckhand.db.sqlalchemy import api as db_api
 
 CONF = cfg.CONF
 
+CONF.register_opt(cfg.BoolOpt('development_mode', default=False,
+                  help="Enables development mode. Do NOT use in "
+                  "production."))
+
 logging.register_options(CONF)
 LOG = logging.getLogger(__name__)
 
 CONFIG_FILES = ['deckhand.conf', 'deckhand-paste.ini']
+_NO_AUTH_CONFIG = 'noauth-paste.ini'
 
 
 def _get_config_files(env=None):
+    config_files = CONFIG_FILES[:]
+
     if env is None:
         env = os.environ
+
     dirname = env.get('DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
-    return [os.path.join(dirname, config_file) for config_file in CONFIG_FILES]
+    return [os.path.join(dirname, config_file) for config_file in config_files]
+
+
+def _get_paste_file(env=None):
+    if env is None:
+        env = os.environ
+
+    if CONF.development_mode:
+        paste_file = _NO_AUTH_CONFIG
+        LOG.warning('Development mode enabled - Keystone authentication '
+                    'disabled.')
+    else:
+        paste_file = CONFIG_FILES[-1]
+
+    dirname = env.get('DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
+    return os.path.join(dirname, paste_file)
 
 
 def setup_logging(conf):
@@ -53,9 +76,11 @@ def init_application():
     Create routes for the v1.0 API and sets up logging.
     """
     config_files = _get_config_files()
-    paste_file = config_files[-1]
 
     CONF([], project='deckhand', default_config_files=config_files)
+
+    paste_file = _get_paste_file()
+
     setup_logging(CONF)
 
     policy.Enforcer(CONF)
