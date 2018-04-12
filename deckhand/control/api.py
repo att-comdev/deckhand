@@ -20,6 +20,7 @@ from oslo_log import log as logging
 from oslo_policy import policy
 from paste import deploy
 
+from deckhand.conf import config  # noqa
 from deckhand.db.sqlalchemy import api as db_api
 
 CONF = cfg.CONF
@@ -28,13 +29,31 @@ logging.register_options(CONF)
 LOG = logging.getLogger(__name__)
 
 CONFIG_FILES = ['deckhand.conf', 'deckhand-paste.ini']
+_NO_AUTH_CONFIG = 'noauth-paste.ini'
 
 
 def _get_config_files(env=None):
     if env is None:
         env = os.environ
+
+    config_files = CONFIG_FILES[:]
     dirname = env.get('DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
-    return [os.path.join(dirname, config_file) for config_file in CONFIG_FILES]
+    conf_path = os.path.join(dirname, config_files[0])
+
+    temp_conf = {}
+    config_parser = cfg.ConfigParser(conf_path, temp_conf)
+    config_parser.parse()
+
+    use_development_mode = (
+        temp_conf['DEFAULT'].get('development_mode') == ['true']
+    )
+
+    if use_development_mode:
+        config_files[-1] = _NO_AUTH_CONFIG
+        LOG.warning('Development mode enabled - Keystone authentication '
+                    'disabled.')
+
+    return [os.path.join(dirname, config_file) for config_file in config_files]
 
 
 def setup_logging(conf):
@@ -56,6 +75,7 @@ def init_application():
     paste_file = config_files[-1]
 
     CONF([], project='deckhand', default_config_files=config_files)
+
     setup_logging(CONF)
 
     policy.Enforcer(CONF)
