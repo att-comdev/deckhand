@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba480d25_0e3b785a",
+        "filename": "deckhand/control/validations.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-12T15:23:08Z",
+      "side": 1,
+      "message": "with excutils.save_and_reraise_exception():\n        LOG.exception(e.format_message())",
+      "range": {
+        "startLine": 48,
+        "startChar": 12,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "a304da3e1e4ef56cc3a22ede05a29d95188db695",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
