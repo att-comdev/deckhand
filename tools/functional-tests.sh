@@ -175,7 +175,7 @@ function gen_paste {
     # NOTE(fmontei): Since this script does not currently support Keystone
     # integration, we remove ``filter:authtoken`` from the ``deckhand_api``
     # pipeline to avoid any kind of auth issues.
-    sed 's/authtoken api/api/' etc/deckhand/deckhand-paste.ini &> $CONF_DIR/deckhand-paste.ini
+    cp deckhand/etc/noauth-api-paste.ini $CONF_DIR/deckhand-paste.ini
 }
 
 function gen_policy {

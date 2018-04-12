@@ -14,6 +14,7 @@
 
 import logging as py_logging
 import os
+import sys
 
 from oslo_config import cfg
 from oslo_log import log as logging
@@ -27,7 +28,7 @@ CONF = cfg.CONF
 logging.register_options(CONF)
 LOG = logging.getLogger(__name__)
 
-CONFIG_FILES = ['deckhand.conf', 'deckhand-paste.ini']
+CONFIG_FILES = ['deckhand.conf', 'noauth-paste.ini', 'deckhand-paste.ini']
 
 
 def _get_config_files(env=None):
@@ -54,6 +55,9 @@ def init_application():
     """
     config_files = _get_config_files()
     paste_file = config_files[-1]
+
+    if "--development-mode" in sys.argv:
+        paste_file = config_files[-2]
 
     CONF([], project='deckhand', default_config_files=config_files)
     setup_logging(CONF)
