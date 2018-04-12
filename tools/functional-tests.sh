@@ -5,16 +5,19 @@
 
 set -xe
 
-# Meant for capturing output of Deckhand image. This requires that logging
-# in the image be set up to pipe everything out to stdout/stderr.
-STDOUT=$(mktemp)
-
 # NOTE(fmontei): `DECKHAND_IMAGE` should only be specified if the desire is to
 # run Deckhand functional tests against a specific Deckhand image, which is
 # useful for CICD (as validating the image is vital). However, if the
 # `DECKHAND_IMAGE` is not specified, then this implies that the most current
 # version of the code should be used, which is in the repo itself.
 DECKHAND_IMAGE=${DECKHAND_IMAGE:-}
+
+if [ -z "$DECKHAND_IMAGE" ]; then
+    RUN_WITH_UWSGI=true
+else
+    RUN_WITH_UWSGI=false
+fi
+
 ROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 source $ROOTDIR/common-tests.sh
@@ -31,12 +34,16 @@ function cleanup_deckhand {
         sudo docker stop $DECKHAND_ID
     fi
 
+    if [ -n "$DECKHAND_ALEMBIC_ID" ]; then
+        sudo docker stop $DECKHAND_ALEMBIC_ID
+    fi
+
     rm -rf $CONF_DIR
 
-    # Kill all processes and child processes (for example, if workers > 1)
-    # if using uwsgi only.
-    PGID=$(ps -o comm -o pgid | grep uwsgi | grep -o [0-9]* | head -n 1)
-    if [ -n "$PGID" ]; then
+    if $RUN_WITH_UWSGI; then
+        # Kill all processes and child processes (for example, if workers > 1)
+        # if using uwsgi only.
+        PGID=$(ps -o comm -o pgid | grep uwsgi | grep -o [0-9]* | head -n 1)
         setsid kill -- -$PGID
     fi
 }
@@ -46,11 +53,10 @@ trap cleanup_deckhand EXIT
 
 
 function deploy_deckhand {
-    gen_config "http://localhost:9000"
+    gen_config true "127.0.0.1:9000"
     gen_paste true
-    gen_policy
 
-    if [ -z "$DECKHAND_IMAGE" ]; then
+    if $RUN_WITH_UWSGI; then
         log_section "Running Deckhand via uwsgi."
 
         alembic upgrade head
@@ -64,24 +70,35 @@ function deploy_deckhand {
         source $ROOTDIR/../entrypoint.sh server &
     else
         log_section "Running Deckhand via Docker."
-        sudo docker run \
-            --rm \
-            --net=host \
-            -v $CONF_DIR:/etc/deckhand \
-            $DECKHAND_IMAGE alembic upgrade head &> $STDOUT &
-        sudo docker run \
-            --rm \
-            --net=host \
-            -p 9000:9000 \
-            -v $CONF_DIR:/etc/deckhand \
-            $DECKHAND_IMAGE server &> $STDOUT &
+
+        # If container is already running, kill it.
+        DECKHAND_ID=$(sudo docker ps --filter ancestor=$DECKHAND_IMAGE --format "{{.ID}}")
+        if [ -n "$DECKHAND_ID" ]; then
+            sudo docker stop $DECKHAND_ID
+        fi
+
+        DECKHAND_ALEMBIC_ID=$(
+            sudo docker run \
+                --rm \
+                --net=host \
+                -v $CONF_DIR:/etc/deckhand \
+                $DECKHAND_IMAGE alembic upgrade head &
+        )
+        echo $DECKHAND_ALEMBIC_ID
+
+        DECKHAND_ID=$(
+            sudo docker run \
+                --rm \
+                --net=host \
+                -p 9000:9000 \
+                -v $CONF_DIR:/etc/deckhand \
+                $DECKHAND_IMAGE server &
+        )
+        echo $DECKHAND_ID
     fi
 
     # Give the server a chance to come up. Better to poll a health check.
     sleep 5
-
-    DECKHAND_ID=$(sudo docker ps | grep deckhand | awk '{print $1}')
-    echo $DECKHAND_ID
 }
 
 
@@ -89,7 +106,7 @@ function deploy_deckhand {
 deploy_postgre
 deploy_deckhand
 
-log_section Running tests
+log_section "Running tests."
 
 # Create folder for saving HTML test results.
 mkdir -p $ROOTDIR/results
@@ -109,8 +126,6 @@ set -e
 if [ "x$TEST_STATUS" = "x0" ]; then
     log_section Done SUCCESS
 else
-    log_section Deckhand Server Log
-    cat $STDOUT
     log_section Done FAILURE
     exit $TEST_STATUS
 fi
