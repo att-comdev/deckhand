@@ -140,10 +140,6 @@ cat <<EOCONF > $CONF_DIR/deckhand.conf
 debug = true
 publish_errors = true
 use_stderr = true
-# NOTE: allow_anonymous_access allows these functional tests to get around
-# Keystone authentication, but the context that is provided has zero privileges
-# so we must also override the policy file for authorization to pass.
-allow_anonymous_access = true
 
 [oslo_policy]
 policy_file = policy.yaml
@@ -178,12 +174,9 @@ EOCONF
     fi
 }
 
-function gen_paste_config {
-    log_section Creating paste config without [filter:authtoken]
-    # NOTE(fmontei): Since this script does not currently support Keystone
-    # integration, we remove ``filter:authtoken`` from the ``deckhand_api``
-    # pipeline to avoid any kind of auth issues.
-    sed 's/authtoken api/api/' etc/deckhand/deckhand-paste.ini &> $CONF_DIR/deckhand-paste.ini
+function use_noauth_paste {
+    log_section Using noauth-paste.ini without [filter:authtoken]
+    cp etc/deckhand/noauth-paste.ini $CONF_DIR/
 }
 
 function gen_policy {
@@ -204,7 +197,7 @@ function gen_policy {
 
 
 gen_config
-gen_paste_config
+use_noauth_paste
 gen_policy
 
 if $RUN_WITH_UWSGI; then
@@ -246,7 +239,7 @@ else
             --net=host \
             -p 9000:9000 \
             -v $CONF_DIR:/etc/deckhand \
-            $DECKHAND_IMAGE &> $STDOUT &
+            $DECKHAND_IMAGE server --development-mode &> $STDOUT &
     )
     echo $DECKHAND_ID
 fi
