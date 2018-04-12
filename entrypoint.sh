@@ -32,12 +32,18 @@ DECKHAND_API_WORKERS=${DECKHAND_API_WORKERS:-"1"}
 # Threads per worker
 DECKHAND_API_THREADS=${DECKHAND_API_THREADS:-"4"}
 # The Deckhand configuration directory containing deckhand.conf
-DECKHAND_CONFIG_DIR=${DECKHAND_CONFIG_DIR:-"/etc/deckhand"}
+DECKHAND_CONFIG_DIR=${DECKHAND_CONFIG_DIR:-"/etc/deckhand/deckhand.conf"}
 
 echo "Command: $1 with arguments $@"
 # Start deckhand application
 if [ "$1" = 'server' ]; then
+    if [ "$#" = "2" ]; then
+        mode="${@:2}"
+    else
+        mode=""
+    fi
     exec uwsgi \
+        --honour-stdin \
         -b 32768 \
         --callable deckhand_callable \
         --die-on-term \
@@ -47,7 +53,7 @@ if [ "$1" = 'server' ]; then
         -L \
         --lazy-apps \
         --master \
-        --pyargv "--config-file ${DECKHAND_CONFIG_DIR}/deckhand.conf" \
+        --pyargv "--config-file ${DECKHAND_CONFIG_DIR}/deckhand.conf $mode" \
         --threads $DECKHAND_API_THREADS \
         --workers $DECKHAND_API_WORKERS \
         -w deckhand.cmd
