@@ -10,6 +10,16 @@ function log_section {
 
 
 function deploy_postgre {
+    #######################################
+    # Deploy an ephemeral PostgreSQL DB.
+    # Globals:
+    #   POSTGRES_ID
+    #   POSTGRES_IP
+    # Arguments:
+    #   None
+    # Returns:
+    #   None
+    #######################################
     set -xe
 
     POSTGRES_ID=$(
@@ -31,14 +41,29 @@ function deploy_postgre {
 
 
 function gen_config {
+    #######################################
+    # Generate sample configuration file
+    # Globals:
+    #   CONF_DIR
+    #   DECKHAND_TEST_URL
+    #   DATABASE_URL
+    #   DECKHAND_CONFIG_DIR
+    # Arguments:
+    #   disable_keystone: true or false
+    #   Deckhand test URL: URL to Deckhand wsgi server
+    # Returns:
+    #   None
+    #######################################
     set -xe
 
-    log_section Creating config directory and test deckhand.conf
+    log_section "Creating config directory and test deckhand.conf"
+
+    local disable_keystone=$1
 
     CONF_DIR=$(mktemp -d -p $(pwd))
     sudo chmod 777 -R $CONF_DIR
 
-    export DECKHAND_TEST_URL=$1
+    export DECKHAND_TEST_URL=$2
     export DATABASE_URL=postgresql+psycopg2://deckhand:password@$POSTGRES_IP:5432/deckhand
     # Used by Deckhand's initialization script to search for config files.
     export DECKHAND_CONFIG_DIR=$CONF_DIR
@@ -97,10 +122,7 @@ cat <<EOCONF > $CONF_DIR/deckhand.conf
 debug = true
 publish_errors = true
 use_stderr = true
-# NOTE: allow_anonymous_access allows these functional tests to get around
-# Keystone authentication, but the context that is provided has zero privileges
-# so we must also override the policy file for authorization to pass.
-allow_anonymous_access = true
+development_mode = false
 
 [oslo_policy]
 policy_file = policy.yaml
@@ -132,50 +154,43 @@ auth_url = http://keystone.openstack.svc.cluster.local/v3
 auth_type = password
 EOCONF
 
-# Only set up logging if running Deckhand via uwsgi. The container already has
-# values for logging.
-if [ -z "$DECKHAND_IMAGE" ]; then
-    sed '1 a log_config_append = '"$CONF_DIR"'/logging.conf' $CONF_DIR/deckhand.conf
-fi
+    # Only set up logging if running Deckhand via uwsgi. The container already has
+    # values for logging.
+    if [ -z "$DECKHAND_IMAGE" ]; then
+        sed '1 a log_config_append = '"$CONF_DIR"'/logging.conf' $CONF_DIR/deckhand.conf
+    fi
+
+    if $disable_keystone; then
+        log_section "Toggling development_mode on to disable Keystone authentication."
+        sed -i -e 's/development_mode = false/development_mode = true/g' $CONF_DIR/deckhand.conf
+    fi
 
     echo $CONF_DIR/deckhand.conf 1>&2
     cat $CONF_DIR/deckhand.conf 1>&2
 
     echo $CONF_DIR/logging.conf 1>&2
     cat $CONF_DIR/logging.conf 1>&2
-
-    log_section Starting server
 }
 
 
 function gen_paste {
+    #######################################
+    # Generate sample paste.ini file
+    # Globals:
+    #   CONF_DIR
+    # Arguments:
+    #   disable_keystone: true or false
+    # Returns:
+    #   None
+    #######################################
     set -xe
 
     local disable_keystone=$1
 
     if $disable_keystone; then
-        log_section Disabling Keystone authentication.
-        sed 's/authtoken api/api/' etc/deckhand/deckhand-paste.ini &> $CONF_DIR/deckhand-paste.ini
+        log_section "Using noauth-paste.ini to disable Keystone authentication."
+        cp etc/deckhand/noauth-paste.ini $CONF_DIR/noauth-paste.ini
     else
         cp etc/deckhand/deckhand-paste.ini $CONF_DIR/deckhand-paste.ini
     fi
-}
-
-
-function gen_policy {
-    set -xe
-
-    log_section Creating policy file with liberal permissions
-
-    policy_file='etc/deckhand/policy.yaml.sample'
-    policy_pattern="deckhand\:"
-
-    touch $CONF_DIR/policy.yaml
-
-    sed -n "/$policy_pattern/p" "$policy_file" \
-        | sed 's/^../\"/' \
-        | sed 's/rule\:[A-Za-z\_\-]*/@/' > $CONF_DIR/policy.yaml
-
-    echo $CONF_DIR/'policy.yaml' 1>&2
-    cat $CONF_DIR/'policy.yaml' 1>&2
 }
