@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    Development mode has been added to Deckhand, allowing for the possibility
+    of running Deckhand without Keystone. A new paste file has been added
+    to ``etc/deckhand`` called ``noauth-paste.ini`` which excludes Keystone
+    authentication. To run Deckhand in development mode, issue::
+
+        ./entrypoint.sh server --development-mode
+
+    from the root Deckhand directory. Note that Deckhand will expect to find
+    ``noauth-paste.ini`` on the host with the ``--development-mode`` flag.

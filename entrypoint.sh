@@ -37,6 +37,11 @@ DECKHAND_CONFIG_DIR=${DECKHAND_CONFIG_DIR:-"/etc/deckhand"}
 echo "Command: $1 with arguments $@"
 # Start deckhand application
 if [ "$1" = 'server' ]; then
+    if [ "$#" = "2" ]; then
+        mode="${@:2}"
+    else
+        mode=""
+    fi
     exec uwsgi \
         -b 32768 \
         --callable deckhand_callable \
@@ -47,7 +52,7 @@ if [ "$1" = 'server' ]; then
         -L \
         --lazy-apps \
         --master \
-        --pyargv "--config-file ${DECKHAND_CONFIG_DIR}/deckhand.conf" \
+        --pyargv "--config-file ${DECKHAND_CONFIG_DIR}/deckhand.conf $mode" \
         --threads $DECKHAND_API_THREADS \
         --workers $DECKHAND_API_WORKERS \
         -w deckhand.cmd
