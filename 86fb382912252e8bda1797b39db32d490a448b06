@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76eb3397_32a2a2b7",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "May we put deckhand-paste.ini and deckhand.conf at the same level of identation?",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 21
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de3cd5d2_dfe0ac76",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "forged_roles\u003dNone",
+      "range": {
+        "startLine": 19,
+        "startChar": 28,
+        "endLine": 19,
+        "endChar": 40
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92f21193_af38af11",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "forged_roles or (\u0027admin\u0027,)",
+      "range": {
+        "startLine": 21,
+        "startChar": 28,
+        "endLine": 21,
+        "endChar": 40
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70c8b1ac_c350ad9e",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "This can be removed.",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 29
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9521aeef_8fe73cb2",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "This should be True (boolean value): https://github.com/openstack/oslo.context/blob/fd3b5f1cebe308bf5fb416613130e4cf960657a7/oslo_context/context.py#L452",
+      "range": {
+        "startLine": 46,
+        "startChar": 53,
+        "endLine": 46,
+        "endChar": 59
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6ccac7e9_9ff238de",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "This should be False (boolean value).",
+      "range": {
+        "startLine": 48,
+        "startChar": 53,
+        "endLine": 48,
+        "endChar": 60
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bff97a2e_508bf0e4",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "This can be removed.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 45
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "addafa18_29ff07c0",
+        "filename": "entrypoint.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-13T13:51:43Z",
+      "side": 1,
+      "message": "This should be removed as there\u0027s an append on L56 already.",
+      "range": {
+        "startLine": 35,
+        "startChar": 57,
+        "endLine": 35,
+        "endChar": 71
+      },
+      "revId": "86fb382912252e8bda1797b39db32d490a448b06",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
