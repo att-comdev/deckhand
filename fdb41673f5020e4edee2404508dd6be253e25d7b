@@ -22,6 +22,30 @@
       "revId": "fdb41673f5020e4edee2404508dd6be253e25d7b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddd3f2af_aeedd0a9",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-15T02:38:32Z",
+      "side": 1,
+      "message": "I forgot this is called by a hook.",
+      "parentUuid": "8453b2a6_04935556",
+      "range": {
+        "startLine": 16,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 18
+      },
+      "revId": "fdb41673f5020e4edee2404508dd6be253e25d7b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
