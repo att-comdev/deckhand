@@ -26,8 +26,6 @@ from deckhand import policy
 class RevisionsResource(api_base.BaseResource):
     """API resource for realizing CRUD operations for revisions."""
 
-    view_builder = revision_view.ViewBuilder()
-
     def on_get(self, req, resp, revision_id=None):
         """Returns list of existing revisions.
 
@@ -52,7 +50,7 @@ class RevisionsResource(api_base.BaseResource):
         except errors.RevisionNotFound as e:
             raise falcon.HTTPNotFound(description=e.format_message())
 
-        revision_resp = self.view_builder.show(revision)
+        revision_resp = revision_view.ViewBuilder.show(revision)
         resp.status = falcon.HTTP_200
         resp.body = revision_resp
 
@@ -67,7 +65,7 @@ class RevisionsResource(api_base.BaseResource):
             revisions = utils.multisort(revisions, sort_by, order_by)
 
         resp.status = falcon.HTTP_200
-        resp.body = self.view_builder.list(revisions)
+        resp.body = revision_view.ViewBuilder.list(revisions)
 
     @policy.authorize('deckhand:delete_revisions')
     def on_delete(self, req, resp):

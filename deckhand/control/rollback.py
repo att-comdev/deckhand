@@ -24,8 +24,6 @@ from deckhand import policy
 class RollbackResource(api_base.BaseResource):
     """API resource for realizing revision rollback."""
 
-    view_builder = revision_view.ViewBuilder()
-
     @policy.authorize('deckhand:create_cleartext_documents')
     def on_post(self, req, resp, revision_id):
         try:
@@ -45,6 +43,6 @@ class RollbackResource(api_base.BaseResource):
         except errors.InvalidRollback as e:
             raise falcon.HTTPBadRequest(description=e.format_message())
 
-        revision_resp = self.view_builder.show(rollback_revision)
+        revision_resp = revision_view.ViewBuilder.show(rollback_revision)
         resp.status = falcon.HTTP_201
         resp.body = revision_resp
