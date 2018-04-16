@@ -28,8 +28,6 @@ LOG = logging.getLogger(__name__)
 class ValidationsResource(api_base.BaseResource):
     """API resource for realizing validations endpoints."""
 
-    view_builder = validation_view.ViewBuilder()
-
     @policy.authorize('deckhand:create_validation')
     def on_post(self, req, resp, revision_id, validation_name):
         validation_data = self.from_yaml(
@@ -49,7 +47,7 @@ class ValidationsResource(api_base.BaseResource):
                 LOG.exception(e.format_message())
 
         resp.status = falcon.HTTP_201
-        resp.body = self.view_builder.show(resp_body)
+        resp.body = validation_view.ViewBuilder.show(resp_body)
 
     def on_get(self, req, resp, revision_id, validation_name=None,
                entry_id=None):
@@ -82,7 +80,7 @@ class ValidationsResource(api_base.BaseResource):
             with excutils.save_and_reraise_exception():
                 LOG.exception(e.format_message())
 
-        resp_body = self.view_builder.show_entry(entry)
+        resp_body = validation_view.EntriesViewBuilder.show_entry(entry)
         return resp_body
 
     @policy.authorize('deckhand:list_validations')
@@ -95,7 +93,7 @@ class ValidationsResource(api_base.BaseResource):
             with excutils.save_and_reraise_exception():
                 LOG.exception(e.format_message())
 
-        resp_body = self.view_builder.list_entries(entries)
+        resp_body = validation_view.EntriesViewBuilder.list_entries(entries)
         return resp_body
 
     @policy.authorize('deckhand:list_validations')
@@ -106,7 +104,7 @@ class ValidationsResource(api_base.BaseResource):
             with excutils.save_and_reraise_exception():
                 LOG.exception(e.format_message())
 
-        resp_body = self.view_builder.list(validations)
+        resp_body = validation_view.ViewBuilder.list(validations)
         return resp_body
 
 

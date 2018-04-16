@@ -96,6 +96,10 @@ class BaseValidationsControllerTest(test_base.BaseControllerTest):
                           side_effect=monkey_patch, autospec=True).start()
         self.addCleanup(mock.patch.stopall)
 
+    def _stub_url(self, entity):
+        entity['url'] = mock.ANY
+        return entity
+
 
 class TestValidationsController(BaseValidationsControllerTest):
     """Test suite for validating Validations API."""
@@ -137,10 +141,10 @@ class TestValidationsController(BaseValidationsControllerTest):
         expected = {
             'count': 1,
             'results': [
-                {
-                    'status': 'success',
-                    'name': types.DECKHAND_SCHEMA_VALIDATION
-                }
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'success'
+                })
             ]
         }
         self.assertEqual(1, len(body))
@@ -166,14 +170,14 @@ class TestValidationsController(BaseValidationsControllerTest):
         expected_body = {
             'count': 2,
             'results': [
-                {
+                self._stub_url({
                     'name': types.DECKHAND_SCHEMA_VALIDATION,
                     'status': 'success'
-                },
-                {
+                }),
+                self._stub_url({
                     'name': validation_name,
                     'status': 'failure'
-                }
+                })
             ]
         }
         body['results'] = sorted(body['results'], key=lambda x: x['name'])
@@ -198,7 +202,8 @@ class TestValidationsController(BaseValidationsControllerTest):
         body = yaml.safe_load(resp.text)
         expected_body = {
             'count': 3,
-            'results': [{'id': x, 'status': 'success'} for x in range(3)]
+            'results': [self._stub_url({'id': x, 'status': 'success'})
+                        for x in range(3)]
         }
         self.assertEqual(expected_body, body)
 
@@ -217,7 +222,7 @@ class TestValidationsController(BaseValidationsControllerTest):
         body = yaml.safe_load(resp.text)
         expected_body = {
             'count': 1,
-            'results': [{'id': 0, 'status': 'failure'}]
+            'results': [self._stub_url({'id': 0, 'status': 'failure'})]
         }
         self.assertEqual(expected_body, body)
 
@@ -244,7 +249,7 @@ class TestValidationsController(BaseValidationsControllerTest):
         body = yaml.safe_load(resp.text)
         expected_body = {
             'count': 1,
-            'results': [{'id': 0, 'status': 'failure'}]
+            'results': [self._stub_url({'id': 0, 'status': 'failure'})]
         }
         self.assertEqual(expected_body, body)
 
@@ -262,7 +267,8 @@ class TestValidationsController(BaseValidationsControllerTest):
         expected_body = {
             'count': 2,
             'results': [
-                {'id': 0, 'status': 'failure'}, {'id': 1, 'status': 'success'}
+                self._stub_url({'id': 0, 'status': 'failure'}),
+                self._stub_url({'id': 1, 'status': 'success'})
             ]
         }
         self.assertEqual(expected_body, body)
@@ -290,7 +296,8 @@ class TestValidationsController(BaseValidationsControllerTest):
         expected_body = {
             'count': 2,
             'results': [
-                {'id': 0, 'status': 'failure'}, {'id': 1, 'status': 'success'}
+                self._stub_url({'id': 0, 'status': 'failure'}),
+                self._stub_url({'id': 1, 'status': 'success'})
             ]
         }
         self.assertEqual(expected_body, body)
@@ -435,7 +442,10 @@ class TestValidationsControllerPreValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'success'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'success'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -492,7 +502,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'success'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'success'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -535,7 +548,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'success'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'success'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -561,7 +577,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'failure'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'failure'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -617,7 +636,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'failure'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'failure'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -668,7 +690,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'failure'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'failure'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -772,7 +797,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'failure'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'failure'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -785,9 +813,20 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         body = yaml.safe_load(resp.text)
         expected_body = {
             'count': 3,
-            'results': [{'id': 0, 'status': 'failure'},  # fail_doc failed.
-                        {'id': 1, 'status': 'success'},  # DataSchema passed.
-                        {'id': 2, 'status': 'success'}]  # pass_doc succeeded.
+            'results': [
+                self._stub_url({  # fail_doc failed.
+                    'id': 0,
+                    'status': 'failure'
+                }),
+                self._stub_url({  # DataSchema passed.
+                    'id': 1,
+                    'status': 'success'
+                }),
+                self._stub_url({  # pass_doc succeeded.
+                    'id': 2,
+                    'status': 'success'
+                })
+            ]
         }
         self.assertEqual(expected_body, body)
 
@@ -829,8 +868,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         body = yaml.safe_load(resp.text)
         expected_body = {
             'count': 2,
-            'results': [{'id': 0, 'status': 'success'},  # Document.
-                        {'id': 1, 'status': 'success'}]  # DataSchema.
+            'results': [
+                self._stub_url({'id': 0, 'status': 'success'}),  # Document.
+                self._stub_url({'id': 1, 'status': 'success'})   # DataSchema.
+            ]
         }
         self.assertEqual(expected_body, body)
 
@@ -896,7 +937,10 @@ class TestValidationsControllerPostValidate(BaseValidationsControllerTest):
         expected_body = {
             'count': 1,
             'results': [
-                {'name': types.DECKHAND_SCHEMA_VALIDATION, 'status': 'success'}
+                self._stub_url({
+                    'name': types.DECKHAND_SCHEMA_VALIDATION,
+                    'status': 'success'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -941,7 +985,10 @@ data:
         expected_body = {
             'count': 1,
             'results': [
-                {'name': 'deckhand-schema-validation', 'status': 'success'}
+                self._stub_url({
+                    'name': 'deckhand-schema-validation',
+                    'status': 'success'
+                })
             ]
         }
         self.assertEqual(expected_body, body)
@@ -988,8 +1035,14 @@ data:
         expected_body = {
             'count': 2,
             'results': [
-                {'name': 'deckhand-schema-validation', 'status': 'success'},
-                {'name': 'promenade-schema-validation', 'status': 'success'}
+                self._stub_url({
+                    'name': 'deckhand-schema-validation',
+                    'status': 'success'
+                }),
+                self._stub_url({
+                    'name': 'promenade-schema-validation',
+                    'status': 'success'
+                })
             ]
         }
         body['results'] = sorted(body['results'], key=lambda x: x['name'])
@@ -1049,8 +1102,14 @@ data:
         expected_body = {
             'count': 2,
             'results': [
-                {'name': 'deckhand-schema-validation', 'status': 'success'},
-                {'name': 'promenade-schema-validation', 'status': 'success'}
+                self._stub_url({
+                    'name': 'deckhand-schema-validation',
+                    'status': 'success'
+                }),
+                self._stub_url({
+                    'name': 'promenade-schema-validation',
+                    'status': 'success'
+                })
             ]
         }
         body['results'] = sorted(body['results'], key=lambda x: x['name'])
@@ -1095,8 +1154,14 @@ data:
         expected_body = {
             'count': 2,
             'results': [
-                {'name': 'deckhand-schema-validation', 'status': 'success'},
-                {'name': 'promenade-schema-validation', 'status': 'failure'}
+                self._stub_url({
+                    'name': 'deckhand-schema-validation',
+                    'status': 'success'
+                }),
+                self._stub_url({
+                    'name': 'promenade-schema-validation',
+                    'status': 'failure'
+                })
             ]
         }
         body['results'] = sorted(body['results'], key=lambda x: x['name'])
@@ -1112,7 +1177,7 @@ data:
         body = yaml.safe_load(resp.text)
         expected_body = {
             'count': 1,
-            'results': [{'id': 0, 'status': 'failure'}]
+            'results': [self._stub_url({'id': 0, 'status': 'failure'})]
         }
         self.assertEqual(expected_body, body)
 
@@ -1182,10 +1247,14 @@ data:
             expected_body = {
                 'count': 2,
                 'results': [
-                    {'name': 'deckhand-schema-validation',
-                             'status': 'success'},
-                    {'name': 'promenade-schema-validation',
-                     'status': 'ignored [%s]' % expected_status}
+                    self._stub_url({
+                        'name': 'deckhand-schema-validation',
+                        'status': 'success'
+                    }),
+                    self._stub_url({
+                        'name': 'promenade-schema-validation',
+                        'status': 'ignored [%s]' % expected_status
+                    })
                 ]
             }
             body['results'] = sorted(body['results'], key=lambda x: x['name'])
@@ -1202,7 +1271,11 @@ data:
             expected_body = {
                 'count': 1,
                 'results': [
-                    {'id': 0, 'status': 'ignored [%s]' % expected_status}
+                    {
+                        'id': 0,
+                        'status': 'ignored [%s]' % expected_status,
+                        'url': mock.ANY
+                    }
                 ]
             }
             self.assertEqual(expected_body, body)

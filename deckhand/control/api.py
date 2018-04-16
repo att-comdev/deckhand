@@ -20,6 +20,7 @@ from oslo_log import log as logging
 from oslo_policy import policy
 from paste import deploy
 
+from deckhand.common import cache
 from deckhand.db.sqlalchemy import api as db_api
 
 CONF = cfg.CONF
@@ -80,9 +81,9 @@ def init_application():
          project='deckhand',
          default_config_files=list(config_files.values()))
 
-    setup_logging(CONF)
-
-    policy.Enforcer(CONF)
+    setup_logging(CONF)         # Setup logging.
+    policy.Enforcer(CONF)       # Setup policy.
+    cache.configure_cache()     # Setup cache.
 
     LOG.debug('Starting WSGI application using %s configuration file.',
               paste_file)

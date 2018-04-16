@@ -25,6 +25,7 @@ barbican_group = cfg.OptGroup(
 Barbican options for allowing Deckhand to communicate with Barbican.
 """)
 
+
 barbican_opts = [
     # TODO(fmontei): Drop these options and related group once Keystone
     # endpoint lookup is used instead.
@@ -41,7 +42,7 @@ default_opts = [
                      "production."),
     cfg.BoolOpt('development_mode', default=False,
                 help="Enables development mode, which disables Keystone "
-                     "authentication. Do NOT use in production.")
+                     "authentication. Do NOT use in production."),
 ]
 
 
@@ -49,6 +50,8 @@ def register_opts(conf):
     conf.register_group(barbican_group)
     conf.register_opts(barbican_opts, group=barbican_group)
     conf.register_opts(default_opts)
+
+    ks_loading.register_auth_conf_options(conf, group='keystone_authtoken')
     ks_loading.register_auth_conf_options(conf, group=barbican_group.name)
     ks_loading.register_session_conf_options(conf, group=barbican_group.name)
 
