@@ -80,9 +80,8 @@ def init_application():
          project='deckhand',
          default_config_files=list(config_files.values()))
 
-    setup_logging(CONF)
-
-    policy.Enforcer(CONF)
+    setup_logging(CONF)         # Setup logging.
+    policy.Enforcer(CONF)       # Setup policy.
 
     LOG.debug('Starting WSGI application using %s configuration file.',
               paste_file)

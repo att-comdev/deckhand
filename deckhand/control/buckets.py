@@ -31,8 +31,6 @@ LOG = logging.getLogger(__name__)
 class BucketsResource(api_base.BaseResource):
     """API resource for realizing CRUD operations for buckets."""
 
-    view_builder = document_view.ViewBuilder()
-
     @policy.authorize('deckhand:create_cleartext_documents')
     def on_put(self, req, resp, bucket_name=None):
         documents = self.from_yaml(req, expect_list=True, allow_empty=True)
@@ -67,7 +65,7 @@ class BucketsResource(api_base.BaseResource):
         created_documents = self._create_revision_documents(
             bucket_name, documents, validations)
 
-        resp.body = self.view_builder.list(created_documents)
+        resp.body = document_view.ViewBuilder.list(created_documents)
         resp.status = falcon.HTTP_200
 
     def _prepare_secret_documents(self, documents):
