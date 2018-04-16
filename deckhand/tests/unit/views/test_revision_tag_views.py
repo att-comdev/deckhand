@@ -30,13 +30,18 @@ class TestRevisionViews(base.TestDbBase):
         tag = rand_prefix + '-Tag'
         data_key = rand_prefix + '-Key'
         data_val = rand_prefix + '-Val'
+
         expected_view = {tag: {data_key: data_val}}
+        expected_location = (
+            'https://deckhand/api/v1.0/revisions/%d/tags/%s' % (
+                self.revision_id, tag))
 
         created_tag = db_api.revision_tag_create(
             self.revision_id, tag, {data_key: data_val})
 
-        actual_view = self.view_builder.show(created_tag)
-        self.assertEqual(expected_view, actual_view)
+        view, location_hdr = self.view_builder.show(created_tag)
+        self.assertEqual(expected_view, view)
+        self.assertEqual(expected_location, location_hdr)
 
     def test_revision_tag_list_view(self):
         expected_view = {}

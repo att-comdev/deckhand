@@ -22,10 +22,26 @@ class ViewBuilder(object):
 
     _collection_name = None
 
-    def _gen_url(self, revision):
+    @classmethod
+    def _gen_url(cls, entity, props):
+        """Generates the url for the given ``entity`` and ``_collection_name``.
+
+        :param dict entity: Entity to extract ``props`` from.
+        :param tuple props: Either one of:
+
+            * Keys into ``entity`` to derive values for string substitution
+            * Additional values for string substitution
+
+            Each property is used for string replacement with
+            ``_collection_name``.
+
+        :returns: Generated URI.
+        :rtype: str
+        """
         # TODO(fmontei): Use a config-based url for the base url below.
-        base_url = 'https://deckhand/api/v1.0/%s/%s'
-        return base_url % (self._collection_name, revision.get('id'))
+        base_url = 'https://deckhand/api/v1.0/%s'
+        uri = base_url % cls._collection_name
+        return uri % tuple(entity.get(x, x) for x in props)
 
 
 def sanitize_params(allowed_params):
