@@ -35,8 +35,6 @@ LOG = logging.getLogger(__name__)
 class RevisionDocumentsResource(api_base.BaseResource):
     """API resource for realizing revision documents endpoint."""
 
-    view_builder = document_view.ViewBuilder()
-
     @policy.authorize('deckhand:list_cleartext_documents')
     @common.sanitize_params([
         'schema', 'metadata.name', 'metadata.layeringDefinition.abstract',
@@ -73,7 +71,7 @@ class RevisionDocumentsResource(api_base.BaseResource):
         documents = utils.multisort(documents, sort_by, order_by)
 
         resp.status = falcon.HTTP_200
-        resp.body = self.view_builder.list(documents)
+        resp.body = document_view.ViewBuilder.list(documents)
 
 
 class RenderedDocumentsResource(api_base.BaseResource):
@@ -89,8 +87,6 @@ class RenderedDocumentsResource(api_base.BaseResource):
     other documents in the revision, in accordance with the ``LayeringPolicy``
     that currently exists in the system.
     """
-
-    view_builder = document_view.ViewBuilder()
 
     @policy.authorize('deckhand:list_cleartext_documents')
     @common.sanitize_params([
@@ -145,9 +141,10 @@ class RenderedDocumentsResource(api_base.BaseResource):
             rendered_documents = utils.multisort(
                 rendered_documents, sort_by, order_by)
 
-        resp.status = falcon.HTTP_200
-        resp.body = self.view_builder.list(rendered_documents)
         self._post_validate(rendered_documents)
+
+        resp.status = falcon.HTTP_200
+        resp.body = document_view.ViewBuilder.list(rendered_documents)
 
     def _retrieve_documents_for_rendering(self, revision_id, **filters):
         """Retrieve all necessary documents needed for rendering. If a layering
