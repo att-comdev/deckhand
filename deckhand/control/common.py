@@ -13,8 +13,14 @@
 # limitations under the License.
 
 import functools
+import os
 
 import falcon
+from oslo_config import cfg
+
+from deckhand.common import endpoint
+
+CONF = cfg.CONF
 
 
 class ViewBuilder(object):
@@ -22,10 +28,31 @@ class ViewBuilder(object):
 
     _collection_name = None
 
-    def _gen_url(self, revision):
-        # TODO(fmontei): Use a config-based url for the base url below.
-        base_url = 'https://deckhand/api/v1.0/%s/%s'
-        return base_url % (self._collection_name, revision.get('id'))
+    @classmethod
+    def _gen_url(cls, entity, *props):
+        """Generates the url for the given ``entity`` and ``_collection_name``.
+
+        :param dict entity: Entity to extract ``props`` from.
+        :param tuple props: Either one of:
+
+            * Keys into ``entity`` to derive values for string substitution
+            * Additional values for string substitution
+
+            Each property is used for string replacement with
+            ``_collection_name``.
+
+        :returns: Generated URI.
+        :rtype: str
+        """
+        if not CONF.development_mode:
+            base_url = endpoint.get_own_endpoint()
+        else:
+            # FIXME(fmontei): Use a better value when development_mode is
+            # enabled.
+            base_url = 'https://deckhand/api/v1.0'
+        base_url = os.path.join(base_url, '%s')
+        uri = base_url % cls._collection_name
+        return uri % tuple(entity.get(x, x) for x in props)
 
 
 def sanitize_params(allowed_params):

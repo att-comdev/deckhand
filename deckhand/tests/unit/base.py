@@ -40,6 +40,7 @@ class DeckhandTestCase(testtools.TestCase):
             api_endpoint='http://127.0.0.1/key-manager', group='barbican'))
         self.useFixture(dh_fixtures.ConfPatcher(
             development_mode=True, group=None))
+        self.override_config('development_mode', True)
 
     def override_config(self, name, override, group=None):
         CONF.set_override(name, override, group)
