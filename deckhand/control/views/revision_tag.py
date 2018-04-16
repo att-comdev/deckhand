@@ -18,18 +18,19 @@ from deckhand.control import common
 class ViewBuilder(common.ViewBuilder):
     """Model revision tag API responses as a python dictionary."""
 
-    _collection_name = 'revisions'
-
-    def list(self, tags):
+    @classmethod
+    def list(cls, tags):
         resp = {}
         for tag in tags:
-            resp.update(self._show(tag))
+            resp.update(cls._show(tag))
         return resp
 
-    def show(self, tag):
-        return self._show(tag)
+    @classmethod
+    def show(cls, tag):
+        return cls._show(tag)
 
-    def _show(self, tag):
+    @classmethod
+    def _show(cls, tag):
         return {
             tag['tag']: tag.get('data', {})
         }

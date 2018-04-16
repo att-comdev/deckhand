@@ -39,7 +39,7 @@ class RevisionTagsResource(api_base.BaseResource):
         except errors.RevisionTagBadFormat as e:
             raise falcon.HTTPBadRequest(description=e.format_message())
 
-        resp_body = revision_tag_view.ViewBuilder().show(resp_tag)
+        resp_body = revision_tag_view.ViewBuilder.show(resp_tag)
         resp.status = falcon.HTTP_201
         resp.body = resp_body
 
@@ -59,7 +59,7 @@ class RevisionTagsResource(api_base.BaseResource):
                 errors.RevisionTagNotFound) as e:
             raise falcon.HTTPNotFound(description=e.format_message())
 
-        resp_body = revision_tag_view.ViewBuilder().show(resp_tag)
+        resp_body = revision_tag_view.ViewBuilder.show(resp_tag)
         resp.status = falcon.HTTP_200
         resp.body = resp_body
 
@@ -71,7 +71,7 @@ class RevisionTagsResource(api_base.BaseResource):
         except errors.RevisionNotFound as e:
             raise falcon.HTTPNotFound(e.format_message())
 
-        resp_body = revision_tag_view.ViewBuilder().list(resp_tags)
+        resp_body = revision_tag_view.ViewBuilder.list(resp_tags)
         resp.status = falcon.HTTP_200
         resp.body = resp_body
 
