@@ -1073,20 +1073,23 @@ def validation_get_all(revision_id, session=None):
     # validation, we regard the validation for the whole revision as 'failure'.
     session = session or get_session()
 
-    query = raw_query("""
-        SELECT DISTINCT name, status FROM validations as v1
-            WHERE revision_id=:revision_id AND status = (
-                SELECT status FROM validations as v2
-                    WHERE v2.name = v1.name
-                    ORDER BY status
-                    LIMIT 1
-            )
-            GROUP BY name, status
-            ORDER BY name, status;
-    """, revision_id=revision_id)
+    validations = session.query(models.Validation)\
+        .filter_by(revision_id=revision_id)\
+        .order_by(models.Validation.created_at.asc())\
+        .all()
 
-    result = {v[0]: v for v in query.fetchall()}
-    actual_validations = set(v[0] for v in result.values())
+    result = {}
+    for validation in validations:
+        validation = validation.to_dict()
+        val_name = validation['name']
+        if val_name not in result:
+            result.setdefault(val_name, validation)
+        else:
+            if validation['status'] == 'failure':
+                result[val_name]['status'] = 'failure'
+                result[val_name]['errors'].extend(validation['errors'])
+
+    actual_validations = set(result.keys())
 
     validation_policies = _get_validation_policies_for_revision(revision_id)
     if not validation_policies:
@@ -1105,13 +1108,14 @@ def validation_get_all(revision_id, session=None):
     # If an entry in the ValidationPolicy was never POSTed, set its status
     # to failure.
     for missing_validation in missing_validations:
-        result[missing_validation] = (missing_validation, 'failure')
+        result.setdefault(missing_validation, {'name': missing_validation})
+        result[missing_validation]['status'] = 'failure'
 
     # If an entry is not in the ValidationPolicy but was externally registered,
     # then override its status to "ignored [{original_status}]".
     for extra_validation in extra_validations:
-        result[extra_validation] = (
-            extra_validation, 'ignored [%s]' % result[extra_validation][1])
+        result[extra_validation]['status'] = (
+            'ignored [%s]' % result[extra_validation]['status'])
 
     return result.values()
 

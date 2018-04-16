@@ -18,21 +18,40 @@ from deckhand.control import common
 class ViewBuilder(common.ViewBuilder):
     """Model validation API responses as a python dictionary."""
 
-    _collection_name = 'validations'
+    _collection_name = 'revisions/%s/validations/%s'
 
     def list(self, validations):
+        """Gets the list of validations which have been reported for given
+        revision.
+        """
+
         return {
             'count': len(validations),
             'results': [
-                {'name': v[0], 'status': v[1]} for v in validations
+                {
+                    'name': v['name'],
+                    'status': v['status'],
+                    'url': self._gen_url(v, props=('revision_id', 'id'))
+                }
+                for v in validations
             ]
         }
 
     def list_entries(self, entries):
+        """Gets the list of validation entry summaries that have been
+        POSTed.
+        """
         results = []
 
         for idx, e in enumerate(entries):
-            results.append({'status': e['status'], 'id': idx})
+            results.append(
+                {
+                    'id': idx,
+                    'status': e['status'],
+                    'url': self._gen_url(e, props=('revision_id', 'id'),
+                                         suffix='entries/%s' % idx)
+                }
+            )
 
         return {
             'count': len(entries),
@@ -40,12 +59,16 @@ class ViewBuilder(common.ViewBuilder):
         }
 
     def show(self, validation):
+        """Gets basic information of a particular validation entry."""
         return {
             'status': validation.get('status'),
             'validator': validation.get('validator')
         }
 
     def show_entry(self, entry):
+        """Gets the full details of a particular validation entry, including
+        all POSTed error details.
+        """
         return {
             'name': entry.get('name'),
             'status': entry.get('status'),

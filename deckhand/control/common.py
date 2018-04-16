@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import functools
+import os
 
 
 class ViewBuilder(object):
@@ -20,10 +21,22 @@ class ViewBuilder(object):
 
     _collection_name = None
 
-    def _gen_url(self, revision):
+    @classmethod
+    def _gen_url(cls, entity, props, suffix=None):
+        """Generates the url for the given ``entity`` and ``_collection_name``.
+
+        :param dict entity: Entity to extract ``props`` from.
+        :param tuple props: Keys used to get corresponding values from
+            ``entity``.
+        :param str suffix: Additional suffix to append to generated URI.
+        :returns: Generated URI.
+        :rtype: str
+        """
         # TODO(fmontei): Use a config-based url for the base url below.
-        base_url = 'https://deckhand/api/v1.0/%s/%s'
-        return base_url % (self._collection_name, revision.get('id'))
+        base_url = 'https://deckhand/api/v1.0/%s'
+        uri = base_url % cls._collection_name
+        uri = uri % tuple(entity.get(x) for x in props)
+        return uri if not suffix else os.path.join(uri, suffix)
 
 
 def sanitize_params(allowed_params):

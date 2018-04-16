@@ -18,8 +18,6 @@ from deckhand.control import common
 class ViewBuilder(common.ViewBuilder):
     """Model revision tag API responses as a python dictionary."""
 
-    _collection_name = 'revisions'
-
     def list(self, tags):
         resp = {}
         for tag in tags:

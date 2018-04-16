@@ -16,13 +16,14 @@ import collections
 
 from deckhand.common import utils
 from deckhand.control import common
+from deckhand.control.views import validation
 from deckhand import types
 
 
 class ViewBuilder(common.ViewBuilder):
     """Model revision API responses as a python dictionary."""
 
-    _collection_name = 'revisions'
+    _collection_name = 'revisions/%s'
 
     def list(self, revisions):
         resp_body = {
@@ -36,6 +37,7 @@ class ViewBuilder(common.ViewBuilder):
 
             for attr in ('id', 'created_at'):
                 body[utils.to_camel_case(attr)] = revision[attr]
+                body['url'] = self._gen_url(revision, props=('id',))
 
             body['tags'].update([t['tag'] for t in revision['tags']])
             body['buckets'].update(
@@ -59,12 +61,18 @@ class ViewBuilder(common.ViewBuilder):
 
         for vp in [d for d in revision['documents']
                    if d['schema'].startswith(types.VALIDATION_POLICY_SCHEMA)]:
+            # TODO(fmontei): All this needs to be reworked in light of the fact
+            # that ValidationPolicy concept will likely be reworked or
+            # deprecated.
             validation_policy = {}
             validation_policy['name'] = vp.get('name')
-            validation_policy['url'] = self._gen_url(vp)
+            validation_policy['url'] = validation.ViewBuilder._gen_url(
+                vp, props=('id',))
             try:
-                validation_policy['status'] = vp['data']['validations'][0][
-                    'status']
+                validations = vp['data']['validations']
+                validation_policy['status'] = 'failure' if 'failure' in [
+                    v['status'] for v in validations
+                ] else 'success'
             except KeyError:
                 validation_policy['status'] = 'unknown'
 
@@ -82,7 +90,7 @@ class ViewBuilder(common.ViewBuilder):
         return {
             'id': revision.get('id'),
             'createdAt': revision.get('created_at'),
-            'url': self._gen_url(revision),
+            'url': self._gen_url(revision, props=('id',)),
             'validationPolicies': validation_policies,
             'status': success_status,
             'tags': dict(tags),
