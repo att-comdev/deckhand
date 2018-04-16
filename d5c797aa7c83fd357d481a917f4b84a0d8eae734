@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "569d3437_ebcc3bdf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-16T14:45:54Z",
+      "side": 1,
+      "message": "Is this still true? It was removed in the latest patch you uploaded.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 80
+      },
+      "revId": "d5c797aa7c83fd357d481a917f4b84a0d8eae734",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
