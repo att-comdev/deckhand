@@ -107,7 +107,7 @@ class TestErrorFormatting(test_base.BaseControllerTest):
 class TestValidationMessageFormatting(test_base.BaseControllerTest):
     """Test suite for validating :class:`ValidationMessage` formatting."""
 
-    def test_put_bucket_validation_message_formatting(self):
+    def test_create_bucket_validation_message_formatting(self):
         """Verify formatting for pre-validation during updating a bucket."""
         rules = {'deckhand:create_cleartext_documents': '@'}
         self.policy.set_rules(rules)
@@ -223,7 +223,7 @@ class TestValidationMessageFormatting(test_base.BaseControllerTest):
             'message': 'The provided documents failed schema validation.',
             'metadata': {}
         }
-        body = yaml.safe_load(resp.text)
+        body = yaml.load(resp.text)
 
         self.assertEqual(500, resp.status_code)
         self.assertEqual(expected, body)

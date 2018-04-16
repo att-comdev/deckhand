@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from deckhand.control import common
-from deckhand import types
 
 
 class ViewBuilder(common.ViewBuilder):
@@ -28,18 +27,18 @@ class ViewBuilder(common.ViewBuilder):
     2. Add all non-deleted documents to the response body.
     """
 
-    _collection_name = 'documents'
+    _collection_name = 'revisions/%s/documents'
 
-    def list(self, documents):
+    @classmethod
+    def list(cls, documents):
         resp_list = []
         attrs = ['id', 'metadata', 'data', 'schema']
 
         for document in documents:
             if document.get('deleted'):
                 continue
-            if document['schema'].startswith(types.VALIDATION_POLICY_SCHEMA):
-                continue
-            resp_obj = {x: document.get(x) for x in attrs}
+            resp_obj = {x: document[x] for x in attrs}
+            resp_obj['url'] = cls._gen_url(document, props=('revision_id',))
             resp_obj.setdefault('status', {})
             resp_obj['status']['bucket'] = document.get('bucket_name')
             resp_obj['status']['revision'] = document.get('revision_id')
