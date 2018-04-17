@@ -70,6 +70,30 @@
       "revId": "d5c797aa7c83fd357d481a917f4b84a0d8eae734",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbfa4a6a_70050606",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1013942
+      },
+      "writtenOn": "2018-04-17T19:14:11Z",
+      "side": 1,
+      "message": "sure.you can do that.Is there any channel in which I can talk to you guys and contribute?",
+      "parentUuid": "cd1e824d_81e6a34a",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 80
+      },
+      "revId": "d5c797aa7c83fd357d481a917f4b84a0d8eae734",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
