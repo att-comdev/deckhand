@@ -46,6 +46,30 @@
       "revId": "d5c797aa7c83fd357d481a917f4b84a0d8eae734",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd1e824d_81e6a34a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-17T17:30:07Z",
+      "side": 1,
+      "message": "Do you mind removing this sentence then so we have an accurate commit message?",
+      "parentUuid": "5299388b_523835cf",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 80
+      },
+      "revId": "d5c797aa7c83fd357d481a917f4b84a0d8eae734",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
