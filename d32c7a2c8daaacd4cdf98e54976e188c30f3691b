@@ -22,6 +22,30 @@
       "revId": "d32c7a2c8daaacd4cdf98e54976e188c30f3691b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14f991d0_c4808c1e",
+        "filename": "releasenotes/source/conf.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-17T17:51:25Z",
+      "side": 1,
+      "message": "Yeah this should import from something like this:\n\n* https://github.com/openstack/nova/blob/1599464c71aaae81809afa89b50791c5c30b6d6b/nova/version.py#L24\n* https://github.com/openstack/nova/blob/1599464c71aaae81809afa89b50791c5c30b6d6b/doc/source/conf.py#L22\n\nBut right now our versioning is non-existent so I think this junk just all got copy/pasted from somewhere but it certainly needs to be cleaned up.",
+      "parentUuid": "fbb4217c_76a41953",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 16
+      },
+      "revId": "d32c7a2c8daaacd4cdf98e54976e188c30f3691b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
