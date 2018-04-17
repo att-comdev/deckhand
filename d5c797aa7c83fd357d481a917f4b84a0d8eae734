@@ -94,6 +94,30 @@
       "revId": "d5c797aa7c83fd357d481a917f4b84a0d8eae734",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fe62e64_e12a7ee1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1013942
+      },
+      "writtenOn": "2018-04-17T19:23:19Z",
+      "side": 1,
+      "message": "you guys are maintaining a jira account.can I pick issues from there and assign it to myself? and regarding the barbican feature you have mentioned seems interesting I need to see and will get back to you.",
+      "parentUuid": "cbfa4a6a_70050606",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 80
+      },
+      "revId": "d5c797aa7c83fd357d481a917f4b84a0d8eae734",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
