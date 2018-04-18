@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8cc9c6e5_47272fc7",
+        "filename": "deckhand/tests/integration/README.rst",
+        "patchSetId": 13
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-18T20:59:29Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 19,
+        "startChar": 64,
+        "endLine": 19,
+        "endChar": 66
+      },
+      "revId": "f19f7b9c298ca30af6c3c74a2a3e9266b0d540b9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
