@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Test runner for functional and integration tests."""
+
 import os
 import yaml
 
@@ -19,7 +21,7 @@ from gabbi import driver
 from gabbi.driver import test_pytest  # noqa
 from gabbi.handlers import jsonhandler
 
-TESTS_DIR = 'gabbits'
+TESTS_DIR = os.getenv('DECKHAND_TESTS_DIR', 'gabbits')
 
 
 # This is quite similar to the existing JSONHandler, so use it as the base
