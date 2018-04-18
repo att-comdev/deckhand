@@ -19,22 +19,40 @@ CURRENT_DIR="$(pwd)"
 : ${OSH_PATH:="../openstack-helm"}
 
 
+function cleanup_osh {
+    set -xe
+
+    if [ -n "command -v kubectl" ]; then
+        kubectl delete namespace openstack
+        kubectl delete namespace ucp
+    fi
+
+    sudo systemctl disable kubelet --now
+    sudo systemctl stop kubelet
+
+    if [ -n "command -v docker" ]; then
+        sudo docker ps -aq | xargs -L1 -P16 sudo docker rm -f
+    fi
+
+    sudo rm -rf /var/lib/openstack-helm
+}
+
+
 function cleanup_deckhand {
     set +e
 
     if [ -n "$POSTGRES_ID" ]; then
         sudo docker stop $POSTGRES_ID
     fi
+
     if [ -n "$DECKHAND_ID" ]; then
         sudo docker stop $DECKHAND_ID
     fi
+
     if [ -d "$CONF_DIR" ]; then
         rm -rf $CONF_DIR
     fi
 }
-
-
-trap cleanup_deckhand EXIT
 
 
 function install_deps {
@@ -79,6 +97,8 @@ function deploy_barbican {
 function deploy_osh_keystone_barbican {
     set -xe
 
+    trap cleanup_osh EXIT
+
     if [ ! -d "$OSH_INFRA_PATH" ]; then
         git clone https://git.openstack.org/openstack/openstack-helm-infra.git ../openstack-helm-infra
     fi
@@ -113,6 +133,8 @@ function deploy_osh_keystone_barbican {
 
 function deploy_deckhand {
     set -xe
+
+    trap cleanup_deckhand EXIT
 
     export OS_CLOUD=openstack_helm
 
