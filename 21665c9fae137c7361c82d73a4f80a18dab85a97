@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33cbf7f1_babfbddd",
+        "filename": "deckhand/tests/integration/test_gabbi.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-18T02:38:03Z",
+      "side": 1,
+      "message": "Add todo to combine this with runner for functional tests",
+      "revId": "21665c9fae137c7361c82d73a4f80a18dab85a97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6bbba07_0107e1ff",
+        "filename": "tools/common-tests.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-18T02:38:03Z",
+      "side": 1,
+      "message": "Need to clean this all up and have functional-tests.sh use the helpers here instead.",
+      "revId": "21665c9fae137c7361c82d73a4f80a18dab85a97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4af49c31_54f180e4",
+        "filename": "tools/integration-tests.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-18T02:38:03Z",
+      "side": 1,
+      "message": "Can remove all this",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 38
+      },
+      "revId": "21665c9fae137c7361c82d73a4f80a18dab85a97",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
