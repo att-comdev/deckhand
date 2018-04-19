@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85d7f6f1_d7f774aa",
+        "filename": "deckhand/tests/integration/gabbits/document-render-secret.yaml",
+        "patchSetId": 17
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-19T06:40:54Z",
+      "side": 1,
+      "message": "s/the//",
+      "range": {
+        "startLine": 46,
+        "startChar": 22,
+        "endLine": 46,
+        "endChar": 25
+      },
+      "revId": "f30484a14c1d6a6aac287c50103dbdb99c59a19b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ea26a72_81737df1",
+        "filename": "deckhand/tests/integration/gabbits/document-substitution-secret.yaml",
+        "patchSetId": 17
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-19T06:40:54Z",
+      "side": 1,
+      "message": "including",
+      "range": {
+        "startLine": 24,
+        "startChar": 27,
+        "endLine": 24,
+        "endChar": 31
+      },
+      "revId": "f30484a14c1d6a6aac287c50103dbdb99c59a19b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de23cd4b_68566f76",
+        "filename": "tools/integration-tests.sh",
+        "patchSetId": 17
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-19T06:40:54Z",
+      "side": 1,
+      "message": "Should reword this to say this step might be needed but don\u0027t think it is for CI",
+      "range": {
+        "startLine": 10,
+        "startChar": 2,
+        "endLine": 11,
+        "endChar": 4
+      },
+      "revId": "f30484a14c1d6a6aac287c50103dbdb99c59a19b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
