@@ -48,6 +48,23 @@
     },
     {
       "key": {
+        "uuid": "53c7ddc5_730dc22c",
+        "filename": "deckhand/tests/integration/test_gabbi.py",
+        "patchSetId": 17
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-19T15:40:30Z",
+      "side": 1,
+      "message": "I will combine this with functional test version of test_gabbi.py in a follow up which will include some other refinements as well.",
+      "revId": "f30484a14c1d6a6aac287c50103dbdb99c59a19b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de23cd4b_68566f76",
         "filename": "tools/integration-tests.sh",
         "patchSetId": 17
