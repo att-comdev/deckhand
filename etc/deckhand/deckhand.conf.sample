@@ -22,6 +22,9 @@
 # Enables profiling of API requests. Do NOT use in production. (boolean value)
 #profiler = false
 
+# Enables development mode on. Do NOT use in production. (boolean value)
+#development_mode = True
+
 #
 # From oslo.log
 #
