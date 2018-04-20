@@ -39,6 +39,29 @@
       "revId": "c573522aa37a810cfe003a17b03f99a7e08ae55d",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fcadc18b_24458ab1",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-20T00:33:37Z",
+      "side": 1,
+      "message": "It looks like this is on the right track based on:\n\n* https://docs.openstack.org/python-barbicanclient/4.3.0/authentication.html#unauthenticated-context\n\nBut keep in mind looks like Barbican will also have to be deployed in development mode too for this to work:\n\n* https://docs.openstack.org/barbican/latest/configuration/noauth.html\n\nBut looks the project_id here should be something like (I haven\u0027t tested this for syntax, so not 100% until I verify):\n\n    project_id \u003d CONF.keystone_authtoken.project_id\n    cli \u003d barbican.client.Client(endpoint\u003dbarbican_url, project_id\u003dproject_id)\n\nAlternate approach (maybe): https://github.com/openstack/keystoneauth/blob/master/keystoneauth1/noauth.py",
+      "range": {
+        "startLine": 59,
+        "startChar": 80,
+        "endLine": 59,
+        "endChar": 86
+      },
+      "revId": "c573522aa37a810cfe003a17b03f99a7e08ae55d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
