@@ -65,6 +65,75 @@
     },
     {
       "key": {
+        "uuid": "914a33ec_8d14dd3d",
+        "filename": "tools/common-tests.sh",
+        "patchSetId": 17
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-20T00:23:05Z",
+      "side": 1,
+      "message": "might just have a simple logging.conf file and copy it to $CONF_DIR instead of writing it out via bash.  Something for a future patch set.",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 37
+      },
+      "revId": "f30484a14c1d6a6aac287c50103dbdb99c59a19b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a301408_ed80fce0",
+        "filename": "tools/common-tests.sh",
+        "patchSetId": 17
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-20T00:23:05Z",
+      "side": 1,
+      "message": "same, though you have $DATABASE_URL, may be using envsubst?",
+      "range": {
+        "startLine": 95,
+        "startChar": 25,
+        "endLine": 95,
+        "endChar": 38
+      },
+      "revId": "f30484a14c1d6a6aac287c50103dbdb99c59a19b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b162ed33_4179a2f8",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 17
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-20T00:23:05Z",
+      "side": 1,
+      "message": "if this $CONF_DIR is coming from mktemp -d can it be a non directory? curious why guard it with -d?",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "f30484a14c1d6a6aac287c50103dbdb99c59a19b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de23cd4b_68566f76",
         "filename": "tools/integration-tests.sh",
         "patchSetId": 17
