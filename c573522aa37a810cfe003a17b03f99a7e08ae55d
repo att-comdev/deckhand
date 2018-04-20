@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "ae2f8d81_84861fa7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-20T00:27:41Z",
+      "side": 1,
+      "message": "nit: if you are submitting a new patch set, can you break this commitmsg into a headline.",
+      "range": {
+        "startLine": 7,
+        "startChar": 1,
+        "endLine": 8,
+        "endChar": 2
+      },
+      "revId": "c573522aa37a810cfe003a17b03f99a7e08ae55d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93db5f08_b740fb62",
         "filename": "deckhand/barbican/client_wrapper.py",
         "patchSetId": 1
