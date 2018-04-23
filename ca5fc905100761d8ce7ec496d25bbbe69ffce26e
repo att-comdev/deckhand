@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a147fc37_2dcad383",
+        "filename": "deckhand/conf/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-23T19:11:25Z",
+      "side": 1,
+      "message": "I think that if we want to introduce a way of toggling development mode it should be done consistently across both patch sets. Instead of passing in `--development-mode` to entrypoint.sh we could just introduce this option and use it in both patch sets. But maybe we can make the change in both places in this patch set instead.",
+      "range": {
+        "startLine": 55,
+        "startChar": 17,
+        "endLine": 55,
+        "endChar": 33
+      },
+      "revId": "ca5fc905100761d8ce7ec496d25bbbe69ffce26e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
