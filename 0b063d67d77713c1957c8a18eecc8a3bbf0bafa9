@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48f4d092_63292fb2",
+        "filename": "tools/integration-tests.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-23T01:01:29Z",
+      "side": 1,
+      "message": "Can remove this check, superfluous",
+      "range": {
+        "startLine": 52,
+        "startChar": 3,
+        "endLine": 52,
+        "endChar": 31
+      },
+      "revId": "0b063d67d77713c1957c8a18eecc8a3bbf0bafa9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
