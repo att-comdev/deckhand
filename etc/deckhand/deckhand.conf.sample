@@ -19,6 +19,9 @@
 #  (boolean value)
 #allow_anonymous_access = false
 
+# Enables development mode. Do NOT use in production. (boolean value)
+#development_mode = True
+
 #
 # From oslo.log
 #
