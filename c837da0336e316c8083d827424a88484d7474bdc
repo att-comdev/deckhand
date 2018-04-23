@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "58dd0b90_c18ffa9b",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1008770
+      },
+      "writtenOn": "2018-04-23T05:32:04Z",
+      "side": 1,
+      "message": "Eeeks! Something went wrong with the merge.  This looks to be an errant javascript function inside a cat \u003c\u003c command.",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 179,
+        "endChar": 14
+      },
+      "revId": "c837da0336e316c8083d827424a88484d7474bdc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
