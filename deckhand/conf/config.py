@@ -49,6 +49,8 @@ def register_opts(conf):
     conf.register_group(barbican_group)
     conf.register_opts(barbican_opts, group=barbican_group)
     conf.register_opts(default_opts)
+
+    ks_loading.register_auth_conf_options(conf, group='keystone_authtoken')
     ks_loading.register_auth_conf_options(conf, group=barbican_group.name)
     ks_loading.register_session_conf_options(conf, group=barbican_group.name)
 
