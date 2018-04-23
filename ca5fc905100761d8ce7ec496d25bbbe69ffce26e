@@ -22,6 +22,30 @@
       "revId": "ca5fc905100761d8ce7ec496d25bbbe69ffce26e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36aafd8a_621dddde",
+        "filename": "deckhand/conf/config.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1013942
+      },
+      "writtenOn": "2018-04-23T19:37:37Z",
+      "side": 1,
+      "message": "I also have thought about that but if you see deckhand/control/api.py Line no 58 there CONF options are loaded from the deckhand.conf and deckhand-paste.ini but the deckhand-paste.ini will be subjective to mode(i.e development or production) before even the CONF options are available.",
+      "parentUuid": "a147fc37_2dcad383",
+      "range": {
+        "startLine": 55,
+        "startChar": 17,
+        "endLine": 55,
+        "endChar": 33
+      },
+      "revId": "ca5fc905100761d8ce7ec496d25bbbe69ffce26e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
