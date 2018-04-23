@@ -78,10 +78,8 @@ function gen_config {
         sed '1 a log_config_append = '"$CONF_DIR"'/logging.conf' $conf_file
     fi
 
-    if $disable_keystone; then
-        log_section "Toggling development_mode on to disable Keystone authentication."
-        sed -i -e 's/development_mode = false/development_mode = true/g' $conf_file
-    fi
+    log_section "Toggling development_mode on to disable Keystone authentication."
+    sed -i -e 's/development_mode = false/development_mode = true/g' $conf_file
 
     echo $conf_file 1>&2
     cat $conf_file 1>&2
