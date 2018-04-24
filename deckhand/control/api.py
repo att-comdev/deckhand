@@ -20,13 +20,10 @@ from oslo_log import log as logging
 from oslo_policy import policy
 from paste import deploy
 
+from deckhand.conf import config  # noqa
 from deckhand.db.sqlalchemy import api as db_api
 
 CONF = cfg.CONF
-
-CONF.register_opt(cfg.BoolOpt('development_mode', default=False,
-                  help="Enables development mode. Do NOT use in "
-                  "production."))
 
 logging.register_options(CONF)
 LOG = logging.getLogger(__name__)
@@ -36,28 +33,27 @@ _NO_AUTH_CONFIG = 'noauth-paste.ini'
 
 
 def _get_config_files(env=None):
+    if env is None:
+        env = os.environ
+
     config_files = CONFIG_FILES[:]
-
-    if env is None:
-        env = os.environ
-
     dirname = env.get('DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
-    return [os.path.join(dirname, config_file) for config_file in config_files]
+    conf_path = os.path.join(dirname, config_files[0])
 
+    temp_conf = {}
+    config_parser = cfg.ConfigParser(conf_path, temp_conf)
+    config_parser.parse()
 
-def _get_paste_file(env=None):
-    if env is None:
-        env = os.environ
+    use_development_mode = (
+        temp_conf['DEFAULT'].get('development_mode') == ['true']
+    )
 
-    if CONF.development_mode:
-        paste_file = _NO_AUTH_CONFIG
+    if use_development_mode:
+        config_files[-1] = _NO_AUTH_CONFIG
         LOG.warning('Development mode enabled - Keystone authentication '
                     'disabled.')
-    else:
-        paste_file = CONFIG_FILES[-1]
 
-    dirname = env.get('DECKHAND_CONFIG_DIR', '/etc/deckhand').strip()
-    return os.path.join(dirname, paste_file)
+    return [os.path.join(dirname, config_file) for config_file in config_files]
 
 
 def setup_logging(conf):
@@ -76,10 +72,9 @@ def init_application():
     Create routes for the v1.0 API and sets up logging.
     """
     config_files = _get_config_files()
+    paste_file = config_files[-1]
 
     CONF([], project='deckhand', default_config_files=config_files)
-
-    paste_file = _get_paste_file()
 
     setup_logging(CONF)
 

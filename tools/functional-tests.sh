@@ -57,7 +57,7 @@ trap cleanup_deckhand EXIT
 
 
 function deploy_deckhand {
-    gen_config "http://localhost:9000"
+    gen_config true
     gen_paste true
     gen_policy
 
@@ -87,7 +87,7 @@ function deploy_deckhand {
                 --rm \
                 --net=host \
                 -v $CONF_DIR:/etc/deckhand \
-                $DECKHAND_IMAGE alembic upgrade head &> $STDOUT &
+                $DECKHAND_IMAGE alembic upgrade head &
         )
         echo $DECKHAND_ALEMBIC_ID
 
@@ -97,7 +97,7 @@ function deploy_deckhand {
                 --net=host \
                 -p 9000:9000 \
                 -v $CONF_DIR:/etc/deckhand \
-                $DECKHAND_IMAGE server &> $STDOUT &
+                $DECKHAND_IMAGE server &
         )
         echo $DECKHAND_ID
     fi
