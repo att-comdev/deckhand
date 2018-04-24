@@ -45,6 +45,52 @@
       "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f940c032_0ec83e41",
+        "filename": "deckhand/tests/unit/base.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-24T23:06:11Z",
+      "side": 1,
+      "message": "As aside can probably drop this at some point",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 57
+      },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e904643d_cc2fee62",
+        "filename": "deckhand/tests/unit/control/base.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-24T23:06:11Z",
+      "side": 1,
+      "message": "This is redundant with: https://review.gerrithub.io/#/c/att-comdev/deckhand/+/407438/10..12/deckhand/tests/unit/base.py@41",
+      "range": {
+        "startLine": 36,
+        "startChar": 8,
+        "endLine": 36,
+        "endChar": 68
+      },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
