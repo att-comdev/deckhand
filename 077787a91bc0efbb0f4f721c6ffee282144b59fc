@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5c69aad9_ac6b13eb",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-24T21:21:44Z",
+      "side": 1,
+      "message": "This can also be removed.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 40
+      },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59ed78f4_a5732e7a",
         "filename": "deckhand/control/api.py",
         "patchSetId": 12
