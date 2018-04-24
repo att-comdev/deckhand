@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59ed78f4_a5732e7a",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-24T21:20:45Z",
+      "side": 1,
+      "message": "This is basically a workaround the fact that there is a chicken and egg problem here. To determine which configuration files to use we first need to check to see whether development_mode is True... which requires reading the configuration file... which means we can\u0027t call CONF([], default_config_files\u003dconfig_files) without blowing up potentially.",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 28
+      },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
