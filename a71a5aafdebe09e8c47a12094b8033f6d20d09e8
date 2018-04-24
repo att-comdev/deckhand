@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fc069b0b_87aecbee",
+        "filename": "tools/integration-tests.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-24T16:36:07Z",
+      "side": 1,
+      "message": "I should wrap set +x and set -x around this to prevent logging the token",
+      "range": {
+        "startLine": 165,
+        "startChar": 4,
+        "endLine": 165,
+        "endChar": 74
+      },
+      "revId": "a71a5aafdebe09e8c47a12094b8033f6d20d09e8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
