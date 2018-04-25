@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "14ca99cb_db1cb682",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-25T07:20:24Z",
+      "side": 1,
+      "message": "This is pretty close but should be this instead (I believe):\n\n            cli \u003d barbican.client.Client(\n                endpoint\u003dbarbican_url,\n                project_id\u003dCONF.keystone_authtoken.admin_tenant_name)\n\nbarbican_url itself must be the root URL without /v1 at the end for it to work.\n\nFrom the CLI the following works:\n\nbarbican --no-auth --endpoint http://barbican-api.openstack.svc.cluster.local:9311 --os-project-id admin secret list\n\nIn order for this to work the barbican_api paste pipeline will have to be used instead of the barbican-api-keystone one.",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 56,
+        "endChar": 65
+      },
+      "revId": "ca5fc905100761d8ce7ec496d25bbbe69ffce26e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4b52145_4e4434e3",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-25T07:20:24Z",
+      "side": 1,
+      "message": "I\u0027ll have to check later but I don\u0027t actually think this is needed by reading the CLI Client constructor code.",
+      "range": {
+        "startLine": 61,
+        "startChar": 46,
+        "endLine": 61,
+        "endChar": 67
+      },
+      "revId": "ca5fc905100761d8ce7ec496d25bbbe69ffce26e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a147fc37_2dcad383",
         "filename": "deckhand/conf/config.py",
         "patchSetId": 1
