@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c698c7df_c01d6f2f",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1013942
+      },
+      "writtenOn": "2018-04-25T07:29:33Z",
+      "side": 1,
+      "message": "cli \u003d barbican.client.Client(\n                endpoint\u003dbarbican_url,\n                project_id\u003dCONF.keystone_authtoken.admin_tenant_name) regarding this I can say while creating barbican client noauth the kwarg project_id can be anything that can\u0027t even be a valid keystone configuration I have checked the only thing that matters is the key should be present when using noauth.",
+      "parentUuid": "14ca99cb_db1cb682",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 56,
+        "endChar": 65
+      },
+      "revId": "ca5fc905100761d8ce7ec496d25bbbe69ffce26e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4b52145_4e4434e3",
         "filename": "deckhand/barbican/client_wrapper.py",
         "patchSetId": 1
