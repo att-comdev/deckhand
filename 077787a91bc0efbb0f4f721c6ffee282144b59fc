@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "3fd3325d_6f31342c",
+        "filename": "deckhand/control/no_oauth_middleware.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011947
+      },
+      "writtenOn": "2018-04-25T17:07:33Z",
+      "side": 1,
+      "message": "nit: 2018",
+      "range": {
+        "startLine": 1,
+        "startChar": 12,
+        "endLine": 1,
+        "endChar": 16
+      },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f940c032_0ec83e41",
         "filename": "deckhand/tests/unit/base.py",
         "patchSetId": 12
@@ -88,6 +111,23 @@
         "endLine": 36,
         "endChar": 68
       },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7442e0e_96ede932",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 12
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1011947
+      },
+      "writtenOn": "2018-04-25T17:07:33Z",
+      "side": 1,
+      "message": "Maybe can check again after stopping the container to make sure that the deckhand container has been properly stopped?",
       "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
