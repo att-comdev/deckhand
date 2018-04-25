@@ -131,6 +131,24 @@
       "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7435eb86_8cec0652",
+        "filename": "tools/functional-tests.sh",
+        "patchSetId": 12
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-25T18:35:28Z",
+      "side": 1,
+      "message": "I can do that in a follow up and replace the logic on L37-41, etc. with logic similar to this.",
+      "parentUuid": "e7442e0e_96ede932",
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
