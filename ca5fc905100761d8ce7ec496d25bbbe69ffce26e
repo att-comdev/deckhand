@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "426da947_31a3d55c",
+        "filename": "deckhand/barbican/client_wrapper.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-25T15:42:36Z",
+      "side": 1,
+      "message": "Hmm, I will have to do further testing then, because I thought this was throwing errors for me last night with \u0027noauth\u0027 here but also according to docs I see this:\n\n        :param endpoint: Barbican endpoint url. ***Required when a session is not\n            given***, or when using a non-authenticated session.\n            When using an authenticated session, the client will attempt\n            to get an endpoint from the session.\n        :param project_id: The project ID used for context in Barbican.\n            ***Required when a session is not given***, or when using a\n            non-authenticated session.\n            When using an authenticated session, the project ID will be\n            provided by the authentication mechanism.\n\nMaybe you\u0027re right that any value would work... but maybe you creating a tenant in your cloud called \u0027noauth\u0027? I would think this has to be a valid tenant, no?\n\n.. https://github.com/openstack/python-barbicanclient/blob/3787b1f9a715683c32b01f6bc5565c907a685976/barbicanclient/client.py#L131",
+      "parentUuid": "c698c7df_c01d6f2f",
+      "range": {
+        "startLine": 55,
+        "startChar": 16,
+        "endLine": 56,
+        "endChar": 65
+      },
+      "revId": "ca5fc905100761d8ce7ec496d25bbbe69ffce26e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4b52145_4e4434e3",
         "filename": "deckhand/barbican/client_wrapper.py",
         "patchSetId": 1
