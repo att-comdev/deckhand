@@ -1,0 +1,35 @@
+# Tests to verify "chained" substitution from document A -> B -> C
+#
+# 1. Purges existing data to ensure test isolation
+# 2. Creates a new revision with documents in it.
+# 3. Verifies first substitution (A -> B)
+# 4. Verifies second substitution (B -> C)
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+  response_headers:
+    content-type: application/x-yaml
+
+tests:
+  - name: purge
+    desc: Begin testing from known state.
+    DELETE: /api/v1.0/revisions
+    status: 204
+    response_headers: null
+
+  - name: create_documents
+    desc: Create documents for performance testing.
+    PUT: /api/v1.0/buckets/mop/documents
+    status: 200
+    data: <@resources/performance.yaml
+
+  - name: verify_performance
+    desc: |
+      Check performance of rendering dozens of documents using chained
+      substitution and layering.
+    GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/rendered-documents
+    query_parameters:
+      sort: schema
+    status: 200
+    response_multidoc_jsonpaths:
