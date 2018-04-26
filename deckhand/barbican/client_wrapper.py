@@ -41,7 +41,6 @@ class BarbicanClientWrapper(object):
     def _get_client(self, retry_on_conflict=True):
         # If we've already constructed a valid, authed client, just return
         # that.
-
         if retry_on_conflict and self._cached_client is not None:
             return self._cached_client
 
