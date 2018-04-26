@@ -117,6 +117,29 @@
     },
     {
       "key": {
+        "uuid": "5255b66d_fc50d7bb",
+        "filename": "docs/source/getting-started.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-04-26T02:01:02Z",
+      "side": 1,
+      "message": "Is this missing a step to set the config option to true in /etc/deckhand\n\ndevelopment_mode \u003d true",
+      "range": {
+        "startLine": 126,
+        "startChar": 3,
+        "endLine": 130,
+        "endChar": 48
+      },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7442e0e_96ede932",
         "filename": "tools/functional-tests.sh",
         "patchSetId": 12
