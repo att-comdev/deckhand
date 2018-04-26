@@ -116,8 +116,6 @@ The command executes ``tools/functional-tests.sh`` which:
        Keystone and pass an admin token to Deckhand.
     4) Instantiates Deckhand via ``uwisgi``.
     5) Calls gabbi which runs a battery of functional tests.
-    6) An HTML report that visualizes the result of the test run is output to
-       ``results/index.html``.
 
 Note that functional tests can be run concurrently; the flags ``--workers``
 and ``--threads`` which are passed to ``uwsgi`` can be > 1.

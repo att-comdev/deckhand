@@ -1,0 +1,41 @@
+# Tests to verify Deckhand performance. To execute these tests run:
+#
+#  $ DECKHAND_PERFORMANCE_TIMEOUT=10 tox -e performance
+#
+# Which runs the performance tests below with a timeout value of 10s, meaning
+# that each scenario must execute within 10s or a RuntimeError is raised.
+#
+# The scenario is straightforward:
+# 1. Create hundreds of documents in a bucket within the timeout limit.
+# 2. Render the bucket within the timeout limit.
+
+defaults:
+  request_headers:
+    content-type: application/x-yaml
+    X-Auth-Token: $ENVIRON['TEST_AUTH_TOKEN']
+  response_headers:
+    content-type: application/x-yaml
+  verbose: true
+
+tests:
+  - name: purge
+    desc: Begin testing from known state.
+    DELETE: /api/v1.0/revisions
+    status: 204
+    response_headers: null
+
+  # - name: create_documents
+  #   desc: Create documents for performance testing.
+  #   PUT: /api/v1.0/buckets/mop/documents
+  #   status: 200
+  #   data: <@resources/performance.yaml
+
+  # - name: verify_performance
+  #   desc: |
+  #     Check performance of rendering dozens of documents using chained
+  #     substitution and layering.
+  #   GET: /api/v1.0/revisions/$RESPONSE['$.[0].status.revision']/rendered-documents
+  #   query_parameters:
+  #     sort: schema
+  #   status: 200
+  #   response_multidoc_jsonpaths:
