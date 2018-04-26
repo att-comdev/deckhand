@@ -37,11 +37,12 @@ class BarbicanDriver(object):
                 barbicanclient.exceptions.HTTPClientError,
                 barbicanclient.exceptions.HTTPServerError) as e:
             LOG.error('Caught %s error from Barbican, likely due to a '
-                      'configuration or deployment issue.', e.__class__)
+                      'configuration or deployment issue.',
+                      e.__class__.__name__)
             raise errors.BarbicanException(details=str(e))
         except barbicanclient.exceptions.PayloadException as e:
             LOG.error('Caught %s error from Barbican, because the secret '
-                      'payload type is unsupported.', e.__class__)
+                      'payload type is unsupported.', e.__class__.__name__)
             raise errors.BarbicanException(details=str(e))
 
         # NOTE(fmontei): The dictionary representation of the Secret object by

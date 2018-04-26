@@ -101,6 +101,34 @@ class SecretsManager(object):
         created_secret = secret_doc['data']
 
         if encryption_type == types.ENCRYPTED:
+            payload = secret_doc['data']
+
+            # NOTE(fmontei): The logic for the 2 conditions below is copied
+            # verbatim from Barbican's Python client. Some pre-processing
+            # and transformation is needed to make Barbican work with
+            # non-compatible formats.
+            if payload == '':
+                # There is no point in even bothering to encrypt an empty
+                # body, which just leads to needless overhead, so return
+                # early.
+                LOG.warning('Barbican does not accept empty payloads so '
+                            'Deckhand will not encrypt document [%s, %s] %s.',
+                            secret_doc.schema, secret_doc.layer,
+                            secret_doc.name)
+                return created_secret
+            elif payload is not None and not isinstance(
+                    payload, (six.text_type, six.binary_type)):
+                # FIXME(fmontei): This requires using yaml.dump to
+                # cast the data into the required format. However, such a
+                # change will also require telling Deckhand in the future to
+                # reverse this change when it reads the secret, requiring
+                # a yaml.load. This in turn can only be accomplished by
+                # adding a new column to the Deckhand DB telling Deckhand
+                # that the secret was transformed.
+                # NOTE(fmontei): Returning prematurely here is broken,
+                # not a workaround.
+                return created_secret
+
             # Store secret_ref in database for `secret_doc`.
             kwargs = {
                 'name': secret_doc['metadata']['name'],

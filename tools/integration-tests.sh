@@ -12,7 +12,7 @@
 
 set -xe
 
-DECKHAND_IMAGE=${DECKHAND_IMAGE:-quay.io/attcomdev/deckhand:latest}
+DECKHAND_IMAGE=${DECKHAND_IMAGE:-}
 
 CURRENT_DIR="$(pwd)"
 : ${OSH_INFRA_PATH:="../openstack-helm-infra"}
@@ -25,16 +25,50 @@ function cleanup_deckhand {
     if [ -n "$POSTGRES_ID" ]; then
         sudo docker stop $POSTGRES_ID
     fi
+
     if [ -n "$DECKHAND_ID" ]; then
         sudo docker stop $DECKHAND_ID
     fi
-    if [ -d "$CONF_DIR" ]; then
-        rm -rf $CONF_DIR
+
+    rm -rf $CONF_DIR
+
+    if [ -n "$DECKHAND_IMAGE" ]; then
+        # Kill all processes and child processes (for example, if workers > 1)
+        # if using uwsgi only.
+        PGID=$(ps -o comm -o pgid | grep uwsgi | grep -o [0-9]* | head -n 1)
+        if [ -n "$PGID" ]; then
+            setsid kill -- -$PGID
+        fi
     fi
 }
 
 
 trap cleanup_deckhand EXIT
+
+
+function install_deps {
+    set -xe
+
+    # NOTE(fmontei): While as a part of `make setup-host` below some of
+    # these dependencies are installed, we want Deckhand to idempotently
+    # install everything it needs for the foregoing to work.
+    sudo apt-get update
+    sudo apt-get install --no-install-recommends -y \
+            ca-certificates \
+            git \
+            make \
+            jq \
+            nmap \
+            curl \
+            uuid-runtime \
+            ipcalc \
+            python-pytest \
+            python-pip
+    # NOTE(fmontei): Use this version because newer versions might
+    # be slightly different in terms of test syntax in YAML files.
+    sudo -H -E pip install gabbi==1.35.1 \
+        stestr
+}
 
 
 function deploy_barbican {
@@ -70,10 +104,6 @@ function deploy_osh_keystone_barbican {
     # NOTE(fmontei): setup-host already sets up required host dependencies.
     make dev-deploy setup-host
     make dev-deploy k8s
-
-    # NOTE(fmontei): Use this version because newer versions might
-    # be slightly different in terms of test syntax in YAML files.
-    sudo -H -E pip install gabbi==1.35.1
 
     cd ${OSH_PATH}
     # Setup clients on the host and assemble the charts¶
@@ -129,24 +159,38 @@ function deploy_deckhand {
     export TEST_AUTH_TOKEN=$( openstack token issue --format value -c id )
     export TEST_BARBICAN_URL=$( openstack endpoint list --format value | grep barbican | grep public | awk '{print $7}' )
 
-    log_section "Running Deckhand via Docker"
-    sudo docker run \
-        --rm \
-        --net=host \
-        -v $CONF_DIR:/etc/deckhand \
-        $DECKHAND_IMAGE alembic upgrade head &
-    sudo docker run \
-        --rm \
-        --net=host \
-        -p 9000:9000 \
-        -v $CONF_DIR:/etc/deckhand \
-        $DECKHAND_IMAGE server &
+    if [ -z "$DECKHAND_IMAGE" ]; then
+        log_section "Running Deckhand via uwsgi."
+
+        alembic upgrade head
+        # NOTE(fmontei): Deckhand's database is not configured to work with
+        # multiprocessing. Currently there is a data race on acquiring shared
+        # SQLAlchemy engine pooled connection strings when workers > 1. As a
+        # workaround, we use multiple threads but only 1 worker. For more
+        # information, see: https://github.com/att-comdev/deckhand/issues/20
+        export DECKHAND_API_WORKERS=1
+        export DECKHAND_API_THREADS=4
+        source entrypoint.sh server &
+    else
+        log_section "Running Deckhand via Docker"
+        sudo docker run \
+            --rm \
+            --net=host \
+            -v $CONF_DIR:/etc/deckhand \
+            $DECKHAND_IMAGE alembic upgrade head &
+        sudo docker run \
+            --rm \
+            --net=host \
+            -p 9000:9000 \
+            -v $CONF_DIR:/etc/deckhand \
+            $DECKHAND_IMAGE server &
+
+        DECKHAND_ID=$(sudo docker ps | grep deckhand | awk '{print $1}')
+        echo $DECKHAND_ID
+    fi 
 
     # Give the server a chance to come up. Better to poll a health check.
     sleep 5
-
-    DECKHAND_ID=$(sudo docker ps | grep deckhand | awk '{print $1}')
-    echo $DECKHAND_ID
 }
 
 
@@ -155,10 +199,11 @@ function run_tests {
 
     posargs=$@
     if [ ${#posargs} -ge 1 ]; then
-        py.test -k $1 -svx ${CURRENT_DIR}/deckhand/tests/integration/test_gabbi.py
+        stestr -v -t ${CURRENT_DIR}/deckhand/tests/integration run $1 --serial --color
     else
-        py.test -svx ${CURRENT_DIR}/deckhand/tests/integration/test_gabbi.py
+        stestr -v -t ${CURRENT_DIR}/deckhand/tests/integration run --serial --color
     fi
+
     TEST_STATUS=$?
 
     set -e
@@ -173,6 +218,8 @@ function run_tests {
 
 
 source ${CURRENT_DIR}/tools/common-tests.sh
+
+install_deps
 
 # Clone openstack-helm-infra and setup host and k8s.
 deploy_osh_keystone_barbican
