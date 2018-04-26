@@ -140,6 +140,30 @@
     },
     {
       "key": {
+        "uuid": "fc692801_7245a0c8",
+        "filename": "docs/source/getting-started.rst",
+        "patchSetId": 12
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-26T03:31:26Z",
+      "side": 1,
+      "message": "Yes it is.",
+      "parentUuid": "5255b66d_fc50d7bb",
+      "range": {
+        "startLine": 126,
+        "startChar": 3,
+        "endLine": 130,
+        "endChar": 48
+      },
+      "revId": "077787a91bc0efbb0f4f721c6ffee282144b59fc",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7442e0e_96ede932",
         "filename": "tools/functional-tests.sh",
         "patchSetId": 12
