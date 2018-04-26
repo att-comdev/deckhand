@@ -37,6 +37,31 @@ function cleanup_deckhand {
 trap cleanup_deckhand EXIT
 
 
+function install_deps {
+    set -xe
+
+    # NOTE(fmontei): While as a part of `make setup-host` below some of
+    # these dependencies are installed, we want Deckhand to idempotently
+    # install everything it needs for the foregoing to work.
+    sudo apt-get update
+    sudo apt-get install --no-install-recommends -y \
+            ca-certificates \
+            git \
+            make \
+            jq \
+            nmap \
+            curl \
+            uuid-runtime \
+            ipcalc \
+            python-pytest \
+            python-pip
+    # NOTE(fmontei): Use this version because newer versions might
+    # be slightly different in terms of test syntax in YAML files.
+    sudo -H -E pip install gabbi==1.35.1 \
+        stestr
+}
+
+
 function deploy_barbican {
     set -xe
 
@@ -70,10 +95,6 @@ function deploy_osh_keystone_barbican {
     # NOTE(fmontei): setup-host already sets up required host dependencies.
     make dev-deploy setup-host
     make dev-deploy k8s
-
-    # NOTE(fmontei): Use this version because newer versions might
-    # be slightly different in terms of test syntax in YAML files.
-    sudo -H -E pip install gabbi==1.35.1
 
     cd ${OSH_PATH}
     # Setup clients on the host and assemble the charts¶
@@ -155,10 +176,11 @@ function run_tests {
 
     posargs=$@
     if [ ${#posargs} -ge 1 ]; then
-        py.test -k $1 -svx ${CURRENT_DIR}/deckhand/tests/integration/test_gabbi.py
+        stestr -v -t ${CURRENT_DIR}/deckhand/tests/integration run $1 --serial --color
     else
-        py.test -svx ${CURRENT_DIR}/deckhand/tests/integration/test_gabbi.py
+        stestr -v -t ${CURRENT_DIR}/deckhand/tests/integration run --serial --color
     fi
+
     TEST_STATUS=$?
 
     set -e
@@ -174,8 +196,10 @@ function run_tests {
 
 source ${CURRENT_DIR}/tools/common-tests.sh
 
+install_deps
+
 # Clone openstack-helm-infra and setup host and k8s.
-deploy_osh_keystone_barbican
+#deploy_osh_keystone_barbican
 
 # Deploy PostgreSQL and Deckhand.
 deploy_postgre

@@ -99,9 +99,9 @@ fi
 set +e
 posargs=$@
 if [ ${#posargs} -ge 1 ]; then
-    py.test -k $1 -svx $( dirname $ROOTDIR )/deckhand/tests/functional/test_gabbi.py --html=results/index.html
+    stestr -v -t $( dirname $ROOTDIR )/deckhand/tests/functional run $1 --serial --color
 else
-    py.test -svx $( dirname $ROOTDIR )/deckhand/tests/functional/test_gabbi.py --html=results/index.html
+    stestr -v -t $( dirname $ROOTDIR )/deckhand/tests/functional run --serial --color
 fi
 TEST_STATUS=$?
 set -e
