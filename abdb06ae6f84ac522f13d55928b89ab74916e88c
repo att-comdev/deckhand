@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "455215fa_e482b965",
+        "filename": "deckhand/tests/functional/gabbits/performance/performance.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-26T17:54:29Z",
+      "side": 1,
+      "message": "Fix this or remove",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 42
+      },
+      "revId": "abdb06ae6f84ac522f13d55928b89ab74916e88c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
