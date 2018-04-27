@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3332edae_b8b845cf",
+        "filename": "deckhand/tests/integration/gabbits/document-substitution-secret.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-27T15:55:54Z",
+      "side": 1,
+      "message": "Missing Passphrase, then this will be good to merge if passes in CICD",
+      "revId": "dcb49fb7a0efd6efd7be4419f45adfddd5928c6c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
