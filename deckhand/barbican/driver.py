@@ -36,7 +36,12 @@ class BarbicanDriver(object):
         except (barbicanclient.exceptions.HTTPAuthError,
                 barbicanclient.exceptions.HTTPClientError,
                 barbicanclient.exceptions.HTTPServerError) as e:
-            LOG.exception(str(e))
+            LOG.error('Caught %s error from Barbican, likely due to a '
+                      'configuration or deployment issue.', e.__class__)
+            raise errors.BarbicanException(details=str(e))
+        except barbicanclient.exceptions.PayloadException as e:
+            LOG.error('Caught %s error from Barbican, because the secret '
+                      'payload type is unsupported.', e.__class__)
             raise errors.BarbicanException(details=str(e))
 
         # NOTE(fmontei): The dictionary representation of the Secret object by
@@ -49,7 +54,6 @@ class BarbicanDriver(object):
 
     def get_secret(self, secret_ref):
         """Get a secret."""
-
         try:
             return self.barbicanclient.call("secrets.get", secret_ref)
         except (barbicanclient.exceptions.HTTPAuthError,
