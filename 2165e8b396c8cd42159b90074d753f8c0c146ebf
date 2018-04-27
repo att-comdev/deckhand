@@ -16,6 +16,24 @@
       "revId": "2165e8b396c8cd42159b90074d753f8c0c146ebf",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06e69751_0be9d4b0",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-27T20:26:45Z",
+      "side": 1,
+      "message": "There\u0027s no restriction around the type and what can be encrypted as in here: https://review.gerrithub.io/#/c/att-comdev/deckhand/+/409260/\n\nTo rephrase: any generic document type can be encrypted: https://github.com/att-comdev/deckhand/blob/a5bb91bc7695ac6612f3b1dfd9aee7decfc6d7e0/deckhand/engine/secrets_manager.py#L49\n\nThat shows that as long as the doc has storagePolicy: encrypted it\u0027ll encrypt. \n\nHowever, I\u0027ve been rolling this in the back of my mind and actually... I realize that https://review.gerrithub.io/#/c/att-comdev/deckhand/+/409260/ is technically ONLY working because the document type \u0027armada/Certificate/v1\u0027 which is \"generic\" results in _get_secret_type here only haphazardly returning \u0027certificate\u0027... which means I need to add some smarter logic to that other PS to make it default to passphrase + b64 encoding if it\u0027s not a built-in Deckhand type... Though I\u0027m curious whether I should make b64 encoding optional or the default behavior?\n\nBarbican does support base64, see the example here: https://docs.openstack.org/barbican/latest/api/reference/secrets.html#id1",
+      "parentUuid": "3acde57a_a8e72f6c",
+      "revId": "2165e8b396c8cd42159b90074d753f8c0c146ebf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
