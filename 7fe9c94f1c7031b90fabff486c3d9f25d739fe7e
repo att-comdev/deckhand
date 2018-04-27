@@ -22,6 +22,75 @@
       "revId": "7fe9c94f1c7031b90fabff486c3d9f25d739fe7e",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94ad922f_7b21c1ea",
+        "filename": "deckhand/tests/integration/gabbits/document-substitution-secret.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-27T17:48:01Z",
+      "side": 1,
+      "message": "each secret document type that was created",
+      "range": {
+        "startLine": 155,
+        "startChar": 49,
+        "endLine": 155,
+        "endChar": 95
+      },
+      "revId": "7fe9c94f1c7031b90fabff486c3d9f25d739fe7e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0ae21f1_80705ac4",
+        "filename": "deckhand/tests/integration/gabbits/document-substitution-secret.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-27T17:48:01Z",
+      "side": 1,
+      "message": "as each secret document type.",
+      "range": {
+        "startLine": 180,
+        "startChar": 76,
+        "endLine": 180,
+        "endChar": 92
+      },
+      "revId": "7fe9c94f1c7031b90fabff486c3d9f25d739fe7e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "279064be_eddd6b86",
+        "filename": "deckhand/tests/integration/gabbits/document-substitution-secret.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-27T17:48:01Z",
+      "side": 1,
+      "message": "s/secret/each secret",
+      "range": {
+        "startLine": 180,
+        "startChar": 17,
+        "endLine": 180,
+        "endChar": 23
+      },
+      "revId": "7fe9c94f1c7031b90fabff486c3d9f25d739fe7e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
