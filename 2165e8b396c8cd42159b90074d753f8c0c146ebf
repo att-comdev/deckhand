@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3acde57a_a8e72f6c",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1011672
+      },
+      "writtenOn": "2018-04-27T20:05:38Z",
+      "side": 1,
+      "message": "Out of curiosity, have you tried just using the \"passphrase\" type for all documents?\n\nIt would be nice to lift the restriction on what documents could be encrypted.  We could even consider serializing and b64 encoding before shipping them to Barbican as \"passphrase\" type.\n\nOf course, there could be restrictions in barbican or its backends that prevent long passphrases.",
+      "revId": "2165e8b396c8cd42159b90074d753f8c0c146ebf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
