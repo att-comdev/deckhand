@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import ast
+import base64
 import copy
 import re
 
@@ -95,28 +97,56 @@ class SecretsManager(object):
         # TODO(fmontei): Look into POSTing Deckhand metadata into Barbican's
         # Secrets Metadata API to make it easier to track stale secrets from
         # prior revisions that need to be deleted.
+        if not isinstance(secret_doc, document_wrapper.DocumentDict):
+            secret_doc = document_wrapper.DocumentDict(secret_doc)
 
-        encryption_type = secret_doc['metadata']['storagePolicy']
-        secret_type = cls._get_secret_type(secret_doc['schema'])
-        created_secret = secret_doc['data']
+        encryption_type = secret_doc.storage_policy
+        secret_type = cls._get_secret_type(secret_doc.schema)
+        payload = secret_doc['data']
 
         if encryption_type == types.ENCRYPTED:
+            # NOTE(fmontei): The logic for the 2 conditions below are enforced
+            # from Barbican's Python client. Some pre-processing and
+            # transformation is needed to make Barbican work with
+            # non-compatible formats.
+            if not payload:
+                # There is no point in even bothering to encrypt an empty
+                # body, which just leads to needless overhead, so return
+                # early.
+                LOG.info('Barbican does not accept empty payloads so '
+                         'Deckhand will not encrypt document [%s, %s] %s.',
+                         secret_doc.schema, secret_doc.layer, secret_doc.name)
+                secret_doc.storage_policy = types.CLEARTEXT
+                return payload
+            elif not isinstance(
+                    payload, (six.text_type, six.binary_type)):
+                LOG.debug('Forcibly setting secret_type=opaque and '
+                          'base64-encoding non-string payload for '
+                          'document [%s, %s] %s.', secret_doc.schema,
+                          secret_doc.layer, secret_doc.name)
+                # NOTE(fmontei): base64-encoding the non-string payload is
+                # done for serialization purposes, not for security purposes.
+                # 'opaque' is used to avoid Barbican doing any further
+                # serialization server-side.
+                secret_type = 'opaque'
+                payload = base64.b64encode(six.text_type(payload))
+
             # Store secret_ref in database for `secret_doc`.
             kwargs = {
                 'name': secret_doc['metadata']['name'],
                 'secret_type': secret_type,
-                'payload': secret_doc['data']
+                'payload': payload
             }
             LOG.info('Storing encrypted document data in Barbican.')
             resp = cls.barbican_driver.create_secret(**kwargs)
 
             secret_ref = resp['secret_ref']
-            created_secret = secret_ref
+            payload = secret_ref
 
-        return created_secret
+        return payload
 
     @classmethod
-    def get(cls, secret_ref):
+    def get(cls, secret_ref, src_doc, dest_doc):
         """Return a secret payload from Barbican.
 
         Extracts {secret_uuid} from a secret reference and queries Barbican's
@@ -132,11 +162,31 @@ class SecretsManager(object):
         # TODO(fmontei): Need to avoid this call if Keystone is disabled.
         secret = cls.barbican_driver.get_secret(secret_ref=secret_ref)
         payload = secret.payload
+
+        if secret.secret_type == 'opaque':
+            LOG.debug('Forcibly base64-decoding original non-string payload '
+                      'for document [%s, %s] %s.', *src_doc.meta)
+            try:
+                # If the secret_type is 'opaque' then this implies the
+                # payload was encoded to base64 previously. Reverse the
+                # operation.
+                payload = ast.literal_eval(base64.b64decode(payload))
+            except Exception:
+                LOG.error('Failed to unencode the original payload that '
+                          'presumably was encoded to base64 with '
+                          'secret_type=opaque for document [%s, %s] %s.',
+                          *src_doc.meta)
+                raise errors.UnknownSubstitutionError(
+                    src_schema=src_doc.schema, src_layer=src_doc.layer,
+                    src_name=src_doc.name, schema=dest_doc.schema,
+                    layer=dest_doc.layer, name=dest_doc.name,
+                    details='Sanitized.')
+
         LOG.debug('Successfully retrieved Barbican secret using reference.')
         return payload
 
-    @classmethod
-    def _get_secret_type(cls, schema):
+    @staticmethod
+    def _get_secret_type(schema):
         """Get the Barbican secret type based on the following mapping:
 
         ``deckhand/Certificate/v1`` => certificate
@@ -146,22 +196,44 @@ class SecretsManager(object):
         ``deckhand/Passphrase/v1`` => passphrase
         ``deckhand/PrivateKey/v1`` => private
         ``deckhand/PublicKey/v1`` => public
+        Generic document => passphrase
 
         :param schema: The document's schema.
         :returns: The value corresponding to the mapping above.
         """
-        _schema = schema.split('/')[1].lower().strip()
-        if _schema in [
+        parts = schema.split('/')
+        if len(parts) == 3:
+            namespace, kind, _ = parts
+        elif len(parts) == 2:
+            namespace, kind = parts
+        else:
+            raise ValueError(
+                'Schema %s must consist of namespace/kind/version.' % schema)
+
+        is_generic = (
+            '/'.join([namespace, kind]) not in types.DOCUMENT_SECRET_TYPES
+        )
+
+        # If the document kind is not a built-in secret type, then default to
+        # 'passphrase'.
+        if is_generic:
+            LOG.debug('Defaulting to secret_type="passphrase" for generic '
+                      'document schema %s.', schema)
+            return 'passphrase'
+
+        kind = kind.lower()
+
+        if kind in [
             'certificateauthoritykey', 'certificatekey', 'privatekey'
         ]:
             return 'private'
-        elif _schema == 'certificateauthority':
+        elif kind == 'certificateauthority':
             return 'certificate'
-        elif _schema == 'publickey':
+        elif kind == 'publickey':
             return 'public'
         # NOTE(fmontei): This branch below handles certificate and passphrase,
         # both of which are supported secret types in Barbican.
-        return _schema
+        return kind
 
 
 class SecretsSubstitution(object):
@@ -209,7 +281,7 @@ class SecretsSubstitution(object):
     @staticmethod
     def get_encrypted_data(src_secret, src_doc, dest_doc):
         try:
-            src_secret = SecretsManager.get(src_secret)
+            src_secret = SecretsManager.get(src_secret, src_doc, dest_doc)
         except errors.BarbicanException as e:
             LOG.error(
                 'Failed to resolve a Barbican reference for substitution '
@@ -269,24 +341,6 @@ class SecretsSubstitution(object):
                 layer=dest_doc.layer, name=dest_doc.name, details=exc_message)
         else:
             LOG.warning(exc_message)
-
-    def _get_encrypted_secret(self, src_secret, src_doc, dest_doc):
-        try:
-            src_secret = SecretsManager.get(src_secret)
-        except errors.BarbicanException as e:
-            LOG.error(
-                'Failed to resolve a Barbican reference for substitution '
-                'source document [%s, %s] %s referenced in document [%s, %s] '
-                '%s. Details: %s', src_doc.schema, src_doc.layer, src_doc.name,
-                dest_doc.schema, dest_doc.layer, dest_doc.name,
-                e.format_message())
-            raise errors.UnknownSubstitutionError(
-                src_schema=src_doc.schema, src_layer=src_doc.layer,
-                src_name=src_doc.name, schema=dest_doc.schema,
-                layer=dest_doc.layer, name=dest_doc.name,
-                details=e.format_message())
-        else:
-            return src_secret
 
     def _check_src_secret_is_not_none(self, src_secret, src_path, src_doc,
                                       dest_doc):

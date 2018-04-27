@@ -112,7 +112,7 @@ class DocumentDict(dict):
 
     @substitutions.setter
     def substitutions(self, value):
-        return utils.jsonpath_replace(self, value, 'metadata.substitutions')
+        return utils.jsonpath_replace(self, value, '.metadata.substitutions')
 
     @property
     def actions(self):
@@ -122,6 +122,10 @@ class DocumentDict(dict):
     @property
     def storage_policy(self):
         return utils.jsonpath_parse(self, 'metadata.storagePolicy') or ''
+
+    @storage_policy.setter
+    def storage_policy(self, value):
+        return utils.jsonpath_replace(self, value, '.metadata.storagePolicy')
 
     @property
     def is_encrypted(self):
