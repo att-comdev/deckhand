@@ -147,14 +147,16 @@ class SecretsManager(object):
         :returns: The value corresponding to the mapping above.
         """
         _schema = schema.split('/')[1].lower().strip()
-        if _schema == 'certificatekey':
+        if _schema in [
+            'certificateauthoritykey', 'certificatekey', 'privatekey'
+        ]:
             return 'private'
         elif _schema == 'certificateauthority':
             return 'certificate'
-        elif _schema == 'certificateauthoritykey':
-            return 'private'
         elif _schema == 'publickey':
             return 'public'
+        # NOTE(fmontei): This branch below handles certificate and passphrase,
+        # both of which are supported secret types in Barbican.
         return _schema
 
 
