@@ -123,6 +123,10 @@ class DocumentDict(dict):
     def storage_policy(self):
         return utils.jsonpath_parse(self, 'metadata.storagePolicy') or ''
 
+    @storage_policy.setter
+    def storage_policy(self, value):
+        return utils.jsonpath_replace(self, value, 'metadata.storagePolicy')
+
     @property
     def is_encrypted(self):
         return self.storage_policy == 'encrypted'
