@@ -102,7 +102,7 @@ class TestSecretsManager(test_base.TestDbBase):
     def test_retrieve_barbican_secret(self):
         secret_ref, expected_secret = self._test_create_secret(
             'encrypted', 'Certificate')
-        secret_payload = secrets_manager.SecretsManager.get(secret_ref)
+        secret_payload = secrets_manager.SecretsManager.get(secret_ref, {}, {})
 
         self.assertEqual(expected_secret, secret_payload)
         self.mock_barbican_driver.get_secret.assert_called_once_with(
@@ -197,7 +197,8 @@ class TestSecretsSubstitution(test_base.TestDbBase):
         }
         self._test_doc_substitution(
             document_mapping, [certificate], expected_data)
-        mock_secrets_manager.get.assert_called_once_with(secret_ref=secret_ref)
+        mock_secrets_manager.get.assert_called_once_with(
+            secret_ref, certificate, mock.ANY)
 
     def test_create_destination_path_with_array(self):
         # Validate that the destination data will be populated with an array
