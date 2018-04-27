@@ -135,8 +135,8 @@ class SecretsManager(object):
         LOG.debug('Successfully retrieved Barbican secret using reference.')
         return payload
 
-    @classmethod
-    def _get_secret_type(cls, schema):
+    @staticmethod
+    def _get_secret_type(schema):
         """Get the Barbican secret type based on the following mapping:
 
         ``deckhand/Certificate/v1`` => certificate
@@ -150,18 +150,34 @@ class SecretsManager(object):
         :param schema: The document's schema.
         :returns: The value corresponding to the mapping above.
         """
-        _schema = schema.split('/')[1].lower().strip()
-        if _schema in [
+        parts = schema.split('/')
+        if len(parts) == 3:
+            namespace, kind, _ = parts
+        elif len(parts) == 2:
+            namespace, kind = parts
+        else:
+            raise ValueError(
+                'Schema %s must consist of namespace/kind/version.' % schema)
+
+        is_generic = (
+            '/'.join([namespace, kind]) not in types.DOCUMENT_SECRET_TYPES
+        )
+
+        # If the document kind is not a built-in secret type, then default to
+        # 'passphrase'.
+        if is_generic:
+            return 'passphrase'
+        elif kind in [
             'certificateauthoritykey', 'certificatekey', 'privatekey'
         ]:
             return 'private'
-        elif _schema == 'certificateauthority':
+        elif kind == 'certificateauthority':
             return 'certificate'
-        elif _schema == 'publickey':
+        elif kind == 'publickey':
             return 'public'
         # NOTE(fmontei): This branch below handles certificate and passphrase,
         # both of which are supported secret types in Barbican.
-        return _schema
+        return kind
 
 
 class SecretsSubstitution(object):
