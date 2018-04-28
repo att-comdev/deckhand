@@ -34,6 +34,24 @@
       "revId": "2165e8b396c8cd42159b90074d753f8c0c146ebf",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "862375c4_4d1e7c60",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-28T18:58:04Z",
+      "side": 1,
+      "message": "I was mistaken, encoding is deprecated because it lead to weird behavior.",
+      "parentUuid": "06e69751_0be9d4b0",
+      "revId": "2165e8b396c8cd42159b90074d753f8c0c146ebf",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
