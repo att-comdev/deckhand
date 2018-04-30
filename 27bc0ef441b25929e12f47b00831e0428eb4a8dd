@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4e73afc_e517407c",
+        "filename": "tools/integration-tests.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1013390
+      },
+      "writtenOn": "2018-04-30T18:33:28Z",
+      "side": 1,
+      "message": "stestr: command not found",
+      "range": {
+        "startLine": 175,
+        "startChar": 8,
+        "endLine": 175,
+        "endChar": 14
+      },
+      "revId": "27bc0ef441b25929e12f47b00831e0428eb4a8dd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70409f54_3bb673dd",
+        "filename": "tools/integration-tests.sh",
+        "patchSetId": 5
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1013390
+      },
+      "writtenOn": "2018-04-30T18:33:28Z",
+      "side": 1,
+      "message": "stestr: command not found",
+      "range": {
+        "startLine": 177,
+        "startChar": 8,
+        "endLine": 177,
+        "endChar": 14
+      },
+      "revId": "27bc0ef441b25929e12f47b00831e0428eb4a8dd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
