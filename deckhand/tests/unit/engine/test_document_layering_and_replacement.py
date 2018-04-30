@@ -212,3 +212,113 @@ data:
             self._test_layering(
                 documents, site_expected=site_expected,
                 global_expected=global_expected)
+
+    def test_replacement_document_receives_substitution(self):
+        """Verifies that the parent-replacement receives substitution data
+        prior to the child-replacement layering with it, which in turn is
+        done prior to any other document attempting to substitute from or
+        layer with the child-replacement (which replaces its parent).
+        """
+        self.documents = list(yaml.safe_load_all("""
+---
+schema: deckhand/LayeringPolicy/v1
+metadata:
+  schema: metadata/Control/v1
+  name: layering-policy
+data:
+  layerOrder:
+    - region
+    - site
+---
+schema: deckhand/Certificate/v1
+metadata:
+  name: example-cert
+  schema: metadata/Document/v1
+  layeringDefinition:
+    layer: site
+  storagePolicy: cleartext
+data: |-
+  CERTIFICATE DATA
+---
+schema: deckhand/CertificateKey/v1
+metadata:
+  name: example-key
+  schema: metadata/Document/v1
+  layeringDefinition:
+    layer: site
+  storagePolicy: cleartext
+data: |-
+  KEY DATA
+---
+schema: armada/Chart/v1
+metadata:
+  name: example-chart-01
+  schema: metadata/Document/v1
+  labels:
+    name: parent-chart
+  layeringDefinition:
+    layer: region
+  substitutions:
+    - dest:
+        path: .chart.values.tls.certificate
+      src:
+        schema: deckhand/Certificate/v1
+        name: example-cert
+        path: .
+data:
+  chart:
+    details:
+      data: foo
+    values: {}
+---
+schema: armada/Chart/v1
+metadata:
+  name: example-chart-01
+  schema: metadata/Document/v1
+  replacement: true
+  layeringDefinition:
+    layer: site
+    parentSelector:
+      name: parent-chart
+    actions:
+      - method: merge
+        path: .
+  substitutions:
+    - dest:
+        path: .chart.values.tls.key
+      src:
+        schema: deckhand/CertificateKey/v1
+        name: example-key
+        path: .
+data:
+  chart:
+    details:
+      data: bar
+    values: {}
+...
+"""))
+
+        site_expected = [
+            "CERTIFICATE DATA",
+            "KEY DATA",
+            {
+                'chart': {
+                    'details': {'data': 'bar'},
+                    'values': {
+                        'tls': {
+                            'certificate': 'CERTIFICATE DATA',
+                            'key': 'KEY DATA'
+                        }
+                    }
+                }
+            }
+        ]
+
+        self._test_layering(self.documents, site_expected=site_expected,
+                            region_expected=None)
+
+        # Try different permutations of document orders for good measure.
+        for documents in list(itertools.permutations(self.documents))[:10]:
+            self._test_layering(
+                documents, site_expected=site_expected,
+                region_expected=None)
