@@ -22,6 +22,52 @@
       "revId": "1eaba0ca70374a084c7c907df459b1496c915f92",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "162c37d4_7e3db084",
+        "filename": "deckhand/barbican/driver.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-30T23:25:35Z",
+      "side": 1,
+      "message": "__class__.__name__",
+      "range": {
+        "startLine": 40,
+        "startChar": 62,
+        "endLine": 40,
+        "endChar": 71
+      },
+      "revId": "1eaba0ca70374a084c7c907df459b1496c915f92",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c26cde11_d45e96a2",
+        "filename": "deckhand/barbican/driver.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-04-30T23:25:35Z",
+      "side": 1,
+      "message": "__class__.__name__",
+      "range": {
+        "startLine": 44,
+        "startChar": 56,
+        "endLine": 44,
+        "endChar": 65
+      },
+      "revId": "1eaba0ca70374a084c7c907df459b1496c915f92",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
