@@ -300,12 +300,19 @@ class DocumentLayering(object):
 
         g = networkx.DiGraph()
         for document in self._documents_by_index.values():
-            if document.has_replacement:
-                g.add_edge(document.meta, document.replaced_by.meta)
-            elif document.parent_selector and not document.is_replacement:
+            if document.parent_selector:
+                # NOTE: A child-replacement depends on its parent-replacement
+                # the same way any child depends on its parent: so that the
+                # child layers with its parent only after the parent has
+                # received all layering and substitution data. But other
+                # documents that depend on the parent-replacement actually
+                # depend on the child-replacement instead as the
+                # child-replacement replaces its parent. So the dependency
+                # chain is: PR -> CR -> anything that layers with PR.
                 parent_meta = self._parents.get(document.meta)
-                if parent_meta:
-                    g.add_edge(document.meta, parent_meta)
+                parent = self._get_parent_or_replacement(document, parent_meta)
+                if parent:
+                    g.add_edge(document.meta, parent.meta)
 
             for sub in document.substitutions:
                 # Retrieve the correct substitution source using
@@ -454,6 +461,10 @@ class DocumentLayering(object):
         self._layer_order = self._get_layering_order(self._layering_policy)
         self._calc_all_document_children()
 
+        LOG.debug("Document Set to Render:::")
+        for d in self._documents_by_index.values():
+            LOG.debug("%s:%s:%s - %s", d.schema, d.layer, d.name, d.data)
+
         if substitution_sources:
             versionutils.report_deprecated_feature(
                 LOG,
@@ -473,8 +484,16 @@ class DocumentLayering(object):
             substitution_sources,
             fail_on_missing_sub_src=fail_on_missing_sub_src)
 
+        LOG.debug("Pre-sort Document Set:::")
+        for d in self._documents_by_index.values():
+            LOG.debug("%s:%s:%s - %s", d.schema, d.layer, d.name, d.data)
+
         self._sorted_documents = self._topologically_sort_documents(
             substitution_sources)
+
+        LOG.debug("Post-sort Document Set:::")
+        for d in self._documents_by_index.values():
+            LOG.debug("%s:%s:%s - %s", d.schema, d.layer, d.name, d.data)
 
         del self._documents_by_layer
         del self._documents_by_labels
@@ -629,10 +648,14 @@ class DocumentLayering(object):
             if doc.is_control:
                 continue
 
+            LOG.debug("Rendering document %s:%s:%s", *doc.meta)
+
             if doc.parent_selector:
                 parent_meta = self._parents.get(doc.meta)
 
                 if parent_meta:
+                    LOG.debug("Using parent %s:%s:%s", *parent_meta)
+
                     parent = self._get_parent_or_replacement(doc, parent_meta)
 
                     if doc.actions:
@@ -652,8 +675,7 @@ class DocumentLayering(object):
                                             doc, parent, action)
                                     except Exception:  # nosec
                                         pass
-                        if not doc.is_abstract:
-                            doc.data = rendered_data.data
+                        doc.data = rendered_data.data
                         self.secrets_substitution.update_substitution_sources(
                             doc.schema, doc.name, rendered_data.data)
                         self._documents_by_index[doc.meta] = rendered_data
@@ -679,10 +701,10 @@ class DocumentLayering(object):
                 if substituted_data:
                     rendered_data = substituted_data[0]
                     # Update the actual document data if concrete.
-                    if not doc.is_abstract:
-                        doc.data = rendered_data.data
-                    self.secrets_substitution.update_substitution_sources(
-                        doc.schema, doc.name, rendered_data.data)
+                    doc.data = rendered_data.data
+                    if not doc.has_replacement:
+                        self.secrets_substitution.update_substitution_sources(
+                            doc.schema, doc.name, rendered_data.data)
                     self._documents_by_index[doc.meta] = rendered_data
             # Otherwise, retrieve the encrypted data for the document if its
             # data has been encrypted so that future references use the actual
