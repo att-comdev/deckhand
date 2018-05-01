@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6347981_5e01d0f4",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-01T22:31:44Z",
+      "side": 1,
+      "message": "Should just define this as payload",
+      "range": {
+        "startLine": 102,
+        "startChar": 8,
+        "endLine": 102,
+        "endChar": 43
+      },
+      "revId": "589b7f73f70ffcddf01a1fd2be62713ef6041353",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
