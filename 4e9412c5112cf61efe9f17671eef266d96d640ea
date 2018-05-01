@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94266f86_c9950d86",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-01T00:38:45Z",
+      "side": 1,
+      "message": "Actually this will likely require changing the document\u0027s storageType to cleartext or doing some other magical footwork to get this to work so this doesn\u0027t blow up during secret retrieval.",
+      "range": {
+        "startLine": 112,
+        "startChar": 24,
+        "endLine": 113,
+        "endChar": 24
+      },
+      "revId": "4e9412c5112cf61efe9f17671eef266d96d640ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a4b5ad1_09cec6a5",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-01T00:38:45Z",
+      "side": 1,
+      "message": "payload",
+      "range": {
+        "startLine": 136,
+        "startChar": 27,
+        "endLine": 136,
+        "endChar": 45
+      },
+      "revId": "4e9412c5112cf61efe9f17671eef266d96d640ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
