@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "98b2f866_aa2ed1cd",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-01T03:33:47Z",
+      "side": 1,
+      "message": "After some thought better approach is to use the secrets metadata api in Barbican to store this kind of metadata info, but this begs the question: is it really worth the trouble in supporting this use case or do we want to error out here?",
+      "range": {
+        "startLine": 121,
+        "startChar": 16,
+        "endLine": 129,
+        "endChar": 35
+      },
+      "revId": "4e9412c5112cf61efe9f17671eef266d96d640ea",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a4b5ad1_09cec6a5",
         "filename": "deckhand/engine/secrets_manager.py",
         "patchSetId": 13
