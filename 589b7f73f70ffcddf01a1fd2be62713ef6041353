@@ -22,6 +22,52 @@
       "revId": "589b7f73f70ffcddf01a1fd2be62713ef6041353",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c5c6712_66d069cd",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-01T22:33:35Z",
+      "side": 1,
+      "message": "is",
+      "range": {
+        "startLine": 107,
+        "startChar": 66,
+        "endLine": 107,
+        "endChar": 69
+      },
+      "revId": "589b7f73f70ffcddf01a1fd2be62713ef6041353",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c072788a_3d5d17b2",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-01T22:33:35Z",
+      "side": 1,
+      "message": "inside",
+      "range": {
+        "startLine": 108,
+        "startChar": 14,
+        "endLine": 108,
+        "endChar": 18
+      },
+      "revId": "589b7f73f70ffcddf01a1fd2be62713ef6041353",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
