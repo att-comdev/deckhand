@@ -70,9 +70,10 @@ works as follows:
 
   * Highest precendence means that ``P`` belongs to the lowest layer
     defined in the ``layerOrder`` list from the ``LayeringPolicy`` which is
-    at least one level higher than the layer for ``C``. For example, if ``C``
-    has layer ``site``, then its parent ``P`` must at least have layer ``type``
-    or above in the following ``layerOrder``:
+    at least the same level or one level higher (>=) than the layer for
+    ``C``. For example, if ``C`` has layer ``site``, then its parent ``P``
+    must at least have layer ``type`` or above in the following
+    ``layerOrder``:
 
     ::
 
