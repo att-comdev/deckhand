@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da0290c6_e3c02502",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-05-03T22:08:45Z",
+      "side": 1,
+      "message": "It\u0027s just a debug here, but in another module, you do \n\n \u0027for document [%s, %s] %s.\u0027, *src_doc.meta)\n\nIs meta different here, or should it be splatted into 3 values?",
+      "range": {
+        "startLine": 189,
+        "startChar": 38,
+        "endLine": 190,
+        "endChar": 26
+      },
+      "revId": "eb24998855e632db0c60588bf78425019dd335d3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
