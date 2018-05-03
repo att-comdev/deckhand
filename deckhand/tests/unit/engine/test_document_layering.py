@@ -649,6 +649,24 @@ class TestDocumentLayering2LayersAbstractConcrete(TestDocumentLayering):
         self._test_layering(documents, site_expected,
                             global_expected=global_expected)
 
+    def test_layering_with_documents_of_same_layer(self):
+        mapping = {
+            "_GLOBAL_DATA_1_": {"data": {"a": {"x": 1, "y": 2}, "c": 9}},
+            "_GLOBAL_DATA_2_": {"data": {"a": {"x": 7, "z": 3}, "b": 4}},
+            "_GLOBAL_ACTIONS_2_": {
+                "actions": [{"method": "delete", "path": '.a'}]}
+        }
+        doc_factory = factories.DocumentFactory(1, [2])
+        documents = doc_factory.gen_test(mapping, global_abstract=False)
+        documents[2]['metadata']['layeringDefinition']['parentSelector'] = (
+            documents[1]['metadata']['labels'])
+
+        global_expected = [
+            {"a": {"x": 1, "y": 2}, "c": 9},
+            {"c": 9}
+        ]
+        self._test_layering(documents, global_expected=global_expected)
+
 
 class TestDocumentLayering2Layers2Sites(TestDocumentLayering):
 

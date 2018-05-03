@@ -178,12 +178,12 @@ class DocumentLayering(object):
                     document_schema=potential_child.schema,
                     document_name=potential_child.name, reason=reason)
 
-            # The highest order is 0, so the parent should be lower than the
-            # child.
-            if document_layer_idx >= child_layer_idx:
+            # The highest order is 0, so the parent's layer should be lower
+            # than or equal to that of the child.
+            if document_layer_idx > child_layer_idx:
                 reason = ('Child has parentSelector which references parent, '
-                          'but the child layer %s must be lower than the '
-                          'parent layer %s for layerOrder %s.' % (
+                          'but the child layer %s must be lower than or equal '
+                          'to the parent layer %s for layerOrder %s.' % (
                               potential_child.layer, document.layer,
                               ', '.join(self._layer_order)))
                 LOG.error(reason)

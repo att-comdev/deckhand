@@ -205,19 +205,6 @@ class TestDocumentLayeringNegative(
             self.assertRaises(
                 errors.InvalidDocumentParent, self._test_layering, documents)
 
-    def test_layering_parent_and_child_with_same_layer_raises_exc(self):
-        """Validate that attempting to layer documents with the same layer
-        results in an exception.
-        """
-        doc_factory = factories.DocumentFactory(2, [1, 1])
-        documents = doc_factory.gen_test({})
-
-        for x in range(1, 3):
-            documents[x]['metadata']['layeringDefinition']['layer'] = 'global'
-
-        self.assertRaises(
-            errors.InvalidDocumentParent, self._test_layering, documents)
-
 
 class TestDocumentLayeringValidationNegative(
         test_document_layering.TestDocumentLayering):
