@@ -28,17 +28,42 @@ Substitution is primarily designed as a mechanism for inserting secrets into
 configuration documents, but works for unencrypted source documents as well.
 Substitution is applied at each layer after all merge actions occur.
 
+Substitution works like this:
+
+The ``src`` document is resolved via the ``src.schema`` and ``src.name``
+keys and the ``src.path`` key is used relative to the source document's
+``data`` section to retrieve the substitution data, which is then injected
+into the ``data`` section of the destination document using the ``dest.path``
+key. The ``dest.pattern`` is optional and has the following constraints:
+
+* ``dest.path`` must already exist in the ``data`` section of the destination
+  document.
+* The ``dest.path`` value **must** be a string.
+* The ``dest.pattern`` must be a regular expression string.
+* The ``dest.pattern`` must be found in the value of ``dest.path``.
+
+If all the constraints above are correct, then the substitution source data
+is injected into the destination document's ``data`` section, keyed
+with the ``dest.path`` value, precisely where the ``dest.pattern``
+value indicates inside the ``dest.path`` value.
+
 .. note::
 
   Substitution is only applied to the ``data`` section of a document. This is
   because a document's ``metadata`` and ``schema`` sections should be
   immutable within the scope of a revision, for obvious reasons.
 
+Rendering Documents with Substitution
+-------------------------------------
+
 Concrete (non-abstract) documents can be used as a source of substitution
 into other documents. This substitution is layer-independent, so given the 3
 layer example above, which includes ``global``, ``region`` and ``site`` layers,
 a document in the ``region`` layer could insert data from a document in the
 ``site`` layer.
+
+Example
+^^^^^^^
 
 Here is a sample set of documents demonstrating substitution:
 
@@ -151,3 +176,10 @@ The rendered document will look like:
 
 This substitution is also ``schema`` agnostic, meaning that source and
 destination documents can have a different ``schema``.
+
+Substitution of Encrypted Data
+------------------------------
+
+Deckhand allows :ref:`data to be encrypted using Barbican <encryption>`.
+Substitution of encrypted data works the same as substitution of cleartext
+data.
