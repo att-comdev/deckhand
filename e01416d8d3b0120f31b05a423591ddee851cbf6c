@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa16f40f_33282c0f",
+        "filename": "deckhand/tests/integration/gabbits/document-render-secret-edge-cases.yaml",
+        "patchSetId": 13
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-05T16:38:54Z",
+      "side": 1,
+      "message": "Attempting to encrypt a non-str/non-bytes payload should result in it first being base64-encoded then passed to Barbican. The response will be a Barbican reference, which indicates the scenario passed successfully.",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 60
+      },
+      "revId": "e01416d8d3b0120f31b05a423591ddee851cbf6c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
