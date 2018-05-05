@@ -22,6 +22,53 @@
       "revId": "eb24998855e632db0c60588bf78425019dd335d3",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2b38f280_f85191b6",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-05T15:55:36Z",
+      "side": 1,
+      "message": "This is just logging out (d.schema, d.layer, d.name) for each d in the documents that are going to be deleted.\n\nThe problem with what existed before is that it\u0027s dumping out the entire dict which is just too much info.",
+      "parentUuid": "da0290c6_e3c02502",
+      "range": {
+        "startLine": 189,
+        "startChar": 38,
+        "endLine": 190,
+        "endChar": 26
+      },
+      "revId": "eb24998855e632db0c60588bf78425019dd335d3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "602b0a34_389cc503",
+        "filename": "deckhand/db/sqlalchemy/api.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-05T15:55:36Z",
+      "side": 1,
+      "message": "Here this isn\u0027t using d.meta because I haven\u0027t converted the input to the DocumentDict type which I need to be doing all the way up in the controller probably, it\u0027s code clean up that I haven\u0027t gotten around to.",
+      "range": {
+        "startLine": 220,
+        "startChar": 18,
+        "endLine": 220,
+        "endChar": 55
+      },
+      "revId": "eb24998855e632db0c60588bf78425019dd335d3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
