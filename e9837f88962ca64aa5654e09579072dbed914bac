@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02343993_1ccfe0fb",
+        "filename": "docs/source/substitution.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-07T01:46:29Z",
+      "side": 1,
+      "message": "Make this paragraph 3 and add a reference to layering.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 20
+      },
+      "revId": "e9837f88962ca64aa5654e09579072dbed914bac",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d3fbd3e_1e0fb3fd",
+        "filename": "docs/source/substitution.rst",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-07T01:46:29Z",
+      "side": 1,
+      "message": "destination",
+      "range": {
+        "startLine": 197,
+        "startChar": 2,
+        "endLine": 197,
+        "endChar": 12
+      },
+      "revId": "e9837f88962ca64aa5654e09579072dbed914bac",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
