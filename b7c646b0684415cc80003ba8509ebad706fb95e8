@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a78d72b_19ce4a9f",
+        "filename": "charts/deckhand/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-07T18:06:49Z",
+      "side": 1,
+      "message": "You might want to consider disabling the readinessProbe as well because the same situations causing the pod to be restarted will cause the endpoint to be marked down. Could cause the service to go down",
+      "revId": "b7c646b0684415cc80003ba8509ebad706fb95e8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
