@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20aa8c49_33b3f38d",
+        "filename": "deckhand/common/document.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-07T01:50:35Z",
+      "side": 1,
+      "message": "Should note that modifying metadata is heavily frowned upon and this is only here to handle a very specific edge case.",
+      "revId": "00554557f0e47ddda3c4e9642275b0ec52ef20d6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "00784d6c_d2b30cb3",
+        "filename": "deckhand/engine/secrets_manager.py",
+        "patchSetId": 14
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-07T01:50:35Z",
+      "side": 1,
+      "message": "secert_doc.data",
+      "range": {
+        "startLine": 105,
+        "startChar": 18,
+        "endLine": 105,
+        "endChar": 36
+      },
+      "revId": "00554557f0e47ddda3c4e9642275b0ec52ef20d6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
