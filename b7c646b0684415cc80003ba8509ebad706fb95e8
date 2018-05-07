@@ -16,6 +16,24 @@
       "revId": "b7c646b0684415cc80003ba8509ebad706fb95e8",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "13103eed_de470782",
+        "filename": "charts/deckhand/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-07T18:33:58Z",
+      "side": 1,
+      "message": "Well, I don\u0027t mind doing that, but is that directly related to the problem in question? I\u0027m assuming readiness is an idempotent check during pod deployment, not an intermittent poll of the DH API server itself -- is this assumption correct? If so, then why remove the readinessProbe for just DH and not all the other services?",
+      "parentUuid": "4a78d72b_19ce4a9f",
+      "revId": "b7c646b0684415cc80003ba8509ebad706fb95e8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
