@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b88b5f51_b0f28051",
+        "filename": "deckhand/control/api.py",
+        "patchSetId": 21
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-07T15:57:42Z",
+      "side": 1,
+      "message": "This seems a bit messy and fragile. Could CONFIG_FILES become a dictionary if you need access to the entries individually?",
+      "revId": "ade045eb01d2d4474d0134ca16d3a69fea0a5633",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
