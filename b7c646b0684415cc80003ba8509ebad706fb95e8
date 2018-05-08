@@ -34,6 +34,24 @@
       "revId": "b7c646b0684415cc80003ba8509ebad706fb95e8",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f742e0db_d81363cc",
+        "filename": "charts/deckhand/templates/deployment.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-08T15:46:06Z",
+      "side": 1,
+      "message": "readiness probes measure the API\u0027s ability service requests. So if the readiness probe fails, this pod will be removed from the endpoint list for the service. And it is an ongoing probe",
+      "parentUuid": "13103eed_de470782",
+      "revId": "b7c646b0684415cc80003ba8509ebad706fb95e8",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }
