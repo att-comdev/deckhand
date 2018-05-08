@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac7674dc_612bd20d",
+        "filename": "deckhand/control/common.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-08T21:04:09Z",
+      "side": 1,
+      "message": "This can be removed",
+      "range": {
+        "startLine": 96,
+        "startChar": 34,
+        "endLine": 96,
+        "endChar": 59
+      },
+      "revId": "d4c3422d75640cff6834277bf8fc4eab3c4b2c10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
