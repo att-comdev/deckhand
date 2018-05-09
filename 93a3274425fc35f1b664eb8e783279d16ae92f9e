@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b61274c_fe79b30a",
+        "filename": "deckhand/control/revision_documents.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1011940
+      },
+      "writtenOn": "2018-05-09T13:25:46Z",
+      "side": 1,
+      "message": "Bit of a ramble here - I don\u0027t see anything `wrong` with the code.\n\n... \n\nLimit is a \"soft\" filter, in that it doesn\u0027t raise an error if you limit and there\u0027s more than the specified value. (and the ones you get are based on the sort)\n\nIn the client\u0027s view, is this really expected?\n\nI\u0027m trying to think through the use case - I know the impetus was what I\u0027m doing in Shipyard to get 1 document for DeploymentConfiguration. \n\nI can expect to get back 0 or 1 or more than 1 are my scenarios:\n\n 0 \u003d error, the document must exist\n 1 \u003d ok, I got the expected document\n \u003e1 \u003d error, as there should be only one document with my criteria\n\n\nSo if I were to put a limit 1 on my request, I still have to check for the 0 or 1 cases, but I wouldn\u0027t detect the \u003e1 case (although I don\u0027t think DH would allow it to happen either since we\u0027re talking about rendered documents).\n\nI\u0027m not certain that this is helping me much in this use case - perhaps there are other use cases that it makes simpler?",
+      "revId": "93a3274425fc35f1b664eb8e783279d16ae92f9e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
