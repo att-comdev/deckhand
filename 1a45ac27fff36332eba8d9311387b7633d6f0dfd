@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0aa2f4c_949bde19",
+        "filename": "charts/deckhand/templates/deployment.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-09T01:20:24Z",
+      "side": 1,
+      "message": "I could probably just do this:\n\n    livenessProbe:\n      tcpSocket:\n        port: 8000\n      initialDelaySeconds: 15\n      periodSeconds: 20",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 29
+      },
+      "revId": "1a45ac27fff36332eba8d9311387b7633d6f0dfd",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
