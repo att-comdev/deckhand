@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b9605d65_6464d18d",
+        "filename": "docs/source/encryption.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-09T18:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7680d024_a304093b",
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "43debdb8_273b8757",
         "filename": "docs/source/encryption.rst",
         "patchSetId": 5
@@ -30,6 +48,30 @@
       "writtenOn": "2018-05-09T14:04:13Z",
       "side": 1,
       "message": "Maybe something like:\n\nexcept the ``data`` section of each encrypted document has been replaced with a reference to Barbican.",
+      "range": {
+        "startLine": 38,
+        "startChar": 10,
+        "endLine": 39,
+        "endChar": 53
+      },
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f160a751_7131c1d2",
+        "filename": "docs/source/encryption.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-09T18:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43debdb8_273b8757",
       "range": {
         "startLine": 38,
         "startChar": 10,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "2e217b7f_2c4b329c",
+        "filename": "docs/source/encryption.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-09T18:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a7c353e_8059826e",
+      "range": {
+        "startLine": 49,
+        "startChar": 55,
+        "endLine": 49,
+        "endChar": 65
+      },
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "446a8605_cca43940",
         "filename": "docs/source/substitution.rst",
         "patchSetId": 5
@@ -76,6 +142,30 @@
       "writtenOn": "2018-05-09T13:03:46Z",
       "side": 1,
       "message": "cannot",
+      "range": {
+        "startLine": 30,
+        "startChar": 13,
+        "endLine": 30,
+        "endChar": 20
+      },
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf59fa99_9c9f3280",
+        "filename": "docs/source/substitution.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-09T18:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "446a8605_cca43940",
       "range": {
         "startLine": 30,
         "startChar": 13,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "5379b4f1_33a5f53c",
+        "filename": "docs/source/substitution.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-09T18:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6881f02_7e4aaa85",
+      "range": {
+        "startLine": 31,
+        "startChar": 30,
+        "endLine": 31,
+        "endChar": 45
+      },
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1eb4df53_bef99c95",
         "filename": "docs/source/substitution.rst",
         "patchSetId": 5
@@ -122,6 +236,30 @@
       "writtenOn": "2018-05-09T14:04:13Z",
       "side": 1,
       "message": "No substitution\n\nI don\u0027t think \u0027However\u0027 is needed.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be70cf5d_04e6850c",
+        "filename": "docs/source/substitution.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-09T18:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1eb4df53_bef99c95",
       "range": {
         "startLine": 46,
         "startChar": 0,
