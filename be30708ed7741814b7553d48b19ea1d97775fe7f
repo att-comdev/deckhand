@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7680d024_a304093b",
+        "filename": "docs/source/encryption.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-09T13:03:46Z",
+      "side": 1,
+      "message": "This reads a bit off to me. I think maybe something along the lines of:\n\nDeckhand supports encrypting the ``data`` section of documents at-rest to secure sensitive data. This encryption behavior is triggered by setting ``metadata.storagePolicy: encrypted``. It is solely the document author\u0027s responsibility to decide the appropriate storagePolicy for the data contained in the document.",
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "446a8605_cca43940",
+        "filename": "docs/source/substitution.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-09T13:03:46Z",
+      "side": 1,
+      "message": "cannot",
+      "range": {
+        "startLine": 30,
+        "startChar": 13,
+        "endLine": 30,
+        "endChar": 20
+      },
+      "revId": "be30708ed7741814b7553d48b19ea1d97775fe7f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
