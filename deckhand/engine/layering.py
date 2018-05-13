@@ -300,12 +300,19 @@ class DocumentLayering(object):
 
         g = networkx.DiGraph()
         for document in self._documents_by_index.values():
-            if document.has_replacement:
-                g.add_edge(document.meta, document.replaced_by.meta)
-            elif document.parent_selector and not document.is_replacement:
+            if document.parent_selector:
+                # NOTE: A child-replacement depends on its parent-replacement
+                # the same way any child depends on its parent: so that the
+                # child layers with its parent only after the parent has
+                # received all layering and substitution data. But other
+                # documents that depend on the parent-replacement actually
+                # depend on the child-replacement instead as the
+                # child-replacement replaces its parent. So the dependency
+                # chain is: PR -> CR -> anything that layers with PR.
                 parent_meta = self._parents.get(document.meta)
-                if parent_meta:
-                    g.add_edge(document.meta, parent_meta)
+                ancestor = self._get_ancestor(document, parent_meta)
+                if ancestor:
+                    g.add_edge(document.meta, ancestor.meta)
 
             for sub in document.substitutions:
                 # Retrieve the correct substitution source using
@@ -591,7 +598,7 @@ class DocumentLayering(object):
 
         return overall_data
 
-    def _get_parent_or_replacement(self, doc, parent_meta):
+    def _get_ancestor(self, doc, parent_meta):
         """Returns the document's parent or the document's parent's
         replacement.
 
@@ -629,14 +636,17 @@ class DocumentLayering(object):
             if doc.is_control:
                 continue
 
+            LOG.debug("Rendering document %s:%s:%s", *doc.meta)
+
             if doc.parent_selector:
                 parent_meta = self._parents.get(doc.meta)
 
                 if parent_meta:
-                    parent = self._get_parent_or_replacement(doc, parent_meta)
+                    LOG.debug("Using parent %s:%s:%s", *parent_meta)
+                    ancestor = self._get_ancestor(doc, parent_meta)
 
                     if doc.actions:
-                        rendered_data = parent
+                        rendered_data = ancestor
                         # Apply each action to the current document.
                         for action in doc.actions:
                             LOG.debug('Applying action %s to document with '
@@ -649,11 +659,10 @@ class DocumentLayering(object):
                                 with excutils.save_and_reraise_exception():
                                     try:
                                         self._log_data_for_layering_failure(
-                                            doc, parent, action)
+                                            doc, ancestor, action)
                                     except Exception:  # nosec
                                         pass
-                        if not doc.is_abstract:
-                            doc.data = rendered_data.data
+                        doc.data = rendered_data.data
                         self.secrets_substitution.update_substitution_sources(
                             doc.schema, doc.name, rendered_data.data)
                         self._documents_by_index[doc.meta] = rendered_data
@@ -662,7 +671,8 @@ class DocumentLayering(object):
                             'Skipped layering for document [%s, %s] %s which '
                             'has a parent [%s, %s] %s, but no associated '
                             'layering actions.', doc.schema, doc.layer,
-                            doc.name, parent.schema, parent.layer, parent.name)
+                            doc.name, ancestor.schema, ancestor.layer,
+                            ancestor.name)
 
             # Perform substitutions on abstract data for child documents that
             # inherit from it, but only update the document's data if concrete.
@@ -679,10 +689,10 @@ class DocumentLayering(object):
                 if substituted_data:
                     rendered_data = substituted_data[0]
                     # Update the actual document data if concrete.
-                    if not doc.is_abstract:
-                        doc.data = rendered_data.data
-                    self.secrets_substitution.update_substitution_sources(
-                        doc.schema, doc.name, rendered_data.data)
+                    doc.data = rendered_data.data
+                    if not doc.has_replacement:
+                        self.secrets_substitution.update_substitution_sources(
+                            doc.schema, doc.name, rendered_data.data)
                     self._documents_by_index[doc.meta] = rendered_data
             # Otherwise, retrieve the encrypted data for the document if its
             # data has been encrypted so that future references use the actual
