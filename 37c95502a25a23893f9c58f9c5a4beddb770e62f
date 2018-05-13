@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0836d27d_328b7cbb",
+        "filename": "deckhand/tests/functional/gabbits/replacement/replacement.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-13T03:04:27Z",
+      "side": 1,
+      "message": "@Scott\n\nAs a side note, I believe that Gabbi is insufficient to properly test Deckhand from a functional test POV. Frankly, Gabbi is great for most situations, but the combination of randomized substitution dependency chains, layering, substitution and replacement makes the amount of unpredictability too high for consistent test results.\n\nThat is, topologically sorting documents is \"non-deterministic\" from the POV of the document ordering itself, but deterministic from the POV of the dependencies, which is fine, but means that a test might not actually be robust enough because you could run into luck with the document ordering such that everything works correctly. But given a completely different test order, things can break down.\n\nThis is why I need to do stuff like this: https://review.gerrithub.io/#/c/att-comdev/deckhand/+/409542/3/deckhand/tests/unit/engine/test_document_layering_and_replacement.py@321\n\nUnfortunately it leads to test duplication, but it\u0027s why you\u0027ll waste a huge amount of time dealing with running `tox -e functional` because of the above explanation, combined with waiting on docker and so on to spin up.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 24
+      },
+      "revId": "37c95502a25a23893f9c58f9c5a4beddb770e62f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
