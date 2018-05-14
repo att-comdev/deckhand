@@ -22,6 +22,30 @@
       "revId": "37c95502a25a23893f9c58f9c5a4beddb770e62f",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e6883050_7ff7121d",
+        "filename": "deckhand/tests/functional/gabbits/replacement/replacement.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-14T14:14:01Z",
+      "side": 1,
+      "message": "Not sure I follow. I agree that for developers to use testing for debugging, gabbi is not the thing. For validation of the API, it seems the absolutely best case.",
+      "parentUuid": "0836d27d_328b7cbb",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 24
+      },
+      "revId": "37c95502a25a23893f9c58f9c5a4beddb770e62f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
     }
   ]
 }

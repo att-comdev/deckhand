@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8da2ef74_4b649500",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-14T14:14:01Z",
+      "side": 1,
+      "message": "Felipe, I think this is a fundamental disagreement on what replacement should be. In my mind, it can be considered only that if doc B replaces doc A, then the common ``name``  references the data section of doc B anytime a schema + name reference is resolved for substitution or final document rendering. It should not impact choosing parents for layering. The reason for this is non-intuitive results\n\n1) A layering parent could be sourced from a higher priority layer than the child\n2) The chosen layering parent may not actually contain the selectors used to choose the layering parent since document replacement refers simply to the data section, not the metadata section.",
+      "range": {
+        "startLine": 304,
+        "startChar": 1,
+        "endLine": 311,
+        "endChar": 69
+      },
+      "revId": "acc3efe30889e2a1453a031ef6dd78fd4533d506",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20fb789d_2f473b0c",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-14T14:14:01Z",
+      "side": 1,
+      "message": "Again, probably will blow up logs.",
+      "revId": "acc3efe30889e2a1453a031ef6dd78fd4533d506",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8cc1160d_c5b29703",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1011939
+      },
+      "writtenOn": "2018-05-14T14:14:01Z",
+      "side": 1,
+      "message": "I would probably rip these out as in production, this is going to blow up the logs.",
+      "revId": "acc3efe30889e2a1453a031ef6dd78fd4533d506",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
