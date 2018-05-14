@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b8681873_610ddbe4",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-14T14:38:58Z",
+      "side": 1,
+      "message": "If you\u0027re commenting on replacement in general, then selecting just the data section over the entire document needs to be done in another patchset.",
+      "parentUuid": "8da2ef74_4b649500",
+      "range": {
+        "startLine": 304,
+        "startChar": 1,
+        "endLine": 311,
+        "endChar": 69
+      },
+      "revId": "acc3efe30889e2a1453a031ef6dd78fd4533d506",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20fb789d_2f473b0c",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 5
@@ -36,6 +60,24 @@
       "writtenOn": "2018-05-14T14:14:01Z",
       "side": 1,
       "message": "Again, probably will blow up logs.",
+      "revId": "acc3efe30889e2a1453a031ef6dd78fd4533d506",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "892aed86_5fec3e2d",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-14T14:38:58Z",
+      "side": 1,
+      "message": "I didn\u0027t know we used debug\u003dTrue in production, but I agree we can remove this.",
+      "parentUuid": "20fb789d_2f473b0c",
       "revId": "acc3efe30889e2a1453a031ef6dd78fd4533d506",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
       "unresolved": false
