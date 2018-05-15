@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "8bdfaea8_b3f83194",
+        "filename": "deckhand/engine/layering.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1011942
+      },
+      "writtenOn": "2018-05-15T00:14:53Z",
+      "side": 1,
+      "message": "1) This isn\u0027t actually doing parent selection, that\u0027s handled elsewhere. This is just to deal with an edge case that I describe in a later patch after rewording this comment.\n2) Does this mean that the returned document that is replaced should return the parent\u0027s metadata or the child\u0027s metadata? This isn\u0027t validated anywhere currently except here: https://review.gerrithub.io/#/c/att-comdev/deckhand/+/409542/5/deckhand/tests/functional/gabbits/replacement/replacement.yaml@41",
+      "parentUuid": "b8681873_610ddbe4",
+      "range": {
+        "startLine": 304,
+        "startChar": 1,
+        "endLine": 311,
+        "endChar": 69
+      },
+      "revId": "acc3efe30889e2a1453a031ef6dd78fd4533d506",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20fb789d_2f473b0c",
         "filename": "deckhand/engine/layering.py",
         "patchSetId": 5
