@@ -4,7 +4,8 @@
 # upon test failure.
 
 function cleanup {
-    pifpaf_stop
+    set +e
+    pifpaf_stop || deactivate
 }
 
 trap cleanup EXIT
@@ -12,6 +13,10 @@ trap cleanup EXIT
 # Instantiate an ephemeral PostgreSQL DB and print out the `pifpaf` environment
 # variables for debugging purposes.
 set -ex
+if [ -z $(which pg_config) ]; then
+    sudo apt-get install libpq-dev -y
+fi
+
 eval `pifpaf run postgresql`
 env | grep PIFPAF
 set +ex
