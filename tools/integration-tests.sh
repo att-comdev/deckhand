@@ -91,7 +91,7 @@ function deploy_osh_keystone_barbican {
 
     # NOTE(fmontei): Use this version because newer versions might
     # be slightly different in terms of test syntax in YAML files.
-    sudo -H -E pip install gabbi==1.35.1
+    sudo -H -E pip install gabbi==1.42.1
 
     cd ${OSH_PATH}
     # Setup clients on the host and assemble the charts¶
